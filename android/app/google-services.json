@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "499632944046",
+    "firebase_url": "https://fyrework-63dd9.firebaseio.com",
+    "project_id": "fyrework-63dd9",
+    "storage_bucket": "fyrework-63dd9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:499632944046:android:9fda39b66d2fbe7d5fce3f",
+        "android_client_info": {
+          "package_name": "com.fyre.work"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "499632944046-r5mq59iq8gqnf4p3tukv9k5fq36t0f1k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fyre.work",
+            "certificate_hash": "9aa9238e0ee6777b743bc4edbf07da78b23bb737"
+          }
+        },
+        {
+          "client_id": "499632944046-fkrk2rik8sjharjrldkpj8cvs5n9avka.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD870qxUxy8ajw0vOx0NSBh9It34_i8pSA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "499632944046-fkrk2rik8sjharjrldkpj8cvs5n9avka.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
