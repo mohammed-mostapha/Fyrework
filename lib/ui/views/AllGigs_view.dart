@@ -1,4 +1,3 @@
-import 'package:myApp/models/gig.dart';
 import 'package:myApp/ui/widgets/gig_item.dart';
 import 'package:myApp/viewmodels/AllGigs_view_model.dart';
 import 'package:flutter/material.dart';
@@ -16,12 +15,6 @@ class AllGigsView extends StatelessWidget {
         onModelReady: (model) => model.listenToGigs(),
         builder: (context, model, child) => Scaffold(
               backgroundColor: Colors.white,
-              // floatingActionButton: FloatingActionButton(
-              //   backgroundColor: Theme.of(context).primaryColor,
-              //   child:
-              //       !model.busy ? Icon(Icons.add) : CircularProgressIndicator(),
-              //   onPressed: model.navigateToCreateView,
-              // ),
               body: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 0),
                 child: Column(

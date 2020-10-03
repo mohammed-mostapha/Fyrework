@@ -2,8 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:myApp/locator.dart';
-import 'package:myApp/new_services/auth_service.dart';
-import 'package:myApp/vew_controllers/user_controller.dart';
+import 'package:myApp/services/auth_service.dart';
 
 class StorageRepo {
   FirebaseStorage storage =

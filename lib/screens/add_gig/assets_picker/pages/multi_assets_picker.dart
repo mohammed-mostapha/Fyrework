@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:async';
-import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_common_exports/flutter_common_exports.dart';
@@ -8,12 +7,8 @@ import 'package:myApp/models/cloud_storage_result.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:path/path.dart' as fileName;
 import '../../../../services/cloud_storage_service.dart';
-
 import '../src/wechat_assets_picker.dart';
-
 import '../constants/picker_model.dart';
-
-import 'package:myApp/route_generator.dart';
 
 class MultiAssetsPicker extends StatefulWidget {
   final String receivedGigHashtags;

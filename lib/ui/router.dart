@@ -1,5 +1,4 @@
 import 'package:myApp/models/gig.dart';
-import 'package:myApp/ui/views/create_gig_view.dart';
 import 'package:myApp/ui/views/AllGigs_view.dart';
 import 'package:flutter/material.dart';
 import 'package:myApp/constants/route_names.dart';

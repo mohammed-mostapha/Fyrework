@@ -5,7 +5,7 @@ import 'package:myApp/locator.dart';
 import 'package:myApp/main.dart';
 import 'package:myApp/models/user.dart';
 import 'package:myApp/ui/widgets/provider_widget.dart';
-import 'package:myApp/new_services/auth_service.dart';
+import 'package:myApp/services/auth_service.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:geolocator/geolocator.dart';

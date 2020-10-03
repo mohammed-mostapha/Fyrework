@@ -1,16 +1,12 @@
 import 'package:myApp/locator.dart';
 import 'package:myApp/models/gig.dart';
-import 'package:myApp/new_services/auth_service.dart';
-import 'package:myApp/screens/home/home.dart';
 import 'package:myApp/services/navigation_service.dart';
 import 'package:myApp/viewmodels/base_model.dart';
-import 'package:myApp/services/dialog_service.dart';
 import 'package:myApp/services/firestore_service.dart';
 import 'package:flutter/material.dart';
 
 class CreateGigViewModel extends BaseModel {
   final FirestoreService _firestoreService = locator<FirestoreService>();
-  final DialogService _dialogService = locator<DialogService>();
   final NavigationService _navigationService = locator<NavigationService>();
 
   Gig _edittingGig;
@@ -62,18 +58,6 @@ class CreateGigViewModel extends BaseModel {
       ));
     }
     setBusy(false);
-
-    // if (result is String) {
-    //   await _dialogService.showDialog(
-    //       title: 'Could not create post', description: result);
-    // } else {
-    //   await _dialogService.showDialog(
-    //     title: 'gig successfully added',
-    //     description: 'Your Gig has been created',
-    //   );
-    // }
-
-    // _navigationService.pop();
 
     if (result is String) {
       _navigationService.previewAllGigs();

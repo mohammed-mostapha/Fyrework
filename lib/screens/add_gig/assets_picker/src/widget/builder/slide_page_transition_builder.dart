@@ -3,7 +3,6 @@ import 'package:myApp/screens/add_gig/addGigDetails.dart';
 import 'package:myApp/screens/add_gig/assets_picker/pages/multi_assets_picker.dart';
 import 'package:myApp/screens/add_gig/camera/src/widget/camera_picker.dart';
 import 'package:myApp/screens/home/home.dart';
-import 'package:myApp/screens/wrapper.dart';
 import 'package:myApp/ui/shared/theme.dart';
 
 /// Built a slide page transition for the picker.

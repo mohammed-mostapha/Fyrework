@@ -1,21 +1,11 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:myApp/screens/authenticate/register.dart';
-import 'package:myApp/screens/authenticate/sign_in.dart';
-import 'package:myApp/services/authh.dart';
-import 'package:myApp/ui/shared/constants.dart';
-import 'package:myApp/ui/shared/loading.dart';
-import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/widgets/custom_dialog.dart';
-
-import '../../route_generator.dart';
 
 class StartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      onGenerateRoute: RouteGenerator.generateRoute,
       home: SafeArea(
         child: Scaffold(
           body: SingleChildScrollView(

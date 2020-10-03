@@ -6,8 +6,8 @@
 
 import 'dart:io';
 
-import 'package:myApp/new_services/auth_service.dart';
-import 'package:myApp/new_services/storage_repo.dart';
+import 'package:myApp/services/auth_service.dart';
+import 'package:myApp/services/storage_repo.dart';
 
 import '../locator.dart';
 

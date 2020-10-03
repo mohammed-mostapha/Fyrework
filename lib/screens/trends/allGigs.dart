@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myApp/screens/home/home.dart';
-import 'package:myApp/screens/wrapper.dart';
 import 'package:myApp/ui/shared/theme.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
-import '../../models/Gig_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import '../../ui/shared/theme.dart';
-
-import '../add_gig/addGigDetails.dart';
 
 class AllGigs extends StatefulWidget {
   @override

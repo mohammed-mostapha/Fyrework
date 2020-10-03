@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'place_service.dart';
 
-import '../screens/authenticate/register.dart';
-
 class AddressSearch extends SearchDelegate<Suggestion> {
   AddressSearch(this.sessionToken) {
     apiClient = PlaceApiProvider(sessionToken);
@@ -60,8 +58,8 @@ class AddressSearch extends SearchDelegate<Suggestion> {
                         Text((snapshot.data[index] as Suggestion).description),
                     onTap: () {
                       close(context, snapshot.data[index] as Suggestion);
-                      locationController.text =
-                          '${snapshot.data[index].description}';
+                      // locationController.text =
+                      //     '${snapshot.data[index].description}';
                     },
                   ),
                   itemCount: snapshot.data.length,

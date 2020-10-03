@@ -1,19 +1,13 @@
-import 'dart:io';
-import 'package:myApp/ui/views/create_gig_view.dart';
-import 'package:myApp/ui/widgets/provider_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:myApp/new_services/auth_service.dart';
+import 'package:myApp/services/auth_service.dart';
 import 'package:myApp/screens/add_gig/addGigDetails.dart';
-import 'package:myApp/screens/add_gig/addGigDetails.dart';
+
 import 'package:myApp/screens/home/setting_form.dart';
 import 'package:myApp/screens/myJobs.dart';
 import 'package:myApp/screens/profile.dart';
 import 'package:myApp/screens/trends/trends.dart';
-// import 'package:myApp/services/auth.dart';
-import 'package:myApp/services/database.dart';
+
 import 'package:myApp/ui/shared/theme.dart';
-import 'package:myApp/models/brew.dart';
-import 'package:myApp/vew_controllers/user_controller.dart';
 
 class Home extends StatefulWidget {
   final int passedSelectedIndex;

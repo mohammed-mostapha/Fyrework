@@ -1,16 +1,11 @@
 import 'dart:io';
 import 'package:myApp/locator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:myApp/models/user.dart';
-import 'package:myApp/new_services/auth_service.dart';
-import 'package:myApp/new_services/storage_repo.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:myApp/services/auth_service.dart';
+import 'package:myApp/services/storage_repo.dart';
 
 class UserController {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-
   User _currentUser;
   dynamic _userAvatarUrl;
   AuthService _authService = locator.get<AuthService>();

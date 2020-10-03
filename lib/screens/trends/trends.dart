@@ -1,11 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:myApp/ui/widgets/provider_widget.dart';
 import 'package:myApp/screens/trends/BuyerGigs.dart';
 import 'package:myApp/screens/trends/AllAccounts.dart';
-import 'package:myApp/screens/trends/allGigs.dart';
 import 'package:myApp/screens/trends/providerGigs.dart';
-import 'package:myApp/new_services/auth_service.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/views/AllGigs_view.dart';
 

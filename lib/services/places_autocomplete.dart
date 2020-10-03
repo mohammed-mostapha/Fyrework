@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-
-// import '../screens/authenticate/register.dart';
 import '../ui/views/sign_up_view.dart';
 import 'address_search.dart';
 import 'place_service.dart';

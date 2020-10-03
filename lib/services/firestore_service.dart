@@ -54,25 +54,6 @@ class FirestoreService {
     }
   }
 
-  // Future getGigsOnceOff() async {
-  //   try {
-  //     var gigDocumentSnapshot = await _gigCollectionReference.getDocuments();
-  //     if (gigDocumentSnapshot.documents.isNotEmpty) {
-  //       return gigDocumentSnapshot.documents
-  //           .map((snapshot) => Gig.fromMap(snapshot.data, snapshot.documentID))
-  //           .where((mappedItem) => mappedItem.gigHashtags != null)
-  //           .toList();
-  //     }
-  //   } catch (e) {
-  //     // TODO: Find or create a way to repeat error handling without so much repeated code
-  //     if (e is PlatformException) {
-  //       return e.message;
-  //     }
-
-  //     return e.toString();
-  //   }
-  // }
-
   Stream listenToGigsRealTime() {
     // Register the handler for when the gigs data changes
     _gigCollectionReference.snapshots().listen((gigsSnapshot) {
