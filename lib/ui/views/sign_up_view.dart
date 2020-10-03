@@ -30,6 +30,7 @@ class SignUpView extends StatefulWidget {
 }
 
 String location = '';
+dynamic userAvatarUrl;
 
 TextEditingController locationController = TextEditingController();
 
@@ -100,6 +101,8 @@ class _SignUpViewState extends State<SignUpView> {
             await locator
                 .get<UserController>()
                 .uploadProfilePicture(profilePictureToUpload);
+
+            // await locator.get<UserController>().getProfilePictureDownloadUrl();
 
             Navigator.of(context).pushReplacementNamed('/home');
             break;

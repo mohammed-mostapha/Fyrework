@@ -11,7 +11,7 @@ import 'package:myApp/new_services/auth_service.dart';
 import 'package:myApp/new_services/storage_repo.dart';
 
 class GigItem extends StatefulWidget {
-  String userProfilePictureUrl;
+  final userProfilePictureUrl;
   final userFullName;
   final gigHashtags;
   final gigPost;
@@ -132,14 +132,15 @@ class _GigItemState extends State<GigItem> {
                 // ),
 
                 //
-                // CircleAvatar(
-                //   backgroundImage: NetworkImage(widget.userProfilePictureUrl),
-                // ),
+                CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      "${widget.userProfilePictureUrl.userProfilePictureUrl}"),
+                ),
                 Container(
                   width: 10,
                   height: 0,
                 ),
-                AutoSizeText("userFullName: ${widget.userFullName}"),
+                AutoSizeText("${widget.userFullName.userFullName}"),
               ],
             ),
             Container(

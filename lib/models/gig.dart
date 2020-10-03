@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 
 class Gig {
   final String userId;
+  final String userProfilePictureUrl;
   final String userFullName;
   final String gigHashtags;
   final String gigPost;
@@ -16,6 +17,7 @@ class Gig {
   final String documentId;
   Gig({
     this.userId,
+    this.userProfilePictureUrl,
     this.userFullName,
     this.gigHashtags,
     this.gigPost,
@@ -33,6 +35,7 @@ class Gig {
   Map<String, dynamic> toMap() {
     return {
       'userId': userId,
+      'userProfilePictureUrl': userProfilePictureUrl,
       'userFullName': userFullName,
       'gigHashtags': gigHashtags,
       'gigPost': gigPost,
@@ -42,7 +45,6 @@ class Gig {
       'gigValue': gigValue,
       'adultContentText': adultContentText,
       'adultcontentBool': adultContentBool,
-      'imageUrl': imageUrl,
     };
   }
 
@@ -51,6 +53,7 @@ class Gig {
 
     return Gig(
       userId: map['userId'],
+      userProfilePictureUrl: map['userProfilePictureUrl'],
       userFullName: map['userFullName'],
       gigHashtags: map['gigHashtags'],
       gigPost: map['gigPost'],
@@ -60,7 +63,6 @@ class Gig {
       gigValue: map['gigValue'],
       adultContentText: map['adultContentText'],
       adultContentBool: map['adultContentBool'],
-      imageUrl: map['imageUrl'],
       documentId: documentId,
     );
   }

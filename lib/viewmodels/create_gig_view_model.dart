@@ -19,7 +19,7 @@ class CreateGigViewModel extends BaseModel {
 
   Future addGig({
     @required String userId,
-    // @required String userProfilePictureUrl,
+    @required String userProfilePictureUrl,
     @required String userFullName,
     @required String gigHashtags,
     @required String gigPost,
@@ -36,6 +36,9 @@ class CreateGigViewModel extends BaseModel {
 
     if (!_editting) {
       result = await _firestoreService.addGig(Gig(
+        userId: userId,
+        userProfilePictureUrl: userProfilePictureUrl,
+        userFullName: userFullName,
         gigHashtags: gigHashtags,
         gigPost: gigPost,
         gigDeadline: gigDeadLine,
@@ -46,6 +49,9 @@ class CreateGigViewModel extends BaseModel {
       ));
     } else {
       result = await _firestoreService.updateGig(Gig(
+        userId: userId,
+        userProfilePictureUrl: userProfilePictureUrl,
+        userFullName: userFullName,
         gigHashtags: gigHashtags,
         gigPost: gigPost,
         gigDeadline: gigDeadLine,

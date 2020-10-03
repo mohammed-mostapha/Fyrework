@@ -34,8 +34,10 @@ class AllGigsView extends StatelessWidget {
                                 itemCount: model.gigs.length,
                                 itemBuilder: (context, index) =>
                                     GestureDetector(
-                                  onTap: () => model.editGig(index),
+                                  // onTap: () => model.editGig(index),
                                   child: GigItem(
+                                    userProfilePictureUrl: model.gigs[index],
+                                    userFullName: model.gigs[index],
                                     gigHashtags: model.gigs[index],
                                     gigPost: model.gigs[index],
                                     gigDeadline: model.gigs[index],

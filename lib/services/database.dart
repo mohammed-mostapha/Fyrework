@@ -20,21 +20,6 @@ class DatabaseService {
     });
   }
 
-  // List<Brew> _brewListFromSnapshot(QuerySnapshot snapshot) {
-  //   return snapshot.documents.map((doc) {
-  //     return Brew(
-  //       name: doc.data['name'] ?? '',
-  //       strength: doc.data['strength'] ?? 0,
-  //       sugars: doc.data['sugars'] ?? '0',
-  //     );
-  //   }).toList();
-  // }
-
-  // get brews stream
-  // Stream<List<Brew>> get brews {
-  //   return usersCollection.snapshots().map(_brewListFromSnapshot);
-  // }
-
   // user Data from snapshots
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(

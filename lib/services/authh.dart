@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:myApp/models/user.dart';
 import 'package:myApp/services/database.dart';
+import 'package:myApp/ui/views/sign_up_view.dart';
 
 import '../screens/authenticate/register.dart';
 
