@@ -50,6 +50,7 @@ dependencies:
   find_dropdown:
   international_phone_input:
   intl_phone_number_input:
+  
 
   
   #for the assets picker 
@@ -77,6 +78,7 @@ dev_dependencies:
 
   flutter_test:
     sdk: flutter
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

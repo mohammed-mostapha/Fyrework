@@ -60,8 +60,8 @@ class _AddGigDetailsState extends State<AddGigDetails> {
   String gigCurrency;
   dynamic gigBudget;
   String gigValue;
-  String adultContentText = Gig().adultContentText;
-  bool adultContentBool = Gig().adultContentBool;
+  String adultContentText;
+  bool adultContentBool = false;
 
   DateTime _currentDate = new DateTime.now().add(Duration(days: 30));
   TextEditingController _deadLineController = new TextEditingController();
@@ -479,6 +479,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                                 setState(() {
                                                   gigValue = T;
                                                   Gig().gigValue = gigValue;
+                                                  print("gigValue: $gigValue");
                                                 });
                                               }),
                                           Text('Gigs I can do'),
@@ -497,6 +498,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                                 setState(() {
                                                   gigValue = T;
                                                   Gig().gigValue = gigValue;
+                                                  print("gigValue: $gigValue");
                                                 });
                                               }),
                                           Text('I need a provider'),
@@ -527,13 +529,21 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                           setState(() {
                                             adultContentBool =
                                                 !adultContentBool;
+                                            if (adultContentBool == true) {
+                                              adultContentText =
+                                                  "Adult content";
+                                            } else {
+                                              adultContentText = '';
+                                            }
                                           });
                                         },
                                         activeColor:
                                             FyreworkrColors.fyreworkBlack,
                                         checkColor: FyreworkrColors.white,
                                       ),
-                                      Flexible(child: Text(adultContentText)),
+                                      Flexible(
+                                          child: Text(
+                                              "This is adult content that should not be visible to minors.")),
                                     ],
                                   ),
                                 ),
@@ -572,6 +582,8 @@ class _AddGigDetailsState extends State<AddGigDetails> {
         gigCurrency: gigCurrency,
         gigBudget: gigBudget,
         gigValue: gigValue,
+        adultContentText: adultContentText,
+        adultContentBool: adultContentBool,
       );
       print('$gigHashtags');
       print('$gigPost');
@@ -579,6 +591,8 @@ class _AddGigDetailsState extends State<AddGigDetails> {
       print('$gigCurrency');
       print('$gigBudget');
       print('$gigValue');
+      print('$adultContentText');
+      print('$adultContentBool');
 
       // var proceedToMultiAssetPicker = new MaterialPageRoute(
       //   builder: (BuildContext context) => MultiAssetsPicker(

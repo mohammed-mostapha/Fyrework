@@ -41,6 +41,8 @@ class CreateGigViewModel extends BaseModel {
         gigCurrency: gigCurrency,
         gigBudget: gigBudget,
         gigValue: gigValue,
+        adultContentText: adultContentText,
+        adultContentBool: adultContentBool,
         // documentId: _edittingGig.documentId,
       ));
     } else {
@@ -54,6 +56,8 @@ class CreateGigViewModel extends BaseModel {
         gigCurrency: gigCurrency,
         gigBudget: gigBudget,
         gigValue: gigValue,
+        adultContentText: adultContentText,
+        adultContentBool: adultContentBool,
         // documentId: _edittingGig.documentId,
       ));
     }

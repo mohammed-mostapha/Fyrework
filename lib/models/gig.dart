@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 class Gig {
+  final String documentId;
   final String userId;
   final String userProfilePictureUrl;
   final String userFullName;
@@ -13,9 +14,8 @@ class Gig {
   String gigValue;
   final String adultContentText;
   final bool adultContentBool;
-  final String imageUrl;
-  final String documentId;
   Gig({
+    this.documentId,
     this.userId,
     this.userProfilePictureUrl,
     this.userFullName,
@@ -25,11 +25,8 @@ class Gig {
     this.gigCurrency,
     this.gigBudget,
     this.gigValue,
-    this.adultContentText =
-        'This is adult content that should not be visible to minors.',
-    this.adultContentBool = false,
-    this.documentId,
-    this.imageUrl,
+    this.adultContentText,
+    this.adultContentBool,
   });
 
   Map<String, dynamic> toMap() {
@@ -44,7 +41,7 @@ class Gig {
       'gigBudget': gigBudget,
       'gigValue': gigValue,
       'adultContentText': adultContentText,
-      'adultcontentBool': adultContentBool,
+      'adultContentBool': adultContentBool,
     };
   }
 

@@ -99,10 +99,46 @@ class _ProfileViewState extends State<ProfileView> {
         future: getProfilePictureDownloadUrl(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return Container(
-              width: 100,
-              height: 100,
-              child: Image.network(userProfilePictureUrl),
+            // return Container(
+            //   width: 100,
+            //   height: 100,
+            //   child: Image.network(userProfilePictureUrl),
+            // );
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(userProfilePictureUrl),
+                    radius: 50,
+                  ),
+                  Column(
+                    children: <Widget>[
+                      AutoSizeText(
+                        "Ongoing gigs",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      AutoSizeText(
+                        "5",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: <Widget>[
+                      AutoSizeText(
+                        "Completed gigs",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      AutoSizeText(
+                        "5",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             );
           } else {
             return Container(
