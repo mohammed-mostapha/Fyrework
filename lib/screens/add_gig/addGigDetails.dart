@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myApp/screens/add_gig/assets_picker/pages/multi_assets_picker.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/widgets/provider_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -209,7 +210,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                 ),
                               ),
                               onPressed: () async {
-                                await saveFormValues();
+                                await saveFormValuesAndPickMediaFiles();
                               },
                             ),
                           ),
@@ -565,47 +566,78 @@ class _AddGigDetailsState extends State<AddGigDetails> {
     );
   }
 
-  Future saveFormValues() async {
+  // Future saveFormValues() async {
+  //   userProfilePictureUrl =
+  //       await locator.get<UserController>().getProfilePictureDownloadUrl();
+  //   if (gigValue == null) {
+  //     Scaffold.of(context).showSnackBar(_gigValueSnackBar);
+  //   } else if (gigValue != null && _formKey.currentState.validate()) {
+  //     _formKey.currentState.save();
+  //     CreateGigViewModel().addGig(
+  //       userId: userId,
+  //       userProfilePictureUrl: userProfilePictureUrl,
+  //       userFullName: userFullName,
+  //       gigHashtags: gigHashtags,
+  //       gigPost: gigPost,
+  //       gigDeadLine: gigDeadline,
+  //       gigCurrency: gigCurrency,
+  //       gigBudget: gigBudget,
+  //       gigValue: gigValue,
+  //       adultContentText: adultContentText,
+  //       adultContentBool: adultContentBool,
+  //     );
+  //     print('$gigHashtags');
+  //     print('$gigPost');
+  //     print('$gigDeadline');
+  //     print('$gigCurrency');
+  //     print('$gigBudget');
+  //     print('$gigValue');
+  //     print('$adultContentText');
+  //     print('$adultContentBool');
+
+  //     // var proceedToMultiAssetPicker = new MaterialPageRoute(
+  //     //   builder: (BuildContext context) => MultiAssetsPicker(
+  //     //   userId: userId,
+  //     // userProfilePictureUrl: userProfilePictureUrl,
+  //     // userFullName: userFullName,
+  //     //     receivedGigHashtags: gigHashtags,
+  //     //     receivedGigPost: gigPost,
+  //     //     receivedGigDeadLine: gigDeadline,
+  //     //     receivedGigCurrency: gigCurrency,
+  //     //     receivedGigBudget: gigBudget,
+  //     //     adultContentText: adultContentText,
+  //     //     receivedAdultContentBool: adultContentBool,
+  //     //     receivedGigValue: gigValue,
+  //     //   ),
+  //     // );
+  //     // Navigator.of(context).push(proceedToMultiAssetPicker);
+  //   }
+  // }
+
+  Future saveFormValuesAndPickMediaFiles() async {
     userProfilePictureUrl =
         await locator.get<UserController>().getProfilePictureDownloadUrl();
     if (gigValue == null) {
       Scaffold.of(context).showSnackBar(_gigValueSnackBar);
     } else if (gigValue != null && _formKey.currentState.validate()) {
       _formKey.currentState.save();
-      CreateGigViewModel().addGig(
-        userId: userId,
-        userProfilePictureUrl: userProfilePictureUrl,
-        userFullName: userFullName,
-        gigHashtags: gigHashtags,
-        gigPost: gigPost,
-        gigDeadLine: gigDeadline,
-        gigCurrency: gigCurrency,
-        gigBudget: gigBudget,
-        gigValue: gigValue,
-        adultContentText: adultContentText,
-        adultContentBool: adultContentBool,
-      );
-      print('$gigHashtags');
-      print('$gigPost');
-      print('$gigDeadline');
-      print('$gigCurrency');
-      print('$gigBudget');
-      print('$gigValue');
-      print('$adultContentText');
-      print('$adultContentBool');
 
-      // var proceedToMultiAssetPicker = new MaterialPageRoute(
-      //   builder: (BuildContext context) => MultiAssetsPicker(
-      //     receivedGigHashtags: gigHashtags,
-      //     receivedGigPost: gigPost,
-      //     receivedGigDeadLine: gigDeadline,
-      //     receivedGigCurrency: gigCurrency,
-      //     receivedGigBudget: gigBudget,
-      //     receivedAdultContentBool: adultContentBool,
-      //     receivedGigValue: gigValue,
-      //   ),
-      // );
-      // Navigator.of(context).push(proceedToMultiAssetPicker);
+      var proceedToMultiAssetPicker = new MaterialPageRoute(
+        builder: (BuildContext context) => MultiAssetsPicker(
+          receivedUserId: userId,
+          receivedUserProfilePictureUrl: userProfilePictureUrl,
+          receivedUserFullName: userFullName,
+          receivedGigHashtags: gigHashtags,
+          receivedGigPost: gigPost,
+          receivedGigDeadLine: gigDeadline,
+          receivedGigCurrency: gigCurrency,
+          receivedGigBudget: gigBudget,
+          receivedAdultContentText: adultContentText,
+          receivedAdultContentBool: adultContentBool,
+          receivedGigValue: gigValue,
+        ),
+      );
+      Navigator.of(context).push(proceedToMultiAssetPicker);
     }
   }
 }
