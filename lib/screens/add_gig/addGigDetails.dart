@@ -96,17 +96,17 @@ class _AddGigDetailsState extends State<AddGigDetails> {
       },
     );
 
-    if (_deadLine != null) {
-      setState(() {
-        _currentDate = _deadLine;
-        GigModel().gigDeadLine = _currentDate;
-      });
-    } else {
-      setState(() {
-        _currentDate = DateTime.now();
-        GigModel().gigDeadLine = _currentDate;
-      });
-    }
+    // if (_deadLine != null) {
+    //   setState(() {
+    //     _currentDate = _deadLine;
+    //     GigModel().gigDeadLine = _currentDate;
+    //   });
+    // } else {
+    //   setState(() {
+    //     _currentDate = DateTime.now();
+    //     GigModel().gigDeadLine = _currentDate;
+    //   });
+    // }
   }
 
   // TextFormField hashtagsTextFormField() {

@@ -7,6 +7,7 @@ import 'package:myApp/models/cloud_storage_result.dart';
 import 'package:myApp/screens/home/home.dart';
 import 'package:myApp/services/storage_repo.dart';
 import 'package:myApp/ui/shared/theme.dart';
+import 'package:myApp/viewmodels/create_gig_view_model.dart';
 import 'package:path/path.dart' as fileName;
 import '../src/wechat_assets_picker.dart';
 import '../constants/picker_model.dart';
@@ -18,6 +19,7 @@ class MultiAssetsPicker extends StatefulWidget {
   final String receivedUserProfilePictureUrl;
   final String receivedUserFullName;
   final String receivedGigHashtags;
+  final List<String> gigMeidaFilesDownloadUrls = List<String>();
   final String receivedGigPost;
   final dynamic receivedGigDeadLine;
   final String receivedGigCurrency;
@@ -365,19 +367,44 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
         ),
       );
 
-  prepareGigMediaFiles() {
+  prepareGigMediaFilesAndPublish() {
     Future<List<File>> assignAssetsToGigMediaFiles = assigingLists();
     assignAssetsToGigMediaFiles.then((value) {
-      CloudStorageResult storageResult;
+      String storageResult;
       if (gigMediaFiles != null) {
         () async {
           for (var i = 0; i < gigMediaFiles.length; i++) {
             storageResult = await StorageRepo().uploadMediaFile(
-                mediaFileToUpload: gigMediaFiles[i],
-                title: fileName.basename(gigMediaFiles[i].path));
+              mediaFileToUpload: gigMediaFiles[i],
+              title: fileName.basename(gigMediaFiles[i].path),
+            );
+
+            //adding each downloadUrl to downloadUrls list
+            widget.gigMeidaFilesDownloadUrls.add(storageResult);
+            print(
+                "no. of urls now is: : ${widget.gigMeidaFilesDownloadUrls.length}");
           }
-          clearGigMediaFiles();
+
           print(gigMediaFiles.length);
+          print(
+              "The URLS from the widget variable are: ${widget.gigMeidaFilesDownloadUrls}");
+
+          CreateGigViewModel().addGig(
+            userId: widget.receivedUserId,
+            userProfilePictureUrl: widget.receivedUserProfilePictureUrl,
+            userFullName: widget.receivedUserFullName,
+            gigHashtags: widget.receivedGigHashtags,
+            gigMediaFilesDownloadUrls: widget.gigMeidaFilesDownloadUrls,
+            gigPost: widget.receivedGigPost,
+            gigDeadLine: widget.receivedGigDeadLine,
+            gigCurrency: widget.receivedGigCurrency,
+            gigBudget: widget.receivedGigBudget,
+            gigValue: widget.receivedGigValue,
+            adultContentText: widget.receivedAdultContentText,
+            adultContentBool: widget.receivedAdultContentBool,
+          );
+          print('new gig should be added');
+          clearGigMediaFiles();
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
@@ -567,7 +594,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                           style: TextStyle(color: FyreworkrColors.white),
                         ),
                         onPressed: () {
-                          prepareGigMediaFiles();
+                          prepareGigMediaFilesAndPublish();
                         }),
                   ],
                 ),

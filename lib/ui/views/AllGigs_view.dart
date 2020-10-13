@@ -2,6 +2,7 @@ import 'package:myApp/ui/widgets/gig_item.dart';
 import 'package:myApp/viewmodels/AllGigs_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider_architecture/provider_architecture.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class AllGigsView extends StatelessWidget {
   const AllGigsView({Key key}) : super(key: key);
@@ -32,6 +33,8 @@ class AllGigsView extends StatelessWidget {
                                     userProfilePictureUrl: model.gigs[index],
                                     userFullName: model.gigs[index],
                                     gigHashtags: model.gigs[index],
+                                    gigMediaFilesDownloadUrls:
+                                        model.gigs[index],
                                     gigPost: model.gigs[index],
                                     gigDeadline: model.gigs[index],
                                     gigCurrency: model.gigs[index],
@@ -44,11 +47,11 @@ class AllGigsView extends StatelessWidget {
                                 ),
                               )
                             : Center(
-                                child: CircularProgressIndicator(
-                                  valueColor:
-                                      AlwaysStoppedAnimation(Colors.black),
-                                ),
-                              ))
+                                child: AutoSizeText(
+                                "Nothing to show right now...you can add your own gig",
+                                style: TextStyle(fontSize: 18),
+                                textAlign: TextAlign.center,
+                              )))
                   ],
                 ),
               ),

@@ -7,6 +7,7 @@ class Gig {
   final String userProfilePictureUrl;
   final String userFullName;
   final String gigHashtags;
+  final dynamic gigMediaFilesDownloadUrls;
   final String gigPost;
   final dynamic gigDeadline;
   final String gigCurrency;
@@ -20,6 +21,7 @@ class Gig {
     this.userProfilePictureUrl,
     this.userFullName,
     this.gigHashtags,
+    this.gigMediaFilesDownloadUrls,
     this.gigPost,
     this.gigDeadline,
     this.gigCurrency,
@@ -35,6 +37,7 @@ class Gig {
       'userProfilePictureUrl': userProfilePictureUrl,
       'userFullName': userFullName,
       'gigHashtags': gigHashtags,
+      'gigMediaFilesDownloadUrls': gigMediaFilesDownloadUrls,
       'gigPost': gigPost,
       'gigDeadline': gigDeadline,
       'gigCurrency': gigCurrency,
@@ -53,6 +56,7 @@ class Gig {
       userProfilePictureUrl: map['userProfilePictureUrl'],
       userFullName: map['userFullName'],
       gigHashtags: map['gigHashtags'],
+      gigMediaFilesDownloadUrls: map['gigMediaFilesDownloadUrls'],
       gigPost: map['gigPost'],
       gigDeadline: map['gigDeadline'],
       gigCurrency: map['gigCurrency'],

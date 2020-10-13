@@ -60,7 +60,6 @@ class FirestoreService {
       if (gigsSnapshot.documents.isNotEmpty) {
         var gigs = gigsSnapshot.documents
             .map((snapshot) => Gig.fromMap(snapshot.data, snapshot.documentID))
-            // .where((mappedItem) => mappedItem.gigHashtags != null)
             .where((mappedItem) => mappedItem.gigHashtags != null)
             .toList();
 

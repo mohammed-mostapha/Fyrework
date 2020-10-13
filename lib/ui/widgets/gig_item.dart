@@ -6,11 +6,13 @@ import 'package:myApp/services/auth_service.dart';
 import 'package:myApp/services/storage_repo.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myApp/ui/shared/theme.dart';
+import 'package:flutter_common_exports/src/extensions/build_context_extension.dart';
 
 class GigItem extends StatefulWidget {
   final userProfilePictureUrl;
   final userFullName;
   final gigHashtags;
+  final gigMediaFilesDownloadUrls;
   final gigPost;
   final gigDeadline;
   final gigCurrency;
@@ -24,6 +26,7 @@ class GigItem extends StatefulWidget {
     this.userProfilePictureUrl,
     this.userFullName,
     this.gigHashtags,
+    this.gigMediaFilesDownloadUrls,
     this.gigPost,
     this.gigDeadline,
     this.gigCurrency,
@@ -41,6 +44,15 @@ class GigItem extends StatefulWidget {
 class _GigItemState extends State<GigItem> {
   AuthService _authService = locator.get<AuthService>();
   StorageRepo _storageRepo = locator.get<StorageRepo>();
+
+  bool isDisplayingDetail = true;
+  ThemeData get currentTheme => context.themeData;
+
+  List<String> gigMediaFilesDownloadedUrls = List<String>();
+
+//slider to preview gigMediaFiles
+
+//end slider to preview gigMediaFiles
 
   @override
   Widget build(BuildContext context) {
@@ -100,9 +112,36 @@ class _GigItemState extends State<GigItem> {
               ),
             ),
             SizedBox(height: 10),
+            // Container(
+            //   child: Image.asset('assets/images/fyrework_logo.png'),
+            // ),
+            //slider to preview gigMediaFiles
             Container(
-              child: Image.asset('assets/images/fyrework_logo.png'),
+              height: 200,
+              // child: Text(
+              //   widget.gigMediaFilesDownloadUrls.gigMediaFilesDownloadUrls
+              //       .toString(),
+              // ),
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                // Let the ListView know how many items it needs to build.
+                itemCount: widget
+                    .gigMediaFilesDownloadUrls.gigMediaFilesDownloadUrls.length,
+                // Provide a builder function. This is where the magic happens.
+                // Convert each item into a widget based on the type of item it is.
+                itemBuilder: (context, index) {
+                  final item = widget.gigMediaFilesDownloadUrls
+                      .gigMediaFilesDownloadUrls[index];
+
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.network(item),
+                  );
+                },
+              ),
             ),
+
+            //end slider to preview gigMediafiles
             SizedBox(height: 10),
             Container(
               alignment: Alignment.centerLeft,

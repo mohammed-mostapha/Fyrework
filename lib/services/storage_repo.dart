@@ -38,7 +38,7 @@ class StorageRepo {
 
   //uploading gig media files
 
-  Future<CloudStorageResult> uploadMediaFile({
+  Future<String> uploadMediaFile({
     @required File mediaFileToUpload,
     @required String title,
   }) async {
@@ -58,12 +58,11 @@ class StorageRepo {
     var downloadUrl = await storageSnapshot.ref.getDownloadURL();
 
     if (uploadTask.isComplete) {
-      var url = downloadUrl.toString();
-      print("DownloadUrls: ${url}");
-      return CloudStorageResult(
-        imageUrl: url,
-        imageFileName: imageFileName,
-      );
+      return downloadUrl;
+      // return CloudStorageResult(
+      //   imageUrl: url,
+      //   imageFileName: imageFileName,
+      // );
     }
 
     return null;
