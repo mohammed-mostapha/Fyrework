@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:myApp/models/gig.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,8 @@ import 'package:myApp/services/storage_repo.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:flutter_common_exports/src/extensions/build_context_extension.dart';
+import 'package:myApp/ui/widgets/chewie_player.dart';
+import 'package:video_player/video_player.dart';
 
 class GigItem extends StatefulWidget {
   final userProfilePictureUrl;
@@ -49,10 +53,6 @@ class _GigItemState extends State<GigItem> {
   ThemeData get currentTheme => context.themeData;
 
   List<String> gigMediaFilesDownloadedUrls = List<String>();
-
-//slider to preview gigMediaFiles
-
-//end slider to preview gigMediaFiles
 
   @override
   Widget build(BuildContext context) {
@@ -130,13 +130,28 @@ class _GigItemState extends State<GigItem> {
                 // Provide a builder function. This is where the magic happens.
                 // Convert each item into a widget based on the type of item it is.
                 itemBuilder: (context, index) {
-                  final item = widget.gigMediaFilesDownloadUrls
+                  final itemUrl = widget.gigMediaFilesDownloadUrls
                       .gigMediaFilesDownloadUrls[index];
-
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.network(item),
-                  );
+                  if (itemUrl.contains("imageFile")) {
+                    return Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.network(itemUrl),
+                      ),
+                    );
+                  } else if (itemUrl.contains("videoFile")) {
+                    return Container(
+                      child: Expanded(
+                        child: ChewiePlayer(
+                          videoPlayerController:
+                              VideoPlayerController.network(itemUrl),
+                          looping: false,
+                        ),
+                      ),
+                    );
+                  } else {
+                    //
+                  }
                 },
               ),
             ),

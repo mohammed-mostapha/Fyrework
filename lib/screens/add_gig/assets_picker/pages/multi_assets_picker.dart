@@ -14,6 +14,8 @@ import '../constants/picker_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+enum UrlType { IMAGE, VIDEO, UNKNOWN }
+
 class MultiAssetsPicker extends StatefulWidget {
   final String receivedUserId;
   final String receivedUserProfilePictureUrl;
@@ -374,10 +376,22 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
       if (gigMediaFiles != null) {
         () async {
           for (var i = 0; i < gigMediaFiles.length; i++) {
-            storageResult = await StorageRepo().uploadMediaFile(
-              mediaFileToUpload: gigMediaFiles[i],
-              title: fileName.basename(gigMediaFiles[i].path),
-            );
+            final parsedItemUrl = getUrlType(gigMediaFiles[i].path);
+            if (parsedItemUrl == UrlType.IMAGE) {
+              //uploading as an image file
+              storageResult = await StorageRepo().uploadMediaFile(
+                mediaFileToUpload: gigMediaFiles[i],
+                title: fileName.basename(gigMediaFiles[i].path + "imageFile"),
+              );
+            } else if (parsedItemUrl == UrlType.VIDEO) {
+              //uplloading as a video file
+              storageResult = await StorageRepo().uploadMediaFile(
+                mediaFileToUpload: gigMediaFiles[i],
+                title: fileName.basename(gigMediaFiles[i].path + "videoFile"),
+              );
+            } else {
+              // uploading and didn't specify an extension
+            }
 
             //adding each downloadUrl to downloadUrls list
             widget.gigMeidaFilesDownloadUrls.add(storageResult);
@@ -557,6 +571,19 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
         ),
       ),
     );
+  }
+
+  // detecting the urlType from firebase links
+  UrlType getUrlType(String url) {
+    Uri uri = Uri.parse(url);
+    String typeString = uri.path.substring(uri.path.length - 3).toLowerCase();
+    if (typeString == "jpg" || typeString == "PNG" || typeString == "gif") {
+      return UrlType.IMAGE;
+    } else if (typeString == "mp4" || typeString == "avi") {
+      return UrlType.VIDEO;
+    } else {
+      return UrlType.UNKNOWN;
+    }
   }
 
   @override
