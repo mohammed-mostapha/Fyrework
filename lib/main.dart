@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:myApp/screens/authenticate/app_start.dart';
 import 'package:myApp/screens/home/home.dart';
@@ -42,18 +45,32 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomeController extends StatelessWidget {
+class HomeController extends StatefulWidget {
+  @override
+  _HomeControllerState createState() => _HomeControllerState();
+}
+
+class _HomeControllerState extends State<HomeController> {
   @override
   Widget build(BuildContext context) {
+    print("this is from the build method");
     final AuthService auth = Provider.of(context).auth;
     return StreamBuilder<String>(
         stream: auth.onAuthStateChanged,
         builder: (context, AsyncSnapshot<String> snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
-            final bool signedIn = snapshot.hasData;
+            bool signedIn = snapshot.hasData;
             return signedIn ? Home(passedSelectedIndex: 0) : StartPage();
           }
-          return CircularProgressIndicator();
+
+          return Container(
+            color: Colors.white,
+            child: Center(
+              child: CircularProgressIndicator(
+                valueColor: new AlwaysStoppedAnimation<Color>(Colors.black),
+              ),
+            ),
+          );
         });
   }
 }

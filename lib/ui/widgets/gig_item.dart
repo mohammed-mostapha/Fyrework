@@ -67,10 +67,10 @@ class _GigItemState extends State<GigItem> {
               children: <Widget>[
                 Row(
                   children: [
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          "${widget.userProfilePictureUrl.userProfilePictureUrl}"),
-                    ),
+                    // CircleAvatar(
+                    //   backgroundImage: NetworkImage(
+                    //       "${widget.userProfilePictureUrl.userProfilePictureUrl}"),
+                    // ),
                     Container(
                       width: 10,
                       height: 0,
@@ -112,49 +112,38 @@ class _GigItemState extends State<GigItem> {
               ),
             ),
             SizedBox(height: 10),
-            // Container(
-            //   child: Image.asset('assets/images/fyrework_logo.png'),
-            // ),
             //slider to preview gigMediaFiles
-            Container(
-              height: 200,
-              // child: Text(
-              //   widget.gigMediaFilesDownloadUrls.gigMediaFilesDownloadUrls
-              //       .toString(),
-              // ),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                // Let the ListView know how many items it needs to build.
-                itemCount: widget
-                    .gigMediaFilesDownloadUrls.gigMediaFilesDownloadUrls.length,
-                // Provide a builder function. This is where the magic happens.
-                // Convert each item into a widget based on the type of item it is.
-                itemBuilder: (context, index) {
-                  final itemUrl = widget.gigMediaFilesDownloadUrls
-                      .gigMediaFilesDownloadUrls[index];
-                  if (itemUrl.contains("imageFile")) {
-                    return Container(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.network(itemUrl),
-                      ),
-                    );
-                  } else if (itemUrl.contains("videoFile")) {
-                    return Container(
-                      child: Expanded(
-                        child: ChewiePlayer(
-                          videoPlayerController:
-                              VideoPlayerController.network(itemUrl),
-                          looping: false,
-                        ),
-                      ),
-                    );
-                  } else {
-                    //
-                  }
-                },
-              ),
-            ),
+            // Container(
+            //   height: 200,
+            //   child: ListView.builder(
+            //     scrollDirection: Axis.horizontal,
+            //     itemCount: widget
+            //         .gigMediaFilesDownloadUrls.gigMediaFilesDownloadUrls.length,
+            //     // Convert each item into a widget based on the type of item it is.
+            //     itemBuilder: (context, index) {
+            //       final itemUrl = widget.gigMediaFilesDownloadUrls
+            //           .gigMediaFilesDownloadUrls[index];
+            //       if (itemUrl.contains("imageFile")) {
+            //         return Container(
+            //           child: Padding(
+            //             padding: const EdgeInsets.all(8.0),
+            //             child: Image.network(itemUrl),
+            //           ),
+            //         );
+            //       } else if (itemUrl.contains("videoFile")) {
+            //         return Container(
+            //           child: ChewiePlayer(
+            //             videoPlayerController:
+            //                 VideoPlayerController.network(itemUrl),
+            //             looping: false,
+            //           ),
+            //         );
+            //       } else {
+            //         //
+            //       }
+            //     },
+            //   ),
+            // ),
 
             //end slider to preview gigMediafiles
             SizedBox(height: 10),

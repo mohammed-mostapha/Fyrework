@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:myApp/locator.dart';
 import 'package:myApp/services/auth_service.dart';
-import '../models/cloud_storage_result.dart';
 
 class StorageRepo {
   FirebaseStorage usersProfilePicsStorage =

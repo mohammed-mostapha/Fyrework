@@ -27,8 +27,6 @@ class AllGigsViewModel extends BaseModel {
 
       setBusy(false);
     });
-
-    print('should display gigs');
   }
 
   Future deleteGig(int index) async {
