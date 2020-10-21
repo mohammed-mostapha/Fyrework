@@ -10,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:flutter_common_exports/src/extensions/build_context_extension.dart';
 import 'package:myApp/ui/widgets/chewie_player.dart';
+import 'package:myApp/ui/widgets/gig_item_media_previewer.dart';
 import 'package:video_player/video_player.dart';
 
 class GigItem extends StatefulWidget {
@@ -58,209 +59,192 @@ class _GigItemState extends State<GigItem> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 20),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
               children: <Widget>[
                 Row(
-                  children: [
-                    // CircleAvatar(
-                    //   backgroundImage: NetworkImage(
-                    //       "${widget.userProfilePictureUrl.userProfilePictureUrl}"),
-                    // ),
-                    Container(
-                      width: 10,
-                      height: 0,
-                    ),
-                    AutoSizeText(
-                      "${widget.userFullName.userFullName}",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                RaisedButton(
-                  child: widget.gigValue.gigValue == 'Gigs I can do'
-                      ? AutoSizeText(
-                          "Hire me",
-                          style: TextStyle(
-                            color: FyreworkrColors.white,
-                          ),
-                        )
-                      : AutoSizeText(
-                          "Apply",
-                          style: TextStyle(
-                            color: FyreworkrColors.white,
-                          ),
-                        ),
-                  color: FyreworkrColors.fyreworkBlack,
-                  onPressed: () {},
-                ),
-              ],
-            ),
-            SizedBox(height: 10),
-            Container(
-              alignment: Alignment.centerLeft,
-              child: AutoSizeText(
-                "${widget.gigHashtags.gigHashtags}",
-                style: TextStyle(
-                  fontSize: 18,
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
-            //slider to preview gigMediaFiles
-            // Container(
-            //   height: 200,
-            //   child: ListView.builder(
-            //     scrollDirection: Axis.horizontal,
-            //     itemCount: widget
-            //         .gigMediaFilesDownloadUrls.gigMediaFilesDownloadUrls.length,
-            //     // Convert each item into a widget based on the type of item it is.
-            //     itemBuilder: (context, index) {
-            //       final itemUrl = widget.gigMediaFilesDownloadUrls
-            //           .gigMediaFilesDownloadUrls[index];
-            //       if (itemUrl.contains("imageFile")) {
-            //         return Container(
-            //           child: Padding(
-            //             padding: const EdgeInsets.all(8.0),
-            //             child: Image.network(itemUrl),
-            //           ),
-            //         );
-            //       } else if (itemUrl.contains("videoFile")) {
-            //         return Container(
-            //           child: ChewiePlayer(
-            //             videoPlayerController:
-            //                 VideoPlayerController.network(itemUrl),
-            //             looping: false,
-            //           ),
-            //         );
-            //       } else {
-            //         //
-            //       }
-            //     },
-            //   ),
-            // ),
-
-            //end slider to preview gigMediafiles
-            SizedBox(height: 10),
-            Container(
-              alignment: Alignment.centerLeft,
-              child: AutoSizeText(
-                "${widget.gigPost.gigPost}",
-                style: TextStyle(
-                  fontSize: 18,
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    FaIcon(
-                      FontAwesomeIcons.hourglassStart,
-                      size: 20,
-                    ),
-                    Container(
-                      width: 5.0,
-                      height: 0,
-                    ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: AutoSizeText(
-                        "${widget.gigDeadline.gigDeadline}",
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 5),
-                Row(
-                  children: <Widget>[
-                    Container(
-                      child: AutoSizeText(
-                        "${widget.gigCurrency.gigCurrency}",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Container(
-                      width: 2.5,
-                      height: 0,
-                    ),
-                    Container(
-                      child: AutoSizeText(
-                        "${widget.gigBudget.gigBudget}",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(height: 10.0),
-            // Container(
-            //   alignment: Alignment.centerLeft,
-            //   child: AutoSizeText(
-            //     "${widget.gigValue.gigValue}",
-            //     style: TextStyle(
-            //       fontSize: 18,
-            //     ),
-            //   ),
-            // ),
-            widget.adultContentBool.adultContentBool
-                ? Container(
-                    alignment: Alignment.centerLeft,
-                    child: Column(
+                    Row(
                       children: [
-                        SizedBox(height: 10),
-                        Row(
-                          children: [
-                            FaIcon(
-                              FontAwesomeIcons.solidStar,
-                              size: 20,
-                            ),
-                            Container(
-                              width: 5.0,
-                              height: 0,
-                            ),
-                            Expanded(
-                              child: AutoSizeText(
-                                "${widget.adultContentText.adultContentText}",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ),
-                          ],
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              "${widget.userProfilePictureUrl.userProfilePictureUrl}"),
+                        ),
+                        Container(
+                          width: 10,
+                          height: 0,
+                        ),
+                        AutoSizeText(
+                          "${widget.userFullName.userFullName}",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
-                  )
-                : Container(
-                    width: 0,
-                    height: 0,
+                    RaisedButton(
+                      child: widget.gigValue.gigValue == 'Gigs I can do'
+                          ? AutoSizeText(
+                              "Hire me",
+                              style: TextStyle(
+                                color: FyreworkrColors.white,
+                              ),
+                            )
+                          : AutoSizeText(
+                              "Apply",
+                              style: TextStyle(
+                                color: FyreworkrColors.white,
+                              ),
+                            ),
+                      color: FyreworkrColors.fyreworkBlack,
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: AutoSizeText(
+                    "${widget.gigHashtags.gigHashtags}",
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
                   ),
-            // Container(
-            //   alignment: Alignment.centerLeft,
-            //   child: AutoSizeText(
-            //     "${widget.adultContentBool.adultContentBool}",
-            //     style: TextStyle(
-            //       fontSize: 18,
-            //     ),
-            //   ),
-            // ),
-            SizedBox(height: 5),
-          ],
-        ),
+                ),
+                SizedBox(height: 10),
+              ],
+            ),
+          ),
+
+          GitItemMediaPreviewer(
+            receivedGigMediaFilesUrls:
+                widget.gigMediaFilesDownloadUrls.gigMediaFilesDownloadUrls,
+          ),
+          //end slider to preview gigMediafiles
+          SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: AutoSizeText(
+                    "${widget.gigPost.gigPost}",
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        FaIcon(
+                          FontAwesomeIcons.hourglassStart,
+                          size: 20,
+                        ),
+                        Container(
+                          width: 5.0,
+                          height: 0,
+                        ),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: AutoSizeText(
+                            "${widget.gigDeadline.gigDeadline}",
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 5),
+                    Row(
+                      children: <Widget>[
+                        Container(
+                          child: AutoSizeText(
+                            "${widget.gigCurrency.gigCurrency}",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Container(
+                          width: 2.5,
+                          height: 0,
+                        ),
+                        Container(
+                          child: AutoSizeText(
+                            "${widget.gigBudget.gigBudget}",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10.0),
+                // Container(
+                //   alignment: Alignment.centerLeft,
+                //   child: AutoSizeText(
+                //     "${widget.gigValue.gigValue}",
+                //     style: TextStyle(
+                //       fontSize: 18,
+                //     ),
+                //   ),
+                // ),
+                widget.adultContentBool.adultContentBool
+                    ? Container(
+                        alignment: Alignment.centerLeft,
+                        child: Column(
+                          children: [
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                FaIcon(
+                                  FontAwesomeIcons.solidStar,
+                                  size: 20,
+                                ),
+                                Container(
+                                  width: 5.0,
+                                  height: 0,
+                                ),
+                                Expanded(
+                                  child: AutoSizeText(
+                                    "${widget.adultContentText.adultContentText}",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
+                    : Container(
+                        width: 0,
+                        height: 0,
+                      ),
+                // Container(
+                //   alignment: Alignment.centerLeft,
+                //   child: AutoSizeText(
+                //     "${widget.adultContentBool.adultContentBool}",
+                //     style: TextStyle(
+                //       fontSize: 18,
+                //     ),
+                //   ),
+                // ),
+                SizedBox(height: 5),
+              ],
+            ),
+          ),
+        ],
       ),
       decoration: BoxDecoration(
           color: Colors.white,

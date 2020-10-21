@@ -23,7 +23,7 @@ class _ChewiePlayerState extends State<ChewiePlayer> {
 
     _chewieController = ChewieController(
         videoPlayerController: widget.videoPlayerController,
-        // aspectRatio: 16 / 9,
+        aspectRatio: 16 / 9,
         autoInitialize: true,
         looping: widget.looping,
         errorBuilder: (context, errorMessage) {
@@ -43,11 +43,11 @@ class _ChewiePlayerState extends State<ChewiePlayer> {
     );
   }
 
-  @override
+  // @override
   void dispose() {
-    super.dispose();
     //Important to dispose all of the used resources
-    widget.videoPlayerController.dispose();
+    // widget.videoPlayerController.dispose();
     _chewieController.dispose();
+    super.dispose();
   }
 }
