@@ -26,12 +26,8 @@ class AuthService {
   }
 
   // Email & Password Sign Up
-  Future createUserWithEmailAndPassword(
-    String email,
-    String password,
-    String name,
-    String location,
-  ) async {
+  Future createUserWithEmailAndPassword(String email, String password,
+      String name, String location, bool is_minor) async {
     final authResult = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
 
@@ -39,7 +35,7 @@ class AuthService {
 
     // create a new document for the user with the uid
     await DatabaseService(uid: user.uid)
-        .updateUserData(name, email, password, location);
+        .updateUserData(user.uid, name, email, password, location, is_minor);
     // return _userFromFirebaseUser(user);
 
     // Update the username

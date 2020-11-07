@@ -17,10 +17,10 @@ InputDecoration buildSignUpInputDecoration(String hint) {
     filled: true,
     fillColor: Colors.white,
     enabledBorder: UnderlineInputBorder(
-      borderSide: BorderSide(color: Colors.black26, width: 1.0),
+      borderSide: BorderSide(color: Colors.black26, width: 0.5),
     ),
     focusedBorder: UnderlineInputBorder(
-      borderSide: BorderSide(color: Colors.black, width: 1.0),
+      borderSide: BorderSide(color: Colors.black, width: 0.5),
     ),
   );
 }

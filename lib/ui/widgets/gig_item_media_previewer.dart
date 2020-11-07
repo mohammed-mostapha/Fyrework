@@ -79,7 +79,7 @@ class _GitItemMediaPreviewerState extends State<GitItemMediaPreviewer> {
               );
             }).toList(),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 10),
           receivedGigMediaFilesUrls.length > 1
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,

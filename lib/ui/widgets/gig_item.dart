@@ -124,7 +124,6 @@ class _GigItemState extends State<GigItem> {
                 widget.gigMediaFilesDownloadUrls.gigMediaFilesDownloadUrls,
           ),
           //end slider to preview gigMediafiles
-          SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(

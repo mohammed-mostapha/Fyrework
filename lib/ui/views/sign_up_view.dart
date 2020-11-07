@@ -18,6 +18,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:myApp/vew_controllers/user_controller.dart';
 import '../shared/constants.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jiffy/jiffy.dart';
+import 'package:jiffy/src/enums/units.dart';
+import 'package:intl/intl.dart';
 
 enum AuthFormType { signIn, signUp, reset, anonymous, convert, phone }
 
@@ -44,7 +47,11 @@ class _SignUpViewState extends State<SignUpView> {
 
   final formKey = GlobalKey<FormState>();
   String _email, _password, _name, location, _warning, _phone;
+  bool _is_minor = false;
   final TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController _ageOfUserController = new TextEditingController();
+  DateTime _defaultAge = Jiffy().subtract(years: 19);
+  // DateTime _defaultAge = new DateTime.now();
 
   void switchFormState(String state) {
     formKey.currentState.reset();
@@ -95,8 +102,8 @@ class _SignUpViewState extends State<SignUpView> {
             // uploading a profile pic for the user signing up
             File profilePictureToUpload = File(_profileImage.path);
 
-            await auth.createUserWithEmailAndPassword(
-                _email.trim(), _password.trim(), _name.trim(), location);
+            await auth.createUserWithEmailAndPassword(_email.trim(),
+                _password.trim(), _name.trim(), location, _is_minor);
 
             await locator
                 .get<UserController>()
@@ -180,10 +187,46 @@ class _SignUpViewState extends State<SignUpView> {
     });
   }
 
+  // Specifying the deadline date
+  Future<Null> _pickAge(BuildContext context) async {
+    final DateTime _selectedAgeOfUser = await showDatePicker(
+      context: context,
+      initialDate: _defaultAge,
+      // firstDate: DateTime.now(),
+      firstDate: _defaultAge,
+      lastDate: DateTime(2022),
+      builder: (BuildContext context, Widget child) {
+        return Theme(
+          data: ThemeData.dark().copyWith(
+              // primarySwatch: buttonTextColor,//OK/Cancel button text color
+              primaryColor: FyreworkrColors.fyreworkBlack, //Head background
+              accentColor: Colors.white //selection color
+              //dialogBackgroundColor: Colors.white,//Background color
+              ),
+          child: child,
+        );
+      },
+    );
+    setState(() {
+      _selectedAgeOfUser == null
+          ? _defaultAge = _defaultAge
+          : _defaultAge = _selectedAgeOfUser;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final _width = MediaQuery.of(context).size.width;
     final _height = MediaQuery.of(context).size.height;
+
+    String _formattedDate = new DateFormat.yMMMd().format(_defaultAge);
+    _ageOfUserController.value = new TextEditingValue(
+      // text: _formattedDate == null ? _defaultAge : '$_formattedDate',
+      text: _formattedDate,
+      selection: TextSelection.fromPosition(
+        TextPosition(offset: _formattedDate.length),
+      ),
+    );
 
     if (authFormType == AuthFormType.anonymous) {
       submit();
@@ -413,31 +456,65 @@ class _SignUpViewState extends State<SignUpView> {
               },
               onSaved: (val) => _name = val,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                IconButton(
-                  color: FyreworkrColors.fyreworkBlack,
-                  onPressed: () {
-                    getUserLocation();
-                  },
-                  icon: Icon(Icons.gps_fixed),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  IconButton(
+                    color: FyreworkrColors.fyreworkBlack,
+                    onPressed: () {
+                      getUserLocation();
+                    },
+                    icon: Icon(Icons.gps_fixed),
+                  ),
+                  Flexible(
+                    // child: TextFormField(
+                    //   controller: locationController,
+                    //   decoration: textInputDecoration.copyWith(
+                    //       hintText: 'loaction'),
+                    //   validator: (val) => val.isEmpty
+                    //       ? 'please click location button'
+                    //       : null,
+                    //   onChanged: (val) {
+                    //     // setState(() => location = val);
+                    //   },
+                    // ),
+                    child: PlacesAutocomplete(),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  border: Border(
+                bottom: BorderSide(color: Colors.black26, width: 0.5),
+              )),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10.0, 8.0, 8.0, 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Flexible(
+                        child: Text(
+                      "Tick this box if you are under 18 years old.",
+                      style: TextStyle(fontSize: 18),
+                    )),
+                    Checkbox(
+                      value: _is_minor,
+                      onChanged: (bool value) {
+                        setState(() {
+                          _is_minor = !_is_minor;
+                          print(_is_minor);
+                        });
+                      },
+                      activeColor: FyreworkrColors.fyreworkBlack,
+                      checkColor: FyreworkrColors.white,
+                    ),
+                  ],
                 ),
-                Flexible(
-                  // child: TextFormField(
-                  //   controller: locationController,
-                  //   decoration: textInputDecoration.copyWith(
-                  //       hintText: 'loaction'),
-                  //   validator: (val) => val.isEmpty
-                  //       ? 'please click location button'
-                  //       : null,
-                  //   onChanged: (val) {
-                  //     // setState(() => location = val);
-                  //   },
-                  // ),
-                  child: PlacesAutocomplete(),
-                ),
-              ],
+              ),
             ),
           ],
         ),
