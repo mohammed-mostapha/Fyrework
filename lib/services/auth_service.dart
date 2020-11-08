@@ -193,7 +193,7 @@ class AuthService {
 class NameValidator {
   static String validate(String value) {
     if (value.isEmpty) {
-      return '*';
+      return '';
     }
     if (value.length < 2) {
       return "Name must be at least 2 characters long";
@@ -207,8 +207,13 @@ class NameValidator {
 
 class EmailValidator {
   static String validate(String value) {
+    bool emailValid = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(value);
     if (value.isEmpty) {
-      return '*';
+      return '';
+    } else if (!emailValid) {
+      return "Please provide a valid email address";
     }
     return null;
   }
@@ -217,7 +222,7 @@ class EmailValidator {
 class PasswordValidator {
   static String validate(String value) {
     if (value.isEmpty) {
-      return '*';
+      return '';
     }
     return null;
   }

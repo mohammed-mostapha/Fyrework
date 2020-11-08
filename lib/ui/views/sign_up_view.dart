@@ -407,13 +407,13 @@ class _SignUpViewState extends State<SignUpView> {
     } else if (authFormType == AuthFormType.phone) {
       _headerText = "Phone Sign In";
     } else {
-      _headerText = "Create New Account";
+      _headerText = "Register";
     }
     return AutoSizeText(
       _headerText,
       maxLines: 1,
       textAlign: TextAlign.center,
-      style: TextStyle(color: FyreworkrColors.black, fontSize: 35),
+      style: TextStyle(color: FyreworkrColors.black, fontSize: 25),
     );
   }
 
@@ -461,26 +461,15 @@ class _SignUpViewState extends State<SignUpView> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
+                  Flexible(
+                    child: PlacesAutocomplete(),
+                  ),
                   IconButton(
                     color: FyreworkrColors.fyreworkBlack,
                     onPressed: () {
                       getUserLocation();
                     },
                     icon: Icon(Icons.gps_fixed),
-                  ),
-                  Flexible(
-                    // child: TextFormField(
-                    //   controller: locationController,
-                    //   decoration: textInputDecoration.copyWith(
-                    //       hintText: 'loaction'),
-                    //   validator: (val) => val.isEmpty
-                    //       ? 'please click location button'
-                    //       : null,
-                    //   onChanged: (val) {
-                    //     // setState(() => location = val);
-                    //   },
-                    // ),
-                    child: PlacesAutocomplete(),
                   ),
                 ],
               ),
@@ -491,7 +480,7 @@ class _SignUpViewState extends State<SignUpView> {
                 bottom: BorderSide(color: Colors.black26, width: 0.5),
               )),
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(10.0, 8.0, 8.0, 8.0),
+                padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -499,7 +488,6 @@ class _SignUpViewState extends State<SignUpView> {
                     Flexible(
                         child: Text(
                       "Tick this box if you are under 18 years old.",
-                      style: TextStyle(fontSize: 18),
                     )),
                     Checkbox(
                       value: _is_minor,
@@ -672,7 +660,7 @@ class _SignUpViewState extends State<SignUpView> {
       _showSocial = false;
     } else {
       _submitButtonText = 'Sign Up';
-      _switchButtonText = 'have an account? Sign In';
+      _switchButtonText = 'Have an account? Sign In';
       _newformState = 'signIn';
     }
 
