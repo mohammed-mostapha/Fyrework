@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:myApp/screens/add_gig/addGigDetails.dart';
 import 'package:myApp/screens/home/home.dart';
+import 'package:myApp/ui/views/sign_up_view.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:provider/provider.dart';
 import '../wechat_assets_picker.dart';
@@ -17,6 +18,7 @@ import '../constants/constants.dart';
 import 'builder/fade_image_builder.dart';
 import 'builder/slide_page_transition_builder.dart';
 import 'fixed_appbar.dart';
+import 'package:path/path.dart' as fileName;
 
 class AssetPicker extends StatelessWidget {
   AssetPicker({
@@ -534,9 +536,18 @@ class AssetPicker extends StatelessWidget {
                 fontWeight: FontWeight.normal,
               ),
             ),
-            onPressed: () {
+            onPressed: () async {
               if (provider.isSelectedNotEmpty) {
-                Navigator.of(context).pop(provider.selectedAssets);
+                //differentiating whether this is for profilePicturePicker or multiAssetsPicker
+                if (provider.selectedAssets.length == 1) {
+                  File selectedProfilePicture =
+                      await provider.selectedAssets.first.originFile;
+                  // Navigator.of(context).pop(provider.selectedAssets);
+                  Navigator.of(context).pop(provider.selectedAssets);
+                  print('coming from asset_picker');
+                } else {
+                  Navigator.of(context).pop(provider.selectedAssets);
+                }
               }
             },
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:myApp/locator.dart';
 import 'package:myApp/main.dart';
 import 'package:myApp/models/user.dart';
+import 'package:myApp/screens/add_gig/assets_picker/constants/picker_model.dart';
+import 'package:myApp/screens/add_gig/assets_picker/pages/add_profile_picture.dart';
+import 'package:myApp/screens/add_gig/assets_picker/src/widget/asset_picker.dart';
 import 'package:myApp/ui/widgets/provider_widget.dart';
 import 'package:myApp/services/auth_service.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -16,6 +19,7 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:myApp/services/places_autocomplete.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:myApp/vew_controllers/user_controller.dart';
+import 'package:photo_manager/photo_manager.dart';
 import '../shared/constants.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiffy/jiffy.dart';
@@ -38,7 +42,10 @@ dynamic userAvatarUrl;
 TextEditingController locationController = TextEditingController();
 
 class _SignUpViewState extends State<SignUpView> {
-  PickedFile _profileImage;
+  final int maxAssetsCount = 1;
+  List<AssetEntity> selectedProfilePictureList;
+  File extractedProfilePictureFromList;
+  File _profileImage;
   final ImagePicker _picker = ImagePicker();
   AuthFormType authFormType;
   AuthService _authService = locator.get<AuthService>();
@@ -214,6 +221,48 @@ class _SignUpViewState extends State<SignUpView> {
     });
   }
 
+  navigateToSelectProfilePicture() async {
+    ((BuildContext context, int index) async {
+      final PickMethodModel model = pickMethods[index];
+
+      final List<AssetEntity> result =
+          await model.method(context, selectedProfilePictureList);
+      if (result != null && result != selectedProfilePictureList) {
+        selectedProfilePictureList = result;
+        () async {
+          print('from the self executed function');
+          extractedProfilePictureFromList =
+              await selectedProfilePictureList.first.originFile;
+          if (mounted) {
+            setState(() {});
+            _profileImage = extractedProfilePictureFromList;
+          }
+        }();
+        // print('selectedProfilePicture: $selectedProfilePicture');
+
+      }
+    }(context, 0));
+  }
+
+  List<PickMethodModel> get pickMethods => <PickMethodModel>[
+        PickMethodModel(
+          icon: '📹',
+          name: 'Common picker',
+          description: 'Pick images and videos.',
+          method: (
+            BuildContext context,
+            List<AssetEntity> assets,
+          ) async {
+            return await AssetPicker.pickAssets(
+              context,
+              maxAssets: maxAssetsCount,
+              selectedAssets: assets,
+              requestType: RequestType.image,
+            );
+          },
+        ),
+      ];
+
   @override
   Widget build(BuildContext context) {
     final _width = MediaQuery.of(context).size.width;
@@ -290,73 +339,21 @@ class _SignUpViewState extends State<SignUpView> {
               : FileImage(File(_profileImage.path)),
         ),
         Positioned(
-          bottom: 30.0,
-          right: 30.0,
+          bottom: 5.0,
+          right: 0.0,
           child: InkWell(
-            onTap: () {
-              showModalBottomSheet(
-                context: context,
-                builder: ((builder) => profileImagePickerBottomSheet()),
-              );
-            },
+            onTap: navigateToSelectProfilePicture,
             child: Icon(
               Icons.camera_alt,
               color: _profileImage == null
                   ? FyreworkrColors.fyreworkGrey
-                  : FyreworkrColors.white,
-              size: 28.0,
+                  : FyreworkrColors.fyreworkBlack,
+              size: 60.0,
             ),
           ),
         ),
       ],
     );
-  }
-
-  Widget profileImagePickerBottomSheet() {
-    return Container(
-      height: 100.0,
-      width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      child: Column(
-        children: <Widget>[
-          AutoSizeText(
-            "Choose Profile image",
-            style: TextStyle(fontSize: 20.0),
-          ),
-          SizedBox(
-            height: 20.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              FlatButton.icon(
-                onPressed: () {
-                  takePhoto(ImageSource.camera);
-                },
-                icon: Icon(Icons.camera),
-                label: AutoSizeText("Camera"),
-              ),
-              FlatButton.icon(
-                onPressed: () {
-                  takePhoto(ImageSource.gallery);
-                },
-                icon: Icon(Icons.image),
-                label: AutoSizeText("Gallery"),
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  void takePhoto(ImageSource source) async {
-    final pickedFile = await _picker.getImage(
-      source: source,
-    );
-    setState(() {
-      _profileImage = pickedFile;
-    });
   }
 
   Widget showAlert() {

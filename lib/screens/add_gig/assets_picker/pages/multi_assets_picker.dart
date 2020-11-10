@@ -121,19 +121,19 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
   Widget methodItemBuilder(BuildContext _, int index) {
     final PickMethodModel model = pickMethods[index];
 
-    if (!choosedAssets) {
-      (() async {
-        final List<AssetEntity> result = await model.method(context, assets);
-        if (result != null && result != assets) {
-          assets = List<AssetEntity>.from(result);
-          if (mounted) {
-            setState(() {
-              choosedAssets = !choosedAssets;
-            });
-          }
+    // if (!choosedAssets) {
+    (() async {
+      final List<AssetEntity> result = await model.method(context, assets);
+      if (result != null && result != assets) {
+        assets = List<AssetEntity>.from(result);
+        if (mounted) {
+          setState(() {
+            choosedAssets = !choosedAssets;
+          });
         }
-      }());
-    } else {}
+      }
+    }());
+    // } else {}
   }
 
   Widget get methodListView => Expanded(
@@ -282,11 +282,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
   Widget get selectedAssetsWidget => AnimatedContainer(
         duration: kThemeChangeDuration,
         curve: Curves.easeInOut,
-        height: assets.isNotEmpty
-            ? isDisplayingDetail
-                ? 250.0
-                : 80.0
-            : 40.0,
+        height: assets.isNotEmpty ? isDisplayingDetail ? 250.0 : 80.0 : 40.0,
         child: Column(
           children: <Widget>[
             SizedBox(
