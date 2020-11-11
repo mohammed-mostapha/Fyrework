@@ -7,6 +7,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:myApp/ui/shared/theme.dart';
+import 'package:myApp/ui/views/sign_up_view.dart';
 import 'package:video_player/video_player.dart';
 
 import '../constants/constants.dart';
@@ -221,7 +222,8 @@ class _CameraPickerViewerState extends State<CameraPickerViewer> {
 
       saveFuture.then((AssetEntity entity) {
         if (Platform.isAndroid) {
-          if (!DeviceUtils.isLowerThanAndroidQ && previewFile.existsSync()) {
+          // if (!DeviceUtils.isLowerThanAndroidQ && previewFile.existsSync()) {
+          if (previewFile.existsSync()) {
             previewFile.delete();
           }
         } else {
@@ -229,6 +231,9 @@ class _CameraPickerViewerState extends State<CameraPickerViewer> {
             previewFile.delete();
           }
         }
+        print(
+            'this is the type of entity from the camera_picker_viewer: ${entity.runtimeType}');
+
         Navigator.of(context).pop(entity);
       });
     } catch (e) {

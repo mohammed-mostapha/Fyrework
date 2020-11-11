@@ -225,10 +225,13 @@ class _SignUpViewState extends State<SignUpView> {
     ((BuildContext context, int index) async {
       final PickMethodModel model = pickMethods[index];
 
-      final List<AssetEntity> result =
+      final List<AssetEntity> retrievedAssets =
           await model.method(context, selectedProfilePictureList);
-      if (result != null && result != selectedProfilePictureList) {
-        selectedProfilePictureList = result;
+      print(
+          'this is the type you are searching for: ${retrievedAssets.runtimeType}');
+      if (retrievedAssets != null &&
+          retrievedAssets != selectedProfilePictureList) {
+        selectedProfilePictureList = retrievedAssets;
         () async {
           print('from the self executed function');
           extractedProfilePictureFromList =
@@ -238,8 +241,6 @@ class _SignUpViewState extends State<SignUpView> {
             _profileImage = extractedProfilePictureFromList;
           }
         }();
-        // print('selectedProfilePicture: $selectedProfilePicture');
-
       }
     }(context, 0));
   }
@@ -339,16 +340,15 @@ class _SignUpViewState extends State<SignUpView> {
               : FileImage(File(_profileImage.path)),
         ),
         Positioned(
-          bottom: 5.0,
-          right: 0.0,
+          bottom: 30.0,
+          right: 20.0,
           child: InkWell(
             onTap: navigateToSelectProfilePicture,
             child: Icon(
               Icons.camera_alt,
-              color: _profileImage == null
-                  ? FyreworkrColors.fyreworkGrey
-                  : FyreworkrColors.fyreworkBlack,
-              size: 60.0,
+              color:
+                  _profileImage == null ? Colors.grey : FyreworkrColors.white,
+              size: 30.0,
             ),
           ),
         ),
@@ -410,7 +410,7 @@ class _SignUpViewState extends State<SignUpView> {
       _headerText,
       maxLines: 1,
       textAlign: TextAlign.center,
-      style: TextStyle(color: FyreworkrColors.black, fontSize: 25),
+      style: TextStyle(color: FyreworkrColors.black, fontSize: 30),
     );
   }
 

@@ -231,6 +231,8 @@ class CameraPickerState extends State<CameraPicker> {
   /// 通过常量全局 Key 获取当前选择器的主题
   ThemeData get theme => _theme;
 
+  List<AssetEntity> listFromEntity = [];
+
   @override
   void initState() {
     super.initState();
@@ -375,10 +377,12 @@ class CameraPickerState extends State<CameraPicker> {
           theme: theme,
         );
         if (entity != null) {
-          Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => MultiAssetsPicker()));
+          listFromEntity.add(entity);
+          Navigator.of(context).pop(listFromEntity);
+          // Navigator.push(context,
+          //     MaterialPageRoute(builder: (context) => MultiAssetsPicker()));
         } else {
+          print('returned with a null value');
           takenPictureFilePath = null;
           if (mounted) {
             setState(() {});
@@ -572,7 +576,8 @@ class CameraPickerState extends State<CameraPicker> {
       borderRadius: maxBorderRadius,
       // onTap: Navigator.of(context).pop,
       onTap: () {
-        Navigator.pushNamedAndRemoveUntil(context, "/addGig", (r) => false);
+        // Navigator.pushNamedAndRemoveUntil(context, "/addGig", (r) => false);
+        Navigator.of(context).pop();
       },
       child: Container(
         margin: const EdgeInsets.all(10.0),
@@ -647,33 +652,43 @@ class CameraPickerState extends State<CameraPicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: FyreworkrColors.fyreworkBlack,
-      child: Stack(
-        children: <Widget>[
-          if (isInitialized)
-            Center(
-              child: AspectRatio(
-                aspectRatio: cameraController.value.aspectRatio,
-                child: CameraPreview(cameraController),
-              ),
-            )
-          else
-            const SizedBox.shrink(),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Column(
-                children: <Widget>[
-                  settingsAction,
-                  const Spacer(),
-                  tipsTextWidget,
-                  shootingActions,
-                ],
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.of(context).pop();
+      },
+      child: Material(
+        color: FyreworkrColors.fyreworkBlack,
+        child: Stack(
+          children: <Widget>[
+            if (isInitialized)
+              Center(
+                child: AspectRatio(
+                  aspectRatio: cameraController.value.aspectRatio,
+                  child: CameraPreview(cameraController),
+                ),
+              )
+            else
+              const SizedBox.shrink(),
+            WillPopScope(
+              onWillPop: () {
+                Navigator.of(context).pop();
+              },
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Column(
+                    children: <Widget>[
+                      settingsAction,
+                      const Spacer(),
+                      tipsTextWidget,
+                      shootingActions,
+                    ],
+                  ),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

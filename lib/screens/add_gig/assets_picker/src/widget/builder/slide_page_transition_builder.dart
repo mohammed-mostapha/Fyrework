@@ -79,7 +79,8 @@ class SlidePageTransitionBuilder<T> extends PageRoute<T> {
 
     return WillPopScope(
       onWillPop: () {
-        Navigator.pushNamedAndRemoveUntil(context, "/addGig", (r) => false);
+        // Navigator.pushNamedAndRemoveUntil(context, "/addGig", (r) => false);
+        Navigator.of(context).pop();
       },
       child: DefaultTabController(
         length: 2,

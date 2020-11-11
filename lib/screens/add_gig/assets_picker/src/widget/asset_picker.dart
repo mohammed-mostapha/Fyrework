@@ -540,8 +540,8 @@ class AssetPicker extends StatelessWidget {
               if (provider.isSelectedNotEmpty) {
                 //differentiating whether this is for profilePicturePicker or multiAssetsPicker
                 if (provider.selectedAssets.length == 1) {
-                  File selectedProfilePicture =
-                      await provider.selectedAssets.first.originFile;
+                  // File selectedProfilePicture =
+                  //     await provider.selectedAssets.first.originFile;
                   // Navigator.of(context).pop(provider.selectedAssets);
                   Navigator.of(context).pop(provider.selectedAssets);
                   print('coming from asset_picker');
@@ -1057,10 +1057,10 @@ class AssetPicker extends StatelessWidget {
             : IconButton(
                 // onPressed: Navigator.of(context).maybePop,
                 onPressed: () {
-                  // Navigator.of(context).pop();
+                  Navigator.of(context).pop();
                   // Navigator.pop(context);
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, "/addGig", (r) => false);
+                  // Navigator.pushNamedAndRemoveUntil(
+                  //     context, "/addGig", (r) => false);
                 },
                 icon: const Icon(Icons.close),
               ),
@@ -1160,15 +1160,21 @@ class AssetPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: overlayStyle,
-      child: Theme(
-        data: theme,
-        child: ChangeNotifierProvider<AssetPickerProvider>.value(
-          value: provider,
-          child: Material(
-            color: theme.canvasColor,
-            child: isAppleOS ? appleOSLayout(context) : androidLayout(context),
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.of(context).pop();
+      },
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: overlayStyle,
+        child: Theme(
+          data: theme,
+          child: ChangeNotifierProvider<AssetPickerProvider>.value(
+            value: provider,
+            child: Material(
+              color: theme.canvasColor,
+              child:
+                  isAppleOS ? appleOSLayout(context) : androidLayout(context),
+            ),
           ),
         ),
       ),
