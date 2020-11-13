@@ -3,9 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:myApp/locator.dart';
 import 'package:myApp/main.dart';
-import 'package:myApp/models/user.dart';
 import 'package:myApp/screens/add_gig/assets_picker/constants/picker_model.dart';
-import 'package:myApp/screens/add_gig/assets_picker/pages/add_profile_picture.dart';
 import 'package:myApp/screens/add_gig/assets_picker/src/widget/asset_picker.dart';
 import 'package:myApp/ui/widgets/provider_widget.dart';
 import 'package:myApp/services/auth_service.dart';
@@ -14,16 +12,13 @@ import 'package:myApp/ui/shared/theme.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-import 'package:international_phone_input/international_phone_input.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:myApp/services/places_autocomplete.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:myApp/vew_controllers/user_controller.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../shared/constants.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:jiffy/src/enums/units.dart';
 import 'package:intl/intl.dart';
 
 enum AuthFormType { signIn, signUp, reset, anonymous, convert, phone }
@@ -123,7 +118,9 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             _cameraColorAnimationController.forward();
             _cameraIconAnimationController.reverse();
           })
-        : () {};
+        : () {
+            //
+          };
     if (validate()) {
       try {
         final auth = Provider.of(context).auth;

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:core';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -46,14 +47,56 @@ class GigItem extends StatefulWidget {
   _GigItemState createState() => _GigItemState();
 }
 
-class _GigItemState extends State<GigItem> {
+class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
   AuthService _authService = locator.get<AuthService>();
   StorageRepo _storageRepo = locator.get<StorageRepo>();
 
   bool isDisplayingDetail = true;
   ThemeData get currentTheme => context.themeData;
 
+  bool liked = false;
+  bool showLikeOverlay = false;
+  AnimationController _likeAnimationController;
+
   List<String> gigMediaFilesDownloadedUrls = List<String>();
+
+  void initState() {
+    super.initState();
+
+    _likeAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 125),
+      value: 1.0,
+      lowerBound: 1.0,
+      upperBound: 1.25,
+    );
+  }
+
+  _likedPressed() {
+    setState(() {
+      liked = !liked;
+      _likeAnimationController.forward().then((value) {
+        _likeAnimationController.reverse();
+      });
+    });
+  }
+
+  _doubleTappedLike() {
+    setState(() {
+      liked = true;
+      showLikeOverlay = true;
+      _likeAnimationController.forward().then((value) {
+        _likeAnimationController.reverse();
+      });
+      if (showLikeOverlay) {
+        Timer(const Duration(milliseconds: 500), () {
+          setState(() {
+            showLikeOverlay = false;
+          });
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +105,7 @@ class _GigItemState extends State<GigItem> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               children: <Widget>[
                 Row(
@@ -120,14 +163,42 @@ class _GigItemState extends State<GigItem> {
               ],
             ),
           ),
-
-          GitItemMediaPreviewer(
-            receivedGigMediaFilesUrls:
-                widget.gigMediaFilesDownloadUrls.gigMediaFilesDownloadUrls,
+          GestureDetector(
+            onDoubleTap: () => _doubleTappedLike(),
+            child: Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                GigItemMediaPreviewer(
+                  receivedGigMediaFilesUrls: widget
+                      .gigMediaFilesDownloadUrls.gigMediaFilesDownloadUrls,
+                ),
+                showLikeOverlay
+                    ? Icon(
+                        Icons.favorite,
+                        size: 120.0,
+                        color: Colors.white,
+                      )
+                    : Container()
+              ],
+            ),
           ),
+
           //end slider to preview gigMediafiles
+          ListTile(
+            contentPadding: const EdgeInsets.all(0),
+            leading: ScaleTransition(
+              scale: _likeAnimationController,
+              child: IconButton(
+                  icon: Icon(
+                    liked ? Icons.favorite : Icons.favorite_border,
+                    color: liked ? Colors.red : Colors.grey,
+                    size: 30,
+                  ),
+                  onPressed: () => _likedPressed()),
+            ),
+          ),
           Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
             child: Column(
               children: <Widget>[
                 Container(
@@ -190,15 +261,6 @@ class _GigItemState extends State<GigItem> {
                   ],
                 ),
                 SizedBox(height: 10.0),
-                // Container(
-                //   alignment: Alignment.centerLeft,
-                //   child: AutoSizeText(
-                //     "${widget.gigValue.gigValue}",
-                //     style: TextStyle(
-                //       fontSize: 18,
-                //     ),
-                //   ),
-                // ),
                 widget.adultContentBool.adultContentBool
                     ? Container(
                         alignment: Alignment.centerLeft,
@@ -232,15 +294,6 @@ class _GigItemState extends State<GigItem> {
                         width: 0,
                         height: 0,
                       ),
-                // Container(
-                //   alignment: Alignment.centerLeft,
-                //   child: AutoSizeText(
-                //     "${widget.adultContentBool.adultContentBool}",
-                //     style: TextStyle(
-                //       fontSize: 18,
-                //     ),
-                //   ),
-                // ),
                 SizedBox(height: 5),
               ],
             ),
@@ -254,5 +307,11 @@ class _GigItemState extends State<GigItem> {
             BoxShadow(blurRadius: 8, color: Colors.grey[200], spreadRadius: 3)
           ]),
     );
+  }
+
+  @override
+  void dispose() {
+    _likeAnimationController.dispose();
+    super.dispose();
   }
 }

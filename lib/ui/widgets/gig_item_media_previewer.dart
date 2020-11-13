@@ -4,20 +4,20 @@ import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/widgets/chewie_player.dart';
 import 'package:video_player/video_player.dart';
 
-class GitItemMediaPreviewer extends StatefulWidget {
+class GigItemMediaPreviewer extends StatefulWidget {
   final List<dynamic> receivedGigMediaFilesUrls;
 
-  GitItemMediaPreviewer({Key key, @required this.receivedGigMediaFilesUrls})
+  GigItemMediaPreviewer({Key key, @required this.receivedGigMediaFilesUrls})
       : super(key: key);
 
   @override
-  _GitItemMediaPreviewerState createState() =>
-      _GitItemMediaPreviewerState(receivedGigMediaFilesUrls);
+  _GigItemMediaPreviewerState createState() =>
+      _GigItemMediaPreviewerState(receivedGigMediaFilesUrls);
 }
 
-class _GitItemMediaPreviewerState extends State<GitItemMediaPreviewer> {
+class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
   List<dynamic> receivedGigMediaFilesUrls;
-  _GitItemMediaPreviewerState(this.receivedGigMediaFilesUrls);
+  _GigItemMediaPreviewerState(this.receivedGigMediaFilesUrls);
   int _current = 0;
 
   List<T> map<T>(List list, Function handler) {
