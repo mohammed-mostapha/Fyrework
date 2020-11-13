@@ -71,6 +71,8 @@ class _GigItemState extends State<GigItem> {
                     Row(
                       children: [
                         CircleAvatar(
+                          // backgroundColor: Theme.of(context).primaryColor,
+                          backgroundColor: Theme.of(context).primaryColor,
                           backgroundImage: NetworkImage(
                               "${widget.userProfilePictureUrl.userProfilePictureUrl}"),
                         ),

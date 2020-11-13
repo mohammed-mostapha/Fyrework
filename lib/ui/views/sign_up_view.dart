@@ -41,16 +41,44 @@ dynamic userAvatarUrl;
 
 TextEditingController locationController = TextEditingController();
 
-class _SignUpViewState extends State<SignUpView> {
+class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
+  final ImagePicker _picker = ImagePicker();
+  AuthFormType authFormType;
+  AuthService _authService = locator.get<AuthService>();
   final int maxAssetsCount = 1;
   List<AssetEntity> selectedProfilePictureList;
   File extractedProfilePictureFromList;
   File _profileImage;
-  final ImagePicker _picker = ImagePicker();
-  AuthFormType authFormType;
-  AuthService _authService = locator.get<AuthService>();
+  AnimationController _cameraIconAnimationController;
+  AnimationController _cameraColorAnimationController;
+  Animation _cameraIconColorAnimation;
 
   _SignUpViewState({this.authFormType});
+
+  @override
+  void initState() {
+    super.initState();
+    _cameraIconAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 125),
+      value: 1.0,
+      lowerBound: 1.0,
+      upperBound: 1.75,
+    );
+
+    _cameraColorAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 125),
+    );
+
+    _cameraIconColorAnimation = ColorTween(
+      begin: Colors.white,
+      end: Colors.red,
+    ).animate(_cameraColorAnimationController)
+      ..addListener(() {
+        setState(() {});
+      });
+  }
 
   final formKey = GlobalKey<FormState>();
   String _email, _password, _name, location, _warning, _phone;
@@ -89,6 +117,13 @@ class _SignUpViewState extends State<SignUpView> {
   }
 
   void submit() async {
+    // checking whether the user picked a profile pic or not
+    _profileImage == null
+        ? _cameraIconAnimationController.forward().then((value) {
+            _cameraColorAnimationController.forward();
+            _cameraIconAnimationController.reverse();
+          })
+        : () {};
     if (validate()) {
       try {
         final auth = Provider.of(context).auth;
@@ -329,26 +364,49 @@ class _SignUpViewState extends State<SignUpView> {
     }
   }
 
+  @override
+  void dispose() {
+    _cameraColorAnimationController.dispose();
+    _cameraIconAnimationController.dispose();
+    super.dispose();
+  }
+
   // adding a profile image from camera or gallery
   Widget profileImagePicker() {
     return Stack(
       children: <Widget>[
-        CircleAvatar(
-          radius: 80.0,
-          backgroundImage: _profileImage == null
-              ? AssetImage("assets/images/black_placeholder.png")
-              : FileImage(File(_profileImage.path)),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(blurRadius: 10, color: Colors.black54, spreadRadius: 5)
+            ],
+          ),
+          child: CircleAvatar(
+            radius: 80.0,
+            backgroundColor: Theme.of(context).primaryColor,
+            backgroundImage: _profileImage == null
+                ? AssetImage("assets/images/black_placeholder.png")
+                : FileImage(File(_profileImage.path)),
+          ),
         ),
         Positioned(
           bottom: 30.0,
           right: 20.0,
-          child: InkWell(
+          child: GestureDetector(
             onTap: navigateToSelectProfilePicture,
-            child: Icon(
-              Icons.camera_alt,
-              color:
-                  _profileImage == null ? Colors.grey : FyreworkrColors.white,
-              size: 30.0,
+            child: ScaleTransition(
+              scale: _cameraIconAnimationController,
+              child: Icon(
+                Icons.camera_alt,
+                // color:
+                //     _profileImage == null ? Colors.grey : FyreworkrColors.white,
+                color: _profileImage == null
+                    ? _cameraIconColorAnimation.value
+                    : Colors.white,
+                size: 30.0,
+              ),
             ),
           ),
         ),

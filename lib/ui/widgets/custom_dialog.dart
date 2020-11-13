@@ -60,6 +60,7 @@ class CustomDialog extends StatelessWidget {
                 ),
                 SizedBox(height: 24.0),
                 RaisedButton(
+                  elevation: 4,
                   color: Colors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0)),

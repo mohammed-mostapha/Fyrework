@@ -7,6 +7,7 @@ import 'package:myApp/screens/add_gig/assets_picker/src/constants/constants.dart
 import 'package:myApp/screens/authenticate/app_start.dart';
 import 'package:myApp/screens/home/home.dart';
 import 'package:myApp/services/auth_service.dart';
+import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/views/sign_up_view.dart';
 import 'package:myApp/ui/widgets/provider_widget.dart';
 import 'locator.dart';
@@ -26,6 +27,10 @@ class MyApp extends StatelessWidget {
     return Provider(
       auth: AuthService(),
       child: MaterialApp(
+        theme: ThemeData(
+          primaryColor: FyreworkrColors.fyreworkBlack,
+          accentColor: FyreworkrColors.fyreworkBlack,
+        ),
         home: HomeController(),
         routes: <String, WidgetBuilder>{
           '/home': (BuildContext context) => HomeController(),
