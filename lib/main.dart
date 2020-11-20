@@ -1,9 +1,5 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:myApp/app_localizations.dart';
-import 'package:myApp/screens/add_gig/assets_picker/src/constants/constants.dart';
 import 'package:myApp/screens/authenticate/app_start.dart';
 import 'package:myApp/screens/home/home.dart';
 import 'package:myApp/services/auth_service.dart';

@@ -17,7 +17,6 @@ import 'package:myApp/services/places_autocomplete.dart';
 import 'package:myApp/vew_controllers/user_controller.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../shared/constants.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:intl/intl.dart';
 
@@ -37,7 +36,6 @@ dynamic userAvatarUrl;
 TextEditingController locationController = TextEditingController();
 
 class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
-  final ImagePicker _picker = ImagePicker();
   AuthFormType authFormType;
   AuthService _authService = locator.get<AuthService>();
   final int maxAssetsCount = 1;
@@ -223,33 +221,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     setState(() {
       _phone = internationalizedPhoneNumber;
       print(_phone);
-    });
-  }
-
-  // Specifying the deadline date
-  Future<Null> _pickAge(BuildContext context) async {
-    final DateTime _selectedAgeOfUser = await showDatePicker(
-      context: context,
-      initialDate: _defaultAge,
-      // firstDate: DateTime.now(),
-      firstDate: _defaultAge,
-      lastDate: DateTime(2022),
-      builder: (BuildContext context, Widget child) {
-        return Theme(
-          data: ThemeData.dark().copyWith(
-              // primarySwatch: buttonTextColor,//OK/Cancel button text color
-              primaryColor: FyreworkrColors.fyreworkBlack, //Head background
-              accentColor: Colors.white //selection color
-              //dialogBackgroundColor: Colors.white,//Background color
-              ),
-          child: child,
-        );
-      },
-    );
-    setState(() {
-      _selectedAgeOfUser == null
-          ? _defaultAge = _defaultAge
-          : _defaultAge = _selectedAgeOfUser;
     });
   }
 

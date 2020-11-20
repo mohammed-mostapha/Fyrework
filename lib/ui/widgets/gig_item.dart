@@ -4,15 +4,10 @@ import 'dart:core';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:myApp/models/gig.dart';
 import 'package:flutter/material.dart';
-import 'package:myApp/locator.dart';
-import 'package:myApp/services/auth_service.dart';
-import 'package:myApp/services/storage_repo.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:flutter_common_exports/src/extensions/build_context_extension.dart';
-import 'package:myApp/ui/widgets/chewie_player.dart';
 import 'package:myApp/ui/widgets/gig_item_media_previewer.dart';
-import 'package:video_player/video_player.dart';
 
 class GigItem extends StatefulWidget {
   final userProfilePictureUrl;
@@ -48,9 +43,6 @@ class GigItem extends StatefulWidget {
 }
 
 class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
-  AuthService _authService = locator.get<AuthService>();
-  StorageRepo _storageRepo = locator.get<StorageRepo>();
-
   bool isDisplayingDetail = true;
   ThemeData get currentTheme => context.themeData;
 
@@ -191,7 +183,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
               child: IconButton(
                   icon: Icon(
                     liked ? Icons.favorite : Icons.favorite_border,
-                    color: liked ? Colors.red : Colors.grey,
+                    color: liked ? Colors.red[400] : Colors.grey,
                     size: 30,
                   ),
                   onPressed: () => _likedPressed()),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:myApp/ui/shared/theme.dart';
-import 'package:myApp/ui/widgets/chewie_player.dart';
-import 'package:video_player/video_player.dart';
+import 'package:better_player/better_player.dart';
 
 class GigItemMediaPreviewer extends StatefulWidget {
   final List<dynamic> receivedGigMediaFilesUrls;
@@ -57,10 +56,7 @@ class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
                 );
               } else if (url.contains("videoFile")) {
                 return Container(
-                  child: ChewiePlayer(
-                    videoPlayerController: VideoPlayerController.network(url),
-                    looping: false,
-                  ),
+                  child: BetterPlayer.network(url),
                 );
               } else {
                 //

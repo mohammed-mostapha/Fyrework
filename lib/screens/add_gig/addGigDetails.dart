@@ -5,7 +5,6 @@ import 'package:myApp/ui/widgets/provider_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:myApp/vew_controllers/user_controller.dart';
-import '../../models/Gig_model.dart';
 import 'package:intl/intl.dart';
 import 'package:myApp/locator.dart';
 import 'package:myApp/models/gig.dart';
@@ -78,7 +77,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
 
   // Specifying the deadline date
   Future<Null> _selectedDate(BuildContext context) async {
-    final DateTime _deadLine = await showDatePicker(
+    await showDatePicker(
       context: context,
       initialDate: _currentDate,
       firstDate: DateTime.now(),
@@ -86,10 +85,8 @@ class _AddGigDetailsState extends State<AddGigDetails> {
       builder: (BuildContext context, Widget child) {
         return Theme(
           data: ThemeData.dark().copyWith(
-              // primarySwatch: buttonTextColor,//OK/Cancel button text color
               primaryColor: FyreworkrColors.fyreworkBlack, //Head background
               accentColor: Colors.white //selection color
-              //dialogBackgroundColor: Colors.white,//Background color
               ),
           child: child,
         );

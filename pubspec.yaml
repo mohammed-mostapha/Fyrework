@@ -19,66 +19,65 @@ version: 1.0.0+1
 
 environment:
   sdk: ">=2.8.3 <3.0.0"
+  flutter: ^1.20.0
 
 dependencies:
   flutter:
     sdk: flutter
 
-  flutter_localizations:
-    sdk: flutter
-    
+  # flutter_localizations:
+  #   sdk: flutter
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  dartx: 
+  dartx:
   cupertino_icons:
-  shared_preferences: ^0.5.12
+  shared_preferences:
   auto_size_text: 
   uuid:
   flutter_router:
   font_awesome_flutter: 
-  firebase_auth: ^0.12.0 
+  firebase_auth: ^0.16.1
   google_sign_in:
-  firebase_storage:
+  firebase_storage: ^3.1.6
   cloud_firestore: 
   provider:
-  intl:
-  geolocator:
-  image_picker:
-  chewie:
+  intl: 
+  geolocator: ^5.3.2+2
+  chewie: 
   flutter_absolute_path:
   flutter_spinkit:
   flutter_auth_buttons:
-  find_dropdown:
-  international_phone_input:
-  intl_phone_number_input:
-  carousel_slider: ^1.3.0
-  jiffy: ^3.0.1
+  find_dropdown: 
+  intl_phone_number_input: ^0.4.6+2
+  carousel_slider: ^1.4.1
+  jiffy:
+  better_player: ^0.0.9 
   
 
   
-  #for the assets picker 
+ #for the assets picker 
   wechat_assets_picker:
   wechat_camera_picker:
-  camera: ^0.5.8+2
-  device_info: ^0.4.2+4
-  assets_audio_player: ^2.0.6+1
-  extended_image: ">=0.9.0 <2.0.0"
-  path_provider: ^1.6.11
-  photo_manager: ^0.5.6
-  video_player:
+  camera: 
+  device_info: 
+  assets_audio_player: 
+  extended_image: 
+  path_provider: 
+  photo_manager: 
+  video_player: 
   flutter_common_exports: 
   collection: 
   #for posting gigs
-  async: ^2.0.8
-  get_it: ^3.0.0+1
-  provider_architecture: ^1.0.3
+  async: 
+  get_it: 
+  provider_architecture: 
 
 
 
 dev_dependencies:
-  flutter_asset_generator: ">=0.4.7 <2.0.0"
+  flutter_asset_generator: 
 
   flutter_test:
     sdk: flutter

@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart';
-
-import 'places_autocomplete.dart';
 import '../credentials.dart';
 
 // For storing our result

@@ -1,13 +1,8 @@
-///
-/// [Author] Alex (https://github.com/AlexV525)
-/// [Date] 2020/7/16 22:02
-///
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:myApp/ui/shared/theme.dart';
-import 'package:myApp/ui/views/sign_up_view.dart';
 import 'package:video_player/video_player.dart';
 
 import '../constants/constants.dart';

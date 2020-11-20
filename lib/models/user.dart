@@ -1,16 +1,3 @@
-// class User {
-//   final String uid;
-
-//   User({this.uid});
-// }
-
-import 'dart:io';
-
-import 'package:myApp/services/auth_service.dart';
-import 'package:myApp/services/storage_repo.dart';
-
-import '../locator.dart';
-
 class UserData {
   final String uid;
   final String name;

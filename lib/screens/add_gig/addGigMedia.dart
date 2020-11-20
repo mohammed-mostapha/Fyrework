@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:myApp/screens/add_gig/image_picker.dart';
-import 'package:myApp/screens/add_gig/video_picker.dart';
-import 'package:myApp/ui/shared/theme.dart';
-
-import 'assets_picker/pages/multi_assets_picker.dart';
 
 class AddGigMedia extends StatefulWidget {
   @override
