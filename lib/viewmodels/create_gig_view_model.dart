@@ -14,7 +14,7 @@ class CreateGigViewModel extends BaseModel {
   bool get _editting => _edittingGig != null;
 
   Future addGig({
-    String documentId,
+    String gigId,
     @required String userId,
     @required String userProfilePictureUrl,
     @required String userFullName,
@@ -34,8 +34,8 @@ class CreateGigViewModel extends BaseModel {
 
     if (!_editting) {
       result = await _firestoreService.addGig(Gig(
-        documentId: documentId,
-        userId: userId,
+        gigId: gigId,
+        gigOwnerId: userId,
         userProfilePictureUrl: userProfilePictureUrl,
         userFullName: userFullName,
         gigHashtags: gigHashtags,
@@ -50,8 +50,8 @@ class CreateGigViewModel extends BaseModel {
       ));
     } else {
       result = await _firestoreService.updateGig(Gig(
-        documentId: documentId,
-        userId: userId,
+        gigId: gigId,
+        gigOwnerId: userId,
         userProfilePictureUrl: userProfilePictureUrl,
         userFullName: userFullName,
         gigHashtags: gigHashtags,

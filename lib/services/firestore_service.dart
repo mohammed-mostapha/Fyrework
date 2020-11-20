@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myApp/models/gig.dart';
+import 'package:myApp/models/comment.dart';
 import 'package:myApp/models/user.dart';
 import 'package:flutter/services.dart';
 
@@ -10,6 +11,8 @@ class FirestoreService {
       Firestore.instance.collection('users');
   final CollectionReference _gigCollectionReference =
       Firestore.instance.collection('gigs');
+  final CollectionReference _commentsCollectionReference =
+      Firestore.instance.collection('comments');
 
   final StreamController<List<Gig>> _gigsController =
       StreamController<List<Gig>>.broadcast();
@@ -45,11 +48,37 @@ class FirestoreService {
     try {
       // await _gigCollectionReference.add(gig.toMap());
       await _gigCollectionReference.add(gig.toMap()).then((gig) {
-        var documentId = gig.documentID;
-        DocumentReference document_ref =
-            _gigCollectionReference.document(documentId);
-        document_ref.updateData({'documentId': document_ref.documentID});
+        var gigId = gig.documentID;
+        DocumentReference gig_ref = _gigCollectionReference.document(gigId);
+        gig_ref.updateData({'gigId': gig_ref.documentID});
       });
+    } catch (e) {
+      // TODO: Find or create a way to repeat error handling without so much repeated code
+      if (e is PlatformException) {
+        return e.message;
+      }
+
+      return e.toString();
+    }
+  }
+
+  Future addComment(Comment comment, String gigIdHoldingComment) async {
+    try {
+      // await _gigCollectionReference.add(gig.toMap());
+
+      Map<String, dynamic> commentData = comment.toMap();
+      //
+      await _commentsCollectionReference
+          .document(gigIdHoldingComment +
+              DateTime.now().millisecondsSinceEpoch.toString())
+          .setData(commentData);
+      //end new
+      // await _commentsCollectionReference.add(comment.toMap()).then((comment) {
+      //   var commentId = comment.documentID;
+      //   DocumentReference documentRef =
+      //       _commentsCollectionReference.document(commentId);
+      //   documentRef.updateData({'commentId': documentRef.documentID});
+      // });
     } catch (e) {
       // TODO: Find or create a way to repeat error handling without so much repeated code
       if (e is PlatformException) {
@@ -77,15 +106,13 @@ class FirestoreService {
     return _gigsController.stream;
   }
 
-  Future deleteGig(String documentId) async {
-    await _gigCollectionReference.document(documentId).delete();
+  Future deleteGig(String gigId) async {
+    await _gigCollectionReference.document(gigId).delete();
   }
 
   Future updateGig(Gig gig) async {
     try {
-      await _gigCollectionReference
-          .document(gig.documentId)
-          .updateData(gig.toMap());
+      await _gigCollectionReference.document(gig.gigId).updateData(gig.toMap());
     } catch (e) {
       // TODO: Find or create a way to repeat error handling without so much repeated code
       if (e is PlatformException) {

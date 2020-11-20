@@ -38,7 +38,7 @@ class AllGigsViewModel extends BaseModel {
     );
     if (dialogResponse.confirmed) {
       setBusy(true);
-      await _firestoreService.deleteGig(_gigs[index].documentId);
+      await _firestoreService.deleteGig(_gigs[index].gigId);
       setBusy(false);
     }
   }

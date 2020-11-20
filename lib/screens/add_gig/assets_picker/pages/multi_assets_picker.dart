@@ -16,7 +16,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 enum UrlType { IMAGE, VIDEO, UNKNOWN }
 
 class MultiAssetsPicker extends StatefulWidget {
-  final String documentId;
+  final String gigId;
   final String receivedUserId;
   final String receivedUserProfilePictureUrl;
   final String receivedUserFullName;
@@ -32,7 +32,7 @@ class MultiAssetsPicker extends StatefulWidget {
 
   MultiAssetsPicker({
     Key key,
-    this.documentId,
+    this.gigId,
     this.receivedUserId,
     this.receivedUserProfilePictureUrl,
     this.receivedUserFullName,
@@ -405,7 +405,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
               "The URLS from the widget variable are: ${widget.gigMeidaFilesDownloadUrls}");
 
           CreateGigViewModel().addGig(
-            documentId: widget.documentId,
+            gigId: widget.gigId,
             userId: widget.receivedUserId,
             userProfilePictureUrl: widget.receivedUserProfilePictureUrl,
             userFullName: widget.receivedUserFullName,

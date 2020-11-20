@@ -1,6 +1,6 @@
 class Gig {
-  final String documentId;
-  final String userId;
+  final String gigId;
+  final String gigOwnerId;
   final String userProfilePictureUrl;
   final String userFullName;
   final String gigHashtags;
@@ -13,8 +13,8 @@ class Gig {
   final String adultContentText;
   final bool adultContentBool;
   Gig({
-    this.documentId,
-    this.userId,
+    this.gigId,
+    this.gigOwnerId,
     this.userProfilePictureUrl,
     this.userFullName,
     this.gigHashtags,
@@ -30,8 +30,8 @@ class Gig {
 
   Map<String, dynamic> toMap() {
     return {
-      'documentId': documentId,
-      'userId': userId,
+      'gigId': gigId,
+      'gigOwnerId': gigOwnerId,
       'userProfilePictureUrl': userProfilePictureUrl,
       'userFullName': userFullName,
       'gigHashtags': gigHashtags,
@@ -50,8 +50,8 @@ class Gig {
     if (map == null) return null;
 
     return Gig(
-      documentId: map['documentId'],
-      userId: map['userId'],
+      gigId: map['gigId'],
+      gigOwnerId: map['gigOwnerId'],
       userProfilePictureUrl: map['userProfilePictureUrl'],
       userFullName: map['userFullName'],
       gigHashtags: map['gigHashtags'],

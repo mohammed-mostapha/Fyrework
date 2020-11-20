@@ -11,6 +11,7 @@ import 'package:myApp/ui/widgets/add_comments_view.dart';
 import 'package:myApp/ui/widgets/gig_item_media_previewer.dart';
 
 class GigItem extends StatefulWidget {
+  final gigId;
   final userProfilePictureUrl;
   final userFullName;
   final gigHashtags;
@@ -25,6 +26,7 @@ class GigItem extends StatefulWidget {
   final Function onDeleteItem;
   GigItem({
     Key key,
+    this.gigId,
     this.userProfilePictureUrl,
     this.userFullName,
     this.gigHashtags,
@@ -77,7 +79,11 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
   _commentButtonPressed() {
     setState(() {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => CommentsPage()));
+          context,
+          MaterialPageRoute(
+              builder: (context) => AddCommentsView(
+                    passedGigId: widget.gigId.gigId,
+                  )));
     });
   }
 
