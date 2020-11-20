@@ -43,7 +43,13 @@ class FirestoreService {
 
   Future addGig(Gig gig) async {
     try {
-      await _gigCollectionReference.add(gig.toMap());
+      // await _gigCollectionReference.add(gig.toMap());
+      await _gigCollectionReference.add(gig.toMap()).then((gig) {
+        var documentId = gig.documentID;
+        DocumentReference document_ref =
+            _gigCollectionReference.document(documentId);
+        document_ref.updateData({'documentId': document_ref.documentID});
+      });
     } catch (e) {
       // TODO: Find or create a way to repeat error handling without so much repeated code
       if (e is PlatformException) {

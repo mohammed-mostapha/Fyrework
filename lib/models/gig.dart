@@ -30,6 +30,7 @@ class Gig {
 
   Map<String, dynamic> toMap() {
     return {
+      'documentId': documentId,
       'userId': userId,
       'userProfilePictureUrl': userProfilePictureUrl,
       'userFullName': userFullName,
@@ -49,6 +50,7 @@ class Gig {
     if (map == null) return null;
 
     return Gig(
+      documentId: map['documentId'],
       userId: map['userId'],
       userProfilePictureUrl: map['userProfilePictureUrl'],
       userFullName: map['userFullName'],
@@ -61,7 +63,6 @@ class Gig {
       gigValue: map['gigValue'],
       adultContentText: map['adultContentText'],
       adultContentBool: map['adultContentBool'],
-      documentId: documentId,
     );
   }
 }

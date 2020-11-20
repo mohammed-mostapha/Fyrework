@@ -166,8 +166,9 @@ class _AddGigDetailsState extends State<AddGigDetails> {
           userFullName = snapshot.data.displayName;
           return snapshot.data.isAnonymous
               ? Container(
-                  child:
-                      Text('You are an Anonymous user in the mean timeeeeeeee'),
+                  child: Flexible(
+                      child: Text(
+                          'You are an Anonymous user in the mean time...signUp to continue')),
                 )
               : ViewModelProvider<CreateGigViewModel>.withConsumer(
                   viewModelBuilder: () {

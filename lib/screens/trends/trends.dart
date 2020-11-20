@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:myApp/screens/trends/BuyerGigs.dart';
-import 'package:myApp/screens/trends/AllAccounts.dart';
+import 'package:myApp/screens/trends/OngoingUserActivity.dart';
 import 'package:myApp/screens/trends/providerGigs.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/views/AllGigs_view.dart';
@@ -21,11 +21,9 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
       child: Scaffold(
         appBar: AppBar(
           title: Center(
-            child: Text(
-              'Fyrework',
-              style:
-                  TextStyle(color: FyreworkrColors.fyreworkBlack, fontSize: 30),
-              textAlign: TextAlign.center,
+            child: Image.asset(
+              'assets/images/fyrework_logo.png',
+              width: 150,
             ),
           ),
           bottom: TabBar(
@@ -51,7 +49,7 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
                     maxLines: 1),
               ),
               Tab(
-                child: AutoSizeText('Accounts',
+                child: AutoSizeText('Ongoing',
                     style: TextStyle(color: FyreworkrColors.fyreworkBlack),
                     maxLines: 1),
               ),
@@ -65,7 +63,7 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
             AllGigsView(),
             BuyerGigs(),
             ProviderGigs(),
-            AllAccounts(),
+            OngoingUserActivity(),
           ],
         ),
       ),

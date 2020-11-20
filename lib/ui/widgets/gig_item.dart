@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:flutter_common_exports/src/extensions/build_context_extension.dart';
+import 'package:myApp/ui/widgets/add_comments_view.dart';
 import 'package:myApp/ui/widgets/gig_item_media_previewer.dart';
 
 class GigItem extends StatefulWidget {
@@ -73,6 +74,13 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
     });
   }
 
+  _commentButtonPressed() {
+    setState(() {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => CommentsPage()));
+    });
+  }
+
   _doubleTappedLike() {
     setState(() {
       liked = true;
@@ -92,6 +100,26 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    ScaleTransition likeButton = ScaleTransition(
+      scale: _likeAnimationController,
+      child: IconButton(
+          icon: Icon(
+            liked ? Icons.favorite : Icons.favorite_border,
+            color: liked ? Colors.red[400] : Colors.grey,
+            size: 30,
+          ),
+          onPressed: () => _likedPressed()),
+    );
+
+    IconButton commentButton = IconButton(
+      icon: Icon(
+        Icons.chat_bubble_outline,
+        color: Colors.grey,
+        size: 30,
+      ),
+      onPressed: () => _commentButtonPressed(),
+    );
+
     return Container(
       margin: const EdgeInsets.only(top: 20),
       child: Column(
@@ -174,20 +202,8 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
               ],
             ),
           ),
-
-          //end slider to preview gigMediafiles
-          ListTile(
-            contentPadding: const EdgeInsets.all(0),
-            leading: ScaleTransition(
-              scale: _likeAnimationController,
-              child: IconButton(
-                  icon: Icon(
-                    liked ? Icons.favorite : Icons.favorite_border,
-                    color: liked ? Colors.red[400] : Colors.grey,
-                    size: 30,
-                  ),
-                  onPressed: () => _likedPressed()),
-            ),
+          Row(
+            children: <Widget>[likeButton, commentButton],
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
@@ -210,7 +226,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                       children: <Widget>[
                         FaIcon(
                           FontAwesomeIcons.hourglassStart,
-                          size: 20,
+                          size: 15,
                         ),
                         Container(
                           width: 5.0,

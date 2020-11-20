@@ -348,7 +348,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             color: Colors.white,
             shape: BoxShape.circle,
             boxShadow: [
-              BoxShadow(blurRadius: 10, color: Colors.black54, spreadRadius: 5)
+              BoxShadow(blurRadius: 5, color: Colors.black54, spreadRadius: 5)
             ],
           ),
           child: CircleAvatar(
