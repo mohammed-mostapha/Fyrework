@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Comment {
   final String gigIdHoldingComment;
   final String commentId;
@@ -5,7 +7,7 @@ class Comment {
   final String commentOwnerProfilePictureUrl;
   final String commentOwnerFullName;
   final String commentBody;
-  DateTime commentTime;
+  dynamic commentTime;
 
   Comment({
     this.gigIdHoldingComment,
@@ -14,6 +16,7 @@ class Comment {
     this.commentOwnerProfilePictureUrl,
     this.commentOwnerFullName,
     this.commentBody,
+    this.commentTime,
   });
 
   Map<String, dynamic> toMap() {
@@ -25,6 +28,8 @@ class Comment {
       'commentOwnerProfilePictureUrl': commentOwnerProfilePictureUrl,
       'commentOwnerFullName': commentOwnerFullName,
       'commentBody': commentBody,
+      // 'commentTime': DateTime.now().millisecondsSinceEpoch.toString(),
+      'commentTime': commentTime,
     };
   }
 
@@ -38,6 +43,7 @@ class Comment {
       commentOwnerProfilePictureUrl: map['commentOwnerProfilePictureUrl'],
       commentOwnerFullName: map['commentOwnerFullName'],
       commentBody: map['commentBody'],
+      commentTime: map['commentTime'],
     );
   }
 }

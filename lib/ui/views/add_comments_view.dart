@@ -63,6 +63,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
       commentOwnerId: userId,
       commentOwnerProfilePictureUrl: userProfilePictureUrl,
       commentId: passedGigId,
+      commentTime: new DateTime.now(),
     );
     _addCommentsController.clear();
   }

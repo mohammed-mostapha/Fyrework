@@ -12,6 +12,7 @@ class CommentItem extends StatefulWidget {
   final commentOwnerProfilePictureUrl;
   final commentOwnerFullName;
   final commentBody;
+  final commentTime;
   final Function onDeleteItem;
   CommentItem({
     Key key,
@@ -21,6 +22,7 @@ class CommentItem extends StatefulWidget {
     this.commentOwnerProfilePictureUrl,
     this.commentOwnerFullName,
     this.commentBody,
+    this.commentTime,
     this.onDeleteItem,
   }) : super(key: key);
 
@@ -82,9 +84,6 @@ class _CommentItemState extends State<CommentItem> {
     timeAgo.setLocaleMessages('ro_short', timeAgo.RoShortMessages());
     timeAgo.setLocaleMessages('sv', timeAgo.SvMessages());
     timeAgo.setLocaleMessages('sv_short', timeAgo.SvShortMessages());
-    final loadedTime = new DateTime.now();
-    final now = new DateTime.now();
-    final difference = now.difference(loadedTime);
 
     var locale = 'en';
 
@@ -98,10 +97,10 @@ class _CommentItemState extends State<CommentItem> {
           child: Text('${widget.commentOwnerFullName.commentOwnerFullName}' +
               ' ' +
               '${widget.commentBody.commentBody}')),
-      // subtitle: Flexible(
-      //   // child: Text(timeAgo.format(now.subtract(difference), locale: locale)),
-      //   child: Text(timeAgo.),
-      // ),
+      subtitle: Flexible(
+        child: Text(timeAgo.format(widget.commentTime.commentTime.toDate())),
+        // child: Text('${widget.commentTime.commentTime}'),
+      ),
     );
   }
 

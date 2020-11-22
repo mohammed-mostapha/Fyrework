@@ -20,6 +20,7 @@ class AddCommentsViewModel extends BaseModel {
     @required String commentOwnerProfilePictureUrl,
     @required String commentOwnerFullName,
     @required String commentBody,
+    @required DateTime commentTime,
   }) async {
     setBusy(true);
 
@@ -33,6 +34,7 @@ class AddCommentsViewModel extends BaseModel {
             commentOwnerProfilePictureUrl: commentOwnerProfilePictureUrl,
             commentOwnerFullName: commentOwnerFullName,
             commentBody: commentBody,
+            commentTime: commentTime,
           ),
           gigIdHoldingComment);
 
@@ -48,6 +50,7 @@ class AddCommentsViewModel extends BaseModel {
           commentOwnerProfilePictureUrl: commentOwnerProfilePictureUrl,
           commentOwnerFullName: commentOwnerFullName,
           commentBody: commentBody,
+          commentTime: commentTime,
         ),
       );
     }

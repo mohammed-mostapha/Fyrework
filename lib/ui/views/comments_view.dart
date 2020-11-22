@@ -36,6 +36,7 @@ class CommentsView extends StatelessWidget {
                                         model.comments[index],
                                     commentOwnerFullName: model.comments[index],
                                     commentBody: model.comments[index],
+                                    commentTime: model.comments[index],
                                     onDeleteItem: () =>
                                         model.deleteComment(index),
                                   ),
