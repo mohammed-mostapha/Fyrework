@@ -33,36 +33,40 @@ class CreateGigViewModel extends BaseModel {
     var result;
 
     if (!_editting) {
-      result = await _firestoreService.addGig(Gig(
-        gigId: gigId,
-        gigOwnerId: userId,
-        userProfilePictureUrl: userProfilePictureUrl,
-        userFullName: userFullName,
-        gigHashtags: gigHashtags,
-        gigMediaFilesDownloadUrls: gigMediaFilesDownloadUrls,
-        gigPost: gigPost,
-        gigDeadline: gigDeadLine,
-        gigCurrency: gigCurrency,
-        gigBudget: gigBudget,
-        gigValue: gigValue,
-        adultContentText: adultContentText,
-        adultContentBool: adultContentBool,
-      ));
+      result = await _firestoreService.addGig(
+        Gig(
+          gigId: gigId,
+          gigOwnerId: userId,
+          userProfilePictureUrl: userProfilePictureUrl,
+          userFullName: userFullName,
+          gigHashtags: gigHashtags,
+          gigMediaFilesDownloadUrls: gigMediaFilesDownloadUrls,
+          gigPost: gigPost,
+          gigDeadline: gigDeadLine,
+          gigCurrency: gigCurrency,
+          gigBudget: gigBudget,
+          gigValue: gigValue,
+          adultContentText: adultContentText,
+          adultContentBool: adultContentBool,
+        ),
+      );
     } else {
-      result = await _firestoreService.updateGig(Gig(
-        gigId: gigId,
-        gigOwnerId: userId,
-        userProfilePictureUrl: userProfilePictureUrl,
-        userFullName: userFullName,
-        gigHashtags: gigHashtags,
-        gigPost: gigPost,
-        gigDeadline: gigDeadLine,
-        gigCurrency: gigCurrency,
-        gigBudget: gigBudget,
-        gigValue: gigValue,
-        adultContentText: adultContentText,
-        adultContentBool: adultContentBool,
-      ));
+      result = await _firestoreService.updateGig(
+        Gig(
+          gigId: gigId,
+          gigOwnerId: userId,
+          userProfilePictureUrl: userProfilePictureUrl,
+          userFullName: userFullName,
+          gigHashtags: gigHashtags,
+          gigPost: gigPost,
+          gigDeadline: gigDeadLine,
+          gigCurrency: gigCurrency,
+          gigBudget: gigBudget,
+          gigValue: gigValue,
+          adultContentText: adultContentText,
+          adultContentBool: adultContentBool,
+        ),
+      );
     }
     setBusy(false);
 

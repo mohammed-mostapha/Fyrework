@@ -54,6 +54,7 @@ dependencies:
   carousel_slider: ^1.4.1
   jiffy:
   better_player: ^0.0.9 
+  timeago: ^2.0.27
   
 
   

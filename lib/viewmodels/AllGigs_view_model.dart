@@ -32,7 +32,7 @@ class AllGigsViewModel extends BaseModel {
   Future deleteGig(int index) async {
     var dialogResponse = await _dialogService.showConfirmationDialog(
       title: 'Are you sure?',
-      description: 'Do you really want to delete the gig?',
+      description: 'Do you really want to delete this gig?',
       confirmationTitle: 'Yes',
       cancelTitle: 'No',
     );

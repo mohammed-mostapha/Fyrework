@@ -19,7 +19,7 @@ class _ProfileViewState extends State<ProfileView> {
   dynamic userProfilePictureUrl;
 
   Future<String> getProfilePictureDownloadUrl() async {
-    print('some workkkkkk');
+    print('fetching profile picture url');
     return userProfilePictureUrl = await _storageRepo
         .getUserProfilePictureDownloadUrl(await _authService.getCurrentUID());
   }

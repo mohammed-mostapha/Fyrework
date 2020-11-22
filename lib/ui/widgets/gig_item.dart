@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:flutter_common_exports/src/extensions/build_context_extension.dart';
-import 'package:myApp/ui/widgets/add_comments_view.dart';
+import 'package:myApp/ui/views/add_comments_view.dart';
 import 'package:myApp/ui/widgets/gig_item_media_previewer.dart';
 
 class GigItem extends StatefulWidget {

@@ -3,26 +3,27 @@ class Comment {
   final String commentId;
   final String commentOwnerId;
   final String commentOwnerProfilePictureUrl;
-  final String comentOwnerFullName;
+  final String commentOwnerFullName;
   final String commentBody;
+  DateTime commentTime;
 
   Comment({
     this.gigIdHoldingComment,
     this.commentId,
     this.commentOwnerId,
     this.commentOwnerProfilePictureUrl,
-    this.comentOwnerFullName,
+    this.commentOwnerFullName,
     this.commentBody,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'gigIdHoldingComment': gigIdHoldingComment,
+      // 'commentId': commentId + DateTime.now().millisecondsSinceEpoch.toString(),
       'commentId': commentId,
-      'commentOwnerId':
-          commentOwnerId + DateTime.now().millisecondsSinceEpoch.toString(),
-      'commentOwnerProfilePicture': commentOwnerProfilePictureUrl,
-      'comentOwnerFullName': comentOwnerFullName,
+      'commentOwnerId': commentOwnerId,
+      'commentOwnerProfilePictureUrl': commentOwnerProfilePictureUrl,
+      'commentOwnerFullName': commentOwnerFullName,
       'commentBody': commentBody,
     };
   }
@@ -34,8 +35,9 @@ class Comment {
       gigIdHoldingComment: map['gigIdHoldingComment'],
       commentId: map['commentId'],
       commentOwnerId: map['commentOwnerId'],
-      commentOwnerProfilePictureUrl: map['commentOwnerProfilePicture'],
-      comentOwnerFullName: map['comentOwnerFullName'],
+      commentOwnerProfilePictureUrl: map['commentOwnerProfilePictureUrl'],
+      commentOwnerFullName: map['commentOwnerFullName'],
+      commentBody: map['commentBody'],
     );
   }
 }
