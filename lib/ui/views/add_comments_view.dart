@@ -92,7 +92,10 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                   body: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Expanded(child: CommentsView()),
+                      Expanded(
+                          child: CommentsView(
+                        gigIdCommentsIdentifier: passedGigId,
+                      )),
                       ListTile(
                         leading: CircleAvatar(
                           backgroundImage: NetworkImage(userProfilePictureUrl),
@@ -118,6 +121,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                               commentOwnerProfilePictureUrl:
                                   userProfilePictureUrl,
                               commentId: passedGigId,
+                              commentTime: new DateTime.now(),
                             );
                             _addCommentsController.clear();
                           },
@@ -132,13 +136,6 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                           onPressed: () {
                             addComment();
                           },
-                          // borderSide: BorderSide.none,
-                          // child: Text(
-                          //   "Add comment",
-                          //   style: TextStyle(
-                          //       color: Colors.black,
-                          //       fontWeight: FontWeight.bold),
-                          // ),
                         ),
                       ),
                     ],

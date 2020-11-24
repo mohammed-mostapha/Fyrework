@@ -16,17 +16,15 @@ class CommentsViewModel extends BaseModel {
 
   bool get busy => false;
 
-  void listenToComments() {
+  void listenToComments(String gigIdCommentsIdentifier) {
     setBusy(true);
-    _firestoreService.listenToCommentsRealTime().listen((commentsData) {
-      print('coming from comments_view_model ${commentsData.runtimeType}');
-      print('coming from comments_view_model ${commentsData.length}');
+    _firestoreService
+        .listenToCommentsRealTime(gigIdCommentsIdentifier)
+        .listen((commentsData) {
       List<dynamic> updatedComments = commentsData;
       if (updatedComments != null && updatedComments.length > 0) {
         _comments = updatedComments;
         notifyListeners();
-      } else {
-        print('null and not more than 0');
       }
 
       setBusy(false);

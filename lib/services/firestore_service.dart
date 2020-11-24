@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myApp/models/gig.dart';
@@ -97,22 +98,20 @@ class FirestoreService {
     return _gigsController.stream;
   }
 
-  Stream listenToCommentsRealTime() {
+  Stream listenToCommentsRealTime(String gigIdCommentsIdentifier) {
     // Register the handler for when the comments data changes
     _commentsCollectionReference.snapshots().listen((commentsSnapshot) {
       if (commentsSnapshot.documents.isNotEmpty) {
-        print('payload is not empty ${commentsSnapshot.documents.length}');
-        var commentsBefore = commentsSnapshot.documents;
-        print('commentsBefore: ${commentsBefore.length}');
-        var comments = commentsSnapshot.documents
+        var commentsByGigId = commentsSnapshot.documents
+            .where((element) =>
+                element.documentID.contains(gigIdCommentsIdentifier))
             .map((snapshot) =>
                 Comment.fromMap(snapshot.data, snapshot.documentID))
-            .where((mappedItem) => mappedItem.commentBody != null)
+            .where((mappedItem) =>
+                mappedItem.gigIdHoldingComment == gigIdCommentsIdentifier)
             .toList();
-        // Add the posts onto the controller
-        _commentsController.add(comments);
-        print('payloaddd 2 ${comments.runtimeType}');
-        print('payloaddd 2 ${comments.length}');
+
+        _commentsController.add(commentsByGigId);
       }
     });
 

@@ -5,14 +5,17 @@ import 'package:myApp/ui/widgets/comment_item.dart';
 import 'package:timeago/timeago.dart';
 
 class CommentsView extends StatelessWidget {
-  const CommentsView({Key key}) : super(key: key);
+  final String gigIdCommentsIdentifier;
+  const CommentsView({Key key, @required this.gigIdCommentsIdentifier})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<CommentsViewModel>.withConsumer(
         viewModelBuilder: () {
           return CommentsViewModel();
         },
-        onModelReady: (model) => model.listenToComments(),
+        onModelReady: (model) =>
+            model.listenToComments(gigIdCommentsIdentifier),
         builder: (context, model, child) => Scaffold(
               backgroundColor: Colors.white,
               body: Padding(
@@ -47,7 +50,7 @@ class CommentsView extends StatelessWidget {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    "No one has commentd on this gig yet..add yours to communiate with the gig poster...",
+                                    "No comments yet...",
                                     style: TextStyle(fontSize: 18),
                                     textAlign: TextAlign.center,
                                   ),

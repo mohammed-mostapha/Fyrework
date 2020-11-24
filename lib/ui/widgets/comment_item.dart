@@ -87,19 +87,41 @@ class _CommentItemState extends State<CommentItem> {
 
     var locale = 'en';
 
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundImage: NetworkImage(
-            '${widget.commentOwnerProfilePictureUrl.commentOwnerProfilePictureUrl}'),
-        radius: 20,
-      ),
-      title: Flexible(
-          child: Text('${widget.commentOwnerFullName.commentOwnerFullName}' +
-              ' ' +
-              '${widget.commentBody.commentBody}')),
-      subtitle: Flexible(
-        child: Text(timeAgo.format(widget.commentTime.commentTime.toDate())),
-        // child: Text('${widget.commentTime.commentTime}'),
+    return Container(
+      decoration: BoxDecoration(
+          border:
+              Border(bottom: BorderSide(width: 0.5, color: Colors.grey[400]))),
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundImage: NetworkImage(
+              '${widget.commentOwnerProfilePictureUrl.commentOwnerProfilePictureUrl}'),
+          radius: 20,
+        ),
+        title: Flexible(
+          // child: Text('${widget.commentOwnerFullName.commentOwnerFullName}' +
+          //     ' ' +
+          //     '${widget.commentBody.commentBody}')),
+          child: RichText(
+            text: TextSpan(
+                style: DefaultTextStyle.of(context).style,
+                children: <TextSpan>[
+                  TextSpan(
+                      text:
+                          '${widget.commentOwnerFullName.commentOwnerFullName} ',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: '${widget.commentBody.commentBody}',
+                      style: TextStyle(
+                        fontSize: 18,
+                      )),
+                ]),
+          ),
+        ),
+        subtitle: Flexible(
+          child: Text(timeAgo.format(widget.commentTime.commentTime.toDate())),
+          // child: Text('${widget.commentTime.commentTime}'),
+        ),
       ),
     );
   }
