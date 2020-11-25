@@ -87,6 +87,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
               },
               builder: (context, model, child) => Scaffold(
                   appBar: new AppBar(
+                    backgroundColor: Theme.of(context).primaryColor,
                     title: Text('Comments'),
                   ),
                   body: Column(
@@ -94,6 +95,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                     children: <Widget>[
                       Expanded(
                           child: CommentsView(
+                        currentUserId: userId,
                         gigIdCommentsIdentifier: passedGigId,
                       )),
                       ListTile(

@@ -3,9 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myApp/models/gig.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_common_exports/src/extensions/build_context_extension.dart';
+import 'package:myApp/ui/shared/theme.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 class CommentItem extends StatefulWidget {
+  final currentUserId;
   final gigIdHoldingComment;
   final commentId;
   final commentOwnerId;
@@ -16,6 +18,7 @@ class CommentItem extends StatefulWidget {
   final Function onDeleteItem;
   CommentItem({
     Key key,
+    this.currentUserId,
     this.gigIdHoldingComment,
     this.commentId,
     this.commentOwnerId,
@@ -39,6 +42,8 @@ class _CommentItemState extends State<CommentItem> {
 
   @override
   Widget build(BuildContext context) {
+    print('commentOwnerId xx: ${widget.commentOwnerId.commentOwnerId}');
+    print('currentUserId xx: ${widget.currentUserId}');
     timeAgo.setLocaleMessages('de', timeAgo.DeMessages());
     timeAgo.setLocaleMessages('dv', timeAgo.DvMessages());
     timeAgo.setLocaleMessages('dv_short', timeAgo.DvShortMessages());
@@ -89,6 +94,9 @@ class _CommentItemState extends State<CommentItem> {
 
     return Container(
       decoration: BoxDecoration(
+          color: widget.commentOwnerId.commentOwnerId == widget.currentUserId
+              ? FyreworkrColors.fyreworkBlack
+              : Colors.grey[50],
           border:
               Border(bottom: BorderSide(width: 0.5, color: Colors.grey[400]))),
       child: ListTile(
@@ -108,18 +116,36 @@ class _CommentItemState extends State<CommentItem> {
                   TextSpan(
                       text:
                           '${widget.commentOwnerFullName.commentOwnerFullName} ',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: widget.commentOwnerId.commentOwnerId ==
+                                widget.currentUserId
+                            ? Colors.white
+                            : FyreworkrColors.fyreworkBlack,
+                      )),
                   TextSpan(
                       text: '${widget.commentBody.commentBody}',
                       style: TextStyle(
                         fontSize: 18,
+                        color: widget.commentOwnerId.commentOwnerId ==
+                                widget.currentUserId
+                            ? Colors.white
+                            : FyreworkrColors.fyreworkBlack,
                       )),
                 ]),
           ),
         ),
         subtitle: Flexible(
-          child: Text(timeAgo.format(widget.commentTime.commentTime.toDate())),
+          child: Text(
+            timeAgo.format(widget.commentTime.commentTime.toDate()),
+            style: TextStyle(
+              color:
+                  widget.commentOwnerId.commentOwnerId == widget.currentUserId
+                      ? Colors.white
+                      : FyreworkrColors.fyreworkBlack,
+            ),
+          ),
           // child: Text('${widget.commentTime.commentTime}'),
         ),
       ),

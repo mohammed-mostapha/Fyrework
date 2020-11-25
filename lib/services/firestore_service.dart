@@ -141,6 +141,21 @@ class FirestoreService {
     }
   }
 
+  Future updateGigAddRemoveLike(String gigId, bool likedOrNot) async {
+    try {
+      await _gigsCollectionReference
+          .document(gigId)
+          .updateData({'gigLikes': FieldValue.increment(likedOrNot ? 1 : -1)});
+    } catch (e) {
+      // TODO: Find or create a way to repeat error handling without so much repeated code
+      if (e is PlatformException) {
+        return e.message;
+      }
+
+      return e.toString();
+    }
+  }
+
   Future updateComment(Comment comment) async {
     try {
       await _commentsCollectionReference

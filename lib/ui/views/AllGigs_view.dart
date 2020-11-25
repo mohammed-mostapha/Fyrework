@@ -41,6 +41,7 @@ class AllGigsView extends StatelessWidget {
                                     gigCurrency: model.gigs[index],
                                     gigBudget: model.gigs[index],
                                     gigValue: model.gigs[index],
+                                    gigLikes: model.gigs[index],
                                     adultContentText: model.gigs[index],
                                     adultContentBool: model.gigs[index],
                                     onDeleteItem: () => model.deleteGig(index),

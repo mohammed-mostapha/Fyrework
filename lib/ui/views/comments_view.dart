@@ -6,7 +6,9 @@ import 'package:timeago/timeago.dart';
 
 class CommentsView extends StatelessWidget {
   final String gigIdCommentsIdentifier;
-  const CommentsView({Key key, @required this.gigIdCommentsIdentifier})
+  final String currentUserId;
+  const CommentsView(
+      {Key key, @required this.gigIdCommentsIdentifier, this.currentUserId})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,7 @@ class CommentsView extends StatelessWidget {
                                     GestureDetector(
                                   // onTap: () => model.editCooment(index),
                                   child: CommentItem(
+                                    currentUserId: currentUserId,
                                     gigIdHoldingComment: model.comments[index],
                                     commentId: model.comments[index],
                                     commentOwnerId: model.comments[index],

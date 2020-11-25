@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:myApp/models/gig.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:myApp/services/firestore_service.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:flutter_common_exports/src/extensions/build_context_extension.dart';
 import 'package:myApp/ui/views/add_comments_view.dart';
@@ -21,6 +22,7 @@ class GigItem extends StatefulWidget {
   final gigCurrency;
   final gigBudget;
   final gigValue;
+  final gigLikes;
   final Gig adultContentText;
   final Gig adultContentBool;
   final Function onDeleteItem;
@@ -36,6 +38,7 @@ class GigItem extends StatefulWidget {
     this.gigCurrency,
     this.gigBudget,
     this.gigValue,
+    this.gigLikes,
     this.adultContentText,
     this.adultContentBool,
     this.onDeleteItem,
@@ -74,6 +77,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
         _likeAnimationController.reverse();
       });
     });
+    FirestoreService().updateGigAddRemoveLike(widget.gigId.gigId, liked);
   }
 
   _commentButtonPressed() {
@@ -88,20 +92,31 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
   }
 
   _doubleTappedLike() {
-    setState(() {
-      liked = true;
-      showLikeOverlay = true;
-      _likeAnimationController.forward().then((value) {
-        _likeAnimationController.reverse();
-      });
-      if (showLikeOverlay) {
-        Timer(const Duration(milliseconds: 500), () {
-          setState(() {
-            showLikeOverlay = false;
-          });
+    print('showLikeOverlay $showLikeOverlay');
+    if (liked == false && showLikeOverlay == false) {
+      setState(() {
+        liked = true;
+        showLikeOverlay = true;
+        _likeAnimationController.forward().then((value) {
+          _likeAnimationController.reverse();
         });
-      }
+        if (showLikeOverlay) {
+          Timer(const Duration(milliseconds: 500), () {
+            setState(() {
+              showLikeOverlay = false;
+            });
+          });
+        }
+
+        FirestoreService().updateGigAddRemoveLike(widget.gigId.gigId, liked);
+      });
+    }
+    showLikeOverlay = true;
+    _likeAnimationController.forward().then((value) {
+      _likeAnimationController.reverse();
+      showLikeOverlay = false;
     });
+    print('showLikeOverlay $showLikeOverlay');
   }
 
   @override
@@ -118,10 +133,15 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
     );
 
     IconButton commentButton = IconButton(
-      icon: Icon(
-        Icons.chat_bubble_outline,
+      // icon: Icon(
+      //   Icons.chat_bubble_outline,
+      //   color: Colors.grey,
+      //   size: 30,
+      // ),
+      icon: FaIcon(
+        FontAwesomeIcons.comment,
+        size: 27,
         color: Colors.grey,
-        size: 30,
       ),
       onPressed: () => _commentButtonPressed(),
     );
@@ -215,6 +235,24 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
             padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
             child: Column(
               children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    widget.gigLikes.gigLikes != null &&
+                            widget.gigLikes.gigLikes != 0 &&
+                            widget.gigLikes.gigLikes > 0
+                        ? Flexible(
+                            child: Text(
+                            '${widget.gigLikes.gigLikes}' + ' ' + 'likes',
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),
+                          ))
+                        : Container(
+                            width: 0,
+                            height: 0,
+                          ),
+                  ],
+                ),
                 Container(
                   alignment: Alignment.centerLeft,
                   child: AutoSizeText(

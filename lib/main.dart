@@ -23,10 +23,10 @@ class MyApp extends StatelessWidget {
     return Provider(
       auth: AuthService(),
       child: MaterialApp(
-        theme: ThemeData(
-          primaryColor: FyreworkrColors.fyreworkBlack,
-          accentColor: FyreworkrColors.fyreworkBlack,
-        ),
+        // theme: ThemeData(
+        //   primaryColor: FyreworkrColors.fyreworkBlack,
+        //   accentColor: FyreworkrColors.fyreworkBlack,
+        // ),
         home: HomeController(),
         routes: <String, WidgetBuilder>{
           '/home': (BuildContext context) => HomeController(),
@@ -65,6 +65,10 @@ class _HomeControllerState extends State<HomeController> {
           if (snapshot.connectionState == ConnectionState.active) {
             bool signedIn = snapshot.hasData;
             return MaterialApp(
+              theme: ThemeData(
+                primaryColor: FyreworkrColors.fyreworkBlack,
+                accentColor: FyreworkrColors.fyreworkBlack,
+              ),
               supportedLocales: [
                 Locale('en', 'US'),
                 Locale('fr', 'FR'),

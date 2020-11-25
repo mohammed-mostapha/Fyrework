@@ -12,6 +12,7 @@ class Gig {
   String gigValue;
   final String adultContentText;
   final bool adultContentBool;
+  final int gigLikes;
   Gig({
     this.gigId,
     this.gigOwnerId,
@@ -24,6 +25,7 @@ class Gig {
     this.gigCurrency,
     this.gigBudget,
     this.gigValue,
+    this.gigLikes,
     this.adultContentText,
     this.adultContentBool,
   });
@@ -43,6 +45,7 @@ class Gig {
       'gigValue': gigValue,
       'adultContentText': adultContentText,
       'adultContentBool': adultContentBool,
+      'gigLikes': gigLikes,
     };
   }
 
@@ -63,6 +66,7 @@ class Gig {
       gigValue: map['gigValue'],
       adultContentText: map['adultContentText'],
       adultContentBool: map['adultContentBool'],
+      gigLikes: map['gigLikes'],
     );
   }
 }
