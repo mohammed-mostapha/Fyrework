@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:myApp/screens/trends/BuyerGigs.dart';
-import 'package:myApp/screens/trends/OngoingUserActivity.dart';
 import 'package:myApp/screens/trends/providerGigs.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/views/AllGigs_view.dart';
@@ -17,7 +16,7 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
     super.build(context);
 
     return DefaultTabController(
-      length: 4,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: Center(
@@ -48,11 +47,6 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
                     style: TextStyle(color: FyreworkrColors.fyreworkBlack),
                     maxLines: 1),
               ),
-              Tab(
-                child: AutoSizeText('Ongoing',
-                    style: TextStyle(color: FyreworkrColors.fyreworkBlack),
-                    maxLines: 1),
-              ),
             ],
           ),
           backgroundColor: FyreworkrColors.white,
@@ -63,7 +57,6 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
             AllGigsView(),
             BuyerGigs(),
             ProviderGigs(),
-            OngoingUserActivity(),
           ],
         ),
       ),

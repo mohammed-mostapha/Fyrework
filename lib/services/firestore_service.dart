@@ -7,6 +7,8 @@ import 'package:myApp/models/comment.dart';
 import 'package:myApp/models/user.dart';
 import 'package:flutter/services.dart';
 
+import 'database.dart';
+
 class FirestoreService {
   final CollectionReference _usersCollectionReference =
       Firestore.instance.collection('users');
@@ -49,13 +51,18 @@ class FirestoreService {
   }
 
   Future addGig(Gig gig) async {
+    var gigId;
+    String userId = gig.gigOwnerId;
+
     try {
       // await _gigCollectionReference.add(gig.toMap());
       await _gigsCollectionReference.add(gig.toMap()).then((gig) {
-        var gigId = gig.documentID;
-        DocumentReference gig_ref = _gigsCollectionReference.document(gigId);
-        gig_ref.updateData({'gigId': gig_ref.documentID});
+        gigId = gig.documentID;
+        DocumentReference gigRef = _gigsCollectionReference.document(gigId);
+        gigRef.updateData({'gigId': gigRef.documentID});
       });
+      await DatabaseService(uid: userId)
+          .updateOngoingGigsByGigId(userId, gigId);
     } catch (e) {
       // TODO: Find or create a way to repeat error handling without so much repeated code
       if (e is PlatformException) {

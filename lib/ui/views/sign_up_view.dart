@@ -76,6 +76,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   final formKey = GlobalKey<FormState>();
   String _email, _password, _name, location, _warning, _phone;
   bool _is_minor = false;
+  dynamic _ongoingGigsByGigId;
   final TextEditingController phoneNumberController = TextEditingController();
   TextEditingController _ageOfUserController = new TextEditingController();
   DateTime _defaultAge = Jiffy().subtract(years: 19);
@@ -139,8 +140,13 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             // uploading a profile pic for the user signing up
             File profilePictureToUpload = File(_profileImage.path);
 
-            await auth.createUserWithEmailAndPassword(_email.trim(),
-                _password.trim(), _name.trim(), location, _is_minor);
+            await auth.createUserWithEmailAndPassword(
+                _email.trim(),
+                _password.trim(),
+                _name.trim(),
+                location,
+                _is_minor,
+                _ongoingGigsByGigId);
 
             await locator
                 .get<UserController>()

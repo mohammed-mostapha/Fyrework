@@ -1,5 +1,6 @@
 import 'package:myApp/locator.dart';
 import 'package:myApp/models/gig.dart';
+import 'package:myApp/services/database.dart';
 import 'package:myApp/services/navigation_service.dart';
 import 'package:myApp/viewmodels/base_model.dart';
 import 'package:myApp/services/firestore_service.dart';
@@ -30,10 +31,11 @@ class CreateGigViewModel extends BaseModel {
   }) async {
     setBusy(true);
 
-    var result;
+    var gigAdded;
+    var updatedOngoingGigsByGigId;
 
     if (!_editting) {
-      result = await _firestoreService.addGig(
+      gigAdded = await _firestoreService.addGig(
         Gig(
           gigId: gigId,
           gigOwnerId: userId,
@@ -51,7 +53,7 @@ class CreateGigViewModel extends BaseModel {
         ),
       );
     } else {
-      result = await _firestoreService.updateGig(
+      gigAdded = await _firestoreService.updateGig(
         Gig(
           gigId: gigId,
           gigOwnerId: userId,
@@ -70,7 +72,8 @@ class CreateGigViewModel extends BaseModel {
     }
     setBusy(false);
 
-    if (result is String) {
+    // if (gigAdded is String && updatedOngoingGigsByGigId is String) {
+    if (gigAdded is String) {
       _navigationService.previewAllGigs();
     } else {
       print('error');

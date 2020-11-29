@@ -26,16 +26,21 @@ class AuthService {
   }
 
   // Email & Password Sign Up
-  Future createUserWithEmailAndPassword(String email, String password,
-      String name, String location, bool is_minor) async {
+  Future createUserWithEmailAndPassword(
+      String email,
+      String password,
+      String name,
+      String location,
+      bool is_minor,
+      dynamic ongoingGigsByGigId) async {
     final authResult = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
 
     FirebaseUser user = authResult.user;
 
     // create a new document for the user with the uid
-    await DatabaseService(uid: user.uid)
-        .updateUserData(user.uid, name, email, password, location, is_minor);
+    await DatabaseService(uid: user.uid).updateUserData(user.uid, name, email,
+        password, location, is_minor, ongoingGigsByGigId);
     // return _userFromFirebaseUser(user);
 
     // Update the username
@@ -55,15 +60,6 @@ class AuthService {
     await currentUser.reload();
     return currentUser.uid;
   }
-
-  // Email & Password Sign In
-  // Future<String> signInWithEmailAndPassword(
-  //     String email, String password) async {
-  //   return (await _firebaseAuth.signInWithEmailAndPassword(
-  //           email: email, password: password))
-  //       .user
-  //       .uid;
-  // }
 
   // Email & Password Sign In
   Future<User> signInWithEmailAndPassword(String email, String password) async {
