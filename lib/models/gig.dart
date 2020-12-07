@@ -1,7 +1,7 @@
 class Gig {
   final String gigId;
   final String gigOwnerId;
-  final String userProfilePictureUrl;
+  final String userProfilePictureDownloadUrl;
   final String userFullName;
   final String gigHashtags;
   final dynamic gigMediaFilesDownloadUrls;
@@ -16,7 +16,7 @@ class Gig {
   Gig({
     this.gigId,
     this.gigOwnerId,
-    this.userProfilePictureUrl,
+    this.userProfilePictureDownloadUrl,
     this.userFullName,
     this.gigHashtags,
     this.gigMediaFilesDownloadUrls,
@@ -34,7 +34,7 @@ class Gig {
     return {
       'gigId': gigId,
       'gigOwnerId': gigOwnerId,
-      'userProfilePictureUrl': userProfilePictureUrl,
+      'userProfilePictureDownloadUrl': userProfilePictureDownloadUrl,
       'userFullName': userFullName,
       'gigHashtags': gigHashtags,
       'gigMediaFilesDownloadUrls': gigMediaFilesDownloadUrls,
@@ -55,7 +55,7 @@ class Gig {
     return Gig(
       gigId: map['gigId'],
       gigOwnerId: map['gigOwnerId'],
-      userProfilePictureUrl: map['userProfilePictureUrl'],
+      userProfilePictureDownloadUrl: map['userProfilePictureDownloadUrl'],
       userFullName: map['userFullName'],
       gigHashtags: map['gigHashtags'],
       gigMediaFilesDownloadUrls: map['gigMediaFilesDownloadUrls'],

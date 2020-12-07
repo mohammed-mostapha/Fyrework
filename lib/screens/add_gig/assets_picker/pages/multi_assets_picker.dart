@@ -18,7 +18,7 @@ enum UrlType { IMAGE, VIDEO, UNKNOWN }
 class MultiAssetsPicker extends StatefulWidget {
   final String gigId;
   final String receivedUserId;
-  final String receivedUserProfilePictureUrl;
+  final String receivedUserProfilePictureDownloadUrl;
   final String receivedUserFullName;
   final String receivedGigHashtags;
   final List<String> gigMeidaFilesDownloadUrls = List<String>();
@@ -34,7 +34,7 @@ class MultiAssetsPicker extends StatefulWidget {
     Key key,
     this.gigId,
     this.receivedUserId,
-    this.receivedUserProfilePictureUrl,
+    this.receivedUserProfilePictureDownloadUrl,
     this.receivedUserFullName,
     this.receivedGigHashtags,
     this.receivedGigPost,
@@ -407,7 +407,8 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
           CreateGigViewModel().addGig(
             gigId: widget.gigId,
             userId: widget.receivedUserId,
-            userProfilePictureUrl: widget.receivedUserProfilePictureUrl,
+            userProfilePictureDownloadUrl:
+                widget.receivedUserProfilePictureDownloadUrl,
             userFullName: widget.receivedUserFullName,
             gigHashtags: widget.receivedGigHashtags,
             gigMediaFilesDownloadUrls: widget.gigMeidaFilesDownloadUrls,

@@ -12,7 +12,7 @@ import 'package:myApp/ui/views/add_comments_view.dart';
 import 'package:myApp/ui/widgets/gig_item_media_previewer.dart';
 import 'package:myApp/ui/widgets/user_profile.dart';
 
-class GigItem extends StatefulWidget {
+class UserRelatedGigItem extends StatefulWidget {
   final gigId;
   final gigOwnerId;
   final gigOwnerEmail;
@@ -26,10 +26,10 @@ class GigItem extends StatefulWidget {
   final gigBudget;
   final gigValue;
   final gigLikes;
-  final Gig adultContentText;
-  final Gig adultContentBool;
+  final dynamic adultContentText;
+  final dynamic adultContentBool;
   final Function onDeleteItem;
-  GigItem({
+  UserRelatedGigItem({
     Key key,
     this.gigId,
     this.gigOwnerId,
@@ -50,10 +50,11 @@ class GigItem extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _GigItemState createState() => _GigItemState();
+  _UserRelatedGigItemState createState() => _UserRelatedGigItemState();
 }
 
-class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
+class _UserRelatedGigItemState extends State<UserRelatedGigItem>
+    with TickerProviderStateMixin {
   bool isDisplayingDetail = true;
   ThemeData get currentTheme => context.themeData;
 
@@ -176,16 +177,17 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                       child: Row(
                         children: [
                           CircleAvatar(
+                            // backgroundColor: Theme.of(context).primaryColor,
                             backgroundColor: Theme.of(context).primaryColor,
                             backgroundImage: NetworkImage(
-                                "${widget.userProfilePictureDownloadUrl.userProfilePictureDownloadUrl}"),
+                                "${widget.userProfilePictureDownloadUrl}"),
                           ),
                           Container(
                             width: 10,
                             height: 0,
                           ),
                           AutoSizeText(
-                            "${widget.userFullName.userFullName}",
+                            "${widget.userFullName}",
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
@@ -193,7 +195,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                       ),
                     ),
                     RaisedButton(
-                      child: widget.gigValue.gigValue == 'Gigs I can do'
+                      child: widget.gigValue == 'Gigs I can do'
                           ? AutoSizeText(
                               "Hire me",
                               style: TextStyle(
@@ -215,7 +217,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                 Container(
                   alignment: Alignment.centerLeft,
                   child: AutoSizeText(
-                    "${widget.gigHashtags.gigHashtags}",
+                    "${widget.gigHashtags}",
                     style: TextStyle(
                       fontSize: 18,
                     ),
@@ -231,8 +233,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
               alignment: Alignment.center,
               children: <Widget>[
                 GigItemMediaPreviewer(
-                  receivedGigMediaFilesUrls: widget
-                      .gigMediaFilesDownloadUrls.gigMediaFilesDownloadUrls,
+                  receivedGigMediaFilesUrls: widget.gigMediaFilesDownloadUrls,
                 ),
                 showLikeOverlay
                     ? Icon(
@@ -253,12 +254,12 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    widget.gigLikes.gigLikes != null &&
-                            widget.gigLikes.gigLikes != 0 &&
-                            widget.gigLikes.gigLikes > 0
+                    widget.gigLikes != null &&
+                            widget.gigLikes != 0 &&
+                            widget.gigLikes > 0
                         ? Flexible(
                             child: Text(
-                            '${widget.gigLikes.gigLikes}' + ' ' + 'likes',
+                            '${widget.gigLikes}' + ' ' + 'likes',
                             style: TextStyle(
                               fontSize: 18,
                             ),
@@ -272,7 +273,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                 Container(
                   alignment: Alignment.centerLeft,
                   child: AutoSizeText(
-                    "${widget.gigPost.gigPost}",
+                    "${widget.gigPost}",
                     style: TextStyle(
                       fontSize: 18,
                     ),
@@ -295,7 +296,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                         Container(
                           alignment: Alignment.centerLeft,
                           child: AutoSizeText(
-                            "${widget.gigDeadline.gigDeadline}",
+                            "${widget.gigDeadline}",
                             style: TextStyle(
                               fontSize: 18,
                             ),
@@ -308,7 +309,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                       children: <Widget>[
                         Container(
                           child: AutoSizeText(
-                            "${widget.gigCurrency.gigCurrency}",
+                            "${widget.gigCurrency}",
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
@@ -319,7 +320,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                         ),
                         Container(
                           child: AutoSizeText(
-                            "${widget.gigBudget.gigBudget}",
+                            "${widget.gigBudget}",
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
@@ -329,7 +330,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                   ],
                 ),
                 SizedBox(height: 10.0),
-                widget.adultContentBool.adultContentBool
+                widget.adultContentBool
                     ? Container(
                         alignment: Alignment.centerLeft,
                         child: Column(
@@ -347,7 +348,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                                 ),
                                 Expanded(
                                   child: AutoSizeText(
-                                    "${widget.adultContentText.adultContentText}",
+                                    "${widget.adultContentText}",
                                     style: TextStyle(
                                       fontSize: 18,
                                     ),

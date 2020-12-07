@@ -3,14 +3,16 @@ class UserData {
   final String name;
   final String email;
   final String location;
-  final int ongoingGigsByGigId;
+  final dynamic ongoingGigsByGigId;
+  final int lengthOfOngoingGigsByGigId;
 
   UserData(
       {this.uid,
       this.name,
       this.email,
       this.location,
-      this.ongoingGigsByGigId});
+      this.ongoingGigsByGigId,
+      this.lengthOfOngoingGigsByGigId});
 }
 
 /////////////////////////////////

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myApp/services/auth_service.dart';
 import 'package:myApp/screens/add_gig/addGigDetails.dart';
 import 'package:myApp/screens/myJobs.dart';
-import 'package:myApp/screens/profile.dart';
+import 'package:myApp/screens/my_profile.dart';
 import 'package:myApp/screens/trends/trends.dart';
 
 import 'package:myApp/ui/shared/theme.dart';
@@ -24,7 +24,7 @@ class _HomeState extends State<Home> {
     Trends(),
     AddGigDetails(),
     MyJobs(),
-    ProfileView(),
+    MyProfileView(),
   ];
 
   int _selectedIndex = 0;

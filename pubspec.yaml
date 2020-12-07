@@ -55,6 +55,7 @@ dependencies:
   jiffy:
   better_player: ^0.0.9 
   timeago: ^2.0.27
+  custom_switch:
   
 
   

@@ -9,6 +9,7 @@ import 'package:myApp/locator.dart';
 import 'package:myApp/services/auth_service.dart';
 import 'package:myApp/services/storage_repo.dart';
 import 'package:timeago/timeago.dart';
+import 'package:custom_switch/custom_switch.dart';
 
 class AddCommentsView extends StatefulWidget {
   final String passedGigId;
@@ -22,7 +23,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
   StorageRepo _storageRepo = locator.get<StorageRepo>();
   String passedGigId;
   _AddCommentsViewState(this.passedGigId);
-
+  bool privateComment = false;
   String userId;
   String userFullName;
   dynamic userProfilePictureUrl;
@@ -99,45 +100,66 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                         gigIdCommentsIdentifier: passedGigId,
                       )),
                       ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(userProfilePictureUrl),
-                          radius: 20,
-                        ),
-                        title: TextFormField(
-                          controller: _addCommentsController,
-                          decoration: InputDecoration(
-                            hintText: "get in touch with gig poster...",
-                            border: InputBorder.none,
-                            // enabledBorder: UnderlineInputBorder(
-                            //     borderSide: BorderSide(color: Colors.red)),
-                            // focusedBorder: UnderlineInputBorder(
-                            //     borderSide: BorderSide(color: Colors.red)),
-                          ),
-                          // onFieldSubmitted: addComment(),
-                          onFieldSubmitted: (String submittedString) {
-                            AddCommentsViewModel().addComment(
-                              gigIdHoldingComment: passedGigId,
-                              commentOwnerFullName: userFullName,
-                              commentBody: submittedString,
-                              commentOwnerId: userId,
-                              commentOwnerProfilePictureUrl:
-                                  userProfilePictureUrl,
-                              commentId: passedGigId,
-                              commentTime: new DateTime.now(),
-                            );
-                            _addCommentsController.clear();
-                          },
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            // CircleAvatar(
+                            //   backgroundImage:
+                            //       NetworkImage(userProfilePictureUrl),
+                            //   radius: 20,
+                            // ),
+                            CustomSwitch(
+                              activeColor: FyreworkrColors.fyreworkBlack,
+                              value: privateComment,
+                              onChanged: (value) {
+                                setState(() {
+                                  privateComment = value;
+                                });
+                              },
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                controller: _addCommentsController,
+                                decoration: InputDecoration(
+                                  hintText: "Add comment...",
+                                  border: InputBorder.none,
+                                  // enabledBorder: UnderlineInputBorder(
+                                  //     borderSide: BorderSide(color: Colors.red)),
+                                  // focusedBorder: UnderlineInputBorder(
+                                  //     borderSide: BorderSide(color: Colors.red)),
+                                ),
+                                // onFieldSubmitted: addComment(),
+                                onFieldSubmitted: (String submittedString) {
+                                  AddCommentsViewModel().addComment(
+                                    gigIdHoldingComment: passedGigId,
+                                    commentOwnerFullName: userFullName,
+                                    commentBody: submittedString,
+                                    commentOwnerId: userId,
+                                    commentOwnerProfilePictureUrl:
+                                        userProfilePictureUrl,
+                                    commentId: passedGigId,
+                                    commentTime: new DateTime.now(),
+                                  );
+                                  _addCommentsController.clear();
+                                },
 
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        trailing: IconButton(
-                          icon: Icon(
-                            Icons.send,
-                            color: FyreworkrColors.fyreworkBlack,
-                          ),
-                          onPressed: () {
-                            addComment();
-                          },
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+
+                            IconButton(
+                              icon: Icon(
+                                Icons.send,
+                                color: FyreworkrColors.fyreworkBlack,
+                              ),
+                              onPressed: () {
+                                addComment();
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     ],

@@ -51,7 +51,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
 
   // instantiating GigModel value here to work with...
   String userId;
-  String userProfilePictureUrl;
+  String userProfilePictureDownloadUrl;
   String userFullName;
 
   String gigHashtags;
@@ -613,7 +613,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
   // }
 
   Future saveFormValuesAndPickMediaFiles() async {
-    userProfilePictureUrl =
+    userProfilePictureDownloadUrl =
         await locator.get<UserController>().getProfilePictureDownloadUrl();
     if (gigValue == null) {
       Scaffold.of(context).showSnackBar(_gigValueSnackBar);
@@ -623,7 +623,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
       var proceedToMultiAssetPicker = new MaterialPageRoute(
         builder: (BuildContext context) => MultiAssetsPicker(
           receivedUserId: userId,
-          receivedUserProfilePictureUrl: userProfilePictureUrl,
+          receivedUserProfilePictureDownloadUrl: userProfilePictureDownloadUrl,
           receivedUserFullName: userFullName,
           receivedGigHashtags: gigHashtags,
           receivedGigPost: gigPost,

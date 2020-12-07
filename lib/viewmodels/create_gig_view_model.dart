@@ -17,7 +17,7 @@ class CreateGigViewModel extends BaseModel {
   Future addGig({
     String gigId,
     @required String userId,
-    @required String userProfilePictureUrl,
+    @required String userProfilePictureDownloadUrl,
     @required String userFullName,
     @required String gigHashtags,
     @required List<String> gigMediaFilesDownloadUrls,
@@ -39,7 +39,7 @@ class CreateGigViewModel extends BaseModel {
         Gig(
           gigId: gigId,
           gigOwnerId: userId,
-          userProfilePictureUrl: userProfilePictureUrl,
+          userProfilePictureDownloadUrl: userProfilePictureDownloadUrl,
           userFullName: userFullName,
           gigHashtags: gigHashtags,
           gigMediaFilesDownloadUrls: gigMediaFilesDownloadUrls,
@@ -57,7 +57,7 @@ class CreateGigViewModel extends BaseModel {
         Gig(
           gigId: gigId,
           gigOwnerId: userId,
-          userProfilePictureUrl: userProfilePictureUrl,
+          userProfilePictureDownloadUrl: userProfilePictureDownloadUrl,
           userFullName: userFullName,
           gigHashtags: gigHashtags,
           gigPost: gigPost,

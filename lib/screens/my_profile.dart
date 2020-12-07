@@ -1,18 +1,19 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:myApp/locator.dart';
+import 'package:myApp/services/database.dart';
 import 'package:myApp/ui/views/sign_up_view.dart';
 import 'package:myApp/ui/widgets/provider_widget.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/services/auth_service.dart';
 import 'package:myApp/services/storage_repo.dart';
 
-class ProfileView extends StatefulWidget {
+class MyProfileView extends StatefulWidget {
   @override
-  _ProfileViewState createState() => _ProfileViewState();
+  _MyProfileViewState createState() => _MyProfileViewState();
 }
 
-class _ProfileViewState extends State<ProfileView> {
+class _MyProfileViewState extends State<MyProfileView> {
   AuthService _authService = locator.get<AuthService>();
   StorageRepo _storageRepo = locator.get<StorageRepo>();
   AuthFormType authFormType;
@@ -37,28 +38,16 @@ class _ProfileViewState extends State<ProfileView> {
                   return Column(
                     children: [
                       displayUserMetadata(context, snapshot),
-                    ],
-                  );
-                } else {
-                  return Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
-                      child: Center(child: CircularProgressIndicator()));
-                }
-              },
-            ),
-            FutureBuilder(
-              future: Provider.of(context).auth.getCurrentUser(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return Column(
-                    children: [
-                      snapshot.data.isAnonymous
-                          ? Container(
-                              child: Text(
-                                  'You are an Anonymous user in the mean timeeeeeeee'),
-                            )
-                          : displayUserInformation(context, snapshot),
+                      Column(
+                        children: [
+                          snapshot.data.isAnonymous
+                              ? Container(
+                                  child: Text(
+                                      'You are an Anonymous user in the mean timeeeeeeee'),
+                                )
+                              : displayUserInformation(context, snapshot),
+                        ],
+                      ),
                     ],
                   );
                 } else {
@@ -95,6 +84,7 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Widget displayUserInformation(context, snapshot) {
+    final authData = snapshot.data;
     return FutureBuilder(
         future: getProfilePictureDownloadUrl(),
         builder: (context, snapshot) {
@@ -113,29 +103,59 @@ class _ProfileViewState extends State<ProfileView> {
                     backgroundImage: NetworkImage(userProfilePictureUrl),
                     radius: 50,
                   ),
-                  Column(
-                    children: <Widget>[
-                      AutoSizeText(
-                        "Ongoing gigs",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      AutoSizeText(
-                        "5",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ],
+                  SizedBox(
+                    height: 100,
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: Text(
+                            "Ongoing gigs",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                        StreamBuilder(
+                          stream: DatabaseService().userData(authData.uid),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return CircularProgressIndicator();
+                            } else if ((snapshot.hasData &&
+                                snapshot.data.ongoingGigsByGigId == null)) {
+                              return Expanded(
+                                child: Text(
+                                  '0',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              );
+                            } else {
+                              return Expanded(
+                                  child: Text(
+                                '${snapshot.data.ongoingGigsByGigId.length}',
+                                style: TextStyle(fontSize: 18),
+                              ));
+                            }
+                          },
+                        )
+                      ],
+                    ),
                   ),
-                  Column(
-                    children: <Widget>[
-                      AutoSizeText(
-                        "Completed gigs",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      AutoSizeText(
-                        "5",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ],
+                  SizedBox(
+                    height: 100,
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: Text(
+                            "Completed gigs",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            "5",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

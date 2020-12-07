@@ -31,7 +31,9 @@ class AllGigsView extends StatelessWidget {
                                   // onTap: () => model.editGig(index),
                                   child: GigItem(
                                     gigId: model.gigs[index],
-                                    userProfilePictureUrl: model.gigs[index],
+                                    gigOwnerId: model.gigs[index],
+                                    userProfilePictureDownloadUrl:
+                                        model.gigs[index],
                                     userFullName: model.gigs[index],
                                     gigHashtags: model.gigs[index],
                                     gigMediaFilesDownloadUrls:

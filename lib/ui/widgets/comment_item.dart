@@ -140,6 +140,7 @@ class _CommentItemState extends State<CommentItem> {
           child: Text(
             timeAgo.format(widget.commentTime.commentTime.toDate()),
             style: TextStyle(
+              fontSize: 12,
               color:
                   widget.commentOwnerId.commentOwnerId == widget.currentUserId
                       ? Colors.white
