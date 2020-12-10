@@ -21,6 +21,7 @@ class AddCommentsViewModel extends BaseModel {
     @required String commentOwnerFullName,
     @required String commentBody,
     @required DateTime commentTime,
+    @required bool privateComment,
   }) async {
     setBusy(true);
 
@@ -28,14 +29,14 @@ class AddCommentsViewModel extends BaseModel {
     if (!_editting) {
       result = await _firestoreService.addComment(
           Comment(
-            gigIdHoldingComment: gigIdHoldingComment,
-            commentId: commentId,
-            commentOwnerId: commentOwnerId,
-            commentOwnerProfilePictureUrl: commentOwnerProfilePictureUrl,
-            commentOwnerFullName: commentOwnerFullName,
-            commentBody: commentBody,
-            commentTime: commentTime,
-          ),
+              gigIdHoldingComment: gigIdHoldingComment,
+              commentId: commentId,
+              commentOwnerId: commentOwnerId,
+              commentOwnerProfilePictureUrl: commentOwnerProfilePictureUrl,
+              commentOwnerFullName: commentOwnerFullName,
+              commentBody: commentBody,
+              commentTime: commentTime,
+              privateComment: privateComment),
           gigIdHoldingComment);
 
       // if (result is String) {
@@ -44,14 +45,14 @@ class AddCommentsViewModel extends BaseModel {
     } else {
       result = await _firestoreService.updateComment(
         Comment(
-          gigIdHoldingComment: gigIdHoldingComment,
-          commentId: commentId,
-          commentOwnerId: commentOwnerId,
-          commentOwnerProfilePictureUrl: commentOwnerProfilePictureUrl,
-          commentOwnerFullName: commentOwnerFullName,
-          commentBody: commentBody,
-          commentTime: commentTime,
-        ),
+            gigIdHoldingComment: gigIdHoldingComment,
+            commentId: commentId,
+            commentOwnerId: commentOwnerId,
+            commentOwnerProfilePictureUrl: commentOwnerProfilePictureUrl,
+            commentOwnerFullName: commentOwnerFullName,
+            commentBody: commentBody,
+            commentTime: commentTime,
+            privateComment: privateComment),
       );
     }
     setBusy(false);

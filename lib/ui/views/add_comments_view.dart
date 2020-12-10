@@ -45,17 +45,6 @@ class _AddCommentsViewState extends State<AddCommentsView> {
 
   TextEditingController _addCommentsController = TextEditingController();
 
-  // _addComment(String val) {
-  //   AddCommentsViewModel().addComment(
-  //     gigIdHoldingComment: passedGigId,
-  //     comentOwnerFullName: 'Mohamed',
-  //     commentBody: 'this is mohamed\'s comment',
-  //     commentOwnerId: 'id123',
-  //     commentOwnerProfilePictureUrl: 'url132',
-  //     commentId: 'commentid123',
-  //   );
-  // }
-
   addComment() {
     AddCommentsViewModel().addComment(
       gigIdHoldingComment: passedGigId,
@@ -63,8 +52,9 @@ class _AddCommentsViewState extends State<AddCommentsView> {
       commentBody: _addCommentsController.text,
       commentOwnerId: userId,
       commentOwnerProfilePictureUrl: userProfilePictureUrl,
-      commentId: passedGigId,
+      commentId: '',
       commentTime: new DateTime.now(),
+      privateComment: privateComment,
     );
     _addCommentsController.clear();
   }
@@ -90,6 +80,12 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                   appBar: new AppBar(
                     backgroundColor: Theme.of(context).primaryColor,
                     title: Text('Comments'),
+                    bottom: PreferredSize(
+                        child: Container(
+                          color: FyreworkrColors.fyreworkBlack,
+                          height: 0.5,
+                        ),
+                        preferredSize: Size.fromHeight(4.0)),
                   ),
                   body: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -134,15 +130,15 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                 // onFieldSubmitted: addComment(),
                                 onFieldSubmitted: (String submittedString) {
                                   AddCommentsViewModel().addComment(
-                                    gigIdHoldingComment: passedGigId,
-                                    commentOwnerFullName: userFullName,
-                                    commentBody: submittedString,
-                                    commentOwnerId: userId,
-                                    commentOwnerProfilePictureUrl:
-                                        userProfilePictureUrl,
-                                    commentId: passedGigId,
-                                    commentTime: new DateTime.now(),
-                                  );
+                                      gigIdHoldingComment: passedGigId,
+                                      commentOwnerFullName: userFullName,
+                                      commentBody: submittedString,
+                                      commentOwnerId: userId,
+                                      commentOwnerProfilePictureUrl:
+                                          userProfilePictureUrl,
+                                      commentId: passedGigId,
+                                      commentTime: new DateTime.now(),
+                                      privateComment: privateComment);
                                   _addCommentsController.clear();
                                 },
 

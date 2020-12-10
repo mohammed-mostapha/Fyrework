@@ -12,6 +12,8 @@ class DatabaseService {
       Firestore.instance.collection('users');
   final CollectionReference _gigsCollection =
       Firestore.instance.collection('gigs');
+  final CollectionReference _commentsCollection =
+      Firestore.instance.collection('comments');
 
   Future updateUserData(String uid, String name, String email, String password,
       String location, bool is_minor, dynamic ongoingGigsByGigId) async {
@@ -44,41 +46,14 @@ class DatabaseService {
         .map(_userDataFromSnapshot);
   }
 
-  // user's gigs from snapshots
-  // GigItem _userGigsFromSnapshot(QuerySnapshot snapshot) {
-  //   return GigItem(
-  //     gigId: snapshot.data['gigId'],
-  //     gigOwnerId: snapshot.data['gigOwnerId'],
-  //     userProfilePictureDownloadUrl:
-  //         snapshot.data['userProfilePictureDownloadUrl'],
-  //     userFullName: snapshot.data['userFullName'],
-  //     gigHashtags: snapshot.data['gigHashtags'],
-  //     gigMediaFilesDownloadUrls: snapshot.data['gigMediaFilesDownloadUrls'],
-  //     gigPost: snapshot.data['gigPost'],
-  //     gigDeadline: snapshot.data['gigDeadline'],
-  //     gigCurrency: snapshot.data['gigCurrency'],
-  //     gigBudget: snapshot.data['gigBudget'],
-  //     gigValue: snapshot.data['gigValue'],
-  //     gigLikes: snapshot.data['gigLikes'],
-  //     adultContentText: snapshot.data['adultContentText'],
-  //     adultContentBool: snapshot.data['adultContentBool'],
-  //     // onDeleteItem: () => model.deleteGig(index),
-  //   );
-  // }
-
-  // get user's ongoing gigs
-  // Future<List<GigItem>> userOngoingGigs(String userId) async {
   Stream<QuerySnapshot> userOngoingGigs(String userId) {
-    // return _gigsCollection.document(uid).snapshots().map(_userGigsFromSnapshot);
-    // QuerySnapshot userRelatedGigs = await _gigsCollection
-    //     .where('gigOwnerId', isEqualTo: userId)
-    //     .getDocuments();
-    // return await userRelatedGigs.documents;
-    // return _gigsCollection
-    //     .where('gigOwnerId', isEqualTo: userId)
-    //     .snapshots()
-    //     .map(_userGigsFromSnapshot);
     return _gigsCollection.where('gigOwnerId', isEqualTo: userId).snapshots();
+  }
+
+  Stream<QuerySnapshot> gigRelatedComments(String gigIdCommentsIdentifier) {
+    return _commentsCollection
+        .where('gigIdHoldingComment', isEqualTo: gigIdCommentsIdentifier)
+        .snapshots();
   }
 
   Future updateOngoingGigsByGigId(String uid, dynamic gigId) async {

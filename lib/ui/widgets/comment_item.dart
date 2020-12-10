@@ -1,8 +1,10 @@
 import 'dart:core';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:custom_switch/custom_switch.dart';
 import 'package:myApp/models/gig.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_common_exports/src/extensions/build_context_extension.dart';
+import 'package:myApp/services/firestore_service.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
@@ -15,6 +17,7 @@ class CommentItem extends StatefulWidget {
   final commentOwnerFullName;
   final commentBody;
   final commentTime;
+  final privateComment;
   final Function onDeleteItem;
   CommentItem({
     Key key,
@@ -26,6 +29,7 @@ class CommentItem extends StatefulWidget {
     this.commentOwnerFullName,
     this.commentBody,
     this.commentTime,
+    this.privateComment,
     this.onDeleteItem,
   }) : super(key: key);
 
@@ -42,8 +46,95 @@ class _CommentItemState extends State<CommentItem> {
 
   @override
   Widget build(BuildContext context) {
-    print('commentOwnerId xx: ${widget.commentOwnerId.commentOwnerId}');
-    print('currentUserId xx: ${widget.currentUserId}');
+    // public comment view
+    Widget publicCommentView = ListTile(
+      leading: CircleAvatar(
+        backgroundImage:
+            NetworkImage('${widget.commentOwnerProfilePictureUrl}'),
+        radius: 20,
+      ),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('${widget.commentOwnerFullName}',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: widget.commentOwnerId == widget.currentUserId
+                    ? Colors.white
+                    : FyreworkrColors.fyreworkBlack,
+              )),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text('${widget.commentBody}',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: widget.commentOwnerId == widget.currentUserId
+                          ? Colors.white
+                          : FyreworkrColors.fyreworkBlack,
+                    )),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              widget.commentOwnerId == widget.currentUserId
+                  ? Container(
+                      width: 60,
+                      height: 25,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white54,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.white54,
+                          ),
+                        ],
+                      ),
+                      child: Switch(
+                        activeColor: FyreworkrColors.fyreworkBlack,
+                        activeTrackColor: Colors.black54,
+                        value: widget.privateComment,
+                        onChanged: (value) {
+                          FirestoreService()
+                              .commentPrivacyToggle(widget.commentId, value);
+                        },
+                      ),
+                    )
+                  : Container(width: 0, height: 0)
+            ],
+          ),
+        ],
+      ),
+      subtitle: Flexible(
+        child: Text(
+          timeAgo.format(widget.commentTime.toDate()),
+          style: TextStyle(
+            fontSize: 12,
+            color: widget.commentOwnerId == widget.currentUserId
+                ? Colors.white
+                : FyreworkrColors.fyreworkBlack,
+          ),
+        ),
+        // child: Text('${widget.commentTime}'),
+      ),
+    );
+
+    // private comment view
+    Widget privateCommentView = Container(
+      width: double.infinity,
+      height: 70,
+      child: Center(
+        child: Text('Private comment',
+            style: TextStyle(
+              color: widget.commentOwnerId == widget.currentUserId
+                  ? Colors.white
+                  : FyreworkrColors.fyreworkBlack,
+            )),
+      ),
+    );
+
     timeAgo.setLocaleMessages('de', timeAgo.DeMessages());
     timeAgo.setLocaleMessages('dv', timeAgo.DvMessages());
     timeAgo.setLocaleMessages('dv_short', timeAgo.DvShortMessages());
@@ -91,66 +182,23 @@ class _CommentItemState extends State<CommentItem> {
     timeAgo.setLocaleMessages('sv_short', timeAgo.SvShortMessages());
 
     var locale = 'en';
-
     return Container(
-      decoration: BoxDecoration(
-          color: widget.commentOwnerId.commentOwnerId == widget.currentUserId
+        decoration: BoxDecoration(
+          color: widget.commentOwnerId == widget.currentUserId
               ? FyreworkrColors.fyreworkBlack
               : Colors.grey[50],
-          border:
-              Border(bottom: BorderSide(width: 0.5, color: Colors.grey[400]))),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: NetworkImage(
-              '${widget.commentOwnerProfilePictureUrl.commentOwnerProfilePictureUrl}'),
-          radius: 20,
-        ),
-        title: Flexible(
-          // child: Text('${widget.commentOwnerFullName.commentOwnerFullName}' +
-          //     ' ' +
-          //     '${widget.commentBody.commentBody}')),
-          child: RichText(
-            text: TextSpan(
-                style: DefaultTextStyle.of(context).style,
-                children: <TextSpan>[
-                  TextSpan(
-                      text:
-                          '${widget.commentOwnerFullName.commentOwnerFullName} ',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: widget.commentOwnerId.commentOwnerId ==
-                                widget.currentUserId
-                            ? Colors.white
-                            : FyreworkrColors.fyreworkBlack,
-                      )),
-                  TextSpan(
-                      text: '${widget.commentBody.commentBody}',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: widget.commentOwnerId.commentOwnerId ==
-                                widget.currentUserId
-                            ? Colors.white
-                            : FyreworkrColors.fyreworkBlack,
-                      )),
-                ]),
+          border: Border(
+            top: widget.commentOwnerId == widget.currentUserId
+                ? BorderSide(width: 0.3, color: Colors.grey[50])
+                : BorderSide(width: 0.3, color: FyreworkrColors.fyreworkBlack),
+            bottom: widget.commentOwnerId == widget.currentUserId
+                ? BorderSide(width: 0.3, color: Colors.green)
+                : BorderSide(width: 0.3, color: FyreworkrColors.fyreworkBlack),
           ),
         ),
-        subtitle: Flexible(
-          child: Text(
-            timeAgo.format(widget.commentTime.commentTime.toDate()),
-            style: TextStyle(
-              fontSize: 12,
-              color:
-                  widget.commentOwnerId.commentOwnerId == widget.currentUserId
-                      ? Colors.white
-                      : FyreworkrColors.fyreworkBlack,
-            ),
-          ),
-          // child: Text('${widget.commentTime.commentTime}'),
-        ),
-      ),
-    );
+        child: widget.commentOwnerId == widget.currentUserId
+            ? publicCommentView
+            : widget.privateComment ? privateCommentView : publicCommentView);
   }
 
   @override

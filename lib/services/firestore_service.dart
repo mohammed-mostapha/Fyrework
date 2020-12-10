@@ -75,11 +75,15 @@ class FirestoreService {
   Future addComment(Comment comment, String gigIdHoldingComment) async {
     try {
       Map<String, dynamic> commentData = comment.toMap();
-      print('commentData $commentData');
-      await _commentsCollectionReference
-          .document(gigIdHoldingComment +
-              DateTime.now().millisecondsSinceEpoch.toString())
-          .setData(commentData);
+      DocumentReference commentRef =
+          await _commentsCollectionReference.add(commentData).then((comment) {
+        comment.updateData({'commentId': comment.documentID});
+      });
+      // .document(gigIdHoldingComment +
+      //     DateTime.now().millisecondsSinceEpoch.toString())
+      // .document()
+      // .setData(commentData);
+
     } catch (e) {
       // TODO: Find or create a way to repeat error handling without so much repeated code
       if (e is PlatformException) {
@@ -153,6 +157,23 @@ class FirestoreService {
       await _gigsCollectionReference
           .document(gigId)
           .updateData({'gigLikes': FieldValue.increment(likedOrNot ? 1 : -1)});
+    } catch (e) {
+      // TODO: Find or create a way to repeat error handling without so much repeated code
+      if (e is PlatformException) {
+        return e.message;
+      }
+
+      return e.toString();
+    }
+  }
+
+  Future commentPrivacyToggle(String commentId, bool value) async {
+    try {
+      await _commentsCollectionReference
+          .document(commentId)
+          .updateData(({'privateComment': value}));
+
+      // updateData({'privateComment': value});
     } catch (e) {
       // TODO: Find or create a way to repeat error handling without so much repeated code
       if (e is PlatformException) {

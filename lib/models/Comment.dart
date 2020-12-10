@@ -6,16 +6,17 @@ class Comment {
   final String commentOwnerFullName;
   final String commentBody;
   dynamic commentTime;
+  final bool privateComment;
 
-  Comment({
-    this.gigIdHoldingComment,
-    this.commentId,
-    this.commentOwnerId,
-    this.commentOwnerProfilePictureUrl,
-    this.commentOwnerFullName,
-    this.commentBody,
-    this.commentTime,
-  });
+  Comment(
+      {this.gigIdHoldingComment,
+      this.commentId,
+      this.commentOwnerId,
+      this.commentOwnerProfilePictureUrl,
+      this.commentOwnerFullName,
+      this.commentBody,
+      this.commentTime,
+      this.privateComment});
 
   Map<String, dynamic> toMap() {
     return {
@@ -28,6 +29,7 @@ class Comment {
       'commentBody': commentBody,
       // 'commentTime': DateTime.now().millisecondsSinceEpoch.toString(),
       'commentTime': commentTime,
+      'privateComment': privateComment,
     };
   }
 
@@ -42,6 +44,7 @@ class Comment {
       commentOwnerFullName: map['commentOwnerFullName'],
       commentBody: map['commentBody'],
       commentTime: map['commentTime'],
+      privateComment: map['privateComment'],
     );
   }
 }

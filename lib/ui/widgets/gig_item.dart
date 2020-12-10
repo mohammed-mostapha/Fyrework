@@ -97,7 +97,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
   }
 
   _doubleTappedLike() {
-    print('showLikeOverlay $showLikeOverlay');
     if (liked == false && showLikeOverlay == false) {
       setState(() {
         liked = true;
