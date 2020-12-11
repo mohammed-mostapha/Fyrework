@@ -1,7 +1,6 @@
+import 'dart:async';
 import 'dart:core';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:custom_switch/custom_switch.dart';
-import 'package:myApp/models/gig.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_common_exports/src/extensions/build_context_extension.dart';
 import 'package:myApp/services/firestore_service.dart';
@@ -39,9 +38,52 @@ class CommentItem extends StatefulWidget {
 
 class _CommentItemState extends State<CommentItem> {
   ThemeData get currentTheme => context.themeData;
+  Timer _timer;
+  int _commentViewIndex = 0;
+  double _commentOpacity = 0.9;
 
   void initState() {
     super.initState();
+  }
+
+  Widget commentViewShifter() {
+    if (!widget.privateComment &&
+        (widget.commentOwnerId == widget.currentUserId)) {
+      print('condition 1');
+      setState(() {
+        _commentOpacity = 0;
+      });
+      _timer = new Timer(Duration(milliseconds: 1000), () {
+        setState(() {
+          _commentOpacity = 0.9;
+          _commentViewIndex = 1;
+        });
+      });
+      _timer = new Timer(Duration(milliseconds: 2000), () {
+        setState(() {
+          _commentOpacity = 0;
+        });
+      });
+
+      _timer = new Timer(Duration(milliseconds: 3000), () {
+        setState(() {
+          _commentOpacity = 0.9;
+          _commentViewIndex = 0;
+        });
+      });
+    } else if (widget.privateComment &&
+        (widget.commentOwnerId == widget.currentUserId)) {
+      print('condition 2');
+      setState(() {
+        _commentViewIndex = 0;
+      });
+    } else if (widget.privateComment &&
+        (widget.commentOwnerId != widget.currentUserId)) {
+      print('condition 3');
+      setState(() {
+        _commentViewIndex = 1;
+      });
+    }
   }
 
   @override
@@ -99,6 +141,7 @@ class _CommentItemState extends State<CommentItem> {
                         onChanged: (value) {
                           FirestoreService()
                               .commentPrivacyToggle(widget.commentId, value);
+                          commentViewShifter();
                         },
                       ),
                     )
@@ -134,6 +177,9 @@ class _CommentItemState extends State<CommentItem> {
             )),
       ),
     );
+
+    // Widget commentViewShifter =
+    //     widget.privateComment ? privateCommentView : publicCommentView;
 
     timeAgo.setLocaleMessages('de', timeAgo.DeMessages());
     timeAgo.setLocaleMessages('dv', timeAgo.DvMessages());
@@ -197,12 +243,29 @@ class _CommentItemState extends State<CommentItem> {
           ),
         ),
         child: widget.commentOwnerId == widget.currentUserId
-            ? publicCommentView
+            ?
+            // AnimatedSwitcher(
+            //     duration: Duration(seconds: 1), child: commentViewShift)
+            IndexedStack(
+                index: _commentViewIndex,
+                children: [
+                  AnimatedOpacity(
+                    opacity: _commentOpacity,
+                    child: publicCommentView,
+                    duration: Duration(milliseconds: 500),
+                  ),
+                  AnimatedOpacity(
+                      opacity: _commentOpacity,
+                      child: privateCommentView,
+                      duration: Duration(milliseconds: 500)),
+                ],
+              )
             : widget.privateComment ? privateCommentView : publicCommentView);
   }
 
   @override
   void dispose() {
+    _timer.cancel();
     super.dispose();
   }
 }
