@@ -7,9 +7,13 @@ import 'package:timeago/timeago.dart';
 
 class CommentsView extends StatelessWidget {
   final String gigIdCommentsIdentifier;
-  final String currentUserId;
+  final String gigOwnerId;
+  final String passedCurrentUserId;
   const CommentsView(
-      {Key key, @required this.gigIdCommentsIdentifier, this.currentUserId})
+      {Key key,
+      @required this.gigIdCommentsIdentifier,
+      @required this.passedCurrentUserId,
+      this.gigOwnerId})
       : super(key: key);
   @override
   // Widget build(BuildContext context) {
@@ -73,30 +77,44 @@ class CommentsView extends StatelessWidget {
         builder: (context, snapshot) {
           return !snapshot.hasData
               ? Center(child: Text('No comments yet...'))
-              : ListView.builder(
-                  itemCount: snapshot.data.documents.length,
-                  itemBuilder: (context, index) {
-                    DocumentSnapshot data = snapshot.data.documents[index];
-                    Map getDocData = data.data;
-                    return GestureDetector(
-                      // onTap: () => model.editGig(index),
-                      child: CommentItem(
-                        currentUserId: currentUserId,
-                        gigIdHoldingComment: getDocData['gigIdHoldingComment'],
-                        commentId: getDocData['commentId'],
-                        commentOwnerId: getDocData['commentOwnerId'],
-                        commentOwnerProfilePictureUrl:
-                            getDocData['commentOwnerProfilePictureUrl'],
-                        commentOwnerFullName:
-                            getDocData['commentOwnerFullName'],
-                        commentBody: getDocData['commentBody'],
-                        commentTime: getDocData['commentTime'],
-                        privateComment: getDocData['privateComment'],
-                        // onDeleteItem: () =>
-                        //     model.deleteComment(index),
-                      ),
-                    );
-                  });
+              : snapshot.data.documents.length > 0
+                  ? ListView.builder(
+                      itemCount: snapshot.data.documents.length,
+                      itemBuilder: (context, index) {
+                        DocumentSnapshot data = snapshot.data.documents[index];
+                        Map getDocData = data.data;
+                        return GestureDetector(
+                          // onTap: () => model.editGig(index),
+                          child: CommentItem(
+                            passedCurrentUserId: passedCurrentUserId,
+                            gigIdHoldingComment:
+                                getDocData['gigIdHoldingComment'],
+                            gigOwnerId: getDocData['gigOwnerId'],
+                            commentId: getDocData['commentId'],
+                            commentOwnerId: getDocData['commentOwnerId'],
+                            commentOwnerProfilePictureUrl:
+                                getDocData['commentOwnerProfilePictureUrl'],
+                            commentOwnerFullName:
+                                getDocData['commentOwnerFullName'],
+                            commentBody: getDocData['commentBody'],
+                            gigCurrency: getDocData['gigCurrency'],
+                            commentTime: getDocData['commentTime'],
+                            privateComment: getDocData['privateComment'],
+                            proposal: getDocData['proposal'],
+                            approved: getDocData['approved'],
+                            appointedUserId: getDocData['appointedUserId'],
+                            appointedUserFullName:
+                                getDocData['appointedUserFullName'],
+                            offeredBudget: getDocData['offeredBudget'],
+                            // onDeleteItem: () =>
+                            //     model.deleteComment(index),
+                          ),
+                        );
+                      })
+                  : Center(
+                      child: Text(
+                      'No comments yet...',
+                    ));
         },
       ),
     );

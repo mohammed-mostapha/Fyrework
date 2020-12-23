@@ -156,41 +156,50 @@ class _UserProfileViewState extends State<UserProfileView> {
                         stream: DatabaseService()
                             .userOngoingGigs(widget.passedUserUid),
                         builder: (context, snapshot) {
+                          print('snapshot.data: ${snapshot.data}');
                           return !snapshot.hasData
                               ? Text('This user hasn\'t posted any gigs yet')
-                              : ListView.builder(
-                                  itemCount: snapshot.data.documents.length,
-                                  itemBuilder: (context, index) {
-                                    DocumentSnapshot data =
-                                        snapshot.data.documents[index];
-                                    Map getDocData = data.data;
-                                    return GestureDetector(
-                                      // onTap: () => model.editGig(index),
-                                      child: UserRelatedGigItem(
-                                        gigId: getDocData['gigId'],
-                                        gigOwnerId: getDocData['gigOwnderId'],
-                                        userProfilePictureDownloadUrl:
-                                            getDocData[
-                                                'userProfilePictureDownloadUrl'],
-                                        userFullName:
-                                            getDocData['userFullName'],
-                                        gigHashtags: getDocData['gigHashtags'],
-                                        gigMediaFilesDownloadUrls: getDocData[
-                                            'gigMediaFilesDownloadUrls'],
-                                        gigPost: getDocData['gigPost'],
-                                        gigDeadline: getDocData['gigDeadline'],
-                                        gigCurrency: getDocData['gigCurrency'],
-                                        gigBudget: getDocData['gigBudget'],
-                                        gigValue: getDocData['gigValue'],
-                                        gigLikes: getDocData['gigLikes'],
-                                        adultContentText:
-                                            getDocData['adultContentText'],
-                                        adultContentBool:
-                                            getDocData['adultContentBool'],
-                                        // onDeleteItem: () => model.deleteGig(index),
-                                      ),
-                                    );
-                                  });
+                              : snapshot.data.documents.length > 0
+                                  ? ListView.builder(
+                                      itemCount: snapshot.data.documents.length,
+                                      itemBuilder: (context, index) {
+                                        DocumentSnapshot data =
+                                            snapshot.data.documents[index];
+                                        Map getDocData = data.data;
+                                        return GestureDetector(
+                                          // onTap: () => model.editGig(index),
+                                          child: UserRelatedGigItem(
+                                            gigId: getDocData['gigId'],
+                                            gigOwnerId:
+                                                getDocData['gigOwnderId'],
+                                            userProfilePictureDownloadUrl:
+                                                getDocData[
+                                                    'userProfilePictureDownloadUrl'],
+                                            userFullName:
+                                                getDocData['userFullName'],
+                                            gigHashtags:
+                                                getDocData['gigHashtags'],
+                                            gigMediaFilesDownloadUrls:
+                                                getDocData[
+                                                    'gigMediaFilesDownloadUrls'],
+                                            gigPost: getDocData['gigPost'],
+                                            gigDeadline:
+                                                getDocData['gigDeadline'],
+                                            gigCurrency:
+                                                getDocData['gigCurrency'],
+                                            gigBudget: getDocData['gigBudget'],
+                                            gigValue: getDocData['gigValue'],
+                                            gigLikes: getDocData['gigLikes'],
+                                            adultContentText:
+                                                getDocData['adultContentText'],
+                                            adultContentBool:
+                                                getDocData['adultContentBool'],
+                                            // onDeleteItem: () => model.deleteGig(index),
+                                          ),
+                                        );
+                                      })
+                                  : Text(
+                                      'This user hasn\'t posted any gigs yet');
                         },
                       ),
                     ),

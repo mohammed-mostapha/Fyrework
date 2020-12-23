@@ -1,3 +1,4 @@
+import 'package:myApp/view_controllers/user_controller.dart';
 import 'package:myApp/ui/widgets/gig_item.dart';
 import 'package:myApp/viewmodels/AllGigs_view_model.dart';
 import 'package:flutter/material.dart';
@@ -5,10 +6,12 @@ import 'package:provider_architecture/provider_architecture.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class AllGigsView extends StatelessWidget {
-  const AllGigsView({Key key}) : super(key: key);
+  AllGigsView({Key key}) : super(key: key);
+  String currentUserId = UserController.currentUserId;
 
   @override
   Widget build(BuildContext context) {
+    print('from build of allGigs_view: $currentUserId');
     return ViewModelProvider<AllGigsViewModel>.withConsumer(
         viewModelBuilder: () {
           return AllGigsViewModel();
@@ -30,7 +33,10 @@ class AllGigsView extends StatelessWidget {
                                     GestureDetector(
                                   // onTap: () => model.editGig(index),
                                   child: GigItem(
+                                    appointed: model.gigs[index],
+                                    appointedUserFullName: model.gigs[index],
                                     gigId: model.gigs[index],
+                                    currentUserId: currentUserId,
                                     gigOwnerId: model.gigs[index],
                                     userProfilePictureDownloadUrl:
                                         model.gigs[index],
@@ -46,6 +52,7 @@ class AllGigsView extends StatelessWidget {
                                     gigLikes: model.gigs[index],
                                     adultContentText: model.gigs[index],
                                     adultContentBool: model.gigs[index],
+                                    appointedUserId: model.gigs[index],
                                     onDeleteItem: () => model.deleteGig(index),
                                   ),
                                 ),

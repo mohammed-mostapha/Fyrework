@@ -174,28 +174,15 @@ class _MyProfileViewState extends State<MyProfileView> {
   }
 
   Widget showSignOut(context, bool isAnonymous) {
-    if (isAnonymous == true) {
-      return RaisedButton(
-        child: AutoSizeText("Sign up to save your data"),
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      SignUpView(authFormType: AuthFormType.convert)));
-        },
-      );
-    } else {
-      return RaisedButton(
-        child: AutoSizeText("Sign out"),
-        onPressed: () async {
-          try {
-            await Provider.of(context).auth.signOut();
-          } catch (e) {
-            print(e);
-          }
-        },
-      );
-    }
+    return RaisedButton(
+      child: AutoSizeText("Sign out"),
+      onPressed: () async {
+        try {
+          await Provider.of(context).auth.signOut();
+        } catch (e) {
+          print(e);
+        }
+      },
+    );
   }
 }

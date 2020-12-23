@@ -1,4 +1,5 @@
 class Gig {
+  final bool appointed;
   final String gigId;
   final String gigOwnerId;
   final String userProfilePictureDownloadUrl;
@@ -13,7 +14,10 @@ class Gig {
   final String adultContentText;
   final bool adultContentBool;
   final int gigLikes;
+  final String appointedUserId;
+  final String appointedUserFullName;
   Gig({
+    this.appointed,
     this.gigId,
     this.gigOwnerId,
     this.userProfilePictureDownloadUrl,
@@ -28,10 +32,13 @@ class Gig {
     this.gigLikes,
     this.adultContentText,
     this.adultContentBool,
+    this.appointedUserId,
+    this.appointedUserFullName,
   });
 
   Map<String, dynamic> toMap() {
     return {
+      'appointed': appointed,
       'gigId': gigId,
       'gigOwnerId': gigOwnerId,
       'userProfilePictureDownloadUrl': userProfilePictureDownloadUrl,
@@ -46,6 +53,8 @@ class Gig {
       'adultContentText': adultContentText,
       'adultContentBool': adultContentBool,
       'gigLikes': gigLikes,
+      'appointedUserId': appointedUserId,
+      'appointedUserFullName': appointedUserFullName,
     };
   }
 
@@ -53,6 +62,7 @@ class Gig {
     if (map == null) return null;
 
     return Gig(
+      appointed: map['appointed'],
       gigId: map['gigId'],
       gigOwnerId: map['gigOwnerId'],
       userProfilePictureDownloadUrl: map['userProfilePictureDownloadUrl'],
@@ -67,6 +77,8 @@ class Gig {
       adultContentText: map['adultContentText'],
       adultContentBool: map['adultContentBool'],
       gigLikes: map['gigLikes'],
+      appointedUserId: map['appointedUserId'],
+      appointedUserFullName: map['appointedUserFullName'],
     );
   }
 }

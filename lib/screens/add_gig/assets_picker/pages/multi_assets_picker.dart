@@ -16,6 +16,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 enum UrlType { IMAGE, VIDEO, UNKNOWN }
 
 class MultiAssetsPicker extends StatefulWidget {
+  final bool appointed;
   final String gigId;
   final String receivedUserId;
   final String receivedUserProfilePictureDownloadUrl;
@@ -32,6 +33,7 @@ class MultiAssetsPicker extends StatefulWidget {
 
   MultiAssetsPicker({
     Key key,
+    this.appointed,
     this.gigId,
     this.receivedUserId,
     this.receivedUserProfilePictureDownloadUrl,
@@ -396,15 +398,10 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
 
             //adding each downloadUrl to downloadUrls list
             widget.gigMeidaFilesDownloadUrls.add(storageResult);
-            print(
-                "no. of urls now is: : ${widget.gigMeidaFilesDownloadUrls.length}");
           }
 
-          print(gigMediaFiles.length);
-          print(
-              "The URLS from the widget variable are: ${widget.gigMeidaFilesDownloadUrls}");
-
           CreateGigViewModel().addGig(
+            appointed: widget.appointed,
             gigId: widget.gigId,
             userId: widget.receivedUserId,
             userProfilePictureDownloadUrl:
@@ -420,7 +417,6 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
             adultContentText: widget.receivedAdultContentText,
             adultContentBool: widget.receivedAdultContentBool,
           );
-          print('new gig should be added');
           clearGigMediaFiles();
           Navigator.pushAndRemoveUntil(
               context,

@@ -35,19 +35,7 @@ class StartPage extends StatelessWidget {
                         padding: EdgeInsets.all(0),
                         color: FyreworkrColors.fyreworkBlack,
                         onPressed: () {
-                          // Navigator.of(context).pushNamed('/register');
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => CustomDialog(
-                                    title:
-                                        "Would you like to create a free account?",
-                                    description:
-                                        "With an account, your data will be securely saved, allowing you to access it from multiple devices. ",
-                                    primaryButtonText: "Create My Account",
-                                    primaryButtonRoute: "/signUp",
-                                    secondaryButtonText: "Maybe later",
-                                    secondaryButtonRoute: "/anonymousSignIn",
-                                  ));
+                          Navigator.of(context).pushNamed("/signUp");
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -60,63 +48,55 @@ class StartPage extends StatelessWidget {
                           width: MediaQuery.of(context).size.width * 0.80,
                           height: 50,
                           child: Center(
-                            child: AutoSizeText(
-                              AppLocalizations.of(context)
-                                  .translate('Create account'),
-                              // 'Create account',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                AppLocalizations.of(context)
+                                    .translate('Create account'),
+                                // 'Create account',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.80,
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: InkWell(
-                                  child: AutoSizeText(
-                                    AppLocalizations.of(context)
-                                        .translate('Login'),
-                                    // 'Login',
-                                    style: TextStyle(
-                                      color: FyreworkrColors.fyreworkGrey,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    Navigator.of(context).pushNamed('/signIn');
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: InkWell(
-                                  child: AutoSizeText(
-                                    AppLocalizations.of(context)
-                                        .translate('Browse'),
-                                    // 'Browse',
-                                    style: TextStyle(
-                                        color: FyreworkrColors.fyreworkGrey,
-                                        fontSize: 20),
-                                  ),
-                                  onTap: () {
-                                    Navigator.of(context).pushReplacementNamed(
-                                        "/anonymousSignIn");
-                                  },
-                                ),
-                              ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      RaisedButton(
+                        padding: EdgeInsets.all(0),
+                        color: FyreworkrColors.fyreworkBlack,
+                        onPressed: () {
+                          Navigator.of(context).pushNamed("/signIn");
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: FyreworkrColors.fyreworkBlack,
+                            boxShadow: [
+                              BoxShadow(color: Colors.black, spreadRadius: 3),
                             ],
                           ),
+                          width: MediaQuery.of(context).size.width * 0.80,
+                          height: 50,
+                          child: Center(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                AppLocalizations.of(context).translate('Login'),
+                                // 'Create account',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),

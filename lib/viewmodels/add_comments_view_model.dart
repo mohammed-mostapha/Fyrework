@@ -15,6 +15,7 @@ class AddCommentsViewModel extends BaseModel {
 
   Future addComment({
     @required String gigIdHoldingComment,
+    @required String gigOwnerId,
     String commentId,
     @required String commentOwnerId,
     @required String commentOwnerProfilePictureUrl,
@@ -22,6 +23,12 @@ class AddCommentsViewModel extends BaseModel {
     @required String commentBody,
     @required DateTime commentTime,
     @required bool privateComment,
+    @required bool proposal,
+    @required bool approved,
+    @required String gigCurrency,
+    @required String offeredBudget,
+    @required String appointedUserId,
+    @required String appointedUserFullName,
   }) async {
     setBusy(true);
 
@@ -29,14 +36,22 @@ class AddCommentsViewModel extends BaseModel {
     if (!_editting) {
       result = await _firestoreService.addComment(
           Comment(
-              gigIdHoldingComment: gigIdHoldingComment,
-              commentId: commentId,
-              commentOwnerId: commentOwnerId,
-              commentOwnerProfilePictureUrl: commentOwnerProfilePictureUrl,
-              commentOwnerFullName: commentOwnerFullName,
-              commentBody: commentBody,
-              commentTime: commentTime,
-              privateComment: privateComment),
+            gigIdHoldingComment: gigIdHoldingComment,
+            gigOwnerId: gigOwnerId,
+            commentId: commentId,
+            commentOwnerId: commentOwnerId,
+            commentOwnerProfilePictureUrl: commentOwnerProfilePictureUrl,
+            commentOwnerFullName: commentOwnerFullName,
+            commentBody: commentBody,
+            commentTime: commentTime,
+            privateComment: privateComment,
+            proposal: proposal,
+            approved: approved,
+            appointedUserId: appointedUserId,
+            appointedUserFullName: appointedUserFullName,
+            gigCurrency: gigCurrency,
+            offeredBudget: offeredBudget,
+          ),
           gigIdHoldingComment);
 
       // if (result is String) {
@@ -45,14 +60,22 @@ class AddCommentsViewModel extends BaseModel {
     } else {
       result = await _firestoreService.updateComment(
         Comment(
-            gigIdHoldingComment: gigIdHoldingComment,
-            commentId: commentId,
-            commentOwnerId: commentOwnerId,
-            commentOwnerProfilePictureUrl: commentOwnerProfilePictureUrl,
-            commentOwnerFullName: commentOwnerFullName,
-            commentBody: commentBody,
-            commentTime: commentTime,
-            privateComment: privateComment),
+          gigIdHoldingComment: gigIdHoldingComment,
+          gigOwnerId: gigOwnerId,
+          commentId: commentId,
+          commentOwnerId: commentOwnerId,
+          commentOwnerProfilePictureUrl: commentOwnerProfilePictureUrl,
+          commentOwnerFullName: commentOwnerFullName,
+          commentBody: commentBody,
+          commentTime: commentTime,
+          privateComment: privateComment,
+          proposal: proposal,
+          approved: approved,
+          appointedUserId: appointedUserId,
+          appointedUserFullName: appointedUserFullName,
+          gigCurrency: gigCurrency,
+          offeredBudget: offeredBudget,
+        ),
       );
     }
     setBusy(false);

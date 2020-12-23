@@ -14,13 +14,13 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:myApp/services/places_autocomplete.dart';
-import 'package:myApp/vew_controllers/user_controller.dart';
+import 'package:myApp/view_controllers/user_controller.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../shared/constants.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:intl/intl.dart';
 
-enum AuthFormType { signIn, signUp, reset, anonymous, convert, phone }
+enum AuthFormType { signIn, signUp, reset, phone }
 
 class SignUpView extends StatefulWidget {
   final AuthFormType authFormType;
@@ -34,6 +34,7 @@ String location = '';
 dynamic userAvatarUrl;
 
 TextEditingController locationController = TextEditingController();
+ScrollController scrollController = ScrollController();
 
 class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   AuthFormType authFormType;
@@ -99,9 +100,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
   bool validate() {
     final form = formKey.currentState;
-    if (authFormType == AuthFormType.anonymous) {
-      return true;
-    }
     if (form.validate()) {
       form.save();
       return true;
@@ -112,14 +110,13 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
   void submit() async {
     // checking whether the user picked a profile pic or not
-    _profileImage == null
-        ? _cameraIconAnimationController.forward().then((value) {
-            _cameraColorAnimationController.forward();
-            _cameraIconAnimationController.reverse();
-          })
-        : () {
-            //
-          };
+    if (_profileImage == null) {
+      _cameraIconAnimationController.forward().then((value) {
+        _cameraColorAnimationController.forward();
+        _cameraIconAnimationController.reverse();
+      });
+    }
+
     if (validate()) {
       try {
         final auth = Provider.of(context).auth;
@@ -156,25 +153,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
             Navigator.of(context).pushReplacementNamed('/home');
             break;
-          case AuthFormType.convert:
-            File profilePictureToUpload = File(_profileImage.path);
-            await auth.convertUserWithEmail(
-                _email.trim(), _password.trim(), _name.trim(), location);
-
-            // locator
-            //     .get<UserController>()
-            //     .setCurrentUserUid(_authService.getCurrentUID());
-
-            await locator
-                .get<UserController>()
-                .uploadProfilePicture(profilePictureToUpload);
-
-            // await locator.get<UserController>().setAvatarUrlAndUserFullName(
-            //     profilePictureToUpload, _name.trim());
-
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => HomeController()));
-            break;
           case AuthFormType.reset:
             await auth.sendPasswordResetEmail(_email.trim());
             _warning = 'A password reset link has been sent to $_email';
@@ -182,11 +160,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               authFormType = AuthFormType.signIn;
             });
             break;
-          case AuthFormType.anonymous:
-            await auth.signInAnonymously();
-            Navigator.of(context).pushReplacementNamed('/home');
-            break;
-
           case AuthFormType.phone:
             var result = await auth.createUserWithPhone(_phone.trim(), context);
             if (_phone == "" || result == "error") {
@@ -275,7 +248,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final _width = MediaQuery.of(context).size.width;
     final _height = MediaQuery.of(context).size.height;
 
     String _formattedDate = new DateFormat.yMMMd().format(_defaultAge);
@@ -286,62 +258,46 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         TextPosition(offset: _formattedDate.length),
       ),
     );
-
-    if (authFormType == AuthFormType.anonymous) {
-      submit();
-      return Scaffold(
-        backgroundColor: FyreworkrColors.fyreworkBlack,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SpinKitDoubleBounce(color: Colors.white),
-            Text(
-              'Loading',
-              style: TextStyle(color: Colors.white),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return Scaffold(
-        body: Container(
-          // color: FyreworkrColors.fyreworkBlack,
-          color: FyreworkrColors.white,
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: SafeArea(
-              child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                children: <Widget>[
-                  SizedBox(height: _height * 0.025),
-                  showAlert(),
-                  SizedBox(height: _height * 0.025),
-                  buildHeaderText(),
-                  SizedBox(height: _height * 0.05),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Form(
-                      key: formKey,
-                      child: Column(
-                        children: buildInputs() + buildButtons(),
-                      ),
+    return Scaffold(
+      body: Container(
+        // color: FyreworkrColors.fyreworkBlack,
+        color: FyreworkrColors.white,
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: SafeArea(
+            child: Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: ListView(
+              controller: scrollController,
+              children: <Widget>[
+                SizedBox(height: _height * 0.025),
+                showAlert(),
+                SizedBox(height: _height * 0.025),
+                buildHeaderText(),
+                SizedBox(height: _height * 0.05),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      children: buildInputs() + buildButtons(),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          )),
-        ),
-      );
-    }
+          ),
+        )),
+      ),
+    );
   }
 
   @override
   void dispose() {
     _cameraColorAnimationController.dispose();
     _cameraIconAnimationController.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -390,6 +346,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
   Widget showAlert() {
     if (_warning != null) {
+      scrollController.animateTo(0,
+          duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       return Container(
         color: Colors.amberAccent,
         width: double.infinity,
@@ -404,7 +362,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               child: AutoSizeText(
                 _warning,
                 maxLines: 3,
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 18),
               ),
             ),
             Padding(
@@ -468,7 +426,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     }
 
     // if were in the sign up state add name
-    if ([AuthFormType.signUp, AuthFormType.convert].contains(authFormType)) {
+    if ([AuthFormType.signUp].contains(authFormType)) {
       textFields.add(
         Column(
           children: <Widget>[
@@ -544,12 +502,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     }
 
     // add email & password
-    if ([
-      AuthFormType.signUp,
-      AuthFormType.convert,
-      AuthFormType.reset,
-      AuthFormType.signIn
-    ].contains(authFormType)) {
+    if ([AuthFormType.signUp, AuthFormType.reset, AuthFormType.signIn]
+        .contains(authFormType)) {
       textFields.add(
         TextFormField(
           validator: EmailValidator.validate,
@@ -566,8 +520,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     if (authFormType != AuthFormType.reset &&
         authFormType != AuthFormType.phone) {
       String _submitButtonText;
-      if (authFormType == AuthFormType.signUp ||
-          authFormType == AuthFormType.convert) {
+      if (authFormType == AuthFormType.signUp) {
         _submitButtonText = 'Sign Up';
       } else {
         _submitButtonText = 'Sign In';
@@ -576,8 +529,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Container(
-              width: MediaQuery.of(context).size.width * 0.6,
+            Expanded(
               child: TextFormField(
                 validator: PasswordValidator.validate,
                 style: TextStyle(fontSize: 22.0),
@@ -678,10 +630,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       _switchButtonText = 'cancel';
       _newformState = 'signIn';
       _showSocial = false;
-    } else if (authFormType == AuthFormType.convert) {
-      _submitButtonText = 'Sign Up';
-      _switchButtonText = 'have an account? Sign In';
-      _newformState = 'signIn';
     } else if (authFormType == AuthFormType.phone) {
       _submitButtonText = 'Continue';
       _switchButtonText = 'Cancel';
@@ -695,8 +643,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
     return [
       (authFormType != AuthFormType.signIn &&
-              authFormType != AuthFormType.signUp &&
-              authFormType != AuthFormType.convert)
+              authFormType != AuthFormType.signUp)
           ? Container(
               width: MediaQuery.of(context).size.width * 0.7,
               child: RaisedButton(
@@ -707,7 +654,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                   child: Text(
                     _submitButtonText,
                     style: TextStyle(
-                      fontSize: 20.0,
+                      fontSize: 18.0,
                     ),
                   ),
                 ),
@@ -718,36 +665,32 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               height: 0,
             ),
       showForgotPassword(_showForgotPassword),
-      Container(
-        width: MediaQuery.of(context).size.width * 0.7,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            FlatButton(
-              child: AutoSizeText(
-                _switchButtonText,
-                style: TextStyle(
-                    color: FyreworkrColors.fyreworkGrey, fontSize: 20),
-                maxLines: 1,
-              ),
-              onPressed: () {
-                switchFormState(_newformState);
-              },
+      Center(
+        child: FlatButton(
+          child: Flexible(
+            child: Text(
+              _switchButtonText,
+              style:
+                  TextStyle(color: FyreworkrColors.fyreworkGrey, fontSize: 18),
+              // maxLines: 1,
             ),
-          ],
+          ),
+          onPressed: () {
+            switchFormState(_newformState);
+          },
         ),
       ),
       buildSocialIcons(_showSocial),
 
       // splitting authFormType.convert from all other authFormTypes
 
-      (authFormType == AuthFormType.convert)
-          ? SizedBox(
-              height: 0,
-            )
-          : SizedBox(
-              height: 0,
-            )
+      // (authFormType == AuthFormType.convert)
+      //     ? SizedBox(
+      //         height: 0,
+      //       )
+      //     : SizedBox(
+      //         height: 0,
+      //       )
     ];
   }
 
@@ -756,7 +699,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       child: FlatButton(
         child: AutoSizeText(
           'Forgotten Password?',
-          style: TextStyle(color: FyreworkrColors.fyreworkGrey, fontSize: 20),
+          style: TextStyle(color: FyreworkrColors.fyreworkGrey, fontSize: 18),
           maxLines: 1,
         ),
         onPressed: () {
@@ -781,13 +724,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             child: GoogleSignInButton(
               onPressed: () async {
                 try {
-                  if (authFormType == AuthFormType.convert) {
-                    await _auth.convertWithGoogle();
-                    Navigator.of(context).pop();
-                  } else {
-                    await _auth.signInWithGoogle();
-                    Navigator.of(context).pushReplacementNamed('/home');
-                  }
+                  await _auth.signInWithGoogle();
+                  Navigator.of(context).pushReplacementNamed('/home');
                 } catch (e) {
                   setState(() {
                     _warning = e.message;

@@ -4,7 +4,7 @@ import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/widgets/provider_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:myApp/vew_controllers/user_controller.dart';
+import 'package:myApp/view_controllers/user_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:myApp/locator.dart';
 import 'package:myApp/models/gig.dart';
@@ -12,30 +12,6 @@ import 'package:myApp/viewmodels/create_gig_view_model.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 
 import '../../ui/shared/theme.dart';
-
-// Numeric input
-// class NumberInputField extends StatefulWidget {
-//   @override
-//   State<StatefulWidget> createState() {
-//     return new NumberInputFieldState();
-//   }
-// }
-
-// class NumberInputFieldState extends State<NumberInputField> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return TextFormField(
-//       decoration: InputDecoration(
-//           hintText: 'Budget',
-//           border: InputBorder.none,
-//           contentPadding: EdgeInsets.symmetric(vertical: 7)),
-//       keyboardType: TextInputType.number,
-//       inputFormatters: <TextInputFormatter>[
-//         WhitelistingTextInputFormatter.digitsOnly
-//       ], // Only numbers can be entered
-//     );
-//   }
-// }
 
 class AddGigDetails extends StatefulWidget {
   // final gigHashtagsController = TextEditingController();
@@ -47,7 +23,7 @@ class AddGigDetails extends StatefulWidget {
 }
 
 class _AddGigDetailsState extends State<AddGigDetails> {
-  final _formKey = GlobalKey<FormState>();
+  final _createGigFormKey = GlobalKey<FormState>();
 
   // instantiating GigModel value here to work with...
   String userId;
@@ -62,11 +38,12 @@ class _AddGigDetailsState extends State<AddGigDetails> {
   String gigValue;
   String adultContentText;
   bool adultContentBool = false;
+  bool appointed = false;
 
-  DateTime _currentDate = new DateTime.now().add(Duration(days: 30));
+  DateTime _initialDeadline = new DateTime.now().add(Duration(days: 30));
   TextEditingController _deadLineController = new TextEditingController();
 
-  List<String> _currency = <String>[
+  List<String> _currencies = <String>[
     '€',
     '£',
     '\$',
@@ -77,9 +54,9 @@ class _AddGigDetailsState extends State<AddGigDetails> {
 
   // Specifying the deadline date
   Future<Null> _selectedDate(BuildContext context) async {
-    await showDatePicker(
+    final DateTime _selectedDeadline = await showDatePicker(
       context: context,
-      initialDate: _currentDate,
+      initialDate: _initialDeadline,
       firstDate: DateTime.now(),
       lastDate: DateTime(2022),
       builder: (BuildContext context, Widget child) {
@@ -92,67 +69,27 @@ class _AddGigDetailsState extends State<AddGigDetails> {
         );
       },
     );
-
-    // if (_deadLine != null) {
-    //   setState(() {
-    //     _currentDate = _deadLine;
-    //     GigModel().gigDeadLine = _currentDate;
-    //   });
-    // } else {
-    //   setState(() {
-    //     _currentDate = DateTime.now();
-    //     GigModel().gigDeadLine = _currentDate;
-    //   });
-    // }
+    if (_selectedDeadline != null) {
+      setState(() {
+        _initialDeadline = _selectedDeadline;
+      });
+    }
   }
-
-  // TextFormField hashtagsTextFormField() {
-  //   return TextFormField(
-  //     decoration: InputDecoration(
-  //       border: InputBorder.none,
-  //       hintText: '#Hashtags',
-  //       fillColor: Colors.white,
-  //       filled: true,
-  //     ),
-  //     validator: (value) {
-  //       if (value.isEmpty) {
-  //         return 'at least one Hashtag required';
-  //       }
-  //     },
-  //     onSaved: (value) => hashtags = value,
-  //   );
-  // }
-
-  // TextFormField gigPostTextFormField() {
-  //   return TextFormField(
-  //     decoration: InputDecoration(
-  //       border: InputBorder.none,
-  //       hintText: 'Gig Post',
-  //       fillColor: Colors.white,
-  //       filled: true,
-  //     ),
-  //     validator: (value) {
-  //       if (value.isEmpty) {
-  //         return 'Gig post required';
-  //       }
-  //     },
-  //     onSaved: (value) => gigPost = value,
-  //   );
-  // }
 
   @override
   void dispose() {
     // Additional disposal code
-
+    _deadLineController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    String _formattedDate = new DateFormat.yMMMd().format(_currentDate);
+    String _formattedDate = new DateFormat.yMMMd().format(_initialDeadline);
 
     _deadLineController.value = new TextEditingValue(
-      text: _formattedDate == null ? _currentDate : '$_formattedDate',
+      // text: _formattedDate == null ? _initialDeadline : '$_formattedDate',
+      text: _formattedDate,
       selection: TextSelection.fromPosition(
         TextPosition(offset: _formattedDate.length),
       ),
@@ -174,13 +111,6 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                   viewModelBuilder: () {
                     return CreateGigViewModel();
                   },
-                  // onModelReady: (model) {
-                  // update the text in the controller
-                  // widget.gigHashtagsController.text =
-                  //     widget.edittingGig?.gigHashtags ?? '';
-
-                  // model.setEdittingGig(widget.edittingGig);
-                  // },
                   builder: (context, model, child) => Scaffold(
                     appBar: AppBar(
                       iconTheme: IconThemeData(
@@ -224,331 +154,275 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                       ),
                     ),
                     body: Form(
-                      key: _formKey,
+                      key: _createGigFormKey,
                       // autovalidate: true,
                       // color: Colors.white,
                       child: Padding(
                         padding: EdgeInsets.all(20.0),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                // height: 60,
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          color: Colors.grey.shade400,
-                                          width: 1)),
-                                ),
-                                child: Container(
-                                  height: 60,
-                                  // child: hashtagsTextFormField(),
-                                  child: TextFormField(
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: '#Hashtags',
-                                        fillColor: Colors.transparent,
-                                        filled: true,
-                                      ),
-                                      inputFormatters: [
-                                        new LengthLimitingTextInputFormatter(
-                                            50),
-                                      ],
-                                      validator: (value) =>
-                                          value.isEmpty ? '*' : null,
-                                      onSaved: (value) => gigHashtags = value),
-                                ),
+                        child: ListView(
+                          children: <Widget>[
+                            Container(
+                              // height: 60,
+                              decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        color: Colors.grey.shade400, width: 1)),
                               ),
-                              Container(
-                                height: 120,
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          color: Colors.grey.shade400,
-                                          width: 1)),
-                                ),
-                                child: Container(
-                                  height: 120,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      TextFormField(
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          hintText: 'Gig Post',
-                                          fillColor: Colors.transparent,
-                                          filled: true,
-                                        ),
-                                        inputFormatters: [
-                                          new LengthLimitingTextInputFormatter(
-                                              500),
-                                        ],
-                                        validator: (value) =>
-                                            value.isEmpty ? '*' : null,
-                                        onSaved: (value) => gigPost = value,
-                                        maxLines: null,
-                                      ),
+                              child: Container(
+                                height: 50,
+                                // child: hashtagsTextFormField(),
+                                child: TextFormField(
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: '#Hashtags',
+                                      fillColor: Colors.transparent,
+                                      filled: true,
+                                    ),
+                                    inputFormatters: [
+                                      new LengthLimitingTextInputFormatter(50),
                                     ],
-                                  ),
-                                ),
+                                    validator: (value) =>
+                                        value.isEmpty ? '*' : null,
+                                    onSaved: (value) => gigHashtags = value),
                               ),
-                              Container(
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          color: Colors.grey.shade400)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text('DeadLine',
-                                          style: TextStyle(fontSize: 18)),
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.40,
-                                        child: FlatButton(
-                                          onPressed: () {
-                                            _selectedDate(context);
+                            ),
+                            Container(
+                              height: 100,
+                              decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        color: Colors.grey.shade400, width: 1)),
+                              ),
+                              child: ListView(
+                                children: <Widget>[
+                                  TextFormField(
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: 'Gig Post',
+                                      fillColor: Colors.transparent,
+                                      filled: true,
+                                    ),
+                                    inputFormatters: [
+                                      new LengthLimitingTextInputFormatter(500),
+                                    ],
+                                    validator: (value) =>
+                                        value.isEmpty ? '*' : null,
+                                    onSaved: (value) => gigPost = value,
+                                    maxLines: null,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              // height: 100,
+                              decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        color: Colors.grey.shade400)),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('DeadLine',
+                                        style: TextStyle(fontSize: 18)),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.40,
+                                      child: FlatButton(
+                                        onPressed: () {
+                                          _selectedDate(context);
+                                        },
+                                        child: TextFormField(
+                                          enabled: false,
+                                          controller: _deadLineController,
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            focusedBorder: InputBorder.none,
+                                            enabledBorder: InputBorder.none,
+                                            errorBorder: InputBorder.none,
+                                            disabledBorder: InputBorder.none,
+                                          ),
+                                          onChanged: (deadline) {
+                                            setState(() {
+                                              gigDeadline = deadline;
+                                            });
                                           },
-                                          child: TextFormField(
-                                            enabled: false,
-                                            controller: _deadLineController,
-                                            decoration: InputDecoration(
-                                              border: InputBorder.none,
-                                              focusedBorder: InputBorder.none,
-                                              enabledBorder: InputBorder.none,
-                                              errorBorder: InputBorder.none,
-                                              disabledBorder: InputBorder.none,
-                                            ),
-                                            onChanged: (deadline) {
-                                              setState(() {
-                                                gigDeadline = deadline;
-                                              });
-                                            },
-                                            onSaved: (value) =>
-                                                gigDeadline = value,
-                                          ),
+                                          onSaved: (value) =>
+                                              gigDeadline = value,
                                         ),
                                       ),
-                                      // Container(
-                                      //   child: FlatButton(
-                                      //     child: Text('DD/MM/YYYY',
-                                      //         style: TextStyle(
-                                      //             fontSize: 16, color: Colors.grey)),
-                                      //     onPressed: () {
-                                      //       _selectedDate(context);
-                                      //     },
-                                      //   ),
-                                      // )
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Container(
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          color: Colors.grey.shade400)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Container(
-                                        child: Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.30,
-                                          height: 100,
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: <Widget>[
-                                              DropdownButtonHideUnderline(
-                                                child: DropdownButtonFormField(
-                                                  dropdownColor: FyreworkrColors
-                                                      .fyreworkBlack,
-                                                  decoration: InputDecoration(
-                                                    border: InputBorder.none,
-                                                    focusedBorder:
-                                                        InputBorder.none,
-                                                    enabledBorder:
-                                                        InputBorder.none,
-                                                    errorBorder:
-                                                        InputBorder.none,
-                                                    disabledBorder:
-                                                        InputBorder.none,
-                                                  ),
-                                                  items: _currency
-                                                      .map((value) =>
-                                                          DropdownMenuItem(
-                                                            child: Text(
-                                                              value,
-                                                              style: TextStyle(
-                                                                  color:
-                                                                      FyreworkrColors
-                                                                          .white),
-                                                            ),
-                                                            value: value,
-                                                          ))
-                                                      .toList(),
-                                                  onChanged:
-                                                      (selectedCurrency) {
-                                                    setState(() {
-                                                      gigCurrency =
-                                                          selectedCurrency;
-                                                    });
-                                                  },
-                                                  value: gigCurrency,
-                                                  isExpanded: false,
-                                                  hint: Text(
-                                                    'Currency',
-                                                  ),
-                                                  validator: (value) =>
-                                                      value == null
-                                                          ? '*'
-                                                          : null,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.30,
-                                        height: 100,
-                                        // child: NumberInputField(),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            TextFormField(
-                                              decoration: InputDecoration(
-                                                  hintText: 'Budget',
-                                                  border: InputBorder.none,
-                                                  contentPadding:
-                                                      EdgeInsets.symmetric(
-                                                          vertical: 7)),
-                                              // Only numbers can be entered
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              inputFormatters: <
-                                                  TextInputFormatter>[
-                                                WhitelistingTextInputFormatter
-                                                    .digitsOnly
-                                              ],
-                                              onSaved: (value) =>
-                                                  gigBudget = value,
-                                              validator: (value) =>
-                                                  value.isEmpty ? '*' : null,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                            ),
+                            Container(
+                              // height: 100,
+                              decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        color: Colors.grey.shade400)),
                               ),
-                              Padding(
+                              child: Padding(
                                 padding: const EdgeInsets.all(10.0),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Container(
-                                      child: Row(
-                                        children: <Widget>[
-                                          Radio(
-                                              value: 'Gigs I can do',
-                                              groupValue: gigValue,
-                                              activeColor:
-                                                  FyreworkrColors.fyreworkBlack,
-                                              onChanged: (T) {
-                                                setState(() {
-                                                  gigValue = T;
-                                                  Gig().gigValue = gigValue;
-                                                  print("gigValue: $gigValue");
-                                                });
-                                              }),
-                                          Text('Gigs I can do'),
-                                        ],
+                                      width: 90,
+                                      child: DropdownButtonHideUnderline(
+                                        child: DropdownButtonFormField(
+                                          dropdownColor: Color(0xFF424242),
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            focusedBorder: InputBorder.none,
+                                            enabledBorder: InputBorder.none,
+                                            errorBorder: InputBorder.none,
+                                            disabledBorder: InputBorder.none,
+                                          ),
+                                          items: _currencies
+                                              .map((value) => DropdownMenuItem(
+                                                    child: Container(
+                                                      width: 25,
+                                                      height: 25,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: Colors.white,
+                                                      ),
+                                                      child: Center(
+                                                        child: Text(
+                                                          value,
+                                                          style: TextStyle(
+                                                            color: FyreworkrColors
+                                                                .fyreworkBlack,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    value: value,
+                                                  ))
+                                              .toList(),
+                                          onChanged: (selectedCurrency) {
+                                            setState(() {
+                                              gigCurrency = selectedCurrency;
+                                            });
+                                          },
+                                          value: gigCurrency,
+                                          isExpanded: false,
+                                          hint: Text(
+                                            'Currency',
+                                          ),
+                                          validator: (value) =>
+                                              value == null ? '*' : null,
+                                        ),
                                       ),
                                     ),
                                     Container(
-                                      child: Row(
-                                        children: <Widget>[
-                                          Radio(
-                                              value: 'I need a provider',
-                                              groupValue: gigValue,
-                                              activeColor:
-                                                  FyreworkrColors.fyreworkBlack,
-                                              onChanged: (T) {
-                                                setState(() {
-                                                  gigValue = T;
-                                                  Gig().gigValue = gigValue;
-                                                  print("gigValue: $gigValue");
-                                                });
-                                              }),
-                                          Text('I need a provider'),
+                                      width: MediaQuery.of(context).size.width *
+                                          0.30,
+                                      child: TextFormField(
+                                        decoration: InputDecoration(
+                                            hintText: 'Budget',
+                                            border: InputBorder.none,
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 7)),
+                                        // Only numbers can be entered
+                                        keyboardType: TextInputType.number,
+                                        inputFormatters: <TextInputFormatter>[
+                                          WhitelistingTextInputFormatter
+                                              .digitsOnly
                                         ],
+                                        onSaved: (value) => gigBudget = value,
+                                        validator: (value) =>
+                                            value.isEmpty ? '*' : null,
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),
-                              Container(
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          color: Colors.grey.shade400)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5.0),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Container(
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
                                     children: <Widget>[
-                                      Checkbox(
-                                        value: adultContentBool,
-                                        onChanged: (bool value) {
-                                          setState(() {
-                                            adultContentBool =
-                                                !adultContentBool;
-                                            if (adultContentBool == true) {
-                                              adultContentText =
-                                                  "Adult content";
-                                            } else {
-                                              adultContentText = '';
-                                            }
-                                          });
-                                        },
-                                        activeColor:
-                                            FyreworkrColors.fyreworkBlack,
-                                        checkColor: FyreworkrColors.white,
-                                      ),
-                                      Flexible(
-                                          child: Text(
-                                              "This is adult content that should not be visible to minors.")),
+                                      Radio(
+                                          value: 'Gigs I can do',
+                                          groupValue: gigValue,
+                                          activeColor:
+                                              FyreworkrColors.fyreworkBlack,
+                                          onChanged: (T) {
+                                            setState(() {
+                                              gigValue = T;
+                                              Gig().gigValue = gigValue;
+                                              print("gigValue: $gigValue");
+                                            });
+                                          }),
+                                      Text('Gigs I can do'),
                                     ],
                                   ),
                                 ),
+                                Container(
+                                  child: Row(
+                                    children: <Widget>[
+                                      Radio(
+                                          value: 'I need a provider',
+                                          groupValue: gigValue,
+                                          activeColor:
+                                              FyreworkrColors.fyreworkBlack,
+                                          onChanged: (T) {
+                                            setState(() {
+                                              gigValue = T;
+                                              Gig().gigValue = gigValue;
+                                              print("gigValue: $gigValue");
+                                            });
+                                          }),
+                                      Text('I need a provider'),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                            Container(
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  // border: Border(
+                                  //     bottom: BorderSide(
+                                  //         color: Colors.grey.shade400)),
+                                  ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Checkbox(
+                                    value: adultContentBool,
+                                    onChanged: (bool value) {
+                                      setState(() {
+                                        adultContentBool = !adultContentBool;
+                                        if (adultContentBool == true) {
+                                          adultContentText = "Adult content";
+                                        } else {
+                                          adultContentText = '';
+                                        }
+                                      });
+                                    },
+                                    activeColor: FyreworkrColors.fyreworkBlack,
+                                    checkColor: FyreworkrColors.white,
+                                  ),
+                                  Flexible(
+                                      child: Text(
+                                          "This is adult content that should not be visible to minors.")),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -564,64 +438,17 @@ class _AddGigDetailsState extends State<AddGigDetails> {
     );
   }
 
-  // Future saveFormValues() async {
-  //   userProfilePictureUrl =
-  //       await locator.get<UserController>().getProfilePictureDownloadUrl();
-  //   if (gigValue == null) {
-  //     Scaffold.of(context).showSnackBar(_gigValueSnackBar);
-  //   } else if (gigValue != null && _formKey.currentState.validate()) {
-  //     _formKey.currentState.save();
-  //     CreateGigViewModel().addGig(
-  //       userId: userId,
-  //       userProfilePictureUrl: userProfilePictureUrl,
-  //       userFullName: userFullName,
-  //       gigHashtags: gigHashtags,
-  //       gigPost: gigPost,
-  //       gigDeadLine: gigDeadline,
-  //       gigCurrency: gigCurrency,
-  //       gigBudget: gigBudget,
-  //       gigValue: gigValue,
-  //       adultContentText: adultContentText,
-  //       adultContentBool: adultContentBool,
-  //     );
-  //     print('$gigHashtags');
-  //     print('$gigPost');
-  //     print('$gigDeadline');
-  //     print('$gigCurrency');
-  //     print('$gigBudget');
-  //     print('$gigValue');
-  //     print('$adultContentText');
-  //     print('$adultContentBool');
-
-  //     // var proceedToMultiAssetPicker = new MaterialPageRoute(
-  //     //   builder: (BuildContext context) => MultiAssetsPicker(
-  //     //   userId: userId,
-  //     // userProfilePictureUrl: userProfilePictureUrl,
-  //     // userFullName: userFullName,
-  //     //     receivedGigHashtags: gigHashtags,
-  //     //     receivedGigPost: gigPost,
-  //     //     receivedGigDeadLine: gigDeadline,
-  //     //     receivedGigCurrency: gigCurrency,
-  //     //     receivedGigBudget: gigBudget,
-  //     //     adultContentText: adultContentText,
-  //     //     receivedAdultContentBool: adultContentBool,
-  //     //     receivedGigValue: gigValue,
-  //     //   ),
-  //     // );
-  //     // Navigator.of(context).push(proceedToMultiAssetPicker);
-  //   }
-  // }
-
   Future saveFormValuesAndPickMediaFiles() async {
     userProfilePictureDownloadUrl =
         await locator.get<UserController>().getProfilePictureDownloadUrl();
     if (gigValue == null) {
       Scaffold.of(context).showSnackBar(_gigValueSnackBar);
-    } else if (gigValue != null && _formKey.currentState.validate()) {
-      _formKey.currentState.save();
+    } else if (gigValue != null && _createGigFormKey.currentState.validate()) {
+      _createGigFormKey.currentState.save();
 
       var proceedToMultiAssetPicker = new MaterialPageRoute(
         builder: (BuildContext context) => MultiAssetsPicker(
+          appointed: appointed,
           receivedUserId: userId,
           receivedUserProfilePictureDownloadUrl: userProfilePictureDownloadUrl,
           receivedUserFullName: userFullName,

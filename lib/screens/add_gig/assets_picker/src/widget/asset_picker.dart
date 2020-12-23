@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:myApp/ui/shared/theme.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:provider/provider.dart';
 import '../wechat_assets_picker.dart';
@@ -64,7 +65,7 @@ class AssetPicker extends StatelessWidget {
   static Future<List<AssetEntity>> pickAssets(
     BuildContext context, {
     Key key,
-    int maxAssets = 9,
+    int maxAssets = 5,
     int pageSize = 320,
     int pathThumbSize = 200,
     int gridCount = 4,
@@ -526,7 +527,8 @@ class AssetPicker extends StatelessWidget {
                   : Constants.textDelegate.confirm,
               style: TextStyle(
                 color: provider.isSelectedNotEmpty
-                    ? theme.textTheme.bodyText1.color
+                    ? FyreworkrColors.fyreworkBlack
+                    //  theme.textTheme.bodyText1.color
                     : theme.textTheme.caption.color,
                 fontSize: 17.0,
                 fontWeight: FontWeight.normal,
@@ -748,12 +750,17 @@ class AssetPicker extends StatelessWidget {
                   reverseDuration: switchingPathDuration,
                   child: selected
                       ? isSingleAssetMode
-                          ? Icon(Icons.check, size: 18.0)
+                          ? Icon(
+                              Icons.check,
+                              size: 18.0,
+                              color: FyreworkrColors.fyreworkBlack,
+                            )
                           : Text(
                               '${selectedAssets.indexOf(asset) + 1}',
                               style: TextStyle(
                                 color: selected
-                                    ? theme.textTheme.bodyText1.color
+                                    ? FyreworkrColors.fyreworkBlack
+                                    // theme.textTheme.bodyText1.color
                                     : null,
                                 fontSize: isAppleOS ? 16.0 : 14.0,
                                 fontWeight: isAppleOS

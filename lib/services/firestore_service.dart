@@ -167,6 +167,47 @@ class FirestoreService {
     }
   }
 
+  Future appointedGigToUser(
+      String gigId, String appointedUserId, String commentId) async {
+    try {
+      var appoinstedUser =
+          await _usersCollectionReference.document(appointedUserId).get();
+      var appointedUserFullName = appoinstedUser.data['name'];
+
+      await DatabaseService(uid: appointedUserId)
+          .updateOngoingGigsByGigId(appointedUserId, gigId);
+
+      await _gigsCollectionReference.document(gigId).updateData({
+        'appointed': true,
+        'appointedUserId': appointedUserId,
+        'appointedUserFullName': appointedUserFullName
+      });
+
+      await _commentsCollectionReference.document(commentId).updateData({
+        'approved': true,
+        'appointedUserFullName': appointedUserFullName,
+        'appointedUserId': appointedUserId
+      });
+    } catch (e) {
+      if (e is PlatformException) {
+        return e.message;
+      }
+    }
+  }
+
+  Future getApponitedUserFullName(String appointedUserId) async {
+    try {
+      var appointedUser =
+          await _usersCollectionReference.document(appointedUserId).get();
+      var appointedUserFullName = appointedUser.data['name'];
+      print('appointedUserFullName: $appointedUserFullName');
+    } catch (e) {
+      if (e is PlatformException) {
+        return e.message;
+      }
+    }
+  }
+
   Future commentPrivacyToggle(String commentId, bool value) async {
     try {
       await _commentsCollectionReference

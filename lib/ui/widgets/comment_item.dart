@@ -5,30 +5,45 @@ import 'package:flutter/material.dart';
 import 'package:flutter_common_exports/src/extensions/build_context_extension.dart';
 import 'package:myApp/services/firestore_service.dart';
 import 'package:myApp/ui/shared/theme.dart';
+import 'package:myApp/ui/widgets/user_profile.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 class CommentItem extends StatefulWidget {
-  final currentUserId;
+  final passedCurrentUserId;
   final gigIdHoldingComment;
+  final gigOwnerId;
   final commentId;
   final commentOwnerId;
   final commentOwnerProfilePictureUrl;
   final commentOwnerFullName;
   final commentBody;
+  final gigCurrency;
   final commentTime;
   final privateComment;
+  final proposal;
+  final approved;
+  final appointedUserId;
+  final appointedUserFullName;
+  final offeredBudget;
   final Function onDeleteItem;
   CommentItem({
     Key key,
-    this.currentUserId,
+    this.passedCurrentUserId,
     this.gigIdHoldingComment,
+    this.gigOwnerId,
     this.commentId,
     this.commentOwnerId,
     this.commentOwnerProfilePictureUrl,
     this.commentOwnerFullName,
     this.commentBody,
+    this.gigCurrency,
     this.commentTime,
     this.privateComment,
+    this.proposal,
+    this.approved,
+    this.appointedUserId,
+    this.appointedUserFullName,
+    this.offeredBudget,
     this.onDeleteItem,
   }) : super(key: key);
 
@@ -47,43 +62,59 @@ class _CommentItemState extends State<CommentItem> {
   }
 
   Widget commentViewShifter() {
-    if (!widget.privateComment &&
-        (widget.commentOwnerId == widget.currentUserId)) {
-      print('condition 1');
-      setState(() {
-        _commentOpacity = 0;
-      });
-      _timer = new Timer(Duration(milliseconds: 1000), () {
-        setState(() {
-          _commentOpacity = 0.9;
-          _commentViewIndex = 1;
-        });
-      });
-      _timer = new Timer(Duration(milliseconds: 2000), () {
-        setState(() {
-          _commentOpacity = 0;
-        });
-      });
-
-      _timer = new Timer(Duration(milliseconds: 3000), () {
-        setState(() {
-          _commentOpacity = 0.9;
-          _commentViewIndex = 0;
-        });
-      });
-    } else if (widget.privateComment &&
-        (widget.commentOwnerId == widget.currentUserId)) {
-      print('condition 2');
+    if (widget.passedCurrentUserId == widget.gigOwnerId) {
       setState(() {
         _commentViewIndex = 0;
       });
-    } else if (widget.privateComment &&
-        (widget.commentOwnerId != widget.currentUserId)) {
-      print('condition 3');
-      setState(() {
-        _commentViewIndex = 1;
-      });
+    } else {
+      if (!widget.privateComment &&
+          (widget.commentOwnerId == widget.passedCurrentUserId)) {
+        print('condition 1');
+        setState(() {
+          _commentOpacity = 0;
+        });
+        _timer = new Timer(Duration(milliseconds: 1000), () {
+          setState(() {
+            _commentOpacity = 0.9;
+            _commentViewIndex = 1;
+          });
+        });
+        _timer = new Timer(Duration(milliseconds: 2000), () {
+          setState(() {
+            _commentOpacity = 0;
+          });
+        });
+
+        _timer = new Timer(Duration(milliseconds: 3000), () {
+          setState(() {
+            _commentOpacity = 0.9;
+            _commentViewIndex = 0;
+          });
+        });
+      } else if (widget.privateComment &&
+          (widget.commentOwnerId == widget.passedCurrentUserId)) {
+        print('condition 2');
+        setState(() {
+          _commentViewIndex = 0;
+        });
+      } else if (widget.privateComment &&
+          (widget.commentOwnerId != widget.passedCurrentUserId)) {
+        print('condition 3');
+        setState(() {
+          _commentViewIndex = 1;
+        });
+      }
     }
+  }
+
+  showUserProfile() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => UserProfileView(
+                  passedUserUid: widget.appointedUserId,
+                  passedUserFullName: widget.appointedUserFullName,
+                )));
   }
 
   @override
@@ -95,67 +126,195 @@ class _CommentItemState extends State<CommentItem> {
             NetworkImage('${widget.commentOwnerProfilePictureUrl}'),
         radius: 20,
       ),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('${widget.commentOwnerFullName}',
+      title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: Text(
+                '${widget.commentOwnerFullName}',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  color: widget.commentOwnerId == widget.passedCurrentUserId
+                      ? Colors.white
+                      : FyreworkrColors.fyreworkBlack,
+                ),
+              ),
+            ),
+            (widget.commentOwnerId == widget.passedCurrentUserId &&
+                    !widget.proposal)
+                ? Switch(
+                    activeColor: Colors.blue,
+                    inactiveThumbColor: Colors.grey[200],
+                    inactiveTrackColor: Colors.grey[200],
+                    activeTrackColor: Colors.grey[200],
+                    value: widget.privateComment,
+                    onChanged: (value) {
+                      FirestoreService()
+                          .commentPrivacyToggle(widget.commentId, value);
+                      commentViewShifter();
+                    },
+                  )
+                : Container(
+                    width: 0,
+                    height: 0,
+                  ),
+          ],
+        ),
+        Container(
+          height: 10,
+        ),
+        Container(
+          child: Text('${widget.commentBody}',
               style: TextStyle(
                 fontSize: 18,
-                fontWeight: FontWeight.w500,
-                color: widget.commentOwnerId == widget.currentUserId
+                color: widget.commentOwnerId == widget.passedCurrentUserId
                     ? Colors.white
                     : FyreworkrColors.fyreworkBlack,
               )),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Text('${widget.commentBody}',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: widget.commentOwnerId == widget.currentUserId
-                          ? Colors.white
-                          : FyreworkrColors.fyreworkBlack,
-                    )),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              widget.commentOwnerId == widget.currentUserId
-                  ? Container(
-                      width: 60,
-                      height: 25,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white54,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.white54,
+        ),
+        Container(height: 10),
+        (widget.gigOwnerId == widget.passedCurrentUserId &&
+                widget.commentOwnerId != widget.passedCurrentUserId &&
+                widget.proposal &&
+                !widget.approved)
+            ? Column(
+                children: [
+                  Container(
+                    color: Colors.white,
+                    child: Row(
+                      children: <Widget>[
+                        Flexible(child: Text('${widget.gigCurrency}')),
+                        Container(
+                          width: 5,
+                        ),
+                        Flexible(
+                          child: Text('${widget.offeredBudget}'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      RaisedButton(
+                          color: widget.commentOwnerId ==
+                                  widget.passedCurrentUserId
+                              ? Colors.white
+                              : FyreworkrColors.fyreworkBlack,
+                          child: Expanded(
+                            child: Text(
+                              'Approve',
+                              style: TextStyle(
+                                color: widget.commentOwnerId ==
+                                        widget.passedCurrentUserId
+                                    ? FyreworkrColors.fyreworkBlack
+                                    : Colors.white,
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                            FirestoreService().appointedGigToUser(
+                                widget.gigIdHoldingComment,
+                                widget.commentOwnerId,
+                                widget.commentId);
+                          }),
+                      RaisedButton(
+                          color: widget.commentOwnerId ==
+                                  widget.passedCurrentUserId
+                              ? Colors.white
+                              : FyreworkrColors.fyreworkBlack,
+                          child: Expanded(
+                            child: Text(
+                              'Reject',
+                              style: TextStyle(
+                                color: widget.commentOwnerId ==
+                                        widget.passedCurrentUserId
+                                    ? FyreworkrColors.fyreworkBlack
+                                    : Colors.white,
+                              ),
+                            ),
+                          ),
+                          onPressed: () {}),
+                    ],
+                  )
+                ],
+              )
+            : (widget.gigOwnerId == widget.passedCurrentUserId &&
+                    widget.commentOwnerId != widget.passedCurrentUserId &&
+                    widget.proposal &&
+                    widget.approved)
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        child: Wrap(
+                          direction: Axis.horizontal,
+                          alignment: WrapAlignment.start,
+                          children: [
+                            Text('You appointed this gig to '),
+                            GestureDetector(
+                              child: Flexible(
+                                  child: Text(
+                                '${widget.appointedUserFullName}',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              )),
+                              onTap: () {
+                                showUserProfile();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 5,
+                      ),
+                    ],
+                  )
+                : (widget.commentOwnerId == widget.passedCurrentUserId &&
+                        widget.proposal)
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                color: !widget.approved
+                                    ? Colors.white
+                                    : Colors.green,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            child: Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  !widget.approved
+                                      ? 'Pending approval'
+                                      : 'approved',
+                                  style: TextStyle(
+                                      color: !widget.approved
+                                          ? Colors.black
+                                          : Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 10,
                           ),
                         ],
+                      )
+                    : Container(
+                        width: 0,
+                        height: 0,
                       ),
-                      child: Switch(
-                        activeColor: FyreworkrColors.fyreworkBlack,
-                        activeTrackColor: Colors.black54,
-                        value: widget.privateComment,
-                        onChanged: (value) {
-                          FirestoreService()
-                              .commentPrivacyToggle(widget.commentId, value);
-                          commentViewShifter();
-                        },
-                      ),
-                    )
-                  : Container(width: 0, height: 0)
-            ],
-          ),
-        ],
-      ),
+      ]),
       subtitle: Flexible(
         child: Text(
           timeAgo.format(widget.commentTime.toDate()),
           style: TextStyle(
             fontSize: 12,
-            color: widget.commentOwnerId == widget.currentUserId
+            color: widget.commentOwnerId == widget.passedCurrentUserId
                 ? Colors.white
                 : FyreworkrColors.fyreworkBlack,
           ),
@@ -171,7 +330,7 @@ class _CommentItemState extends State<CommentItem> {
       child: Center(
         child: Text('Private comment',
             style: TextStyle(
-              color: widget.commentOwnerId == widget.currentUserId
+              color: widget.commentOwnerId == widget.passedCurrentUserId
                   ? Colors.white
                   : FyreworkrColors.fyreworkBlack,
             )),
@@ -230,37 +389,41 @@ class _CommentItemState extends State<CommentItem> {
     var locale = 'en';
     return Container(
         decoration: BoxDecoration(
-          color: widget.commentOwnerId == widget.currentUserId
+          color: widget.commentOwnerId == widget.passedCurrentUserId
               ? FyreworkrColors.fyreworkBlack
               : Colors.grey[50],
           border: Border(
-            top: widget.commentOwnerId == widget.currentUserId
+            top: widget.commentOwnerId == widget.passedCurrentUserId
                 ? BorderSide(width: 0.3, color: Colors.grey[50])
                 : BorderSide(width: 0.3, color: FyreworkrColors.fyreworkBlack),
-            bottom: widget.commentOwnerId == widget.currentUserId
+            bottom: widget.commentOwnerId == widget.passedCurrentUserId
                 ? BorderSide(width: 0.3, color: Colors.green)
                 : BorderSide(width: 0.3, color: FyreworkrColors.fyreworkBlack),
           ),
         ),
-        child: widget.commentOwnerId == widget.currentUserId
-            ?
-            // AnimatedSwitcher(
-            //     duration: Duration(seconds: 1), child: commentViewShift)
-            IndexedStack(
-                index: _commentViewIndex,
-                children: [
-                  AnimatedOpacity(
-                    opacity: _commentOpacity,
-                    child: publicCommentView,
-                    duration: Duration(milliseconds: 500),
-                  ),
-                  AnimatedOpacity(
-                      opacity: _commentOpacity,
-                      child: privateCommentView,
-                      duration: Duration(milliseconds: 500)),
-                ],
-              )
-            : widget.privateComment ? privateCommentView : publicCommentView);
+        child: widget.gigOwnerId == widget.passedCurrentUserId
+            ? publicCommentView
+            : widget.commentOwnerId == widget.passedCurrentUserId
+                ?
+                // AnimatedSwitcher(
+                //     duration: Duration(seconds: 1), child: commentViewShift)
+                IndexedStack(
+                    index: _commentViewIndex,
+                    children: [
+                      AnimatedOpacity(
+                        opacity: _commentOpacity,
+                        child: publicCommentView,
+                        duration: Duration(milliseconds: 500),
+                      ),
+                      AnimatedOpacity(
+                          opacity: _commentOpacity,
+                          child: privateCommentView,
+                          duration: Duration(milliseconds: 500)),
+                    ],
+                  )
+                : widget.privateComment
+                    ? privateCommentView
+                    : publicCommentView);
   }
 
   @override

@@ -1,19 +1,19 @@
 import 'dart:async';
 import 'dart:core';
-
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:myApp/models/gig.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myApp/services/firestore_service.dart';
 import 'package:myApp/ui/shared/theme.dart';
-import 'package:flutter_common_exports/src/extensions/build_context_extension.dart';
 import 'package:myApp/ui/views/add_comments_view.dart';
 import 'package:myApp/ui/widgets/gig_item_media_previewer.dart';
 import 'package:myApp/ui/widgets/user_profile.dart';
 
 class GigItem extends StatefulWidget {
+  final appointed;
+  final appointedUserFullName;
   final gigId;
+  final currentUserId;
   final gigOwnerId;
   final gigOwnerEmail;
   final userProfilePictureDownloadUrl;
@@ -26,12 +26,16 @@ class GigItem extends StatefulWidget {
   final gigBudget;
   final gigValue;
   final gigLikes;
+  final appointedUserId;
   final Gig adultContentText;
   final Gig adultContentBool;
   final Function onDeleteItem;
   GigItem({
     Key key,
+    this.appointed,
+    this.appointedUserFullName,
     this.gigId,
+    this.currentUserId,
     this.gigOwnerId,
     this.gigOwnerEmail,
     this.userProfilePictureDownloadUrl,
@@ -44,6 +48,7 @@ class GigItem extends StatefulWidget {
     this.gigBudget,
     this.gigValue,
     this.gigLikes,
+    this.appointedUserId,
     this.adultContentText,
     this.adultContentBool,
     this.onDeleteItem,
@@ -54,9 +59,6 @@ class GigItem extends StatefulWidget {
 }
 
 class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
-  bool isDisplayingDetail = true;
-  ThemeData get currentTheme => context.themeData;
-
   bool liked = false;
   bool showLikeOverlay = false;
   AnimationController _likeAnimationController;
@@ -92,6 +94,11 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
           MaterialPageRoute(
               builder: (context) => AddCommentsView(
                     passedGigId: widget.gigId.gigId,
+                    passedGigOwnerId: widget.gigOwnerId.gigOwnerId,
+                    passedCurrentUserId: widget.currentUserId,
+                    passedGigAppointed: widget.appointed.appointed,
+                    passedGigValue: widget.gigValue.gigValue,
+                    passedGigCurrency: widget.gigCurrency.gigCurrency,
                   )));
     });
   }
@@ -146,11 +153,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
     );
 
     IconButton commentButton = IconButton(
-      // icon: Icon(
-      //   Icons.chat_bubble_outline,
-      //   color: Colors.grey,
-      //   size: 30,
-      // ),
       icon: FaIcon(
         FontAwesomeIcons.comment,
         size: 27,
@@ -164,7 +166,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8),
             child: Column(
               children: <Widget>[
                 Row(
@@ -172,55 +174,67 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                   children: <Widget>[
                     GestureDetector(
                       onTap: showUserProfile,
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: Theme.of(context).primaryColor,
-                            backgroundImage: NetworkImage(
-                                "${widget.userProfilePictureDownloadUrl.userProfilePictureDownloadUrl}"),
+                      child: Flexible(
+                        child: Container(
+                          width: 200,
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundColor: Theme.of(context).primaryColor,
+                                backgroundImage: NetworkImage(
+                                    "${widget.userProfilePictureDownloadUrl.userProfilePictureDownloadUrl}"),
+                              ),
+                              Container(
+                                width: 10,
+                                height: 0,
+                              ),
+                              Flexible(
+                                child: Text(
+                                  "${widget.userFullName.userFullName}",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
                           ),
-                          Container(
-                            width: 10,
-                            height: 0,
-                          ),
-                          AutoSizeText(
-                            "${widget.userFullName.userFullName}",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                     RaisedButton(
-                      child: widget.gigValue.gigValue == 'Gigs I can do'
-                          ? AutoSizeText(
-                              "Hire me",
-                              style: TextStyle(
-                                color: FyreworkrColors.white,
-                              ),
-                            )
-                          : AutoSizeText(
-                              "Apply",
-                              style: TextStyle(
-                                color: FyreworkrColors.white,
-                              ),
-                            ),
                       color: FyreworkrColors.fyreworkBlack,
-                      onPressed: () {},
-                    ),
+                      child: Text(
+                        widget.gigOwnerId.gigOwnerId == widget.currentUserId
+                            ? 'Your gig'
+                            : widget.gigValue.gigValue == 'Gigs I can do'
+                                ? 'Hire me'
+                                : 'Apply',
+                        style: TextStyle(color: FyreworkrColors.white),
+                      ),
+                      onPressed:
+                          widget.gigOwnerId.gigOwnerId == widget.currentUserId
+                              ? () {}
+                              : widget.gigValue.gigValue == 'Gigs I can do'
+                                  ? () {}
+                                  : () {},
+                    )
                   ],
                 ),
                 SizedBox(height: 10),
                 Container(
                   alignment: Alignment.centerLeft,
-                  child: AutoSizeText(
-                    "${widget.gigHashtags.gigHashtags}",
-                    style: TextStyle(
-                      fontSize: 18,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      "${widget.gigHashtags.gigHashtags}",
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                // SizedBox(height: 10),
               ],
             ),
           ),
@@ -270,14 +284,17 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                 ),
                 Container(
                   alignment: Alignment.centerLeft,
-                  child: AutoSizeText(
-                    "${widget.gigPost.gigPost}",
-                    style: TextStyle(
-                      fontSize: 18,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      "${widget.gigPost.gigPost}",
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -293,10 +310,13 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                         ),
                         Container(
                           alignment: Alignment.centerLeft,
-                          child: AutoSizeText(
-                            "${widget.gigDeadline.gigDeadline}",
-                            style: TextStyle(
-                              fontSize: 18,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              "${widget.gigDeadline.gigDeadline}",
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
                             ),
                           ),
                         ),
@@ -306,10 +326,13 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                     Row(
                       children: <Widget>[
                         Container(
-                          child: AutoSizeText(
-                            "${widget.gigCurrency.gigCurrency}",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              "${widget.gigCurrency.gigCurrency}",
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
                         Container(
@@ -317,35 +340,38 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                           height: 0,
                         ),
                         Container(
-                          child: AutoSizeText(
-                            "${widget.gigBudget.gigBudget}",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              "${widget.gigBudget.gigBudget}",
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ],
                 ),
-                SizedBox(height: 10.0),
+                // SizedBox(height: 10.0),
                 widget.adultContentBool.adultContentBool
                     ? Container(
                         alignment: Alignment.centerLeft,
                         child: Column(
                           children: [
-                            SizedBox(height: 10),
+                            SizedBox(height: 5),
                             Row(
                               children: [
                                 FaIcon(
                                   FontAwesomeIcons.solidStar,
-                                  size: 20,
+                                  size: 15,
                                 ),
                                 Container(
                                   width: 5.0,
                                   height: 0,
                                 ),
                                 Expanded(
-                                  child: AutoSizeText(
+                                  child: Text(
                                     "${widget.adultContentText.adultContentText}",
                                     style: TextStyle(
                                       fontSize: 18,

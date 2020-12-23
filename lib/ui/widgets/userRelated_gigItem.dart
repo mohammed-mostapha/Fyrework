@@ -93,6 +93,7 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
           MaterialPageRoute(
               builder: (context) => AddCommentsView(
                     passedGigId: widget.gigId.gigId,
+                    passedGigOwnerId: widget.gigOwnerId.gigOwnerId,
                   )));
     });
   }

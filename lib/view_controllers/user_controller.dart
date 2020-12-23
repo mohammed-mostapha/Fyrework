@@ -7,6 +7,7 @@ import 'package:myApp/services/storage_repo.dart';
 
 class UserController {
   User _currentUser;
+  static String currentUserId;
   dynamic _userAvatarUrl;
   AuthService _authService = locator.get<AuthService>();
   StorageRepo _storageRepo = locator.get<StorageRepo>();
@@ -34,5 +35,9 @@ class UserController {
     print(_currentUser.fullName);
     print(_currentUser.uid);
     print(_userAvatarUrl);
+  }
+
+  Future<String> getCurrentUser() async {
+    return currentUserId = (await _authService.getCurrentUser()).uid;
   }
 }
