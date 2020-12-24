@@ -114,6 +114,8 @@ class _CommentItemState extends State<CommentItem> {
             builder: (context) => UserProfileView(
                   passedUserUid: widget.appointedUserId,
                   passedUserFullName: widget.appointedUserFullName,
+                  fromComment: true,
+                  fromGig: false,
                 )));
   }
 

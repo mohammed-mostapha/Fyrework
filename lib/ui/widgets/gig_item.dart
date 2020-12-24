@@ -136,6 +136,8 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
             builder: (context) => UserProfileView(
                   passedUserUid: widget.gigOwnerId.gigOwnerId,
                   passedUserFullName: widget.userFullName.userFullName,
+                  fromComment: false,
+                  fromGig: true,
                 )));
   }
 

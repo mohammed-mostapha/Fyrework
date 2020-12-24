@@ -46,8 +46,14 @@ class DatabaseService {
         .map(_userDataFromSnapshot);
   }
 
-  Stream<QuerySnapshot> userOngoingGigs(String userId) {
+  Stream<QuerySnapshot> userOngoingGigsByGigOwnerId(String userId) {
     return _gigsCollection.where('gigOwnerId', isEqualTo: userId).snapshots();
+  }
+
+  Stream<QuerySnapshot> userOngoingGigsByAppointedUserId(String userId) {
+    return _gigsCollection
+        .where('appointedUserId', isEqualTo: userId)
+        .snapshots();
   }
 
   Stream<QuerySnapshot> gigRelatedComments(String gigIdCommentsIdentifier) {

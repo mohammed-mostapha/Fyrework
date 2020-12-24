@@ -12,10 +12,14 @@ import 'gig_item.dart';
 class UserProfileView extends StatefulWidget {
   final String passedUserUid;
   final String passedUserFullName;
+  bool fromGig = false;
+  bool fromComment = false;
   UserProfileView({
     Key key,
     @required this.passedUserUid,
     @required this.passedUserFullName,
+    @required this.fromGig,
+    @required this.fromComment,
   }) : super(key: key);
   @override
   _UserProfileViewState createState() => _UserProfileViewState();
@@ -153,8 +157,12 @@ class _UserProfileViewState extends State<UserProfileView> {
                         ))),
                     Expanded(
                       child: StreamBuilder<QuerySnapshot>(
-                        stream: DatabaseService()
-                            .userOngoingGigs(widget.passedUserUid),
+                        stream: widget.fromGig
+                            ? DatabaseService().userOngoingGigsByGigOwnerId(
+                                widget.passedUserUid)
+                            : DatabaseService()
+                                .userOngoingGigsByAppointedUserId(
+                                    widget.passedUserUid),
                         builder: (context, snapshot) {
                           print('snapshot.data: ${snapshot.data}');
                           return !snapshot.hasData
