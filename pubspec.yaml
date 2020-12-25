@@ -81,6 +81,8 @@ dependencies:
 dev_dependencies:
   flutter_asset_generator: 
 
+  flutter_native_splash: ^0.1.9
+
   flutter_test:
     sdk: flutter
 

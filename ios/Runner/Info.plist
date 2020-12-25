@@ -56,5 +56,8 @@
 	<string>Need to upload images</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Need to use Microphone</string>
+	<key>UIStatusBarHidden</key>
+	<true/>
+
 </dict>
 </plist>

@@ -1,31 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Modify this file to customize your launch splash screen -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    
-    <item android:drawable="@color/White" />
+    <item android:drawable="@color/splash_color" />
 
     <!-- You can insert your own image assets here -->
-    
-
-    <item>
+    <!-- <item>
         <bitmap
             android:gravity="center"
-            android:layout_gravity="center"
-            android:src="@mipmap/fyrework_logo_dpi" />
-         
-    </item>
-    <item
-        android:layout_width="wrap_content"
-        android:bottom="-400dp"
-        android:gravity="center" 
-        android:layout_gravity="center" 
-        android:drawable="@drawable/gigsbyhumansforhumans"/>
-    
-     <!-- <item>
-        <bitmap android:src="@drawable/gigsbyhumansforhumans/"
-            android:gravity="center" />
+            android:src="@mipmap/launch_image" />
     </item> -->
+    <item >
+        <bitmap  android:src="@drawable/splash" />
+    </item>
 
- <!-- <item android:layout_gravity="bottom" android:height="50dp"/> -->
-   
 </layer-list>
