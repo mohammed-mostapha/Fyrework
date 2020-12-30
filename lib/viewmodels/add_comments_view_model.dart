@@ -25,10 +25,9 @@ class AddCommentsViewModel extends BaseModel {
     @required bool privateComment,
     @required bool proposal,
     @required bool approved,
+    @required bool rejected,
     @required String gigCurrency,
     @required String offeredBudget,
-    @required String appointedUserId,
-    @required String appointedUserFullName,
   }) async {
     setBusy(true);
 
@@ -47,8 +46,7 @@ class AddCommentsViewModel extends BaseModel {
             privateComment: privateComment,
             proposal: proposal,
             approved: approved,
-            appointedUserId: appointedUserId,
-            appointedUserFullName: appointedUserFullName,
+            rejected: rejected,
             gigCurrency: gigCurrency,
             offeredBudget: offeredBudget,
           ),
@@ -71,8 +69,7 @@ class AddCommentsViewModel extends BaseModel {
           privateComment: privateComment,
           proposal: proposal,
           approved: approved,
-          appointedUserId: appointedUserId,
-          appointedUserFullName: appointedUserFullName,
+          rejected: rejected,
           gigCurrency: gigCurrency,
           offeredBudget: offeredBudget,
         ),

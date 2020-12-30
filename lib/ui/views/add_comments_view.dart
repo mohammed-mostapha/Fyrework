@@ -38,8 +38,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
   bool privateComment = false;
   bool proposal = false;
   bool approved = false;
-  String appointedUserId;
-  String appointedUserFullName;
+  bool rejected = false;
   String offeredBudget;
   String userId;
   String userFullName;
@@ -72,8 +71,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
         privateComment: privateComment,
         proposal: proposal,
         approved: approved,
-        appointedUserId: appointedUserId,
-        appointedUserFullName: appointedUserFullName,
+        rejected: rejected,
         gigCurrency: widget.passedGigCurrency,
         offeredBudget: offeredBudget,
       );
@@ -101,8 +99,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
         privateComment: privateComment,
         proposal: proposal,
         approved: approved,
-        appointedUserId: appointedUserId,
-        appointedUserFullName: appointedUserFullName,
+        rejected: rejected,
         gigCurrency: widget.passedGigCurrency,
         offeredBudget: _offeredBudgetController.text,
       );
@@ -246,7 +243,6 @@ class _AddCommentsViewState extends State<AddCommentsView> {
 
   @override
   Widget build(BuildContext context) {
-    print('passedGigAppointed: ${widget.passedGigAppointed}');
 // new code
     return Scaffold(
       appBar: new AppBar(
@@ -365,9 +361,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                         privateComment: privateComment,
                                         proposal: proposal,
                                         approved: approved,
-                                        appointedUserId: appointedUserId,
-                                        appointedUserFullName:
-                                            appointedUserFullName,
+                                        rejected: rejected,
                                         gigCurrency: widget.passedGigCurrency,
                                         offeredBudget: offeredBudget,
                                       );

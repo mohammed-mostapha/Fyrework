@@ -22,8 +22,7 @@ class CommentItem extends StatefulWidget {
   final privateComment;
   final proposal;
   final approved;
-  final appointedUserId;
-  final appointedUserFullName;
+  final rejected;
   final offeredBudget;
   final Function onDeleteItem;
   CommentItem({
@@ -41,8 +40,7 @@ class CommentItem extends StatefulWidget {
     this.privateComment,
     this.proposal,
     this.approved,
-    this.appointedUserId,
-    this.appointedUserFullName,
+    this.rejected,
     this.offeredBudget,
     this.onDeleteItem,
   }) : super(key: key);
@@ -112,8 +110,8 @@ class _CommentItemState extends State<CommentItem> {
         context,
         MaterialPageRoute(
             builder: (context) => UserProfileView(
-                  passedUserUid: widget.appointedUserId,
-                  passedUserFullName: widget.appointedUserFullName,
+                  passedUserUid: widget.commentOwnerId,
+                  passedUserFullName: widget.commentOwnerFullName,
                   fromComment: true,
                   fromGig: false,
                 )));
@@ -180,7 +178,8 @@ class _CommentItemState extends State<CommentItem> {
         (widget.gigOwnerId == widget.passedCurrentUserId &&
                 widget.commentOwnerId != widget.passedCurrentUserId &&
                 widget.proposal &&
-                !widget.approved)
+                !widget.approved &&
+                !widget.rejected)
             ? Column(
                 children: [
                   Container(
@@ -238,7 +237,9 @@ class _CommentItemState extends State<CommentItem> {
                               ),
                             ),
                           ),
-                          onPressed: () {}),
+                          onPressed: () {
+                            FirestoreService().rejectProposal(widget.commentId);
+                          }),
                     ],
                   )
                 ],
@@ -246,7 +247,7 @@ class _CommentItemState extends State<CommentItem> {
             : (widget.gigOwnerId == widget.passedCurrentUserId &&
                     widget.commentOwnerId != widget.passedCurrentUserId &&
                     widget.proposal &&
-                    widget.approved)
+                    widget.rejected)
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -255,11 +256,11 @@ class _CommentItemState extends State<CommentItem> {
                           direction: Axis.horizontal,
                           alignment: WrapAlignment.start,
                           children: [
-                            Text('You appointed this gig to '),
+                            Text('You rejected '),
                             GestureDetector(
                               child: Flexible(
                                   child: Text(
-                                '${widget.appointedUserFullName}',
+                                '${widget.commentOwnerFullName}\'s proposal',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               )),
                               onTap: () {
@@ -274,42 +275,78 @@ class _CommentItemState extends State<CommentItem> {
                       ),
                     ],
                   )
-                : (widget.commentOwnerId == widget.passedCurrentUserId &&
-                        widget.proposal)
+                : (widget.gigOwnerId == widget.passedCurrentUserId &&
+                        widget.commentOwnerId != widget.passedCurrentUserId &&
+                        widget.proposal &&
+                        widget.approved)
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            decoration: BoxDecoration(
-                                color: !widget.approved
-                                    ? Colors.white
-                                    : Colors.green,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  !widget.approved
-                                      ? 'Pending approval'
-                                      : 'approved',
-                                  style: TextStyle(
-                                      color: !widget.approved
-                                          ? Colors.black
-                                          : Colors.white),
+                            child: Wrap(
+                              direction: Axis.horizontal,
+                              alignment: WrapAlignment.start,
+                              children: [
+                                Text('You appointed this gig to '),
+                                GestureDetector(
+                                  child: Flexible(
+                                      child: Text(
+                                    '${widget.commentOwnerFullName}',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  )),
+                                  onTap: () {
+                                    showUserProfile();
+                                  },
                                 ),
-                              ),
+                              ],
                             ),
                           ),
                           Container(
-                            height: 10,
+                            height: 5,
                           ),
                         ],
                       )
-                    : Container(
-                        width: 0,
-                        height: 0,
-                      ),
+                    : (widget.commentOwnerId == widget.passedCurrentUserId &&
+                            widget.proposal)
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: !widget.approved
+                                        ? !widget.rejected
+                                            ? Colors.white
+                                            : Colors.red
+                                        : Colors.green,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      !widget.approved
+                                          ? !widget.rejected
+                                              ? 'Pending approval'
+                                              : 'Rejected'
+                                          : 'approved',
+                                      style: TextStyle(
+                                          color: !widget.approved
+                                              ? Colors.black
+                                              : Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                height: 10,
+                              ),
+                            ],
+                          )
+                        : Container(
+                            width: 0,
+                            height: 0,
+                          ),
       ]),
       subtitle: Flexible(
         child: Text(

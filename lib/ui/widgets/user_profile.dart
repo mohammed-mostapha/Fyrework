@@ -166,7 +166,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                         builder: (context, snapshot) {
                           print('snapshot.data: ${snapshot.data}');
                           return !snapshot.hasData
-                              ? Text('This user hasn\'t posted any gigs yet')
+                              ? Text('')
                               : snapshot.data.documents.length > 0
                                   ? ListView.builder(
                                       itemCount: snapshot.data.documents.length,

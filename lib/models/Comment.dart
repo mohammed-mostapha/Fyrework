@@ -10,8 +10,7 @@ class Comment {
   final bool privateComment;
   final bool proposal;
   final bool approved;
-  final String appointedUserId;
-  final String appointedUserFullName;
+  final bool rejected;
   final String gigCurrency;
   final String offeredBudget;
 
@@ -27,8 +26,7 @@ class Comment {
     this.privateComment,
     this.proposal,
     this.approved,
-    this.appointedUserId,
-    this.appointedUserFullName,
+    this.rejected,
     this.gigCurrency,
     this.offeredBudget,
   });
@@ -48,10 +46,9 @@ class Comment {
       'privateComment': privateComment,
       'proposal': proposal,
       'approved': approved,
+      'rejected': rejected,
       'gigCurrency': gigCurrency,
       'offeredBudget': offeredBudget,
-      'appointedUserId': appointedUserId,
-      'appointedUserFullName': appointedUserFullName,
     };
   }
 
@@ -70,10 +67,9 @@ class Comment {
       privateComment: map['privateComment'],
       proposal: map['proposal'],
       approved: map['approved'],
+      rejected: map['rejected'],
       gigCurrency: map['gigCurrency'],
       offeredBudget: map['offeredBudget'],
-      appointedUserId: map['appointedUserId'],
-      appointedUserFullName: map['appointedUserFullName'],
     );
   }
 }

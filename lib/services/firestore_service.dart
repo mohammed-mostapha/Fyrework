@@ -170,9 +170,9 @@ class FirestoreService {
   Future appointedGigToUser(
       String gigId, String appointedUserId, String commentId) async {
     try {
-      var appoinstedUser =
+      var appointedUser =
           await _usersCollectionReference.document(appointedUserId).get();
-      var appointedUserFullName = appoinstedUser.data['name'];
+      var appointedUserFullName = appointedUser.data['name'];
 
       await DatabaseService(uid: appointedUserId)
           .updateOngoingGigsByGigId(appointedUserId, gigId);
@@ -185,8 +185,17 @@ class FirestoreService {
 
       await _commentsCollectionReference.document(commentId).updateData({
         'approved': true,
+        'appointedUserId': appointedUserId,
         'appointedUserFullName': appointedUserFullName,
-        'appointedUserId': appointedUserId
+      }).then((value) async {
+        await _commentsCollectionReference
+            .where('approved', isEqualTo: false)
+            .getDocuments()
+            .then((querySnapshots) {
+          querySnapshots.documents.forEach((document) {
+            document.reference.updateData({'rejected': true});
+          });
+        });
       });
     } catch (e) {
       if (e is PlatformException) {
@@ -195,18 +204,34 @@ class FirestoreService {
     }
   }
 
-  Future getApponitedUserFullName(String appointedUserId) async {
+  Future rejectProposal(String commentId) async {
     try {
-      var appointedUser =
-          await _usersCollectionReference.document(appointedUserId).get();
-      var appointedUserFullName = appointedUser.data['name'];
-      print('appointedUserFullName: $appointedUserFullName');
+      await _commentsCollectionReference.document(commentId).updateData({
+        'rejected': true,
+      });
     } catch (e) {
       if (e is PlatformException) {
         return e.message;
       }
     }
   }
+
+  // Future getApponitedOrRejectedUserFullName(
+  //     String appointedOrRejectedUserId) async {
+  //   try {
+  //     var appointedOrRejectedUser = await _usersCollectionReference
+  //         .document(appointedOrRejectedUserId)
+  //         .get();
+  //     var appointedOrRejectedUserFullName =
+  //         appointedOrRejectedUser.data['name'];
+  //     print(
+  //         'appointedOrRejectedUserFullName: $appointedOrRejectedUserFullName');
+  //   } catch (e) {
+  //     if (e is PlatformException) {
+  //       return e.message;
+  //     }
+  //   }
+  // }
 
   Future commentPrivacyToggle(String commentId, bool value) async {
     try {

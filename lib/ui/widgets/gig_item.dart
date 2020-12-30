@@ -286,13 +286,10 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                 ),
                 Container(
                   alignment: Alignment.centerLeft,
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      "${widget.gigPost.gigPost}",
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
+                  child: Text(
+                    "${widget.gigPost.gigPost}",
+                    style: TextStyle(
+                      fontSize: 18,
                     ),
                   ),
                 ),

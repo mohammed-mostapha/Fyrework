@@ -76,7 +76,7 @@ class CommentsView extends StatelessWidget {
         stream: DatabaseService().gigRelatedComments(gigIdCommentsIdentifier),
         builder: (context, snapshot) {
           return !snapshot.hasData
-              ? Center(child: Text('No comments yet...'))
+              ? Center(child: Text(''))
               : snapshot.data.documents.length > 0
                   ? ListView.builder(
                       itemCount: snapshot.data.documents.length,
@@ -102,9 +102,7 @@ class CommentsView extends StatelessWidget {
                             privateComment: getDocData['privateComment'],
                             proposal: getDocData['proposal'],
                             approved: getDocData['approved'],
-                            appointedUserId: getDocData['appointedUserId'],
-                            appointedUserFullName:
-                                getDocData['appointedUserFullName'],
+                            rejected: getDocData['rejected'],
                             offeredBudget: getDocData['offeredBudget'],
                             // onDeleteItem: () =>
                             //     model.deleteComment(index),
