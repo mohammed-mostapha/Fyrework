@@ -1,8 +1,6 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:myApp/app_localizations.dart';
 import 'package:myApp/ui/shared/theme.dart';
-import 'package:myApp/ui/widgets/custom_dialog.dart';
 
 class StartPage extends StatelessWidget {
   @override
@@ -29,7 +27,8 @@ class StartPage extends StatelessWidget {
                   FittedBox(
                     fit: BoxFit.contain,
                     child: Text(
-                      'GIGS BY HUMANS FOR HUMANS',
+                      AppLocalizations.of(context)
+                          .translate('GIGS BY HUMANS FOR HUMANS'),
                       style: TextStyle(fontSize: 400),
                       maxLines: 1,
                     ),
@@ -63,7 +62,7 @@ class StartPage extends StatelessWidget {
                       // height: 50,
                       child: Center(
                         child: FittedBox(
-                          fit: BoxFit.scaleDown,
+                          fit: BoxFit.contain,
                           child: Text(
                             AppLocalizations.of(context)
                                 .translate('Create account'),
@@ -83,7 +82,7 @@ class StartPage extends StatelessWidget {
                       children: [
                         Container(
                           child: FittedBox(
-                            fit: BoxFit.scaleDown,
+                            fit: BoxFit.contain,
                             child: Text(
                               AppLocalizations.of(context)
                                   .translate('Have an account already? '),
