@@ -144,55 +144,66 @@ class _CommentItemState extends State<CommentItem> {
             ),
             (widget.gigOwnerId == widget.passedCurrentUserId &&
                     widget.gigOwnerId != widget.commentOwnerId &&
-                    widget.proposal)
+                    widget.proposal &&
+                    !widget.approved &&
+                    widget.rejected)
                 ? Container(
                     decoration: BoxDecoration(
                         border: Border.all(
                           width: 2,
-                          color: !widget.approved
-                              ? !widget.rejected ? Colors.white : Colors.red
-                              : Colors.green,
+                          color: Colors.red,
                         ),
                         borderRadius: BorderRadius.all(Radius.circular(2))),
                     child: Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          !widget.approved
-                              ? !widget.rejected
-                                  ? 'Pending approval'
-                                  : 'Rejected'
-                              : 'Approved',
-                          style: TextStyle(
-                            color: !widget.approved
-                                ? !widget.rejected ? Colors.white : Colors.red
-                                : Colors.green,
-                            //  !widget.approved
-                            //     ? Colors.black
-                            //     : Colors.white,
-                          ),
+                          'Rejected',
+                          style: TextStyle(color: Colors.red),
                         ),
                       ),
                     ),
                   )
-                : (widget.commentOwnerId == widget.passedCurrentUserId &&
-                        !widget.proposal)
-                    ? Switch(
-                        activeColor: Colors.blue,
-                        inactiveThumbColor: Colors.grey[200],
-                        inactiveTrackColor: Colors.grey[200],
-                        activeTrackColor: Colors.grey[200],
-                        value: widget.privateComment,
-                        onChanged: (value) {
-                          FirestoreService()
-                              .commentPrivacyToggle(widget.commentId, value);
-                          commentViewShifter();
-                        },
+                : (widget.gigOwnerId == widget.passedCurrentUserId &&
+                        widget.gigOwnerId != widget.commentOwnerId &&
+                        widget.proposal &&
+                        widget.approved &&
+                        !widget.rejected)
+                    ? Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 2,
+                              color: Colors.green,
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(2))),
+                        child: Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Approved',
+                              style: TextStyle(color: Colors.green),
+                            ),
+                          ),
+                        ),
                       )
-                    : Container(
-                        width: 0,
-                        height: 0,
-                      ),
+                    : (widget.commentOwnerId == widget.passedCurrentUserId &&
+                            !widget.proposal)
+                        ? Switch(
+                            activeColor: Colors.blue,
+                            inactiveThumbColor: Colors.grey[200],
+                            inactiveTrackColor: Colors.grey[200],
+                            activeTrackColor: Colors.grey[200],
+                            value: widget.privateComment,
+                            onChanged: (value) {
+                              FirestoreService().commentPrivacyToggle(
+                                  widget.commentId, value);
+                              commentViewShifter();
+                            },
+                          )
+                        : Container(
+                            width: 0,
+                            height: 0,
+                          ),
           ],
         ),
         Container(
