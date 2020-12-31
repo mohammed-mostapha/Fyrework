@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
     return Provider(
       auth: AuthService(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: HomeController(),
         routes: <String, WidgetBuilder>{
           '/home': (BuildContext context) => HomeController(),

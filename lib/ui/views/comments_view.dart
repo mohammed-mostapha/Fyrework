@@ -16,60 +16,6 @@ class CommentsView extends StatelessWidget {
       this.gigOwnerId})
       : super(key: key);
   @override
-  // Widget build(BuildContext context) {
-  //   return ViewModelProvider<CommentsViewModel>.withConsumer(
-  //       viewModelBuilder: () {
-  //         return CommentsViewModel();
-  //       },
-  //       onModelReady: (model) =>
-  //           model.listenToComments(gigIdCommentsIdentifier),
-  //       builder: (context, model, child) => Scaffold(
-  //             backgroundColor: Colors.white,
-  //             body: Padding(
-  //               padding: const EdgeInsets.symmetric(horizontal: 0),
-  //               child: Column(
-  //                 mainAxisSize: MainAxisSize.max,
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 children: <Widget>[
-  //                   Expanded(
-  //                       child: model.comments != null
-  //                           ? ListView.builder(
-  //                               itemCount: model.comments.length,
-  //                               itemBuilder: (context, index) =>
-  //                                   GestureDetector(
-  //                                 // onTap: () => model.editCooment(index),
-  //                                 child: CommentItem(
-  //                                   currentUserId: currentUserId,
-  //                                   gigIdHoldingComment: model.comments[index],
-  //                                   commentId: model.comments[index],
-  //                                   commentOwnerId: model.comments[index],
-  //                                   commentOwnerProfilePictureUrl:
-  //                                       model.comments[index],
-  //                                   commentOwnerFullName: model.comments[index],
-  //                                   commentBody: model.comments[index],
-  //                                   commentTime: model.comments[index],
-  //                                   privateComment: model.comments[index],
-  //                                   onDeleteItem: () =>
-  //                                       model.deleteComment(index),
-  //                                 ),
-  //                               ),
-  //                             )
-  //                           : Center(
-  //                               child: Flexible(
-  //                               child: Padding(
-  //                                 padding: const EdgeInsets.all(8.0),
-  //                                 child: Text(
-  //                                   "No comments yet...",
-  //                                   style: TextStyle(fontSize: 18),
-  //                                   textAlign: TextAlign.center,
-  //                                 ),
-  //                               ),
-  //                             )))
-  //                 ],
-  //               ),
-  //             ),
-  //           ));
-  // }
   Widget build(BuildContext context) {
     return Expanded(
       child: StreamBuilder<QuerySnapshot>(

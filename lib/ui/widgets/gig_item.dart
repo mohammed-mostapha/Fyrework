@@ -99,6 +99,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                     passedGigAppointed: widget.appointed.appointed,
                     passedGigValue: widget.gigValue.gigValue,
                     passedGigCurrency: widget.gigCurrency.gigCurrency,
+                    passedGigBudget: widget.gigBudget.gigBudget,
                   )));
     });
   }

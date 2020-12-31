@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/views/comments_view.dart';
-import 'package:myApp/ui/widgets/comment_item.dart';
 import 'package:myApp/ui/widgets/provider_widget.dart';
 import 'package:myApp/viewmodels/add_comments_view_model.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:myApp/locator.dart';
 import 'package:myApp/services/auth_service.dart';
 import 'package:myApp/services/storage_repo.dart';
-import 'package:timeago/timeago.dart';
 import 'package:custom_switch/custom_switch.dart';
 
 class AddCommentsView extends StatefulWidget {
@@ -19,6 +17,7 @@ class AddCommentsView extends StatefulWidget {
   final String passedGigValue;
   final bool passedGigAppointed;
   final String passedGigCurrency;
+  final String passedGigBudget;
   AddCommentsView({
     Key key,
     @required this.passedGigId,
@@ -27,6 +26,7 @@ class AddCommentsView extends StatefulWidget {
     @required this.passedGigValue,
     @required this.passedGigAppointed,
     @required this.passedGigCurrency,
+    @required this.passedGigBudget,
   }) : super(key: key);
   @override
   _AddCommentsViewState createState() => _AddCommentsViewState();
@@ -254,29 +254,46 @@ class _AddCommentsViewState extends State<AddCommentsView> {
               'Comments',
               style: TextStyle(fontSize: 18),
             ),
-            FlatButton(
-                color: FyreworkrColors.white,
-                child: Text(
-                  widget.passedGigOwnerId == widget.passedCurrentUserId
-                      ? 'Your gig'
-                      : !widget.passedGigAppointed
-                          ? widget.passedGigValue == 'Gigs I can do'
-                              ? 'Hire me'
-                              : 'Apply'
-                          : 'Appointed',
-                  style: TextStyle(color: FyreworkrColors.fyreworkBlack),
-                ),
-                onPressed: widget.passedGigOwnerId == widget.passedCurrentUserId
-                    ? () {}
-                    :
-                    // widget.passedGigValue == 'Gigs I can do'
-                    //     ? () {}
-                    //     : () {},
-                    !widget.passedGigAppointed
-                        ? () {
-                            _showApplyOrHireTemplate();
-                          }
-                        : () {}),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Flexible(
+                    child: Text(
+                      '${widget.passedGigCurrency} ${widget.passedGigBudget}',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  FlatButton(
+                      color: FyreworkrColors.white,
+                      child: Text(
+                        widget.passedGigOwnerId == widget.passedCurrentUserId
+                            ? 'Your gig'
+                            : !widget.passedGigAppointed
+                                ? widget.passedGigValue == 'Gigs I can do'
+                                    ? 'Hire me'
+                                    : 'Apply'
+                                : 'Appointed',
+                        style: TextStyle(color: FyreworkrColors.fyreworkBlack),
+                      ),
+                      onPressed:
+                          widget.passedGigOwnerId == widget.passedCurrentUserId
+                              ? () {}
+                              :
+                              // widget.passedGigValue == 'Gigs I can do'
+                              //     ? () {}
+                              //     : () {},
+                              !widget.passedGigAppointed
+                                  ? () {
+                                      _showApplyOrHireTemplate();
+                                    }
+                                  : () {}),
+                ],
+              ),
+            ),
           ],
         ),
         bottom: PreferredSize(

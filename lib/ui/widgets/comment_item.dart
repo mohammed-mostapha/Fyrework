@@ -142,24 +142,57 @@ class _CommentItemState extends State<CommentItem> {
                 ),
               ),
             ),
-            (widget.commentOwnerId == widget.passedCurrentUserId &&
-                    !widget.proposal)
-                ? Switch(
-                    activeColor: Colors.blue,
-                    inactiveThumbColor: Colors.grey[200],
-                    inactiveTrackColor: Colors.grey[200],
-                    activeTrackColor: Colors.grey[200],
-                    value: widget.privateComment,
-                    onChanged: (value) {
-                      FirestoreService()
-                          .commentPrivacyToggle(widget.commentId, value);
-                      commentViewShifter();
-                    },
+            (widget.gigOwnerId == widget.passedCurrentUserId &&
+                    widget.gigOwnerId != widget.commentOwnerId &&
+                    widget.proposal)
+                ? Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 2,
+                          color: !widget.approved
+                              ? !widget.rejected ? Colors.white : Colors.red
+                              : Colors.green,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(2))),
+                    child: Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          !widget.approved
+                              ? !widget.rejected
+                                  ? 'Pending approval'
+                                  : 'Rejected'
+                              : 'Approved',
+                          style: TextStyle(
+                            color: !widget.approved
+                                ? !widget.rejected ? Colors.white : Colors.red
+                                : Colors.green,
+                            //  !widget.approved
+                            //     ? Colors.black
+                            //     : Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
                   )
-                : Container(
-                    width: 0,
-                    height: 0,
-                  ),
+                : (widget.commentOwnerId == widget.passedCurrentUserId &&
+                        !widget.proposal)
+                    ? Switch(
+                        activeColor: Colors.blue,
+                        inactiveThumbColor: Colors.grey[200],
+                        inactiveTrackColor: Colors.grey[200],
+                        activeTrackColor: Colors.grey[200],
+                        value: widget.privateComment,
+                        onChanged: (value) {
+                          FirestoreService()
+                              .commentPrivacyToggle(widget.commentId, value);
+                          commentViewShifter();
+                        },
+                      )
+                    : Container(
+                        width: 0,
+                        height: 0,
+                      ),
           ],
         ),
         Container(
@@ -197,7 +230,7 @@ class _CommentItemState extends State<CommentItem> {
                     ),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       RaisedButton(
                           color: widget.commentOwnerId ==
@@ -221,6 +254,9 @@ class _CommentItemState extends State<CommentItem> {
                                 widget.commentOwnerId,
                                 widget.commentId);
                           }),
+                      SizedBox(
+                        width: 10,
+                      ),
                       RaisedButton(
                           color: widget.commentOwnerId ==
                                   widget.passedCurrentUserId
@@ -310,17 +346,25 @@ class _CommentItemState extends State<CommentItem> {
                     : (widget.commentOwnerId == widget.passedCurrentUserId &&
                             widget.proposal)
                         ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Container(
                                 decoration: BoxDecoration(
-                                    color: !widget.approved
-                                        ? !widget.rejected
-                                            ? Colors.white
-                                            : Colors.red
-                                        : Colors.green,
+                                    // color: !widget.approved
+                                    //     ? !widget.rejected
+                                    //         ? Colors.white
+                                    //         : Colors.red
+                                    //     : Colors.green,
+                                    border: Border.all(
+                                      width: 2,
+                                      color: !widget.approved
+                                          ? !widget.rejected
+                                              ? Colors.white
+                                              : Colors.red
+                                          : Colors.green,
+                                    ),
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
+                                        BorderRadius.all(Radius.circular(2))),
                                 child: Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -329,11 +373,17 @@ class _CommentItemState extends State<CommentItem> {
                                           ? !widget.rejected
                                               ? 'Pending approval'
                                               : 'Rejected'
-                                          : 'approved',
+                                          : 'Approved',
                                       style: TextStyle(
-                                          color: !widget.approved
-                                              ? Colors.black
-                                              : Colors.white),
+                                        color: !widget.approved
+                                            ? !widget.rejected
+                                                ? Colors.white
+                                                : Colors.red
+                                            : Colors.green,
+                                        //  !widget.approved
+                                        //     ? Colors.black
+                                        //     : Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
