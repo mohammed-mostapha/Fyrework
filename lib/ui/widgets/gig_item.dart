@@ -206,7 +206,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                       ),
                     ),
                     RaisedButton(
-                      color: FyreworkrColors.fyreworkBlack,
+                      color: Theme.of(context).primaryColor,
                       child: Text(
                         widget.gigOwnerId.gigOwnerId == widget.currentUserId
                             ? 'Your gig'
@@ -303,6 +303,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                         FaIcon(
                           FontAwesomeIcons.hourglassStart,
                           size: 15,
+                          color: Theme.of(context).primaryColor,
                         ),
                         Container(
                           width: 5.0,

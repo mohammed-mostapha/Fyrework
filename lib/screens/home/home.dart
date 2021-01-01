@@ -64,6 +64,7 @@ class _HomeState extends State<Home> {
         bottomNavigationBar: BottomNavigationBar(
           showSelectedLabels: false,
           showUnselectedLabels: false,
+          type: BottomNavigationBarType.fixed,
           onTap: _onItemTapped,
           items: [
             BottomNavigationBarItem(

@@ -14,6 +14,7 @@ class FyreworkrColors {
   static final Color paleSky = Color.fromRGBO(101, 119, 133, 1.0);
   static final Color ceriseRed = Color.fromRGBO(224, 36, 94, 1.0);
   static final Color paleSky50 = Color.fromRGBO(101, 118, 133, 0.5);
-  static final Color fyreworkBlack = Color.fromRGBO(0, 0, 0, 1);
+  // static final Color fyreworkBlack = Color.fromRGBO(0, 0, 0, 1);
+  static final Color fyreworkBlack = Color(0xFF000000);
   static final Color fyreworkGrey = Color.fromRGBO(104, 107, 116, 1);
 }

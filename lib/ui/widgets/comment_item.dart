@@ -7,6 +7,7 @@ import 'package:myApp/services/firestore_service.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/widgets/user_profile.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
+import 'package:expandable_text/expandable_text.dart';
 
 class CommentItem extends StatefulWidget {
   final passedCurrentUserId;
@@ -59,49 +60,35 @@ class _CommentItemState extends State<CommentItem> {
     super.initState();
   }
 
-  Widget commentViewShifter() {
-    if (widget.passedCurrentUserId == widget.gigOwnerId) {
+  void commentViewShifter() {
+    if (!widget.privateComment) {
+      print('condition 1');
       setState(() {
-        _commentViewIndex = 0;
+        _commentOpacity = 0;
       });
-    } else {
-      if (!widget.privateComment &&
-          (widget.commentOwnerId == widget.passedCurrentUserId)) {
-        print('condition 1');
+      _timer = new Timer(Duration(milliseconds: 1000), () {
+        setState(() {
+          _commentOpacity = 0.9;
+          _commentViewIndex = 1;
+        });
+      });
+      _timer = new Timer(Duration(milliseconds: 2000), () {
         setState(() {
           _commentOpacity = 0;
         });
-        _timer = new Timer(Duration(milliseconds: 1000), () {
-          setState(() {
-            _commentOpacity = 0.9;
-            _commentViewIndex = 1;
-          });
-        });
-        _timer = new Timer(Duration(milliseconds: 2000), () {
-          setState(() {
-            _commentOpacity = 0;
-          });
-        });
+      });
 
-        _timer = new Timer(Duration(milliseconds: 3000), () {
-          setState(() {
-            _commentOpacity = 0.9;
-            _commentViewIndex = 0;
-          });
-        });
-      } else if (widget.privateComment &&
-          (widget.commentOwnerId == widget.passedCurrentUserId)) {
-        print('condition 2');
+      _timer = new Timer(Duration(milliseconds: 3000), () {
         setState(() {
+          _commentOpacity = 0.9;
           _commentViewIndex = 0;
         });
-      } else if (widget.privateComment &&
-          (widget.commentOwnerId != widget.passedCurrentUserId)) {
-        print('condition 3');
-        setState(() {
-          _commentViewIndex = 1;
-        });
-      }
+      });
+    } else {
+      print('condition 2');
+      setState(() {
+        _commentViewIndex = 0;
+      });
     }
   }
 
@@ -130,16 +117,14 @@ class _CommentItemState extends State<CommentItem> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Flexible(
-              child: Text(
-                '${widget.commentOwnerFullName}',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: widget.commentOwnerId == widget.passedCurrentUserId
-                      ? Colors.white
-                      : FyreworkrColors.fyreworkBlack,
-                ),
+            Text(
+              '${widget.commentOwnerFullName}',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                color: widget.commentOwnerId == widget.passedCurrentUserId
+                    ? Colors.white
+                    : FyreworkrColors.fyreworkBlack,
               ),
             ),
             (widget.gigOwnerId == widget.passedCurrentUserId &&
@@ -206,19 +191,27 @@ class _CommentItemState extends State<CommentItem> {
                           ),
           ],
         ),
+        // Container(
+        //   height: 5,
+        // ),
         Container(
-          height: 10,
+          child: ExpandableText(
+            '${widget.commentBody}',
+            expandText: ' more',
+            collapseText: ' less',
+            maxLines: 3,
+            linkColor: widget.commentOwnerId == widget.passedCurrentUserId
+                ? Colors.white
+                : FyreworkrColors.fyreworkBlack,
+            style: TextStyle(
+              fontSize: 18,
+              color: widget.commentOwnerId == widget.passedCurrentUserId
+                  ? Colors.white
+                  : Colors.grey[700],
+            ),
+          ),
         ),
-        Container(
-          child: Text('${widget.commentBody}',
-              style: TextStyle(
-                fontSize: 18,
-                color: widget.commentOwnerId == widget.passedCurrentUserId
-                    ? Colors.white
-                    : FyreworkrColors.fyreworkBlack,
-              )),
-        ),
-        Container(height: 10),
+        Container(height: 5),
         (widget.gigOwnerId == widget.passedCurrentUserId &&
                 widget.commentOwnerId != widget.passedCurrentUserId &&
                 widget.proposal &&
@@ -230,13 +223,11 @@ class _CommentItemState extends State<CommentItem> {
                     color: Colors.white,
                     child: Row(
                       children: <Widget>[
-                        Flexible(child: Text('${widget.gigCurrency}')),
+                        Text('${widget.gigCurrency}'),
                         Container(
                           width: 5,
                         ),
-                        Flexible(
-                          child: Text('${widget.offeredBudget}'),
-                        ),
+                        Text('${widget.offeredBudget}'),
                       ],
                     ),
                   ),
@@ -305,11 +296,10 @@ class _CommentItemState extends State<CommentItem> {
                           children: [
                             Text('You rejected '),
                             GestureDetector(
-                              child: Flexible(
-                                  child: Text(
+                              child: Text(
                                 '${widget.commentOwnerFullName}\'s proposal',
                                 style: TextStyle(fontWeight: FontWeight.bold),
-                              )),
+                              ),
                               onTap: () {
                                 showUserProfile();
                               },
@@ -336,12 +326,11 @@ class _CommentItemState extends State<CommentItem> {
                               children: [
                                 Text('You appointed this gig to '),
                                 GestureDetector(
-                                  child: Flexible(
-                                      child: Text(
+                                  child: Text(
                                     '${widget.commentOwnerFullName}',
                                     style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  )),
+                                        TextStyle(fontWeight: FontWeight.w900),
+                                  ),
                                   onTap: () {
                                     showUserProfile();
                                   },
@@ -409,17 +398,14 @@ class _CommentItemState extends State<CommentItem> {
                             height: 0,
                           ),
       ]),
-      subtitle: Flexible(
-        child: Text(
-          timeAgo.format(widget.commentTime.toDate()),
-          style: TextStyle(
-            fontSize: 12,
-            color: widget.commentOwnerId == widget.passedCurrentUserId
-                ? Colors.white
-                : FyreworkrColors.fyreworkBlack,
-          ),
+      subtitle: Text(
+        timeAgo.format(widget.commentTime.toDate()),
+        style: TextStyle(
+          fontSize: 12,
+          color: widget.commentOwnerId == widget.passedCurrentUserId
+              ? Colors.white
+              : FyreworkrColors.fyreworkBlack,
         ),
-        // child: Text('${widget.commentTime}'),
       ),
     );
 
@@ -490,8 +476,9 @@ class _CommentItemState extends State<CommentItem> {
     return Container(
         decoration: BoxDecoration(
           color: widget.commentOwnerId == widget.passedCurrentUserId
-              ? FyreworkrColors.fyreworkBlack
-              : Colors.grey[50],
+              // ? FyreworkrColors.fyreworkBlack
+              ? Theme.of(context).primaryColor
+              : Colors.white,
           border: Border(
             top: widget.commentOwnerId == widget.passedCurrentUserId
                 ? BorderSide(width: 0.3, color: Colors.grey[50])
@@ -501,8 +488,21 @@ class _CommentItemState extends State<CommentItem> {
                 : BorderSide(width: 0.3, color: FyreworkrColors.fyreworkBlack),
           ),
         ),
-        child: widget.gigOwnerId == widget.passedCurrentUserId
-            ? publicCommentView
+        child: (widget.gigOwnerId == widget.passedCurrentUserId)
+            ? IndexedStack(
+                index: _commentViewIndex,
+                children: [
+                  AnimatedOpacity(
+                    opacity: _commentOpacity,
+                    child: publicCommentView,
+                    duration: Duration(milliseconds: 500),
+                  ),
+                  AnimatedOpacity(
+                      opacity: _commentOpacity,
+                      child: privateCommentView,
+                      duration: Duration(milliseconds: 500)),
+                ],
+              )
             : widget.commentOwnerId == widget.passedCurrentUserId
                 ?
                 // AnimatedSwitcher(

@@ -246,6 +246,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
 // new code
     return Scaffold(
       appBar: new AppBar(
+        // backgroundColor: Theme.of(context).primaryColor,
         backgroundColor: Theme.of(context).primaryColor,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -277,7 +278,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                     ? 'Hire me'
                                     : 'Apply'
                                 : 'Appointed',
-                        style: TextStyle(color: FyreworkrColors.fyreworkBlack),
+                        style: TextStyle(color: Theme.of(context).primaryColor),
                       ),
                       onPressed:
                           widget.passedGigOwnerId == widget.passedCurrentUserId
