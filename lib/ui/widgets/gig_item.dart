@@ -314,7 +314,10 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              "${widget.gigDeadline.gigDeadline}",
+                              // "${widget.gigDeadline.gigDeadline}",
+                              widget.gigDeadline.gigDeadline != null
+                                  ? "${widget.gigDeadline.gigDeadline}"
+                                  : "Book Gig",
                               style: TextStyle(
                                 fontSize: 18,
                               ),

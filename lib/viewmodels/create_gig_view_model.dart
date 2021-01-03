@@ -37,6 +37,7 @@ class CreateGigViewModel extends BaseModel {
 
     if (!_editting) {
       gigAdded = await _firestoreService.addGig(
+        gigHashtags,
         Gig(
           appointed: appointed,
           gigId: gigId,

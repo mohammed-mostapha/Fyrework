@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myApp/screens/add_gig/assets_picker/pages/multi_assets_picker.dart';
+import 'package:myApp/screens/add_gig/popularHashtags.dart';
 import 'package:myApp/screens/add_gig/sizeConfig.dart';
+import 'package:myApp/services/database.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/widgets/provider_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +14,7 @@ import 'package:myApp/models/gig.dart';
 import 'package:myApp/viewmodels/create_gig_view_model.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import '../../ui/shared/theme.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sliding_card/sliding_card.dart';
 
 class AddGigDetails extends StatefulWidget {
@@ -26,6 +29,7 @@ class AddGigDetails extends StatefulWidget {
 class _AddGigDetailsState extends State<AddGigDetails> {
   final _createGigFormKey = GlobalKey<FormState>();
   SlidingCardController slidingCardController;
+  TextEditingController typeAheadController = TextEditingController();
 
   // instantiating GigModel value here to work with...
   String userId;
@@ -157,31 +161,63 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                           child: SingleChildScrollView(
                             child: Column(
                               children: <Widget>[
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            color: Colors.grey.shade400,
-                                            width: 1)),
-                                  ),
-                                  height: 50,
-                                  // child: hashtagsTextFormField(),
-                                  child: TextFormField(
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.all(0),
-                                        border: InputBorder.none,
-                                        hintText: '#Hashtags',
-                                        fillColor: Colors.transparent,
-                                        filled: true,
-                                      ),
-                                      inputFormatters: [
-                                        new LengthLimitingTextInputFormatter(
-                                            50),
-                                      ],
-                                      validator: (value) =>
-                                          value.isEmpty ? '*' : null,
-                                      onSaved: (value) => gigHashtags = value),
+                                // Container(
+                                //   decoration: BoxDecoration(
+                                //     border: Border(
+                                //         bottom: BorderSide(
+                                //             color: Colors.grey.shade400,
+                                //             width: 1)),
+                                //   ),
+                                //   height: 50,
+                                //   // child: hashtagsTextFormField(),
+                                //   child: TextFormField(
+                                //       decoration: InputDecoration(
+                                //         contentPadding: EdgeInsets.all(0),
+                                //         border: InputBorder.none,
+                                //         hintText: '#Hashtags',
+                                //         fillColor: Colors.transparent,
+                                //         filled: true,
+                                //       ),
+                                //       inputFormatters: [
+                                //         new LengthLimitingTextInputFormatter(
+                                //             50),
+                                //       ],
+                                //       validator: (value) =>
+                                //           value.isEmpty ? '*' : null,
+                                //       onSaved: (value) => gigHashtags = value),
+                                // ),
+                                //type_ahead
+                                TypeAheadFormField(
+                                  validator: (value) =>
+                                      value.isEmpty ? '*' : null,
+                                  onSaved: (value) => gigHashtags = value,
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                          controller: typeAheadController,
+
+                                          // autofocus: true,
+
+                                          style: DefaultTextStyle.of(context)
+                                              .style
+                                              .copyWith(fontSize: 17),
+                                          decoration: InputDecoration(
+                                              contentPadding: EdgeInsets.all(0),
+                                              border: InputBorder.none,
+                                              hintText: '#Hashtags')),
+                                  suggestionsCallback: (pattern) async {
+                                    return await BackendService.getSuggestions(
+                                        pattern);
+                                  },
+                                  itemBuilder: (context, suggestions) {
+                                    return ListTile(
+                                      title: Text(suggestions),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) {
+                                    typeAheadController.text = suggestion;
+                                  },
                                 ),
+                                //end type_ahead
                                 Container(
                                   height: 100,
                                   decoration: BoxDecoration(
@@ -410,6 +446,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
   @override
   void dispose() {
     // Additional disposal code
+    typeAheadController.dispose();
     super.dispose();
   }
 }

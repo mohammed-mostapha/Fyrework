@@ -57,6 +57,7 @@ dependencies:
   timeago: ^2.0.27
   custom_switch:
   expandable_text: ^1.1.0
+  flutter_typeahead: ^0.6.1  
   sliding_card: ^0.1.2
   
 

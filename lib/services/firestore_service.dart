@@ -16,6 +16,8 @@ class FirestoreService {
       Firestore.instance.collection('gigs');
   final CollectionReference _commentsCollectionReference =
       Firestore.instance.collection('comments');
+  final CollectionReference _popularHashtagsCollectionReference =
+      Firestore.instance.collection('popularHashtags');
 
   final StreamController<List<Gig>> _gigsController =
       StreamController<List<Gig>>.broadcast();
@@ -50,7 +52,7 @@ class FirestoreService {
     }
   }
 
-  Future addGig(Gig gig) async {
+  Future addGig(String hashtag, Gig gig) async {
     var gigId;
     String userId = gig.gigOwnerId;
 
@@ -63,12 +65,28 @@ class FirestoreService {
       });
       await DatabaseService(uid: userId)
           .updateOngoingGigsByGigId(userId, gigId);
+
+      // if the used hashtag doesn't exist in popularHashtags collection...add it
+      var usedHashtag = await _popularHashtagsCollectionReference
+          .where('hashtag', isEqualTo: hashtag)
+          .limit(1)
+          .getDocuments();
+      final List<DocumentSnapshot> hashtagsCheckList = usedHashtag.documents;
+      if (!(hashtagsCheckList.length > 0)) {
+        DocumentReference docRef =
+            _popularHashtagsCollectionReference.document();
+        docRef.setData({
+          'hashtag': hashtag,
+        });
+      } else {
+        //
+      }
     } catch (e) {
       // TODO: Find or create a way to repeat error handling without so much repeated code
       if (e is PlatformException) {
-        return e.message;
+        // return e.message;
       }
-      return e.toString();
+      // return e.toString();
     }
   }
 

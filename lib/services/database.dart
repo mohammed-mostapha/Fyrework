@@ -14,6 +14,8 @@ class DatabaseService {
       Firestore.instance.collection('gigs');
   final CollectionReference _commentsCollection =
       Firestore.instance.collection('comments');
+  final CollectionReference _popularHashtags =
+      Firestore.instance.collection('popularHashtags');
 
   Future updateUserData(String uid, String name, String email, String password,
       String location, bool is_minor, dynamic ongoingGigsByGigId) async {
@@ -66,5 +68,19 @@ class DatabaseService {
     return await _usersCollection.document(uid).updateData({
       "ongoingGigsByGigId": FieldValue.arrayUnion([gigId])
     });
+  }
+
+  //fetch popular hashtags
+  Future fetchPopularHashtags(String query) async {
+    List filteredHashtags = List();
+    QuerySnapshot querySnapshot = await _popularHashtags.getDocuments();
+    List fetchedHashtags =
+        querySnapshot.documents.map((doc) => doc.data['hashtag']).toList();
+    fetchedHashtags.forEach((element) {
+      if (element.contains(query)) {
+        filteredHashtags.add(element);
+      }
+    });
+    return filteredHashtags.toList();
   }
 }
