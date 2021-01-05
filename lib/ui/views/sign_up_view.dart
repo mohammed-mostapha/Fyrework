@@ -10,7 +10,6 @@ import 'package:myApp/services/auth_service.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:myApp/services/places_autocomplete.dart';
@@ -184,8 +183,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     List<Placemark> placemarks = await Geolocator()
         .placemarkFromCoordinates(position.latitude, position.longitude);
     Placemark placemark = placemarks[0];
-    String completeAddress =
-        '${placemark.subThoroughfare} ${placemark.thoroughfare}, ${placemark.subLocality} ${placemark.locality}, ${placemark.subAdministrativeArea}, ${placemark.administrativeArea} ${placemark.postalCode}, ${placemark.country}';
+    // String completeAddress =
+    //     '${placemark.subThoroughfare} ${placemark.thoroughfare}, ${placemark.subLocality} ${placemark.locality}, ${placemark.subAdministrativeArea}, ${placemark.administrativeArea} ${placemark.postalCode}, ${placemark.country}';
     // print(completeAddress);
     String formattedAddress = "${placemark.locality}, ${placemark.country}";
     setState(() {
@@ -261,7 +260,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     return Scaffold(
       body: Container(
         // color: FyreworkrColors.fyreworkBlack,
-        color: FyreworkrColors.white,
+        color: Colors.grey[50],
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: SafeArea(
@@ -297,6 +296,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   void dispose() {
     _cameraColorAnimationController.dispose();
     _cameraIconAnimationController.dispose();
+    locationController.dispose();
     scrollController.dispose();
     super.dispose();
   }
@@ -310,7 +310,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             color: Colors.white,
             shape: BoxShape.circle,
             boxShadow: [
-              BoxShadow(blurRadius: 5, color: Colors.black54, spreadRadius: 5)
+              BoxShadow(blurRadius: 5, color: Colors.black54, spreadRadius: 2.5)
             ],
           ),
           child: CircleAvatar(
@@ -400,7 +400,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       _headerText,
       maxLines: 1,
       textAlign: TextAlign.center,
-      style: TextStyle(color: FyreworkrColors.black, fontSize: 30),
+      style: TextStyle(color: FyreworkrColors.black, fontSize: 25),
     );
   }
 
@@ -409,14 +409,17 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
     if (authFormType == AuthFormType.reset) {
       textFields.add(
-        TextFormField(
-          validator: EmailValidator.validate,
-          style: TextStyle(fontSize: 22.0),
-          decoration: buildSignUpInputDecoration('Email'),
-          onChanged: (val) {
-            setState(() => _email = val);
-          },
-          onSaved: (val) => _name = val,
+        Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: TextFormField(
+            validator: EmailValidator.validate,
+            style: TextStyle(fontSize: 22.0),
+            decoration: buildSignUpInputDecoration('Email'),
+            onChanged: (val) {
+              setState(() => _email = val);
+            },
+            onSaved: (val) => _name = val,
+          ),
         ),
       );
       textFields.add(
@@ -622,7 +625,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
     if (authFormType == AuthFormType.signIn) {
       _submitButtonText = 'Sign In';
-      _switchButtonText = 'New User? Create Account';
+      // _switchButtonText = 'New User? Create Account';
+      _switchButtonText = 'Register';
       _newformState = 'signUp';
       _showForgotPassword = true;
     } else if (authFormType == AuthFormType.reset) {
@@ -645,7 +649,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       (authFormType != AuthFormType.signIn &&
               authFormType != AuthFormType.signUp)
           ? Container(
-              width: MediaQuery.of(context).size.width * 0.7,
+              width: MediaQuery.of(context).size.width * 0.8,
               child: RaisedButton(
                 color: FyreworkrColors.fyreworkBlack,
                 textColor: FyreworkrColors.white,
@@ -664,21 +668,41 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           : SizedBox(
               height: 0,
             ),
-      showForgotPassword(_showForgotPassword),
-      Center(
-        child: FlatButton(
-          child: Flexible(
-            child: Text(
-              _switchButtonText,
-              style:
-                  TextStyle(color: FyreworkrColors.fyreworkGrey, fontSize: 18),
-              // maxLines: 1,
+      // showForgotPassword(_showForgotPassword),
+      // Center(
+      //   child: FlatButton(
+      //     child: Flexible(
+      //       child: Text(
+      //         _switchButtonText,
+      //         style:
+      //             TextStyle(color: FyreworkrColors.fyreworkGrey, fontSize: 18),
+      //         // maxLines: 1,
+      //       ),
+      //     ),
+      //     onPressed: () {
+      //       switchFormState(_newformState);
+      //     },
+      //   ),
+      // ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          showForgotPassword(_showForgotPassword),
+          FlatButton(
+            padding: EdgeInsets.zero,
+            child: Container(
+              child: AutoSizeText(
+                _switchButtonText,
+                style: TextStyle(
+                    color: FyreworkrColors.fyreworkBlack, fontSize: 18),
+                // maxLines: 1,
+              ),
             ),
+            onPressed: () {
+              switchFormState(_newformState);
+            },
           ),
-          onPressed: () {
-            switchFormState(_newformState);
-          },
-        ),
+        ],
       ),
       buildSocialIcons(_showSocial),
 
@@ -697,9 +721,11 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   Widget showForgotPassword(bool visible) {
     return Visibility(
       child: FlatButton(
+        padding: EdgeInsets.zero,
         child: AutoSizeText(
-          'Forgotten Password?',
-          style: TextStyle(color: FyreworkrColors.fyreworkGrey, fontSize: 18),
+          // 'Forgotten Password?',
+          'Forgotten?',
+          style: TextStyle(color: FyreworkrColors.fyreworkBlack, fontSize: 18),
           maxLines: 1,
         ),
         onPressed: () {
@@ -718,7 +744,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       child: Column(
         children: <Widget>[
           Divider(color: Colors.white),
-          SizedBox(height: 10),
+          SizedBox(height: 50),
           Container(
             width: double.infinity,
             child: GoogleSignInButton(
@@ -735,14 +761,15 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             ),
           ),
           RaisedButton(
+            padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
             color: FyreworkrColors.black,
             textColor: Colors.white,
             child: Row(
               children: <Widget>[
                 Icon(Icons.phone),
                 Padding(
-                  padding:
-                      const EdgeInsets.only(left: 8.0, top: 10.0, bottom: 10.0),
+                  padding: const EdgeInsets.only(
+                      left: 20.0, top: 10.0, bottom: 10.0),
                   child: Text(
                     'Sign in with Phone',
                     style: TextStyle(fontSize: 18),

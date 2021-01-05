@@ -35,7 +35,7 @@ class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           CarouselSlider(
-            height: 200.0,
+            height: MediaQuery.of(context).size.height / 2,
             initialPage: 0,
             enableInfiniteScroll:
                 receivedGigMediaFilesUrls.length > 1 ? true : false,

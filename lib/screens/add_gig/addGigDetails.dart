@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:myApp/screens/add_gig/assets_picker/pages/multi_assets_picker.dart';
 import 'package:myApp/screens/add_gig/popularHashtags.dart';
 import 'package:myApp/screens/add_gig/sizeConfig.dart';
-import 'package:myApp/services/database.dart';
+import 'package:myApp/services/places_autocomplete.dart';
+import 'package:myApp/ui/shared/constants.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/widgets/provider_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,10 +28,12 @@ class AddGigDetails extends StatefulWidget {
   _AddGigDetailsState createState() => _AddGigDetailsState();
 }
 
+TextEditingController _gigLocationController = TextEditingController();
+SlidingCardController slidingCardController;
+TextEditingController typeAheadController = TextEditingController();
+
 class _AddGigDetailsState extends State<AddGigDetails> {
   final _createGigFormKey = GlobalKey<FormState>();
-  SlidingCardController slidingCardController;
-  TextEditingController typeAheadController = TextEditingController();
 
   // instantiating GigModel value here to work with...
   String userId;
@@ -45,10 +49,31 @@ class _AddGigDetailsState extends State<AddGigDetails> {
   bool appointed = false;
 
   List<String> _currencies = <String>[
-    '€',
-    '£',
-    '\$',
-    'Kr',
+    'AUD',
+    'BRL',
+    'CAD',
+    'CZK',
+    'DKK',
+    'EUR',
+    'HKD',
+    'HUF',
+    'ILS',
+    'JPY',
+    'MYR',
+    'MXN',
+    'NOK',
+    'NZD',
+    'PHP',
+    'PLN',
+    'GBP',
+    'RUB',
+    'SGD',
+    'SEK',
+    'CHF',
+    'TWD',
+    'THB',
+    'TRY',
+    'USD',
   ];
 
   final _gigValueSnackBar = SnackBar(content: Text('who will do the Gig!!!'));
@@ -75,7 +100,9 @@ class _AddGigDetailsState extends State<AddGigDetails> {
           receivedUserFullName: userFullName,
           receivedGigHashtags: gigHashtags,
           receivedGigPost: gigPost,
-          receivedGigDeadLine: AppointmentCard.gigDeadline,
+          receivedGigDeadLine: AppointmentCard.gigDeadline != null
+              ? (AppointmentCard.gigDeadline.toUtc().millisecondsSinceEpoch)
+              : AppointmentCard.gigDeadline,
           receivedGigCurrency: gigCurrency,
           receivedGigBudget: gigBudget,
           receivedAdultContentText: adultContentText,
@@ -85,6 +112,22 @@ class _AddGigDetailsState extends State<AddGigDetails> {
       );
       Navigator.of(context).push(proceedToMultiAssetPicker);
     }
+  }
+
+  getUserLocation() async {
+    Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    List<Placemark> placemarks = await Geolocator()
+        .placemarkFromCoordinates(position.latitude, position.longitude);
+    Placemark placemark = placemarks[0];
+    // String completeAddress =
+    //     '${placemark.subThoroughfare} ${placemark.thoroughfare}, ${placemark.subLocality} ${placemark.locality}, ${placemark.subAdministrativeArea}, ${placemark.administrativeArea} ${placemark.postalCode}, ${placemark.country}';
+    // print(completeAddress);
+    String formattedAddress = "${placemark.locality}, ${placemark.country}";
+    setState(() {
+      _gigLocationController.text = formattedAddress;
+      print('${_gigLocationController.text}');
+    });
   }
 
   @override
@@ -109,6 +152,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                   },
                   builder: (context, model, child) => Scaffold(
                     appBar: AppBar(
+                      backgroundColor: Colors.grey[50],
                       iconTheme: IconThemeData(
                           color: FyreworkrColors
                               .fyreworkBlack //change your color here
@@ -140,7 +184,6 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                           ),
                         ),
                       ],
-                      backgroundColor: FyreworkrColors.white,
                       title: Padding(
                         padding: const EdgeInsets.all(0),
                         child: Text(
@@ -161,31 +204,26 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                           child: SingleChildScrollView(
                             child: Column(
                               children: <Widget>[
-                                // Container(
-                                //   decoration: BoxDecoration(
-                                //     border: Border(
-                                //         bottom: BorderSide(
-                                //             color: Colors.grey.shade400,
-                                //             width: 1)),
-                                //   ),
-                                //   height: 50,
-                                //   // child: hashtagsTextFormField(),
-                                //   child: TextFormField(
-                                //       decoration: InputDecoration(
-                                //         contentPadding: EdgeInsets.all(0),
-                                //         border: InputBorder.none,
-                                //         hintText: '#Hashtags',
-                                //         fillColor: Colors.transparent,
-                                //         filled: true,
-                                //       ),
-                                //       inputFormatters: [
-                                //         new LengthLimitingTextInputFormatter(
-                                //             50),
-                                //       ],
-                                //       validator: (value) =>
-                                //           value.isEmpty ? '*' : null,
-                                //       onSaved: (value) => gigHashtags = value),
-                                // ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Flexible(
+                                        child: PlacesAutocomplete(),
+                                      ),
+                                      IconButton(
+                                        color: FyreworkrColors.fyreworkBlack,
+                                        onPressed: () {
+                                          getUserLocation();
+                                        },
+                                        icon: Icon(Icons.gps_fixed),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 //type_ahead
                                 TypeAheadFormField(
                                   validator: (value) =>
@@ -193,17 +231,20 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                   onSaved: (value) => gigHashtags = value,
                                   textFieldConfiguration:
                                       TextFieldConfiguration(
-                                          controller: typeAheadController,
+                                    controller: typeAheadController,
 
-                                          // autofocus: true,
+                                    // autofocus: true,
 
-                                          style: DefaultTextStyle.of(context)
-                                              .style
-                                              .copyWith(fontSize: 17),
-                                          decoration: InputDecoration(
-                                              contentPadding: EdgeInsets.all(0),
-                                              border: InputBorder.none,
-                                              hintText: '#Hashtags')),
+                                    style: DefaultTextStyle.of(context)
+                                        .style
+                                        .copyWith(fontSize: 17),
+                                    // decoration: InputDecoration(
+                                    //     contentPadding: EdgeInsets.all(0),
+                                    //     border: InputBorder.none,
+                                    //     hintText: '#Hashtags'),
+                                    decoration:
+                                        buildSignUpInputDecoration('#Hashtag'),
+                                  ),
                                   suggestionsCallback: (pattern) async {
                                     return await BackendService.getSuggestions(
                                         pattern);
@@ -218,52 +259,43 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                   },
                                 ),
                                 //end type_ahead
-                                Container(
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            color: Colors.grey.shade400,
-                                            width: 1)),
-                                  ),
-                                  child: ListView(
-                                    children: <Widget>[
-                                      TextFormField(
-                                        decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.all(0),
-                                          border: InputBorder.none,
-                                          hintText: 'Describe your gig...',
-                                          // hintStyle: TextStyle(fontSize: 14),
-                                          fillColor: Colors.transparent,
-                                          filled: true,
-                                        ),
-                                        inputFormatters: [
-                                          new LengthLimitingTextInputFormatter(
-                                              500),
-                                        ],
-                                        validator: (value) =>
-                                            value.isEmpty ? '*' : null,
-                                        onSaved: (value) => gigPost = value,
-                                        maxLines: null,
-                                      ),
-                                    ],
-                                  ),
-                                ),
                                 Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                                  child: AppointmentCard(
-                                    onCardTapped: () {
-                                      if (slidingCardController
-                                              .isCardSeparated ==
-                                          true) {
-                                        slidingCardController.collapseCard();
-                                      } else {
-                                        slidingCardController.expandCard();
-                                      }
-                                    },
-                                    slidingCardController:
-                                        slidingCardController,
+                                  child: TextFormField(
+                                    decoration: buildSignUpInputDecoration(
+                                        'Describe your gig...'),
+                                    inputFormatters: [
+                                      new LengthLimitingTextInputFormatter(500),
+                                    ],
+                                    validator: (value) =>
+                                        value.isEmpty ? '*' : null,
+                                    onSaved: (value) => gigPost = value,
+                                    maxLines: null,
+                                  ),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.black26,
+                                              width: 0.5))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        0, 10, 10, 10),
+                                    child: AppointmentCard(
+                                      onCardTapped: () {
+                                        if (slidingCardController
+                                                .isCardSeparated ==
+                                            true) {
+                                          slidingCardController.collapseCard();
+                                        } else {
+                                          slidingCardController.expandCard();
+                                        }
+                                      },
+                                      slidingCardController:
+                                          slidingCardController,
+                                    ),
                                   ),
                                 ),
                                 // child: whoWillDoTheGig(context),
@@ -272,10 +304,10 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                 Container(
                                   // height: 100,
                                   decoration: BoxDecoration(
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            color: Colors.grey.shade400)),
-                                  ),
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.black26,
+                                              width: 0.5))),
                                   child: Padding(
                                     padding: const EdgeInsets.fromLTRB(
                                         0, 10, 10, 10),
@@ -301,8 +333,8 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                                   .map((value) =>
                                                       DropdownMenuItem(
                                                         child: Container(
-                                                          width: 25,
-                                                          height: 25,
+                                                          width: 40,
+                                                          height: 40,
                                                           decoration:
                                                               BoxDecoration(
                                                             shape:
@@ -446,6 +478,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
   @override
   void dispose() {
     // Additional disposal code
+    _gigLocationController.dispose();
     typeAheadController.dispose();
     super.dispose();
   }
@@ -463,8 +496,9 @@ class AppointmentCard extends StatefulWidget {
   final Function onCardTapped;
 
   static String gigValue;
-  static dynamic gigDeadline =
-      new DateFormat.yMMMd().format(new DateTime.now().add(Duration(days: 30)));
+  // static dynamic gigDeadline = new DateFormat('yyyy-MM-dd')
+  //     .format(new DateTime.now().add(Duration(days: 30)));
+  static DateTime gigDeadline = new DateTime.now().add(Duration(days: 30));
 
   @override
   _AppointmentCardState createState() => _AppointmentCardState();
@@ -534,7 +568,10 @@ class _AppointmentCardState extends State<AppointmentCard> {
                       widget.onCardTapped();
                       setState(() {
                         AppointmentCard.gigValue = T;
-                        AppointmentCard.gigDeadline = _formattedDate;
+                        // AppointmentCard.gigDeadline = _formattedDate;
+                        AppointmentCard.gigDeadline =
+                            new DateTime.now().add(Duration(days: 30));
+
                         print('deadline: ${AppointmentCard.gigDeadline}');
                         // Gig().gigValue = gigValue;
                       });
@@ -592,9 +629,9 @@ class _AppointmentCardState extends State<AppointmentCard> {
       ),
       backCardWidget: Container(
         // height: 100,
-        decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: Colors.grey.shade400)),
-        ),
+        // decoration: BoxDecoration(
+        //   border: Border(bottom: BorderSide()),
+        // ),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
           child: Row(
@@ -608,26 +645,30 @@ class _AppointmentCardState extends State<AppointmentCard> {
                     onPressed: () {
                       _selectedDate(context);
                     },
-                    child: TextFormField(
-                      style: TextStyle(color: Colors.grey, fontSize: 17),
-                      enabled: false,
-                      controller: _deadLineController,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                      ),
-                      onChanged: (deadline) {
-                        setState(() {
-                          AppointmentCard.gigDeadline = deadline;
-                        });
-                      },
-                      onSaved: (value) => AppointmentCard.gigDeadline != null
-                          ? AppointmentCard.gigDeadline = value
-                          : AppointmentCard.gigDeadline = null,
+                    child: Text(
+                      '${AppointmentCard.gigDeadline}',
+                      style: TextStyle(color: Colors.grey),
                     ),
+                    // child: TextFormField(
+                    //   style: TextStyle(color: Colors.grey, fontSize: 17),
+                    //   enabled: false,
+                    //   controller: _deadLineController,
+                    //   decoration: InputDecoration(
+                    //     border: InputBorder.none,
+                    //     focusedBorder: InputBorder.none,
+                    //     enabledBorder: InputBorder.none,
+                    //     errorBorder: InputBorder.none,
+                    //     disabledBorder: InputBorder.none,
+                    //   ),
+                    //   onChanged: (deadline) {
+                    //     setState(() {
+                    //       AppointmentCard.gigDeadline = deadline;
+                    //     });
+                    //   },
+                    //   onSaved: (value) => AppointmentCard.gigDeadline != null
+                    //       ? AppointmentCard.gigDeadline = value
+                    //       : AppointmentCard.gigDeadline = null,
+                    // ),
                   ),
                 ),
               ),
@@ -648,9 +689,9 @@ class _AppointmentCardState extends State<AppointmentCard> {
   @override
   void dispose() {
     // Additional disposal code
-    _deadLineController.dispose();
     AppointmentCard.gigValue = null;
     AppointmentCard.gigDeadline = null;
+    _deadLineController.dispose();
     super.dispose();
   }
 }

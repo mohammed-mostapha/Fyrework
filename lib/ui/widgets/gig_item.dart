@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:myApp/models/gig.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:myApp/screens/add_gig/assets_picker/src/constants/constants.dart';
 import 'package:myApp/services/firestore_service.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/views/add_comments_view.dart';
@@ -168,77 +169,81 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
       margin: const EdgeInsets.only(top: 20),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: showUserProfile,
-                      child: Flexible(
-                        child: Container(
-                          width: 200,
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                backgroundColor: Theme.of(context).primaryColor,
-                                backgroundImage: NetworkImage(
-                                    "${widget.userProfilePictureDownloadUrl.userProfilePictureDownloadUrl}"),
-                              ),
-                              Container(
-                                width: 10,
-                                height: 0,
-                              ),
-                              Flexible(
-                                child: Text(
-                                  "${widget.userFullName.userFullName}",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      GestureDetector(
+                        onTap: showUserProfile,
+                        child: Flexible(
+                          child: Container(
+                            width: 200,
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  maxRadius: 20,
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                  backgroundImage: NetworkImage(
+                                      "${widget.userProfilePictureDownloadUrl.userProfilePictureDownloadUrl}"),
                                 ),
-                              ),
-                            ],
+                                Container(
+                                  width: 10,
+                                  height: 0,
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    "${widget.userFullName.userFullName}",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    RaisedButton(
-                      color: Theme.of(context).primaryColor,
-                      child: Text(
-                        widget.gigOwnerId.gigOwnerId == widget.currentUserId
-                            ? 'Your gig'
-                            : widget.gigValue.gigValue == 'Gigs I can do'
-                                ? 'Hire me'
-                                : 'Apply',
-                        style: TextStyle(color: FyreworkrColors.white),
-                      ),
-                      onPressed:
+                      RaisedButton(
+                        color: Theme.of(context).primaryColor,
+                        child: Text(
                           widget.gigOwnerId.gigOwnerId == widget.currentUserId
-                              ? () {}
+                              ? 'Your gig'
                               : widget.gigValue.gigValue == 'Gigs I can do'
-                                  ? () {}
-                                  : () {},
-                    )
-                  ],
-                ),
-                SizedBox(height: 10),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      "${widget.gigHashtags.gigHashtags}",
-                      style: TextStyle(
-                        fontSize: 18,
+                                  ? 'Hire me'
+                                  : 'Apply',
+                          style: TextStyle(color: FyreworkrColors.white),
+                        ),
+                        onPressed:
+                            widget.gigOwnerId.gigOwnerId == widget.currentUserId
+                                ? () {}
+                                : widget.gigValue.gigValue == 'Gigs I can do'
+                                    ? () {}
+                                    : () {},
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        "${widget.gigHashtags.gigHashtags}",
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                // SizedBox(height: 10),
-              ],
+                  SizedBox(height: 10),
+                ],
+              ),
             ),
           ),
           GestureDetector(
@@ -316,7 +321,10 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                             child: Text(
                               // "${widget.gigDeadline.gigDeadline}",
                               widget.gigDeadline.gigDeadline != null
-                                  ? "${widget.gigDeadline.gigDeadline}"
+                                  // ? "${widget.gigDeadline.gigDeadline}"
+                                  ? DateFormat('yyyy-MM-dd').format(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          widget.gigDeadline.gigDeadline))
                                   : "Book Gig",
                               style: TextStyle(
                                 fontSize: 18,
