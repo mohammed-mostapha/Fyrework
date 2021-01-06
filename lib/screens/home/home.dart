@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:myApp/services/auth_service.dart';
+// import 'package:myApp/services/auth_service.dart';
 import 'package:myApp/screens/add_gig/addGigDetails.dart';
 import 'package:myApp/screens/myJobs.dart';
 import 'package:myApp/screens/my_profile.dart';
 import 'package:myApp/screens/trends/trends.dart';
 
 import 'package:myApp/ui/shared/theme.dart';
+import 'package:myApp/view_controllers/user_controller.dart';
 
 class Home extends StatefulWidget {
   final int passedSelectedIndex;
@@ -31,12 +32,12 @@ class _HomeState extends State<Home> {
 
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(() {
-      _selectedIndex = passedSelectedIndex;
-      Future.delayed(Duration(seconds: 0), () {
-        _pageController.jumpToPage(_selectedIndex);
-      });
-    }());
+    // WidgetsBinding.instance.addPostFrameCallback(() {
+    //   _selectedIndex = passedSelectedIndex;
+    //   Future.delayed(Duration(seconds: 0), () {
+    //     _pageController.jumpToPage(_selectedIndex);
+    //   });
+    // }());
   }
 
   void _onPageChanged(int currentIndex) {
@@ -49,7 +50,7 @@ class _HomeState extends State<Home> {
     _pageController.jumpToPage(selectedIndex);
   }
 
-  final AuthService _auth = AuthService();
+  // final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {

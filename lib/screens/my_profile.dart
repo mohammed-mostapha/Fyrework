@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:myApp/locator.dart';
 import 'package:myApp/services/database.dart';
 import 'package:myApp/ui/views/sign_up_view.dart';
-import 'package:myApp/ui/widgets/provider_widget.dart';
+// import 'package:myApp/ui/widgets/provider_widget.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/services/auth_service.dart';
 import 'package:myApp/services/storage_repo.dart';
@@ -32,7 +32,8 @@ class _MyProfileViewState extends State<MyProfileView> {
         child: Column(
           children: <Widget>[
             FutureBuilder(
-              future: Provider.of(context).auth.getCurrentUser(),
+              // future: Provider.of(context).auth.getCurrentUser(),
+              future: AuthService().getCurrentUser(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return Column(
@@ -178,7 +179,8 @@ class _MyProfileViewState extends State<MyProfileView> {
       child: AutoSizeText("Sign out"),
       onPressed: () async {
         try {
-          await Provider.of(context).auth.signOut();
+          // await Provider.of(context).auth.signOut();
+          await AuthService().signOut();
         } catch (e) {
           print(e);
         }

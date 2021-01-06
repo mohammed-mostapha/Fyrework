@@ -36,8 +36,9 @@ TextEditingController locationController = TextEditingController();
 ScrollController scrollController = ScrollController();
 
 class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
+  // final auth = AuthService();
   AuthFormType authFormType;
-  AuthService _authService = locator.get<AuthService>();
+  // AuthService _authService = locator.get<AuthService>();
   final int maxAssetsCount = 1;
   List<AssetEntity> selectedProfilePictureList;
   File extractedProfilePictureFromList;
@@ -75,7 +76,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
   final formKey = GlobalKey<FormState>();
   String _email, _password, _name, location, _warning, _phone;
-  bool _is_minor = false;
+  bool _isMinor = false;
   dynamic _ongoingGigsByGigId;
   final TextEditingController phoneNumberController = TextEditingController();
   TextEditingController _ageOfUserController = new TextEditingController();
@@ -115,10 +116,10 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         _cameraIconAnimationController.reverse();
       });
     }
-
     if (validate()) {
       try {
-        final auth = Provider.of(context).auth;
+        // final auth = Provider.of(context).auth;
+        // final auth = AuthService();
         switch (authFormType) {
           case AuthFormType.signIn:
             // await auth.signInWithEmailAndPassword(
@@ -136,12 +137,12 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             // uploading a profile pic for the user signing up
             File profilePictureToUpload = File(_profileImage.path);
 
-            await auth.createUserWithEmailAndPassword(
+            await AuthService().createUserWithEmailAndPassword(
                 _email.trim(),
                 _password.trim(),
                 _name.trim(),
                 location,
-                _is_minor,
+                _isMinor,
                 _ongoingGigsByGigId);
 
             await locator
@@ -153,14 +154,15 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             Navigator.of(context).pushReplacementNamed('/home');
             break;
           case AuthFormType.reset:
-            await auth.sendPasswordResetEmail(_email.trim());
+            await AuthService().sendPasswordResetEmail(_email.trim());
             _warning = 'A password reset link has been sent to $_email';
             setState(() {
               authFormType = AuthFormType.signIn;
             });
             break;
           case AuthFormType.phone:
-            var result = await auth.createUserWithPhone(_phone.trim(), context);
+            var result =
+                await AuthService().createUserWithPhone(_phone.trim(), context);
             if (_phone == "" || result == "error") {
               setState(() {
                 _warning = "Your phone number could not be validated";
@@ -294,10 +296,10 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _cameraColorAnimationController.dispose();
-    _cameraIconAnimationController.dispose();
-    locationController.dispose();
-    scrollController.dispose();
+    // _cameraColorAnimationController.dispose();
+    // _cameraIconAnimationController.dispose();
+    // locationController.dispose();
+    // scrollController.dispose();
     super.dispose();
   }
 
@@ -480,11 +482,11 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                       "Tick this box if you are under 18 years old.",
                     )),
                     Checkbox(
-                      value: _is_minor,
+                      value: _isMinor,
                       onChanged: (bool value) {
                         setState(() {
-                          _is_minor = !_is_minor;
-                          print(_is_minor);
+                          _isMinor = !_isMinor;
+                          print(_isMinor);
                         });
                       },
                       activeColor: FyreworkrColors.fyreworkBlack,
@@ -739,7 +741,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   }
 
   Widget buildSocialIcons(bool visible) {
-    final _auth = Provider.of(context).auth;
+    // final _auth = Provider.of(context).auth;
     return Visibility(
       child: Column(
         children: <Widget>[
@@ -750,7 +752,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             child: GoogleSignInButton(
               onPressed: () async {
                 try {
-                  await _auth.signInWithGoogle();
+                  await AuthService().signInWithGoogle();
                   Navigator.of(context).pushReplacementNamed('/home');
                 } catch (e) {
                   setState(() {

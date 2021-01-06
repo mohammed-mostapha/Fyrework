@@ -3,10 +3,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:myApp/screens/add_gig/assets_picker/pages/multi_assets_picker.dart';
 import 'package:myApp/screens/add_gig/popularHashtags.dart';
 import 'package:myApp/screens/add_gig/sizeConfig.dart';
+import 'package:myApp/services/auth_service.dart';
 import 'package:myApp/services/places_autocomplete.dart';
 import 'package:myApp/ui/shared/constants.dart';
 import 'package:myApp/ui/shared/theme.dart';
-import 'package:myApp/ui/widgets/provider_widget.dart';
+// import 'package:myApp/ui/widgets/provider_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:myApp/view_controllers/user_controller.dart';
@@ -135,7 +136,8 @@ class _AddGigDetailsState extends State<AddGigDetails> {
     SizeConfig().init(context);
 
     return FutureBuilder(
-      future: Provider.of(context).auth.getCurrentUser(),
+      // future: Provider.of(context).auth.getCurrentUser(),
+      future: AuthService().getCurrentUser(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           userId = snapshot.data.uid;
@@ -478,8 +480,8 @@ class _AddGigDetailsState extends State<AddGigDetails> {
   @override
   void dispose() {
     // Additional disposal code
-    _gigLocationController.dispose();
-    typeAheadController.dispose();
+    // _gigLocationController.dispose();
+    // typeAheadController.dispose();
     super.dispose();
   }
 }
