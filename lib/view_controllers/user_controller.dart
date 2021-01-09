@@ -50,7 +50,7 @@ class UserController {
     // currentFirebaseUserUid = (await FirebaseAuth.instance.currentUser()).uid;
     // await authService.getCurrentUID();
     // DatabaseService().fetchUserData(currentFirebaseUserUid);
-    await FirestoreService().getUserData(currentFirebaseUserUid);
+    await FirestoreService().getCurrentUserData(currentFirebaseUserUid);
     print('print userId: ${MyUser.uid}');
 
     // print('print user model: $User');

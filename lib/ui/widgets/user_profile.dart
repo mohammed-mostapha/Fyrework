@@ -31,13 +31,6 @@ class _UserProfileViewState extends State<UserProfileView> {
   AuthService _authService = locator.get<AuthService>();
   StorageRepo _storageRepo = locator.get<StorageRepo>();
   AuthFormType authFormType;
-  dynamic userProfilePictureDownloadUrl;
-
-  Future<String> getProfilePictureDownloadUrl() async {
-    print('from inside function: ${widget.passedUserUid}');
-    return userProfilePictureDownloadUrl = await _storageRepo
-        .getUserProfilePictureDownloadUrl(widget.passedUserUid);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,376 +39,273 @@ class _UserProfileViewState extends State<UserProfileView> {
         backgroundColor: FyreworkrColors.fyreworkBlack,
         body: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: FutureBuilder(
-            future: getProfilePictureDownloadUrl(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.active) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (snapshot.connectionState == ConnectionState.done) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CircleAvatar(
-                          backgroundImage:
-                              NetworkImage(userProfilePictureDownloadUrl),
-                          radius: 50,
-                        ),
-                        SizedBox(
-                          height: 50,
-                          child: Column(
-                            children: <Widget>[
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    "Ongoing",
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.white),
+          child: StreamBuilder(
+              stream: DatabaseService().fetchUserData(widget.passedUserUid),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(snapshot.data.userAvatarUrl),
+                            radius: 50,
+                          ),
+                          SizedBox(
+                            height: 50,
+                            child: Column(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Center(
+                                    child: Text(
+                                      "Ongoing",
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.white),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              StreamBuilder(
-                                stream: DatabaseService()
-                                    .fetchUserData(widget.passedUserUid),
-                                builder: (context, snapshot) {
-                                  if (!snapshot.hasData) {
-                                    return Container(
-                                      width: 0,
-                                      height: 0,
-                                    );
-                                  } else if ((snapshot.hasData &&
-                                      snapshot.data.ongoingGigsByGigId ==
-                                          null)) {
-                                    return Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          '0',
+                                // StreamBuilder(
+                                //   stream: DatabaseService()
+                                //       .fetchUserData(widget.passedUserUid),
+                                //   builder: (context, snapshot) {
+                                //     if (!snapshot.hasData) {
+                                //       return Container(
+                                //         width: 0,
+                                //         height: 0,
+                                //       );
+                                //     } else if ((snapshot.hasData &&
+                                //         snapshot.data.ongoingGigsByGigId ==
+                                //             null)) {
+                                //       return Expanded(
+                                //         child: Center(
+                                //           child: Text(
+                                //             '0',
+                                //             style: TextStyle(
+                                //                 fontSize: 16,
+                                //                 color: Colors.white),
+                                //           ),
+                                //         ),
+                                //       );
+                                //     } else {
+                                //       return Expanded(
+                                //           child: Center(
+                                //         child: Text(
+                                //           '${snapshot.data.ongoingGigsByGigId.length}',
+                                //           style: TextStyle(
+                                //               fontSize: 16, color: Colors.white),
+                                //         ),
+                                //       ));
+                                //     }
+                                //   },
+                                // ),
+                                Expanded(
+                                  child: Center(
+                                    child: Text(
+                                      snapshot.data.ongoingGigsByGigId != null
+                                          ? '${snapshot.data.ongoingGigsByGigId.length}'
+                                          : '0',
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 50,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Expanded(
+                                  child: Center(
+                                    child: Text(
+                                      "Completed",
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Center(
+                                    child: Text(
+                                      "5",
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              children: [
+                                Text(
+                                  // widget.passedUserFullName,
+                                  snapshot.data.name,
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.white),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Container(
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text('no.',
                                           style: TextStyle(
                                               fontSize: 16,
-                                              color: Colors.white),
-                                        ),
+                                              color: Colors.white)),
+                                      FaIcon(
+                                        FontAwesomeIcons.solidStar,
+                                        size: 16,
+                                        color: Colors.yellow,
                                       ),
-                                    );
-                                  } else {
-                                    return Expanded(
-                                        child: Center(
-                                      child: Text(
-                                        '${snapshot.data.ongoingGigsByGigId.length}',
-                                        style: TextStyle(
-                                            fontSize: 16, color: Colors.white),
-                                      ),
-                                    ));
-                                  }
-                                },
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 50,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    "Completed",
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.white),
+                                    ],
                                   ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    "5",
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Row(
-                            children: [
-                              Text(
-                                widget.passedUserFullName,
+                                )
+                              ],
+                            ),
+                            Text(snapshot.data.location,
                                 style: TextStyle(
-                                    fontSize: 16, color: Colors.white),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Container(
-                                child: Row(
-                                  children: <Widget>[
-                                    Text('no.',
-                                        style: TextStyle(
-                                            fontSize: 16, color: Colors.white)),
-                                    FaIcon(
-                                      FontAwesomeIcons.solidStar,
+                                    fontSize: 16, color: Colors.white)),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: DefaultTabController(
+                          length: 4,
+                          child: Scaffold(
+                            appBar: AppBar(
+                                toolbarHeight: 50,
+                                primary: false,
+                                leading: Container(),
+                                title: Container(),
+                                bottom: TabBar(
+                                  indicatorColor: FyreworkrColors.fyreworkBlack,
+                                  tabs: [
+                                    Tab(
+                                        child: FaIcon(
+                                      FontAwesomeIcons.borderAll,
                                       size: 16,
-                                      color: Colors.yellow,
+                                      color: FyreworkrColors.fyreworkBlack,
+                                    )),
+                                    Tab(
+                                      child: FaIcon(
+                                        FontAwesomeIcons.checkCircle,
+                                        size: 16,
+                                        color: FyreworkrColors.fyreworkBlack,
+                                      ),
+                                    ),
+                                    Tab(
+                                      child: FaIcon(
+                                        FontAwesomeIcons.thumbsUp,
+                                        size: 16,
+                                        color: FyreworkrColors.fyreworkBlack,
+                                      ),
+                                    ),
+                                    Tab(
+                                      child: FaIcon(
+                                        FontAwesomeIcons.star,
+                                        size: 16,
+                                        color: FyreworkrColors.fyreworkBlack,
+                                      ),
                                     ),
                                   ],
                                 ),
-                              )
-                            ],
-                          ),
-                          Text('location',
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white)),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: DefaultTabController(
-                        length: 4,
-                        child: Scaffold(
-                          appBar: AppBar(
-                              toolbarHeight: 50,
-                              primary: false,
-                              leading: Container(),
-                              title: Container(),
-                              bottom: TabBar(
-                                indicatorColor: FyreworkrColors.fyreworkBlack,
-                                tabs: [
-                                  Tab(
-                                      child: FaIcon(
-                                    FontAwesomeIcons.borderAll,
-                                    size: 16,
-                                    color: FyreworkrColors.fyreworkBlack,
-                                  )),
-                                  Tab(
-                                    child: FaIcon(
-                                      FontAwesomeIcons.checkCircle,
-                                      size: 16,
-                                      color: FyreworkrColors.fyreworkBlack,
-                                    ),
-                                  ),
-                                  Tab(
-                                    child: FaIcon(
-                                      FontAwesomeIcons.thumbsUp,
-                                      size: 16,
-                                      color: FyreworkrColors.fyreworkBlack,
-                                    ),
-                                  ),
-                                  Tab(
-                                    child: FaIcon(
-                                      FontAwesomeIcons.star,
-                                      size: 16,
-                                      color: FyreworkrColors.fyreworkBlack,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              elevation: 0,
-                              backgroundColor: Color(0xFFfafafa)),
-                          // backgroundColor: FyreworkrColors.fyreworkBlack),
-                          body: TabBarView(
-                            children: [
-                              userOngoingGigs(),
-                              Container(
-                                child: Center(child: Text('Done goes here')),
-                              ),
-                              Container(
-                                child:
-                                    Center(child: Text('Liked gigs gies here')),
-                              ),
-                              Container(
-                                child: Center(child: Text('Rating goes here')),
-                              ),
-                            ],
+                                elevation: 0,
+                                backgroundColor: Color(0xFFfafafa)),
+                            // backgroundColor: FyreworkrColors.fyreworkBlack),
+                            body: TabBarView(
+                              children: [
+                                userOngoingGigs(),
+                                Container(
+                                  child: Center(child: Text('Done goes here')),
+                                ),
+                                Container(
+                                  child: Center(
+                                      child: Text('Liked gigs gies here')),
+                                ),
+                                Container(
+                                  child:
+                                      Center(child: Text('Rating goes here')),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
+                    ],
+                  );
+                } else {
+                  return Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: Center(
+                      child: CircularProgressIndicator(),
                     ),
-                  ],
-                );
-              } else {
-                return Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                );
-              }
-            },
-          ),
+                  );
+                }
+              }),
         ),
       ),
     );
   }
 
-  Expanded userOngoingGigs() {
-    return Expanded(
-      child: StreamBuilder<QuerySnapshot>(
-        stream: widget.fromGig
-            ? DatabaseService()
-                .userOngoingGigsByGigOwnerId(widget.passedUserUid)
-            : DatabaseService()
-                .userOngoingGigsByAppointedUserId(widget.passedUserUid),
-        builder: (context, snapshot) {
-          print('snapshot.data: ${snapshot.data}');
-          return !snapshot.hasData
-              ? Text('')
-              : snapshot.data.documents.length > 0
-                  ? ListView.builder(
-                      itemCount: snapshot.data.documents.length,
-                      itemBuilder: (context, index) {
-                        DocumentSnapshot data = snapshot.data.documents[index];
-                        Map getDocData = data.data;
-                        return GestureDetector(
-                          // onTap: () => model.editGig(index),
-                          child: UserRelatedGigItem(
-                            gigId: getDocData['gigId'],
-                            gigOwnerId: getDocData['gigOwnderId'],
-                            userProfilePictureDownloadUrl:
-                                getDocData['userProfilePictureDownloadUrl'],
-                            userFullName: getDocData['userFullName'],
-                            gigHashtags: getDocData['gigHashtags'],
-                            gigMediaFilesDownloadUrls:
-                                getDocData['gigMediaFilesDownloadUrls'],
-                            gigPost: getDocData['gigPost'],
-                            gigDeadline: getDocData['gigDeadline'],
-                            gigCurrency: getDocData['gigCurrency'],
-                            gigBudget: getDocData['gigBudget'],
-                            gigValue: getDocData['gigValue'],
-                            gigLikes: getDocData['gigLikes'],
-                            adultContentText: getDocData['adultContentText'],
-                            adultContentBool: getDocData['adultContentBool'],
-                            // onDeleteItem: () => model.deleteGig(index),
-                          ),
-                        );
-                      })
-                  : Center(
-                      child: Text('This user hasn\'t posted any gigs yet'));
-        },
-      ),
+  userOngoingGigs() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: widget.fromGig
+          ? DatabaseService().userOngoingGigsByGigOwnerId(widget.passedUserUid)
+          : DatabaseService()
+              .userOngoingGigsByAppointedUserId(widget.passedUserUid),
+      builder: (context, snapshot) {
+        print('snapshot.data: ${snapshot.data}');
+        return !snapshot.hasData
+            ? Text('')
+            : snapshot.data.documents.length > 0
+                ? ListView.builder(
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (context, index) {
+                      DocumentSnapshot data = snapshot.data.documents[index];
+                      Map getDocData = data.data;
+                      return GestureDetector(
+                        // onTap: () => model.editGig(index),
+                        child: UserRelatedGigItem(
+                          gigId: getDocData['gigId'],
+                          gigOwnerId: getDocData['gigOwnderId'],
+                          userProfilePictureDownloadUrl:
+                              getDocData['userProfilePictureDownloadUrl'],
+                          userFullName: getDocData['userFullName'],
+                          gigHashtags: getDocData['gigHashtags'],
+                          gigMediaFilesDownloadUrls:
+                              getDocData['gigMediaFilesDownloadUrls'],
+                          gigPost: getDocData['gigPost'],
+                          gigDeadline: getDocData['gigDeadline'],
+                          gigCurrency: getDocData['gigCurrency'],
+                          gigBudget: getDocData['gigBudget'],
+                          gigValue: getDocData['gigValue'],
+                          gigLikes: getDocData['gigLikes'],
+                          adultContentText: getDocData['adultContentText'],
+                          adultContentBool: getDocData['adultContentBool'],
+                          // onDeleteItem: () => model.deleteGig(index),
+                        ),
+                      );
+                    })
+                : Center(child: Text('This user hasn\'t posted any gigs yet'));
+      },
     );
   }
-
-  // Widget displayUserMetadata(context, snapshot) {
-  //   final authData = snapshot.data;
-  //   return Container(
-  //     width: MediaQuery.of(context).size.width,
-  //     child: Column(
-  //       children: <Widget>[
-  //         Padding(
-  //           padding: const EdgeInsets.all(8.0),
-  //           child: AutoSizeText(
-  //             "${authData.email ?? 'Anonymous'}",
-  //             style: TextStyle(fontSize: 20),
-  //           ),
-  //         ),
-  //         showSignOut(context, authData.isAnonymous)
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget displayUserInformation(context, snapshot) {
-  //   final authData = snapshot.data;
-  //   return FutureBuilder(
-  //       future: getProfilePictureDownloadUrl(),
-  //       builder: (context, snapshot) {
-  //         if (snapshot.connectionState == ConnectionState.done) {
-  //           // return Container(
-  //           //   width: 100,
-  //           //   height: 100,
-  //           //   child: Image.network(userProfilePictureUrl),
-  //           // );
-  //           return Padding(
-  //             padding: const EdgeInsets.all(8.0),
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 CircleAvatar(
-  //                   backgroundImage:
-  //                       NetworkImage(userProfilePictureDownloadUrl),
-  //                   radius: 50,
-  //                 ),
-  //                 SizedBox(
-  //                   height: 100,
-  //                   child: Column(
-  //                     children: <Widget>[
-  //                       Expanded(
-  //                         child: Text(
-  //                           "Ongoing gigs",
-  //                           style: TextStyle(fontSize: 18),
-  //                         ),
-  //                       ),
-  //                       StreamBuilder(
-  //                         stream: DatabaseService().userData(authData.uid),
-  //                         builder: (context, snapshot) {
-  //                           if (!snapshot.hasData) {
-  //                             return CircularProgressIndicator();
-  //                           } else if ((snapshot.hasData &&
-  //                               snapshot.data.ongoingGigsByGigId == null)) {
-  //                             return Expanded(
-  //                               child: Text(
-  //                                 '0',
-  //                                 style: TextStyle(fontSize: 18),
-  //                               ),
-  //                             );
-  //                           } else {
-  //                             return Expanded(
-  //                                 child: Text(
-  //                               '${snapshot.data.ongoingGigsByGigId.length}',
-  //                               style: TextStyle(fontSize: 18),
-  //                             ));
-  //                           }
-  //                         },
-  //                       )
-  //                     ],
-  //                   ),
-  //                 ),
-  //                 SizedBox(
-  //                   height: 100,
-  //                   child: Column(
-  //                     children: <Widget>[
-  //                       Expanded(
-  //                         child: Text(
-  //                           "Completed gigs",
-  //                           style: TextStyle(fontSize: 18),
-  //                         ),
-  //                       ),
-  //                       Expanded(
-  //                         child: Text(
-  //                           "5",
-  //                           style: TextStyle(fontSize: 18),
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           );
-  //         } else {
-  //           return Container(
-  //             width: 70,
-  //             height: 70,
-  //             child: CircularProgressIndicator(
-  //               valueColor: AlwaysStoppedAnimation<Color>(
-  //                   FyreworkrColors.fyreworkBlack),
-  //             ),
-  //           );
-  //         }
-  //       });
-  // }
-
 }

@@ -48,6 +48,7 @@ class DatabaseService {
       userAvatarUrl: snapshot.data['userAvatarUrl'],
       userLocation: snapshot.data['userLocation'],
       isMinor: snapshot.data['isMinor'],
+      location: snapshot.data['location'],
       ongoingGigsByGigId: snapshot.data['ongoingGigsByGigId'],
       lengthOfOngoingGigsByGigId: snapshot.data['lengthOfOngoingGigsByGigId'],
     );
@@ -61,6 +62,12 @@ class DatabaseService {
 
   Stream<QuerySnapshot> userOngoingGigsByGigOwnerId(String userId) {
     return _gigsCollection.where('gigOwnerId', isEqualTo: userId).snapshots();
+  }
+
+  Future<QuerySnapshot> myOngoingGigsByGigOwnerId(String userId) {
+    return _gigsCollection
+        .where('gigOwnerId', isEqualTo: userId)
+        .getDocuments();
   }
 
   Stream<QuerySnapshot> userOngoingGigsByAppointedUserId(String userId) {

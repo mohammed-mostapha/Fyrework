@@ -29,6 +29,7 @@ class MyUser {
   static String userAvatarUrl;
   static String userLocation;
   static bool isMinor;
+  static String location;
   static dynamic ongoingGigsByGigId;
   static int lengthOfOngoingGigsByGigId;
 
@@ -55,6 +56,7 @@ class MyUser {
     userAvatarUrl = data['userAvatarUrl'];
     userLocation = data['userLocation'];
     isMinor = data['isMinor'];
+    location = data['location'];
     ongoingGigsByGigId = data['ongoingGigsByGigId'];
     lengthOfOngoingGigsByGigId = data['lengthOfOngoingGigsByGigId'];
   }
@@ -68,6 +70,7 @@ class MyUser {
   //     'userAvatarUrl': userAvatarUrl,
   //     'userLocation': userLocation,
   //     'isMinor': isMinor,
+  // 'location': location,
   //     'ongoingGigsByGigId': ongoingGigsByGigId,
   //     'lengthOfOngoingGigsByGigId': lengthOfOngoingGigsByGigId,
   //   };

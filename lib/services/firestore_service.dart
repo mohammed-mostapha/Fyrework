@@ -38,7 +38,7 @@ class FirestoreService {
   //   }
   // }
 
-  Future getUserData(String uid) async {
+  Future getCurrentUserData(String uid) async {
     try {
       var userData = await _usersCollectionReference.document(uid).get();
       print('print from getUserData function: ${userData.data}');

@@ -5,6 +5,7 @@ class OtherUser {
   final String userAvatarUrl;
   final String userLocation;
   final bool isMinor;
+  final String location;
   final dynamic ongoingGigsByGigId;
   final int lengthOfOngoingGigsByGigId;
 
@@ -15,19 +16,20 @@ class OtherUser {
     this.userAvatarUrl,
     this.userLocation,
     this.isMinor,
+    this.location,
     this.ongoingGigsByGigId,
     this.lengthOfOngoingGigsByGigId,
   });
 
-  OtherUser.fromData(Map<String, dynamic> data)
-      : uid = data['id'],
-        name = data['name'],
-        email = data['email'],
-        userAvatarUrl = data['userAvatarUrl'],
-        userLocation = data['userLocation'],
-        isMinor = data['isMinor'],
-        ongoingGigsByGigId = data['ongoingGigsByGigId'],
-        lengthOfOngoingGigsByGigId = data['lengthOfOngoingGigsByGigId'];
+  // OtherUser.fromData(Map<String, dynamic> data)
+  //     : uid = data['id'],
+  //       name = data['name'],
+  //       email = data['email'],
+  //       userAvatarUrl = data['userAvatarUrl'],
+  //       userLocation = data['userLocation'],
+  //       isMinor = data['isMinor'],
+  //       ongoingGigsByGigId = data['ongoingGigsByGigId'],
+  //       lengthOfOngoingGigsByGigId = data['lengthOfOngoingGigsByGigId'];
 
   // Map<String, dynamic> toJson() {
   //   return {
