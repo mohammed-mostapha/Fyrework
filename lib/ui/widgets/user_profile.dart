@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myApp/locator.dart';
 import 'package:myApp/services/database.dart';
+import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/views/sign_up_view.dart';
 import 'package:myApp/services/auth_service.dart';
 import 'package:myApp/services/storage_repo.dart';
@@ -41,6 +43,7 @@ class _UserProfileViewState extends State<UserProfileView> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: FyreworkrColors.fyreworkBlack,
         body: Padding(
           padding: const EdgeInsets.all(10.0),
           child: FutureBuilder(
@@ -63,22 +66,21 @@ class _UserProfileViewState extends State<UserProfileView> {
                           radius: 50,
                         ),
                         SizedBox(
-                          height: 100,
+                          height: 50,
                           child: Column(
                             children: <Widget>[
                               Expanded(
                                 child: Center(
                                   child: Text(
-                                    "Ongoing gigs",
+                                    "Ongoing",
                                     style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
+                                        fontSize: 16, color: Colors.white),
                                   ),
                                 ),
                               ),
                               StreamBuilder(
                                 stream: DatabaseService()
-                                    .userData(widget.passedUserUid),
+                                    .fetchUserData(widget.passedUserUid),
                                 builder: (context, snapshot) {
                                   if (!snapshot.hasData) {
                                     return Container(
@@ -93,8 +95,8 @@ class _UserProfileViewState extends State<UserProfileView> {
                                         child: Text(
                                           '0',
                                           style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold),
+                                              fontSize: 16,
+                                              color: Colors.white),
                                         ),
                                       ),
                                     );
@@ -104,8 +106,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                                       child: Text(
                                         '${snapshot.data.ongoingGigsByGigId.length}',
                                         style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
+                                            fontSize: 16, color: Colors.white),
                                       ),
                                     ));
                                   }
@@ -115,17 +116,16 @@ class _UserProfileViewState extends State<UserProfileView> {
                           ),
                         ),
                         SizedBox(
-                          height: 100,
+                          height: 50,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Expanded(
                                 child: Center(
                                   child: Text(
-                                    "Completed gigs",
+                                    "Completed",
                                     style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
+                                        fontSize: 16, color: Colors.white),
                                   ),
                                 ),
                               ),
@@ -134,8 +134,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                                   child: Text(
                                     "5",
                                     style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
+                                        fontSize: 16, color: Colors.white),
                                   ),
                                 ),
                               ),
@@ -147,68 +146,103 @@ class _UserProfileViewState extends State<UserProfileView> {
                     SizedBox(
                       height: 10,
                     ),
-                    SizedBox(
-                        height: 40,
-                        child: Expanded(
-                            child: Text(
-                          widget.passedUserFullName,
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ))),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            children: [
+                              Text(
+                                widget.passedUserFullName,
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Container(
+                                child: Row(
+                                  children: <Widget>[
+                                    Text('no.',
+                                        style: TextStyle(
+                                            fontSize: 16, color: Colors.white)),
+                                    FaIcon(
+                                      FontAwesomeIcons.solidStar,
+                                      size: 16,
+                                      color: Colors.yellow,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                          Text('location',
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white)),
+                        ],
+                      ),
+                    ),
                     Expanded(
-                      child: StreamBuilder<QuerySnapshot>(
-                        stream: widget.fromGig
-                            ? DatabaseService().userOngoingGigsByGigOwnerId(
-                                widget.passedUserUid)
-                            : DatabaseService()
-                                .userOngoingGigsByAppointedUserId(
-                                    widget.passedUserUid),
-                        builder: (context, snapshot) {
-                          print('snapshot.data: ${snapshot.data}');
-                          return !snapshot.hasData
-                              ? Text('')
-                              : snapshot.data.documents.length > 0
-                                  ? ListView.builder(
-                                      itemCount: snapshot.data.documents.length,
-                                      itemBuilder: (context, index) {
-                                        DocumentSnapshot data =
-                                            snapshot.data.documents[index];
-                                        Map getDocData = data.data;
-                                        return GestureDetector(
-                                          // onTap: () => model.editGig(index),
-                                          child: UserRelatedGigItem(
-                                            gigId: getDocData['gigId'],
-                                            gigOwnerId:
-                                                getDocData['gigOwnderId'],
-                                            userProfilePictureDownloadUrl:
-                                                getDocData[
-                                                    'userProfilePictureDownloadUrl'],
-                                            userFullName:
-                                                getDocData['userFullName'],
-                                            gigHashtags:
-                                                getDocData['gigHashtags'],
-                                            gigMediaFilesDownloadUrls:
-                                                getDocData[
-                                                    'gigMediaFilesDownloadUrls'],
-                                            gigPost: getDocData['gigPost'],
-                                            gigDeadline:
-                                                getDocData['gigDeadline'],
-                                            gigCurrency:
-                                                getDocData['gigCurrency'],
-                                            gigBudget: getDocData['gigBudget'],
-                                            gigValue: getDocData['gigValue'],
-                                            gigLikes: getDocData['gigLikes'],
-                                            adultContentText:
-                                                getDocData['adultContentText'],
-                                            adultContentBool:
-                                                getDocData['adultContentBool'],
-                                            // onDeleteItem: () => model.deleteGig(index),
-                                          ),
-                                        );
-                                      })
-                                  : Text(
-                                      'This user hasn\'t posted any gigs yet');
-                        },
+                      child: DefaultTabController(
+                        length: 4,
+                        child: Scaffold(
+                          appBar: AppBar(
+                              toolbarHeight: 50,
+                              primary: false,
+                              leading: Container(),
+                              title: Container(),
+                              bottom: TabBar(
+                                indicatorColor: FyreworkrColors.fyreworkBlack,
+                                tabs: [
+                                  Tab(
+                                      child: FaIcon(
+                                    FontAwesomeIcons.borderAll,
+                                    size: 16,
+                                    color: FyreworkrColors.fyreworkBlack,
+                                  )),
+                                  Tab(
+                                    child: FaIcon(
+                                      FontAwesomeIcons.checkCircle,
+                                      size: 16,
+                                      color: FyreworkrColors.fyreworkBlack,
+                                    ),
+                                  ),
+                                  Tab(
+                                    child: FaIcon(
+                                      FontAwesomeIcons.thumbsUp,
+                                      size: 16,
+                                      color: FyreworkrColors.fyreworkBlack,
+                                    ),
+                                  ),
+                                  Tab(
+                                    child: FaIcon(
+                                      FontAwesomeIcons.star,
+                                      size: 16,
+                                      color: FyreworkrColors.fyreworkBlack,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              elevation: 0,
+                              backgroundColor: Color(0xFFfafafa)),
+                          // backgroundColor: FyreworkrColors.fyreworkBlack),
+                          body: TabBarView(
+                            children: [
+                              userOngoingGigs(),
+                              Container(
+                                child: Center(child: Text('Done goes here')),
+                              ),
+                              Container(
+                                child:
+                                    Center(child: Text('Liked gigs gies here')),
+                              ),
+                              Container(
+                                child: Center(child: Text('Rating goes here')),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ],
@@ -222,6 +256,54 @@ class _UserProfileViewState extends State<UserProfileView> {
             },
           ),
         ),
+      ),
+    );
+  }
+
+  Expanded userOngoingGigs() {
+    return Expanded(
+      child: StreamBuilder<QuerySnapshot>(
+        stream: widget.fromGig
+            ? DatabaseService()
+                .userOngoingGigsByGigOwnerId(widget.passedUserUid)
+            : DatabaseService()
+                .userOngoingGigsByAppointedUserId(widget.passedUserUid),
+        builder: (context, snapshot) {
+          print('snapshot.data: ${snapshot.data}');
+          return !snapshot.hasData
+              ? Text('')
+              : snapshot.data.documents.length > 0
+                  ? ListView.builder(
+                      itemCount: snapshot.data.documents.length,
+                      itemBuilder: (context, index) {
+                        DocumentSnapshot data = snapshot.data.documents[index];
+                        Map getDocData = data.data;
+                        return GestureDetector(
+                          // onTap: () => model.editGig(index),
+                          child: UserRelatedGigItem(
+                            gigId: getDocData['gigId'],
+                            gigOwnerId: getDocData['gigOwnderId'],
+                            userProfilePictureDownloadUrl:
+                                getDocData['userProfilePictureDownloadUrl'],
+                            userFullName: getDocData['userFullName'],
+                            gigHashtags: getDocData['gigHashtags'],
+                            gigMediaFilesDownloadUrls:
+                                getDocData['gigMediaFilesDownloadUrls'],
+                            gigPost: getDocData['gigPost'],
+                            gigDeadline: getDocData['gigDeadline'],
+                            gigCurrency: getDocData['gigCurrency'],
+                            gigBudget: getDocData['gigBudget'],
+                            gigValue: getDocData['gigValue'],
+                            gigLikes: getDocData['gigLikes'],
+                            adultContentText: getDocData['adultContentText'],
+                            adultContentBool: getDocData['adultContentBool'],
+                            // onDeleteItem: () => model.deleteGig(index),
+                          ),
+                        );
+                      })
+                  : Center(
+                      child: Text('This user hasn\'t posted any gigs yet'));
+        },
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:myApp/models/myUser.dart';
 import 'package:myApp/view_controllers/user_controller.dart';
 import 'package:myApp/ui/widgets/gig_item.dart';
 import 'package:myApp/viewmodels/AllGigs_view_model.dart';
@@ -7,7 +8,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 
 class AllGigsView extends StatelessWidget {
   AllGigsView({Key key}) : super(key: key);
-  String currentUserId = UserController.currentUserId;
+  // String currentUserId = UserController.currentUserId;
+  String currentUserId = MyUser.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,8 @@ class AllGigsView extends StatelessWidget {
                                     userProfilePictureDownloadUrl:
                                         model.gigs[index],
                                     userFullName: model.gigs[index],
+                                    userLocation: model.gigs[index],
+                                    gigLocation: model.gigs[index],
                                     gigHashtags: model.gigs[index],
                                     gigMediaFilesDownloadUrls:
                                         model.gigs[index],

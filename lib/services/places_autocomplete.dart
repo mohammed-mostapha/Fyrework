@@ -9,17 +9,21 @@ class PlacesAutocomplete extends StatefulWidget {
   PlacesAutocomplete({Key key, this.title}) : super(key: key);
 
   final String title;
-
+  static TextEditingController placesAutoCompleteController =
+      TextEditingController();
   @override
   _PlacesAutocompleteState createState() => _PlacesAutocompleteState();
 }
 
 class _PlacesAutocompleteState extends State<PlacesAutocomplete> {
-  final controller = TextEditingController();
-
   @override
   void dispose() {
-    controller.dispose();
+    PlacesAutocomplete.placesAutoCompleteController.clear();
+    // PlacesAutocomplete.placesAutoCompleteController.dispose();
+
+    print(
+        'placesAutoComplete after dispose: ${PlacesAutocomplete.placesAutoCompleteController}');
+
     super.dispose();
   }
 
@@ -29,13 +33,12 @@ class _PlacesAutocompleteState extends State<PlacesAutocomplete> {
       child: Column(
         children: <Widget>[
           TextFormField(
-            decoration: buildSignUpInputDecoration('Gig location'),
-            controller: locationController,
-            validator: (val) =>
-                val.isEmpty ? 'Please specify your location' : null,
+            decoration: buildSignUpInputDecoration(' location'),
+            controller: PlacesAutocomplete.placesAutoCompleteController,
+            validator: (val) => val.isEmpty ? '*' : null,
             onChanged: (val) {
               setState(() {
-                location = val;
+                // location = val;
               });
             },
             onTap: () async {
@@ -47,7 +50,11 @@ class _PlacesAutocompleteState extends State<PlacesAutocomplete> {
               );
               // This will change the text displayed in the TextField
               if (result != null) {
-                locationController.text = result.description;
+                // locationController.text = result.description;
+                PlacesAutocomplete.placesAutoCompleteController.text =
+                    result.description;
+                print(
+                    'placesAutoCompleteController: ${PlacesAutocomplete.placesAutoCompleteController}');
               }
             },
           ),

@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myApp/models/gig.dart';
 import 'package:myApp/models/comment.dart';
-import 'package:myApp/models/user.dart';
+import 'package:myApp/models/myUser.dart';
 import 'package:flutter/services.dart';
 
 import 'database.dart';
@@ -25,23 +25,25 @@ class FirestoreService {
   final StreamController<List<Comment>> _commentsController =
       StreamController<List<Comment>>.broadcast();
 
-  Future createUser(User user) async {
-    try {
-      await _usersCollectionReference.document(user.id).setData(user.toJson());
-    } catch (e) {
-      // TODO: Find or create a way to repeat error handling without so much repeated code
-      if (e is PlatformException) {
-        return e.message;
-      }
+  // Future createUser(User user) async {
+  //   try {
+  //     await _usersCollectionReference.document(user.uid).setData(user.toJson());
+  //   } catch (e) {
+  //     // TODO: Find or create a way to repeat error handling without so much repeated code
+  //     if (e is PlatformException) {
+  //       return e.message;
+  //     }
 
-      return e.toString();
-    }
-  }
+  //     return e.toString();
+  //   }
+  // }
 
-  Future getUser(String uid) async {
+  Future getUserData(String uid) async {
     try {
       var userData = await _usersCollectionReference.document(uid).get();
-      return User.fromData(userData.data);
+      print('print from getUserData function: ${userData.data}');
+      MyUser.fromData(userData.data);
+      print('print second from getUserData function: ${MyUser.uid}');
     } catch (e) {
       // TODO: Find or create a way to repeat error handling without so much repeated code
       if (e is PlatformException) {

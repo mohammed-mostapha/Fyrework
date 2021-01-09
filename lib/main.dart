@@ -52,15 +52,19 @@ class HomeController extends StatefulWidget {
 bool isAuthenticated = false;
 
 class _HomeControllerState extends State<HomeController> {
+  AuthService authService = locator.get<AuthService>();
   @override
   void initState() {
-    FirebaseAuth.instance.currentUser().then((user) => user != null
-        ? UserController().getCurrentUser().then((value) => setState(() {
-              print('user: $user');
-              isAuthenticated = true;
-            }))
+    // FirebaseAuth.instance.currentUser().then((user) => user != null
+    // FirebaseAuth.instance.currentUser().then((user) => user != null
+    authService.getCurrentUser().then((user) => user != null
+        ? UserController()
+            .getCurrentUserFromFirebase()
+            .then((value) => setState(() {
+                  isAuthenticated = true;
+                }))
         : setState(() {
-            print('user null: $user');
+            print('print from main => user null: $user');
             isAuthenticated = false;
           }));
     super.initState();

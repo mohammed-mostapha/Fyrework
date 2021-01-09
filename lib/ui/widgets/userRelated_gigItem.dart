@@ -190,28 +190,29 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                           AutoSizeText(
                             "${widget.userFullName}",
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 16,
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    RaisedButton(
-                      child: widget.gigValue == 'Gigs I can do'
-                          ? AutoSizeText(
-                              "Hire me",
-                              style: TextStyle(
-                                color: FyreworkrColors.white,
-                              ),
-                            )
-                          : AutoSizeText(
-                              "Apply",
-                              style: TextStyle(
-                                color: FyreworkrColors.white,
-                              ),
-                            ),
-                      color: FyreworkrColors.fyreworkBlack,
-                      onPressed: () {},
-                    ),
+                    // RaisedButton(
+                    //   child: widget.gigValue == 'Gigs I can do'
+                    //       ? AutoSizeText(
+                    //           "Hire me",
+                    //           style: TextStyle(
+                    //             color: FyreworkrColors.white,
+                    //           ),
+                    //         )
+                    //       : AutoSizeText(
+                    //           "Apply",
+                    //           style: TextStyle(
+                    //             color: FyreworkrColors.white,
+                    //           ),
+                    //         ),
+                    //   color: FyreworkrColors.fyreworkBlack,
+                    //   onPressed: () {},
+                    // ),
                   ],
                 ),
                 SizedBox(height: 10),
@@ -220,7 +221,7 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                   child: AutoSizeText(
                     "${widget.gigHashtags}",
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                     ),
                   ),
                 ),
@@ -262,7 +263,7 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                             child: Text(
                             '${widget.gigLikes}' + ' ' + 'likes',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 16,
                             ),
                           ))
                         : Container(
@@ -276,7 +277,7 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                   child: AutoSizeText(
                     "${widget.gigPost}",
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                     ),
                   ),
                 ),
@@ -299,7 +300,7 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                           child: AutoSizeText(
                             "${widget.gigDeadline}",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 16,
                             ),
                           ),
                         ),
@@ -312,7 +313,8 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                           child: AutoSizeText(
                             "${widget.gigCurrency}",
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                         Container(
@@ -323,7 +325,8 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                           child: AutoSizeText(
                             "${widget.gigBudget}",
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ],
@@ -351,7 +354,7 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                                   child: AutoSizeText(
                                     "${widget.adultContentText}",
                                     style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 16,
                                     ),
                                   ),
                                 ),

@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:myApp/services/database.dart';
-import 'package:myApp/models/user.dart';
+import 'package:myApp/models/myUser.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:myApp/services/storage_repo.dart';
 import 'package:myApp/ui/shared/theme.dart';
+
+import '../locator.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -27,31 +32,48 @@ class AuthService {
 
   // Email & Password Sign Up
   Future createUserWithEmailAndPassword(
-      String email,
-      String password,
-      String name,
-      String location,
-      bool is_minor,
-      dynamic ongoingGigsByGigId) async {
+    String name,
+    String email,
+    String password,
+    String userAvatarUrl,
+    File profilePictureToUpload,
+    String location,
+    bool isMinor,
+    dynamic ongoingGigsByGigId,
+    int lengthOfOngoingGigsByGigId,
+  ) async {
     final authResult = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
 
     FirebaseUser user = authResult.user;
 
-    // create a new document for the user with the uid
-    await DatabaseService(uid: user.uid).updateUserData(user.uid, name, email,
-        password, location, is_minor, ongoingGigsByGigId);
+    //just waiting for uier.uid to use
+    userAvatarUrl = await locator
+        .get<StorageRepo>()
+        .uploadProfilePicture(profilePictureToUpload, user.uid);
+
+    // create a new document for the user with the uid in users collection
+    await DatabaseService(uid: user.uid).setUserData(
+        user.uid,
+        name,
+        email,
+        password,
+        userAvatarUrl,
+        location,
+        isMinor,
+        ongoingGigsByGigId,
+        lengthOfOngoingGigsByGigId);
     // return _userFromFirebaseUser(user);
 
-    // Update the username
+    // Update the displayName of the user in authData
     await updateUserName(name, authResult.user);
     return authResult.user.uid;
   }
 
-  // create user obj based on FirebaseUser
-  User _userFromFirebaseUser(FirebaseUser user) {
-    return user != null ? User(uid: user.uid) : null;
-  }
+  // // create user obj based on FirebaseUser
+  // User _userFromFirebaseUser(FirebaseUser user) {
+  //   return user != null ? User(uid: user.uid) : null;
+  // }
 
   Future updateUserName(String name, FirebaseUser currentUser) async {
     var userUpdateInfo = UserUpdateInfo();
@@ -62,12 +84,11 @@ class AuthService {
   }
 
   // Email & Password Sign In
-  Future<User> signInWithEmailAndPassword(String email, String password) async {
-    var authResult = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email, password: password);
-    return User(
-        uid: authResult.user.uid, fullName: authResult.user.displayName);
-  }
+  // Future<User> signInWithEmailAndPassword(String email, String password) async {
+  //   var authResult = await _firebaseAuth.signInWithEmailAndPassword(
+  //       email: email, password: password);
+  //   return User(uid: authResult.user.uid, name: authResult.user.displayName);
+  // }
 
   // Sign Out
   signOut() {
@@ -80,19 +101,19 @@ class AuthService {
   }
 
   // Create Anonymous User
-  Future signInAnonymously() {
-    return _firebaseAuth.signInAnonymously();
-  }
+  // Future signInAnonymously() {
+  //   return _firebaseAuth.signInAnonymously();
+  // }
 
   //Convert an anonymous user to a user with credentials
-  Future convertUserWithEmail(
-      String email, String password, String name, String location) async {
-    final currentUser = await _firebaseAuth.currentUser();
-    final credential =
-        EmailAuthProvider.getCredential(email: email, password: password);
-    await currentUser.linkWithCredential(credential);
-    await updateUserName(name, currentUser);
-  }
+  // Future convertUserWithEmail(
+  //     String email, String password, String name, String location) async {
+  //   final currentUser = await _firebaseAuth.currentUser();
+  //   final credential =
+  //       EmailAuthProvider.getCredential(email: email, password: password);
+  //   await currentUser.linkWithCredential(credential);
+  //   await updateUserName(name, currentUser);
+  // }
 
   // Converting an anonymous user to user with gmail
   Future convertWithGoogle() async {

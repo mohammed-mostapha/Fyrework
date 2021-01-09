@@ -19,6 +19,8 @@ class GigItem extends StatefulWidget {
   final gigOwnerEmail;
   final userProfilePictureDownloadUrl;
   final userFullName;
+  final userLocation;
+  final gigLocation;
   final gigHashtags;
   final gigMediaFilesDownloadUrls;
   final gigPost;
@@ -41,6 +43,8 @@ class GigItem extends StatefulWidget {
     this.gigOwnerEmail,
     this.userProfilePictureDownloadUrl,
     this.userFullName,
+    this.userLocation,
+    this.gigLocation,
     this.gigHashtags,
     this.gigMediaFilesDownloadUrls,
     this.gigPost,

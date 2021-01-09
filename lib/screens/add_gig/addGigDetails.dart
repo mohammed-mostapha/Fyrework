@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:myApp/models/myUser.dart';
 import 'package:myApp/screens/add_gig/assets_picker/pages/multi_assets_picker.dart';
 import 'package:myApp/screens/add_gig/popularHashtags.dart';
 import 'package:myApp/screens/add_gig/sizeConfig.dart';
@@ -10,6 +11,7 @@ import 'package:myApp/ui/shared/theme.dart';
 // import 'package:myApp/ui/widgets/provider_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+// import 'package:myApp/ui/views/sign_up_view.dart';
 import 'package:myApp/view_controllers/user_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:myApp/locator.dart';
@@ -29,7 +31,7 @@ class AddGigDetails extends StatefulWidget {
   _AddGigDetailsState createState() => _AddGigDetailsState();
 }
 
-TextEditingController _gigLocationController = TextEditingController();
+TextEditingController locationController = TextEditingController();
 SlidingCardController slidingCardController;
 TextEditingController typeAheadController = TextEditingController();
 
@@ -40,6 +42,8 @@ class _AddGigDetailsState extends State<AddGigDetails> {
   String userId;
   String userProfilePictureDownloadUrl;
   String userFullName;
+  String userLocation;
+  String gigLocation;
 
   String gigHashtags;
   String gigPost;
@@ -85,8 +89,10 @@ class _AddGigDetailsState extends State<AddGigDetails> {
   }
 
   Future saveFormValuesAndPickMediaFiles() async {
-    userProfilePictureDownloadUrl =
-        await locator.get<UserController>().getProfilePictureDownloadUrl();
+    gigLocation = PlacesAutocomplete.placesAutoCompleteController.text;
+    // userProfilePictureDownloadUrl =
+    //     await locator.get<UserController>().getProfilePictureDownloadUrl();
+    userProfilePictureDownloadUrl = MyUser.userAvatarUrl;
     if (AppointmentCard.gigValue == null) {
       Scaffold.of(context).showSnackBar(_gigValueSnackBar);
     } else if (AppointmentCard.gigValue != null &&
@@ -99,6 +105,8 @@ class _AddGigDetailsState extends State<AddGigDetails> {
           receivedUserId: userId,
           receivedUserProfilePictureDownloadUrl: userProfilePictureDownloadUrl,
           receivedUserFullName: userFullName,
+          receivedUserLocation: userLocation,
+          receivedGigLocation: gigLocation,
           receivedGigHashtags: gigHashtags,
           receivedGigPost: gigPost,
           receivedGigDeadLine: AppointmentCard.gigDeadline != null
@@ -126,8 +134,10 @@ class _AddGigDetailsState extends State<AddGigDetails> {
     // print(completeAddress);
     String formattedAddress = "${placemark.locality}, ${placemark.country}";
     setState(() {
-      _gigLocationController.text = formattedAddress;
-      print('${_gigLocationController.text}');
+      // locationController.text = formattedAddress;
+      PlacesAutocomplete.placesAutoCompleteController.text = formattedAddress;
+      print(
+          'PlacesAutocomplete().placesAutoCompleteController.text: ${PlacesAutocomplete.placesAutoCompleteController.text}');
     });
   }
 
@@ -139,7 +149,8 @@ class _AddGigDetailsState extends State<AddGigDetails> {
       // future: Provider.of(context).auth.getCurrentUser(),
       future: AuthService().getCurrentUser(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
+        // if (snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.hasData && snapshot.data != null) {
           userId = snapshot.data.uid;
           userFullName = snapshot.data.displayName;
           return snapshot.data.isAnonymous

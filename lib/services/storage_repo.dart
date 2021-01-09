@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:myApp/locator.dart';
-import 'package:myApp/services/auth_service.dart';
+// import 'package:myApp/services/auth_service.dart';
 
 class StorageRepo {
   FirebaseStorage usersProfilePicsStorage =
@@ -11,11 +11,11 @@ class StorageRepo {
   FirebaseStorage gigMediaFilesStorage =
       FirebaseStorage(storageBucket: "gs://fyrework-63dd9.appspot.com");
 
-  AuthService _authService = locator.get<AuthService>();
+  // AuthService _authService = locator.get<AuthService>();
 
   //uploading and getting downloadURl of users profiles pics
-  Future<String> uploadProfilePicture(File file) async {
-    var userId = await _authService.getCurrentUID();
+  Future<String> uploadProfilePicture(File file, String userId) async {
+    // var userId = await _authService.getCurrentUID();
 
     var usersProfilePicsStorageRef =
         usersProfilePicsStorage.ref().child("users/profile_pictures/$userId");

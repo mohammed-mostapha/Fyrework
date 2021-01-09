@@ -5,7 +5,6 @@ import 'package:myApp/locator.dart';
 import 'package:myApp/main.dart';
 import 'package:myApp/screens/add_gig/assets_picker/constants/picker_model.dart';
 import 'package:myApp/screens/add_gig/assets_picker/src/widget/asset_picker.dart';
-import 'package:myApp/ui/widgets/provider_widget.dart';
 import 'package:myApp/services/auth_service.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:myApp/ui/shared/theme.dart';
@@ -32,7 +31,7 @@ class SignUpView extends StatefulWidget {
 String location = '';
 dynamic userAvatarUrl;
 
-TextEditingController locationController = TextEditingController();
+// TextEditingController locationController = TextEditingController();
 ScrollController scrollController = ScrollController();
 
 class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
@@ -75,9 +74,10 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   }
 
   final formKey = GlobalKey<FormState>();
-  String _email, _password, _name, location, _warning, _phone;
+  String _email, _password, _name, _userAvatarUrl, location, _warning, _phone;
   bool _isMinor = false;
   dynamic _ongoingGigsByGigId;
+  int _lengthOfOngoingGigsByGigId;
   final TextEditingController phoneNumberController = TextEditingController();
   TextEditingController _ageOfUserController = new TextEditingController();
   DateTime _defaultAge = Jiffy().subtract(years: 19);
@@ -124,30 +124,30 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           case AuthFormType.signIn:
             // await auth.signInWithEmailAndPassword(
             //     _email.trim(), _password.trim());
-            await locator.get<UserController>().signInWithEmailAndPassword(
-                email: _email.trim(), password: _password.trim());
+            // await locator.get<UserController>().signInWithEmailAndPassword(
+            //     email: _email.trim(), password: _password.trim());
 
             // Navigator.of(context).pushReplacementNamed('/home');
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => HomeController()));
             break;
           case AuthFormType.signUp:
-            location = locationController.text;
+            location = PlacesAutocomplete.placesAutoCompleteController.text;
 
             // uploading a profile pic for the user signing up
             File profilePictureToUpload = File(_profileImage.path);
 
             await AuthService().createUserWithEmailAndPassword(
-                _email.trim(),
-                _password.trim(),
-                _name.trim(),
-                location,
-                _isMinor,
-                _ongoingGigsByGigId);
-
-            await locator
-                .get<UserController>()
-                .uploadProfilePicture(profilePictureToUpload);
+              _name.trim(),
+              _email.trim(),
+              _password.trim(),
+              _userAvatarUrl,
+              profilePictureToUpload,
+              location,
+              _isMinor,
+              _ongoingGigsByGigId,
+              _lengthOfOngoingGigsByGigId,
+            );
 
             // await locator.get<UserController>().getProfilePictureDownloadUrl();
 
@@ -190,8 +190,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     // print(completeAddress);
     String formattedAddress = "${placemark.locality}, ${placemark.country}";
     setState(() {
-      locationController.text = formattedAddress;
-      print(location);
+      PlacesAutocomplete.placesAutoCompleteController.text = formattedAddress;
+      print('${PlacesAutocomplete.placesAutoCompleteController.text}');
     });
   }
 
@@ -441,7 +441,10 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             ),
             TextFormField(
               validator: NameValidator.validate,
-              style: TextStyle(fontSize: 22.0),
+              enableSuggestions: false,
+              style: TextStyle(
+                fontSize: 22.0,
+              ),
               decoration: buildSignUpInputDecoration('Name'),
               onChanged: (val) {
                 setState(() => _name = val);
@@ -553,7 +556,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                 child: AutoSizeText(
                   _submitButtonText,
                   style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: 16.0,
                   ),
                   maxLines: 1,
                 ),
@@ -696,7 +699,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               child: AutoSizeText(
                 _switchButtonText,
                 style: TextStyle(
-                    color: FyreworkrColors.fyreworkBlack, fontSize: 18),
+                    color: FyreworkrColors.fyreworkBlack, fontSize: 16),
                 // maxLines: 1,
               ),
             ),
@@ -727,7 +730,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         child: AutoSizeText(
           // 'Forgotten Password?',
           'Forgotten?',
-          style: TextStyle(color: FyreworkrColors.fyreworkBlack, fontSize: 18),
+          style: TextStyle(color: FyreworkrColors.fyreworkBlack, fontSize: 16),
           maxLines: 1,
         ),
         onPressed: () {
@@ -774,7 +777,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                       left: 20.0, top: 10.0, bottom: 10.0),
                   child: Text(
                     'Sign in with Phone',
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 16),
                   ),
                 ),
               ],

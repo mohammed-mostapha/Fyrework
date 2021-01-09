@@ -21,6 +21,8 @@ class MultiAssetsPicker extends StatefulWidget {
   final String receivedUserId;
   final String receivedUserProfilePictureDownloadUrl;
   final String receivedUserFullName;
+  final String receivedUserLocation;
+  final String receivedGigLocation;
   final String receivedGigHashtags;
   final List<String> gigMeidaFilesDownloadUrls = List<String>();
   final String receivedGigPost;
@@ -38,6 +40,8 @@ class MultiAssetsPicker extends StatefulWidget {
     this.receivedUserId,
     this.receivedUserProfilePictureDownloadUrl,
     this.receivedUserFullName,
+    this.receivedUserLocation,
+    this.receivedGigLocation,
     this.receivedGigHashtags,
     this.receivedGigPost,
     this.receivedGigDeadLine,
@@ -408,6 +412,8 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                 widget.receivedUserProfilePictureDownloadUrl,
             userFullName: widget.receivedUserFullName,
             gigHashtags: widget.receivedGigHashtags,
+            userLocation: widget.receivedUserLocation,
+            gigLocation: widget.receivedGigLocation,
             gigMediaFilesDownloadUrls: widget.gigMeidaFilesDownloadUrls,
             gigPost: widget.receivedGigPost,
             gigDeadLine: widget.receivedGigDeadLine,

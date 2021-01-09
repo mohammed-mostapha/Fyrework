@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:myApp/screens/trends/BuyerGigs.dart';
 import 'package:myApp/screens/trends/providerGigs.dart';
 import 'package:myApp/ui/shared/theme.dart';
-import 'package:myApp/ui/views/AllGigs_view.dart';
+import 'package:myApp/screens/trends/AllGigs_view.dart';
 
 class Trends extends StatefulWidget {
   @override
@@ -54,7 +54,6 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
         body: TabBarView(
           children: [
             AllGigsView(),
-            // BuyerGigs(),
             SearchPage(),
             ProviderGigs(),
           ],

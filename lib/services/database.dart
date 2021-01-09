@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:myApp/models/gig.dart';
-import 'package:myApp/models/user.dart';
-import 'package:myApp/ui/widgets/gig_item.dart';
+import 'package:myApp/models/myUser.dart';
+import 'package:myApp/models/otherUser.dart';
 
 class DatabaseService {
   final String uid;
@@ -17,35 +16,47 @@ class DatabaseService {
   final CollectionReference _popularHashtags =
       Firestore.instance.collection('popularHashtags');
 
-  Future updateUserData(String uid, String name, String email, String password,
-      String location, bool is_minor, dynamic ongoingGigsByGigId) async {
-    return await _usersCollection.document(uid).setData({
-      'user_ID': uid,
+  Future setUserData(
+      String id,
+      String name,
+      String email,
+      String password,
+      String userAvatarUrl,
+      String location,
+      bool isMinor,
+      dynamic ongoingGigsByGigId,
+      int lengthOfOngoingGigsByGigId) async {
+    return await _usersCollection.document(id).setData({
+      'id': uid,
       'name': name,
       'email': email,
       'password': password,
+      'userAvatarUrl': userAvatarUrl,
       'location': location,
-      'is_minor?': is_minor,
+      'isMinor?': isMinor,
       'ongoingGigsByGigId': ongoingGigsByGigId,
+      'lengthOfOngoingGigsByGigId': lengthOfOngoingGigsByGigId,
     });
   }
 
   // user Data from snapshots
-  UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
-    return UserData(
-      uid: snapshot.data['user_ID'],
+  OtherUser _userDataFromSnapshot(DocumentSnapshot snapshot) {
+    return OtherUser(
+      uid: snapshot.data['Id'],
       name: snapshot.data['name'],
       email: snapshot.data['email'],
+      userAvatarUrl: snapshot.data['userAvatarUrl'],
+      userLocation: snapshot.data['userLocation'],
+      isMinor: snapshot.data['isMinor'],
       ongoingGigsByGigId: snapshot.data['ongoingGigsByGigId'],
+      lengthOfOngoingGigsByGigId: snapshot.data['lengthOfOngoingGigsByGigId'],
     );
   }
 
   // get user doc stream
-  Stream<UserData> userData(String uid) {
-    return _usersCollection
-        .document(uid)
-        .snapshots()
-        .map(_userDataFromSnapshot);
+  Stream<OtherUser> fetchUserData(String id) {
+    print('print working in DB');
+    return _usersCollection.document(id).snapshots().map(_userDataFromSnapshot);
   }
 
   Stream<QuerySnapshot> userOngoingGigsByGigOwnerId(String userId) {
