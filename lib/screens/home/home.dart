@@ -63,37 +63,32 @@ class _HomeState extends State<Home> {
           physics: NeverScrollableScrollPhysics(),
         ),
         bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: FyreworkrColors.fyreworkBlack,
           showSelectedLabels: false,
           showUnselectedLabels: false,
           type: BottomNavigationBarType.fixed,
           onTap: _onItemTapped,
           items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home,
-                  color: _selectedIndex == 0
-                      ? FyreworkrColors.fyreworkBlack
-                      : Colors.grey),
+              icon: Icon(
+                Icons.home,
+                color: _selectedIndex == 0 ? Colors.white : Colors.grey[600],
+              ),
               title: Text('home'),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.add_box,
-                  color: _selectedIndex == 1
-                      ? FyreworkrColors.fyreworkBlack
-                      : Colors.grey),
+                  color: _selectedIndex == 1 ? Colors.white : Colors.grey[600]),
               title: Text('add'),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.work,
-                  color: _selectedIndex == 2
-                      ? FyreworkrColors.fyreworkBlack
-                      : Colors.grey),
+                  color: _selectedIndex == 2 ? Colors.white : Colors.grey[600]),
               title: Text('work'),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.account_circle,
-                  color: _selectedIndex == 3
-                      ? FyreworkrColors.fyreworkBlack
-                      : Colors.grey),
+                  color: _selectedIndex == 3 ? Colors.white : Colors.grey[600]),
               title: Text('account'),
             )
           ],

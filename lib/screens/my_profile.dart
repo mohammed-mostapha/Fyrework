@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myApp/locator.dart';
@@ -34,6 +35,10 @@ class _MyProfileViewState extends State<MyProfileView> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+          appBar: AppBar(
+            leading: Container(),
+          ),
+          endDrawer: myProfileDrawer(),
           backgroundColor: FyreworkrColors.fyreworkBlack,
           body: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -243,6 +248,158 @@ class _MyProfileViewState extends State<MyProfileView> {
   //     ),
   //   );
   // }
+
+  Widget myProfileDrawer() {
+    var platform = Theme.of(context).platform;
+
+    return Container(
+      decoration: BoxDecoration(
+          color: FyreworkrColors.fyreworkBlack,
+          border: Border(
+            left: BorderSide(color: Colors.grey[50], width: 0.5),
+          )),
+      width: MediaQuery.of(context).size.width / 1.5,
+      height: MediaQuery.of(context).size.height,
+      child: ListView(children: <Widget>[
+        Container(
+          width: double.infinity,
+          height: 50,
+          decoration: BoxDecoration(
+              color: FyreworkrColors.fyreworkBlack,
+              border: Border(
+                bottom: BorderSide(color: Colors.grey[50], width: 0.5),
+              )),
+          child: DrawerHeader(
+            child: Text('${MyUser.email}',
+                style: TextStyle(fontSize: 16, color: Colors.white)),
+          ),
+        ),
+        ListTile(
+          leading: FlatButton(
+            child: Text(
+              'Edit your profile picture',
+              style: TextStyle(fontSize: 16, color: Colors.white),
+            ),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (_) => platform == TargetPlatform.iOS
+                      ? CupertinoAlertDialog(
+                          title: Text('Edit profile pic...'),
+                          content: Text('will be implemented soon...'),
+                          actions: <Widget>[
+                            CupertinoDialogAction(
+                              child: Text('Yes'),
+                            ),
+                            CupertinoDialogAction(
+                              child: Text('No'),
+                            ),
+                          ],
+                        )
+                      : AlertDialog(
+                          title: Text('Edit profile pic...'),
+                          content: Text('will be implemented soon...'),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text('Yes'),
+                              onPressed: () {},
+                            ),
+                            FlatButton(
+                              child: Text('No'),
+                              onPressed: () {},
+                            ),
+                          ],
+                        ));
+            },
+          ),
+        ),
+        ListTile(
+            leading: FlatButton(
+          child: Text('Terms',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+              )),
+          onPressed: () {},
+        )),
+        ListTile(
+            leading: FlatButton(
+          child: Text('Privacy',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+              )),
+          onPressed: () {},
+        )),
+        ListTile(
+            leading: FlatButton(
+          child: Text('Safety & Security',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+              )),
+          onPressed: () {},
+        )),
+        ListTile(
+            leading: FlatButton(
+          child: Text('Rules and Policies',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+              )),
+          onPressed: () {},
+        )),
+        ListTile(
+            leading: FlatButton(
+          child: Text('Legals',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+              )),
+          onPressed: () {
+            showAboutDialog(
+                context: context,
+                // applicationVersion: '1.0',
+                // applicationIcon:
+                applicationLegalese: '',
+                children: <Widget>[
+                  Image.asset('assets/images/fyrework_logo.png'),
+                  Text(
+                    'FYRE.WORK',
+                    style: TextStyle(
+                        fontSize: 20, color: FyreworkrColors.fyreworkBlack),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    height: 50,
+                  ),
+                  Text(
+                    'Owned by',
+                    style: TextStyle(
+                        fontSize: 16, color: FyreworkrColors.fyreworkBlack),
+                  ),
+                  Text(
+                    'TRIBAL SENSATION OU.',
+                    style: TextStyle(
+                        fontSize: 16, color: FyreworkrColors.fyreworkBlack),
+                  ),
+                  Text(
+                    'Roosikrantsi tn 2-77, 10119, Tallinn, Harju, Estonia',
+                    style: TextStyle(
+                        fontSize: 16, color: FyreworkrColors.fyreworkBlack),
+                  ),
+                  Text(
+                    '#12437328',
+                    style: TextStyle(
+                        fontSize: 16, color: FyreworkrColors.fyreworkBlack),
+                  ),
+                ]);
+          },
+        )),
+      ]),
+    );
+  }
 
   Widget displayUserInformation(
     context,
