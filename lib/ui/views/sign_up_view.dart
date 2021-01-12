@@ -12,13 +12,14 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:myApp/services/places_autocomplete.dart';
-import 'package:myApp/view_controllers/user_controller.dart';
+import 'package:myApp/view_controllers/myUser_controller.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../shared/constants.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:intl/intl.dart';
 
-enum AuthFormType { signIn, signUp, reset, phone }
+// enum AuthFormType { signIn, signUp, reset, phone }
+enum AuthFormType { signIn, signUp, reset }
 
 class SignUpView extends StatefulWidget {
   final AuthFormType authFormType;
@@ -74,7 +75,14 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   }
 
   final formKey = GlobalKey<FormState>();
-  String _email, _password, _name, _userAvatarUrl, location, _warning, _phone;
+  String _email,
+      _password,
+      _name,
+      _username,
+      _userAvatarUrl,
+      location,
+      _warning,
+      _phone;
   bool _isMinor = false;
   dynamic _ongoingGigsByGigId;
   int _lengthOfOngoingGigsByGigId;
@@ -122,14 +130,15 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         // final auth = AuthService();
         switch (authFormType) {
           case AuthFormType.signIn:
-            // await auth.signInWithEmailAndPassword(
-            //     _email.trim(), _password.trim());
+            var result = await AuthService()
+                .signInWithEmailAndPassword(_email.trim(), _password.trim());
             // await locator.get<UserController>().signInWithEmailAndPassword(
             //     email: _email.trim(), password: _password.trim());
 
-            // Navigator.of(context).pushReplacementNamed('/home');
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => HomeController()));
+            Navigator.of(context).pushReplacementNamed('/home');
+            // _warning = 'Wrong email address or password';
+            // Navigator.push(context,
+            //     MaterialPageRoute(builder: (context) => HomeController()));
             break;
           case AuthFormType.signUp:
             location = PlacesAutocomplete.placesAutoCompleteController.text;
@@ -139,6 +148,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
             await AuthService().createUserWithEmailAndPassword(
               _name.trim(),
+              _username.trim(),
               _email.trim(),
               _password.trim(),
               _userAvatarUrl,
@@ -155,26 +165,46 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             break;
           case AuthFormType.reset:
             await AuthService().sendPasswordResetEmail(_email.trim());
-            _warning = 'A password reset link has been sent to $_email';
+
             setState(() {
+              _warning = 'A password reset link has been sent to $_email';
               authFormType = AuthFormType.signIn;
             });
             break;
-          case AuthFormType.phone:
-            var result =
-                await AuthService().createUserWithPhone(_phone.trim(), context);
-            if (_phone == "" || result == "error") {
-              setState(() {
-                _warning = "Your phone number could not be validated";
-              });
-            }
-            break;
+          // case AuthFormType.phone:
+          //   var result =
+          //       await AuthService().createUserWithPhone(_phone.trim(), context);
+          //   if (_phone == "" || result == "error") {
+          //     setState(() {
+          //       _warning = "Your phone number could not be validated";
+          //     });
+          //   }
+          //   break;
         }
       } catch (e) {
+        switch (authFormType) {
+          case AuthFormType.signUp:
+            setState(() {
+              _warning = 'This email address is already taken';
+            });
+            break;
+          case AuthFormType.signIn:
+            setState(() {
+              _warning = 'Wrong email address or password';
+            });
+            break;
+            // case AuthFormType.phone:
+            break;
+          case AuthFormType.reset:
+            setState(() {
+              _warning = 'Wrong email address';
+            });
+            break;
+        }
         print(e);
-        setState(() {
-          _warning = e.message;
-        });
+        // setState(() {
+        //   _warning = e.message;
+        // });
       }
     }
   }
@@ -266,29 +296,33 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: SafeArea(
-            child: Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: ListView(
-              controller: scrollController,
-              children: <Widget>[
-                SizedBox(height: _height * 0.025),
-                showAlert(),
-                SizedBox(height: _height * 0.025),
-                buildHeaderText(),
-                SizedBox(height: _height * 0.05),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Form(
-                    key: formKey,
-                    child: Column(
-                      children: buildInputs() + buildButtons(),
+            child: Column(
+          children: [
+            SizedBox(height: _height * 0.025),
+            showAlert(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: ListView(
+                  controller: scrollController,
+                  children: <Widget>[
+                    SizedBox(height: _height * 0.025),
+                    buildHeaderText(),
+                    SizedBox(height: _height * 0.05),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Form(
+                        key: formKey,
+                        child: Column(
+                          children: buildInputs() + buildButtons(),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         )),
       ),
     );
@@ -351,26 +385,32 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       scrollController.animateTo(0,
           duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       return Container(
-        color: Colors.amberAccent,
+        color: FyreworkrColors.fyreworkBlack,
         width: double.infinity,
         padding: EdgeInsets.all(8.0),
         child: Row(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
-              child: Icon(Icons.error_outline),
+              child: Icon(
+                Icons.error_outline,
+                color: Colors.white,
+              ),
             ),
             Expanded(
-              child: AutoSizeText(
+              child: Text(
                 _warning,
                 maxLines: 3,
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 16, color: Colors.white),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: IconButton(
-                icon: Icon(Icons.close),
+                icon: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                ),
                 onPressed: () {
                   setState(() {
                     _warning = null;
@@ -393,9 +433,11 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       _headerText = "Sign In";
     } else if (authFormType == AuthFormType.reset) {
       _headerText = "Reset Password";
-    } else if (authFormType == AuthFormType.phone) {
-      _headerText = "Phone Sign In";
-    } else {
+    }
+    //  else if (authFormType == AuthFormType.phone) {
+    //   _headerText = "Phone Sign In";
+    // }
+    else {
       _headerText = "Register";
     }
     return AutoSizeText(
@@ -412,7 +454,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     if (authFormType == AuthFormType.reset) {
       textFields.add(
         Container(
-          width: MediaQuery.of(context).size.width * 0.8,
+          // width: MediaQuery.of(context).size.width * 0.8,
+          width: double.infinity,
           child: TextFormField(
             validator: EmailValidator.validate,
             style: TextStyle(fontSize: 22.0),
@@ -451,6 +494,18 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               },
               onSaved: (val) => _name = val,
             ),
+            TextFormField(
+              validator: NameValidator.validate,
+              enableSuggestions: false,
+              style: TextStyle(
+                fontSize: 22.0,
+              ),
+              decoration: buildSignUpInputDecoration('Userame'),
+              onChanged: (val) {
+                setState(() => _username = val);
+              },
+              onSaved: (val) => _username = val,
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0),
               child: Row(
@@ -483,6 +538,9 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                     Flexible(
                         child: Text(
                       "Tick this box if you are under 18 years old.",
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
                     )),
                     Checkbox(
                       value: _isMinor,
@@ -525,8 +583,9 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       );
       textFields.add(SizedBox(height: 20));
     }
-    if (authFormType != AuthFormType.reset &&
-        authFormType != AuthFormType.phone) {
+    // if (authFormType != AuthFormType.reset &&
+    //     authFormType != AuthFormType.phone) {
+    if (authFormType != AuthFormType.reset) {
       String _submitButtonText;
       if (authFormType == AuthFormType.signUp) {
         _submitButtonText = 'Sign Up';
@@ -549,11 +608,21 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                 onSaved: (val) => _password = val,
               ),
             ),
+            SizedBox(
+              width: 20,
+            ),
             Container(
-              child: RaisedButton(
-                color: FyreworkrColors.fyreworkBlack,
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                borderRadius: BorderRadius.circular(5),
+                boxShadow: [
+                  BoxShadow(color: Colors.white, spreadRadius: 8),
+                ],
+              ),
+              child: FlatButton(
+                color: Theme.of(context).primaryColor,
                 textColor: FyreworkrColors.white,
-                child: AutoSizeText(
+                child: Text(
                   _submitButtonText,
                   style: TextStyle(
                     fontSize: 16.0,
@@ -574,51 +643,51 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     }
 
     // Phone authentication
-    if (authFormType == AuthFormType.phone) {
-      textFields.add(
-        // TextFormField(
-        //   style: TextStyle(fontSize: 22.0),
-        //   decoration: buildSignUpInputDecoration('Enter Phone'),
-        //   onChanged: (val) {
-        //     setState(() => _phone = val);
-        //   },
-        //   onSaved: (val) => _password = val,
-        // ),
-        Container(
-          width: MediaQuery.of(context).size.width * 0.7,
-          // child: InternationalPhoneInput(
-          //   decoration: buildSignUpInputDecoration('Enter Phone Number'),
-          //   onPhoneNumberChange: onPhoneNumberChange,
-          //   initialPhoneNumber: _phone,
-          //   initialSelection: 'US',
-          //   showCountryCodes: true,
-          //   showCountryFlags: true,
-          // ),
-          child: InternationalPhoneNumberInput(
-            onInputChanged: (PhoneNumber number) {
-              print(number.phoneNumber);
-              setState(() {
-                _phone = number.toString();
-              });
-            },
-            onInputValidated: (bool value) {
-              print(value);
-            },
-            ignoreBlank: false,
-            autoValidate: false,
-            selectorTextStyle: TextStyle(color: Colors.black),
-            textFieldController: phoneNumberController,
-            inputBorder: OutlineInputBorder(),
-            selectorType: PhoneInputSelectorType.DIALOG,
-          ),
-        ),
-      );
-      textFields.add(
-        SizedBox(
-          height: 20,
-        ),
-      );
-    }
+    // if (authFormType == AuthFormType.phone) {
+    //   textFields.add(
+    //     // TextFormField(
+    //     //   style: TextStyle(fontSize: 22.0),
+    //     //   decoration: buildSignUpInputDecoration('Enter Phone'),
+    //     //   onChanged: (val) {
+    //     //     setState(() => _phone = val);
+    //     //   },
+    //     //   onSaved: (val) => _password = val,
+    //     // ),
+    //     Container(
+    //       width: MediaQuery.of(context).size.width * 0.7,
+    //       // child: InternationalPhoneInput(
+    //       //   decoration: buildSignUpInputDecoration('Enter Phone Number'),
+    //       //   onPhoneNumberChange: onPhoneNumberChange,
+    //       //   initialPhoneNumber: _phone,
+    //       //   initialSelection: 'US',
+    //       //   showCountryCodes: true,
+    //       //   showCountryFlags: true,
+    //       // ),
+    //       child: InternationalPhoneNumberInput(
+    //         onInputChanged: (PhoneNumber number) {
+    //           print(number.phoneNumber);
+    //           setState(() {
+    //             _phone = number.toString();
+    //           });
+    //         },
+    //         onInputValidated: (bool value) {
+    //           print(value);
+    //         },
+    //         ignoreBlank: false,
+    //         autoValidate: false,
+    //         selectorTextStyle: TextStyle(color: Colors.black),
+    //         textFieldController: phoneNumberController,
+    //         inputBorder: OutlineInputBorder(),
+    //         selectorType: PhoneInputSelectorType.DIALOG,
+    //       ),
+    //     ),
+    //   );
+    //   textFields.add(
+    //     SizedBox(
+    //       height: 20,
+    //     ),
+    //   );
+    // }
 
     return textFields;
   }
@@ -639,12 +708,14 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       _switchButtonText = 'cancel';
       _newformState = 'signIn';
       _showSocial = false;
-    } else if (authFormType == AuthFormType.phone) {
-      _submitButtonText = 'Continue';
-      _switchButtonText = 'Cancel';
-      _newformState = 'SignIn';
-      _showSocial = false;
-    } else {
+    }
+    //  else if (authFormType == AuthFormType.phone) {
+    //   _submitButtonText = 'Continue';
+    //   _switchButtonText = 'Cancel';
+    //   _newformState = 'SignIn';
+    //   _showSocial = false;
+    // }
+    else {
       _submitButtonText = 'Sign Up';
       _switchButtonText = 'Have an account? Sign In';
       _newformState = 'signIn';
@@ -654,7 +725,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       (authFormType != AuthFormType.signIn &&
               authFormType != AuthFormType.signUp)
           ? Container(
-              width: MediaQuery.of(context).size.width * 0.8,
+              // width: MediaQuery.of(context).size.width * 0.8,
+              width: double.infinity,
               child: RaisedButton(
                 color: FyreworkrColors.fyreworkBlack,
                 textColor: FyreworkrColors.white,
@@ -689,21 +761,39 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       //     },
       //   ),
       // ),
+      // SizedBox(height: 50),
+      authFormType == AuthFormType.signIn
+          ? SizedBox(height: 50)
+          : SizedBox(
+              width: 0,
+              height: 0,
+            ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           showForgotPassword(_showForgotPassword),
-          FlatButton(
-            padding: EdgeInsets.zero,
-            child: Container(
-              child: AutoSizeText(
-                _switchButtonText,
-                style: TextStyle(
-                    color: FyreworkrColors.fyreworkBlack, fontSize: 16),
-                // maxLines: 1,
-              ),
+          // FlatButton(
+          //   padding: EdgeInsets.zero,
+          //   child: Container(
+          //     child: AutoSizeText(
+          //       _switchButtonText,
+          //       style: TextStyle(
+          //           color: FyreworkrColors.fyreworkBlack, fontSize: 16),
+          //       // maxLines: 1,
+          //     ),
+          //   ),
+          //   onPressed: () {
+          //     switchFormState(_newformState);
+          //   },
+          // ),
+          GestureDetector(
+            child: Text(
+              _submitButtonText,
+              style:
+                  TextStyle(color: FyreworkrColors.fyreworkBlack, fontSize: 16),
+              // maxLines: 1,
             ),
-            onPressed: () {
+            onTap: () {
               switchFormState(_newformState);
             },
           ),
@@ -724,23 +814,31 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   }
 
   Widget showForgotPassword(bool visible) {
-    return Visibility(
-      child: FlatButton(
-        padding: EdgeInsets.zero,
-        child: AutoSizeText(
-          // 'Forgotten Password?',
+    // return FlatButton(
+    //   padding: EdgeInsets.zero,
+    //   child: AutoSizeText(
+    //     // 'Forgotten Password?',
+    //     'Forgotten?',
+    //     style: TextStyle(color: FyreworkrColors.fyreworkBlack, fontSize: 16),
+    //     maxLines: 1,
+    //   ),
+    //   onPressed: () {
+    //     setState(() {
+    //       authFormType = AuthFormType.reset;
+    //     });
+    //   },
+    // );
+    return GestureDetector(
+        child: Text(
           'Forgotten?',
           style: TextStyle(color: FyreworkrColors.fyreworkBlack, fontSize: 16),
           maxLines: 1,
         ),
-        onPressed: () {
+        onTap: () {
           setState(() {
             authFormType = AuthFormType.reset;
           });
-        },
-      ),
-      visible: visible,
-    );
+        });
   }
 
   Widget buildSocialIcons(bool visible) {
@@ -749,7 +847,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       child: Column(
         children: <Widget>[
           Divider(color: Colors.white),
-          SizedBox(height: 50),
           Container(
             width: double.infinity,
             child: GoogleSignInButton(
@@ -765,29 +862,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               },
             ),
           ),
-          RaisedButton(
-            padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-            color: FyreworkrColors.black,
-            textColor: Colors.white,
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.phone),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 20.0, top: 10.0, bottom: 10.0),
-                  child: Text(
-                    'Sign in with Phone',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-              ],
-            ),
-            onPressed: () {
-              setState(() {
-                authFormType = AuthFormType.phone;
-              });
-            },
-          )
         ],
       ),
       visible: visible,

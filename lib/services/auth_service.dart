@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:myApp/services/storage_repo.dart';
 import 'package:myApp/ui/shared/theme.dart';
+import 'package:myApp/view_controllers/myUser_controller.dart';
 
 import '../locator.dart';
 
@@ -33,6 +34,7 @@ class AuthService {
   // Email & Password Sign Up
   Future createUserWithEmailAndPassword(
     String name,
+    String username,
     String email,
     String password,
     String userAvatarUrl,
@@ -56,6 +58,7 @@ class AuthService {
     await DatabaseService(uid: user.uid).setUserData(
         user.uid,
         name,
+        username,
         email,
         password,
         userAvatarUrl,
@@ -83,12 +86,14 @@ class AuthService {
     return currentUser.uid;
   }
 
-  // Email & Password Sign In
-  // Future<User> signInWithEmailAndPassword(String email, String password) async {
-  //   var authResult = await _firebaseAuth.signInWithEmailAndPassword(
-  //       email: email, password: password);
-  //   return User(uid: authResult.user.uid, name: authResult.user.displayName);
-  // }
+//  Email & Password Sign In
+  Future<MyUser> signInWithEmailAndPassword(
+      String email, String password) async {
+    var authResult = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: password);
+    String myUid = authResult.user.uid;
+    MyUserController().getCurrentUserFromFirebase(myUid);
+  }
 
   // Sign Out
   signOut() {
@@ -148,13 +153,23 @@ class AuthService {
         phoneNumber: phone,
         timeout: Duration(seconds: 60),
         verificationCompleted: (AuthCredential authCredential) {
-          _firebaseAuth
-              .signInWithCredential(authCredential)
-              .then((AuthResult result) {
-            Navigator.of(context).pushReplacementNamed('/home');
-          }).catchError((e) {
-            return "error";
-          });
+          showDialog(
+              context: context,
+              builder: (context) => Container(
+                    // height: 200,
+                    child: Center(
+                      child: AlertDialog(
+                        title: Text('Verification completed'),
+                      ),
+                    ),
+                  ));
+          // _firebaseAuth
+          //     .signInWithCredential(authCredential)
+          //     .then((AuthResult result) {
+          //   Navigator.of(context).pushReplacementNamed('/home');
+          // }).catchError((e) {
+          //   return "error";
+          // });
         },
         verificationFailed: (AuthException exception) {
           return "error";
@@ -187,21 +202,21 @@ class AuthService {
                           var _credential = PhoneAuthProvider.getCredential(
                               verificationId: verificationId,
                               smsCode: _codeController.text.trim());
-                          _firebaseAuth
-                              .signInWithCredential(_credential)
-                              .then((AuthResult result) {
-                            Navigator.of(context).pushReplacementNamed('/home');
-                          }).catchError((e) {
-                            return "error";
-                          });
+                          // _firebaseAuth
+                          //     .signInWithCredential(_credential)
+                          //     .then((AuthResult result) {
+                          //   Navigator.of(context).pushReplacementNamed('/home');
+                          // }).catchError((e) {
+                          //   return "error";
+                          // });
                         },
                       )
                     ],
                   ));
         },
-        codeAutoRetrievalTimeout: (String verifivationId) {
-          verifivationId = verifivationId;
-          print(verifivationId);
+        codeAutoRetrievalTimeout: (String verificationId) {
+          verificationId = verificationId;
+          print(verificationId);
           print("Timeout");
         });
   }

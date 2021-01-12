@@ -1,6 +1,7 @@
 class OtherUser {
   final String uid;
   final String name;
+  final String username;
   final String email;
   final String userAvatarUrl;
   final String userLocation;
@@ -12,6 +13,7 @@ class OtherUser {
   OtherUser({
     this.uid,
     this.name,
+    this.username,
     this.email,
     this.userAvatarUrl,
     this.userLocation,

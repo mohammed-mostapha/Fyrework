@@ -5,7 +5,7 @@ import 'package:myApp/services/firestore_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:myApp/services/navigation_service.dart';
 import 'package:myApp/services/dialog_service.dart';
-import 'package:myApp/view_controllers/user_controller.dart';
+import 'package:myApp/view_controllers/myUser_controller.dart';
 
 import 'models/otherUser.dart';
 
@@ -19,5 +19,5 @@ void setupLocator() {
   locator.registerLazySingleton(() => StorageRepo());
   locator.registerLazySingleton(() => MyUser());
   locator.registerLazySingleton(() => OtherUser());
-  locator.registerLazySingleton(() => UserController());
+  locator.registerLazySingleton(() => MyUserController());
 }

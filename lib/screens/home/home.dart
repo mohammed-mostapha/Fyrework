@@ -6,7 +6,7 @@ import 'package:myApp/screens/my_profile.dart';
 import 'package:myApp/screens/trends/trends.dart';
 
 import 'package:myApp/ui/shared/theme.dart';
-import 'package:myApp/view_controllers/user_controller.dart';
+import 'package:myApp/view_controllers/myUser_controller.dart';
 
 class Home extends StatefulWidget {
   final int passedSelectedIndex;

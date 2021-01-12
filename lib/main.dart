@@ -7,7 +7,7 @@ import 'package:myApp/services/auth_service.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/views/sign_up_view.dart';
 // import 'package:myApp/ui/widgets/provider_widget.dart';
-import 'package:myApp/view_controllers/user_controller.dart';
+import 'package:myApp/view_controllers/myUser_controller.dart';
 import 'locator.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -57,16 +57,31 @@ class _HomeControllerState extends State<HomeController> {
   void initState() {
     // FirebaseAuth.instance.currentUser().then((user) => user != null
     // FirebaseAuth.instance.currentUser().then((user) => user != null
-    authService.getCurrentUser().then((user) => user != null
-        ? UserController()
-            .getCurrentUserFromFirebase()
+    // authService.getCurrentUser().then((user) => user != null
+    //     ? MyUserController()
+    //         .getCurrentUserFromFirebase()
+    //         .then((value) => setState(() {
+    //               isAuthenticated = true;
+    //             }))
+    //     : setState(() {
+    //         print('print from main => user null: $user');
+    //         isAuthenticated = false;
+    //       }));
+    authService.getCurrentUser().then((user) async {
+      if (user != null) {
+        String myUid = await authService.getCurrentUID();
+        MyUserController()
+            .getCurrentUserFromFirebase(myUid)
             .then((value) => setState(() {
                   isAuthenticated = true;
-                }))
-        : setState(() {
-            print('print from main => user null: $user');
-            isAuthenticated = false;
-          }));
+                }));
+      } else {
+        setState(() {
+          print('print from main => user null: $user');
+          isAuthenticated = false;
+        });
+      }
+    });
     super.initState();
   }
 

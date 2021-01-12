@@ -12,7 +12,7 @@ import 'package:myApp/ui/shared/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 // import 'package:myApp/ui/views/sign_up_view.dart';
-import 'package:myApp/view_controllers/user_controller.dart';
+import 'package:myApp/view_controllers/myUser_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:myApp/locator.dart';
 import 'package:myApp/models/gig.dart';

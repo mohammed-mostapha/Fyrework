@@ -19,6 +19,7 @@ class DatabaseService {
   Future setUserData(
       String id,
       String name,
+      String username,
       String email,
       String password,
       String userAvatarUrl,
@@ -29,6 +30,7 @@ class DatabaseService {
     return await _usersCollection.document(id).setData({
       'id': uid,
       'name': name,
+      'username': username,
       'email': email,
       'password': password,
       'userAvatarUrl': userAvatarUrl,
@@ -44,6 +46,7 @@ class DatabaseService {
     return OtherUser(
       uid: snapshot.data['Id'],
       name: snapshot.data['name'],
+      username: snapshot.data['username'],
       email: snapshot.data['email'],
       userAvatarUrl: snapshot.data['userAvatarUrl'],
       userLocation: snapshot.data['userLocation'],

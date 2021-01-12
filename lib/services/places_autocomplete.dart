@@ -33,9 +33,9 @@ class _PlacesAutocompleteState extends State<PlacesAutocomplete> {
       child: Column(
         children: <Widget>[
           TextFormField(
-            decoration: buildSignUpInputDecoration(' location'),
+            decoration: buildSignUpInputDecoration('location'),
             controller: PlacesAutocomplete.placesAutoCompleteController,
-            validator: (val) => val.isEmpty ? '*' : null,
+            validator: (val) => val.isEmpty ? '' : null,
             onChanged: (val) {
               setState(() {
                 // location = val;

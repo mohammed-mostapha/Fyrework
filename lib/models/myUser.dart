@@ -24,6 +24,7 @@
 class MyUser {
   static String uid;
   static String name;
+  static String username;
   static String email;
   static String password;
   static String userAvatarUrl;
@@ -51,6 +52,7 @@ class MyUser {
   {
     uid = data['id'];
     name = data['name'];
+    username = data['username'];
     email = data['email'];
     password = data['password'];
     userAvatarUrl = data['userAvatarUrl'];

@@ -2,12 +2,13 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myApp/locator.dart';
 import 'package:myApp/models/myUser.dart';
+import 'package:myApp/screens/authenticate/app_start.dart';
 import 'package:myApp/services/database.dart';
 import 'package:myApp/ui/views/sign_up_view.dart';
-// import 'package:myApp/ui/widgets/provider_widget.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/services/auth_service.dart';
 import 'package:myApp/services/storage_repo.dart';
@@ -20,16 +21,17 @@ class MyProfileView extends StatefulWidget {
 }
 
 class _MyProfileViewState extends State<MyProfileView> {
-  AuthService _authService = locator.get<AuthService>();
-  StorageRepo _storageRepo = locator.get<StorageRepo>();
+  // AuthService _authService = locator.get<AuthService>();
+  // StorageRepo _storageRepo = locator.get<StorageRepo>();
   AuthFormType authFormType;
-  // dynamic userProfilePictureUrl;
-
-  // Future<String> getProfilePictureDownloadUrl() async {
-  //   print('fetching profile picture url');
-  //   return userProfilePictureUrl = await _storageRepo
-  //       .getUserProfilePictureDownloadUrl(await _authService.getCurrentUID());
-  // }
+  bool profileEditingMenu = false;
+  final String shieldCheck = 'assets/svgs/shield-check.svg';
+  final String lock = 'assets/svgs/lock.svg';
+  final String balanceScale = 'assets/svgs/balance-scale.svg';
+  final String userIcon = 'assets/svgs/user.svg';
+  final String legals = 'assets/svgs/file-contract.svg';
+  final String signOut = 'assets/svgs/sign-out-alt.svg';
+  final String policies = 'assets/svgs/file-signature.svg';
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,13 @@ class _MyProfileViewState extends State<MyProfileView> {
       child: Scaffold(
           appBar: AppBar(
             leading: Container(),
+            title: Container(
+              child: Text(
+                // widget.passedUserFullName,
+                MyUser.username,
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
+            ),
           ),
           endDrawer: myProfileDrawer(),
           backgroundColor: FyreworkrColors.fyreworkBlack,
@@ -260,144 +269,370 @@ class _MyProfileViewState extends State<MyProfileView> {
           )),
       width: MediaQuery.of(context).size.width / 1.5,
       height: MediaQuery.of(context).size.height,
-      child: ListView(children: <Widget>[
+      child: Column(
+        children: [
+          Expanded(
+            child: !profileEditingMenu
+                ? generalSideMenu(platform)
+                : profileEditingSideMenu(platform),
+          ),
+          showSignOut(context),
+        ],
+      ),
+    );
+  }
+
+  ListView generalSideMenu(TargetPlatform platform) {
+    return ListView(
+      children: <Widget>[
         Container(
-          width: double.infinity,
-          height: 50,
           decoration: BoxDecoration(
-              color: FyreworkrColors.fyreworkBlack,
               border: Border(
-                bottom: BorderSide(color: Colors.grey[50], width: 0.5),
-              )),
-          child: DrawerHeader(
-            child: Text('${MyUser.email}',
-                style: TextStyle(fontSize: 16, color: Colors.white)),
+            bottom: BorderSide(color: Colors.grey[50], width: 0.5),
+          )),
+          child: ListTile(
+            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            leading: Text('${MyUser.name}',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                )),
           ),
         ),
+        GestureDetector(
+          child: ListTile(
+            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            leading: Container(
+              width: 100,
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: SvgPicture.asset(
+                      userIcon,
+                      semanticsLabel: 'user',
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Profile',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+            trailing: Icon(Icons.chevron_right, color: Colors.white),
+          ),
+          onTap: () {
+            setState(() {
+              profileEditingMenu = true;
+            });
+          },
+        ),
+        GestureDetector(
+          child: ListTile(
+            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            leading: Container(
+              width: 100,
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: SvgPicture.asset(
+                      balanceScale,
+                      semanticsLabel: 'terms',
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Terms',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+            trailing: Icon(Icons.chevron_right, color: Colors.white),
+          ),
+          onTap: () {
+            setState(() {
+              profileEditingMenu = true;
+            });
+          },
+        ),
+        GestureDetector(
+          child: ListTile(
+            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            leading: Container(
+              width: 100,
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: SvgPicture.asset(
+                      lock,
+                      semanticsLabel: 'lock',
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Privacy',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+            trailing: Icon(Icons.chevron_right, color: Colors.white),
+          ),
+          onTap: () {
+            setState(() {
+              profileEditingMenu = true;
+            });
+          },
+        ),
+        GestureDetector(
+          child: ListTile(
+            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            leading: Container(
+              width: 200,
+              child: Row(
+                children: [
+                  // FaIcon(
+                  //   FontAwesomeIcons.shieldAlt,
+                  //   color: Colors.white,
+                  //   size: 16,
+                  // ),
+                  SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: SvgPicture.asset(
+                      shieldCheck,
+                      semanticsLabel: 'shield-check',
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Safety & Security',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+            trailing: Icon(Icons.chevron_right, color: Colors.white),
+          ),
+          onTap: () {
+            setState(() {
+              profileEditingMenu = true;
+            });
+          },
+        ),
+        GestureDetector(
+          child: ListTile(
+            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            leading: Container(
+              width: 200,
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: SvgPicture.asset(
+                      policies,
+                      semanticsLabel: 'user',
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Rules & Policies',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+            trailing: Icon(Icons.chevron_right, color: Colors.white),
+          ),
+          onTap: () {
+            setState(() {
+              profileEditingMenu = true;
+            });
+          },
+        ),
+        GestureDetector(
+          child: ListTile(
+            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            leading: Container(
+              width: 100,
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: SvgPicture.asset(
+                      legals,
+                      semanticsLabel: 'legals',
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Legals',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+            trailing: Icon(Icons.chevron_right, color: Colors.white),
+          ),
+          onTap: () {
+            setState(() {
+              profileEditingMenu = true;
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  ListView profileEditingSideMenu(TargetPlatform platform) {
+    return ListView(
+      children: <Widget>[
         ListTile(
-          leading: FlatButton(
-            child: Text(
-              'Edit your profile picture',
+          contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+          leading: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onTap: () {
+            setState(() {
+              profileEditingMenu = false;
+            });
+          },
+        ),
+        GestureDetector(
+          child: ListTile(
+            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            leading: Text('#Hashtag',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                )),
+          ),
+          onTap: () {},
+        ),
+        GestureDetector(
+          child: ListTile(
+            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            leading: Text('@Handle name',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                )),
+          ),
+          onTap: () {},
+        ),
+        GestureDetector(
+          child: ListTile(
+            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            leading: Text('Username',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                )),
+          ),
+          onTap: () {},
+        ),
+        GestureDetector(
+          child: ListTile(
+            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            leading: Text(
+              'Profile Picture',
               style: TextStyle(fontSize: 16, color: Colors.white),
             ),
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (_) => platform == TargetPlatform.iOS
-                      ? CupertinoAlertDialog(
-                          title: Text('Edit profile pic...'),
-                          content: Text('will be implemented soon...'),
-                          actions: <Widget>[
-                            CupertinoDialogAction(
-                              child: Text('Yes'),
-                            ),
-                            CupertinoDialogAction(
-                              child: Text('No'),
-                            ),
-                          ],
-                        )
-                      : AlertDialog(
-                          title: Text('Edit profile pic...'),
-                          content: Text('will be implemented soon...'),
-                          actions: <Widget>[
-                            FlatButton(
-                              child: Text('Yes'),
-                              onPressed: () {},
-                            ),
-                            FlatButton(
-                              child: Text('No'),
-                              onPressed: () {},
-                            ),
-                          ],
-                        ));
-            },
           ),
-        ),
-        ListTile(
-            leading: FlatButton(
-          child: Text('Terms',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-              )),
-          onPressed: () {},
-        )),
-        ListTile(
-            leading: FlatButton(
-          child: Text('Privacy',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-              )),
-          onPressed: () {},
-        )),
-        ListTile(
-            leading: FlatButton(
-          child: Text('Safety & Security',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-              )),
-          onPressed: () {},
-        )),
-        ListTile(
-            leading: FlatButton(
-          child: Text('Rules and Policies',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-              )),
-          onPressed: () {},
-        )),
-        ListTile(
-            leading: FlatButton(
-          child: Text('Legals',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-              )),
-          onPressed: () {
-            showAboutDialog(
+          onTap: () {
+            showDialog(
                 context: context,
-                // applicationVersion: '1.0',
-                // applicationIcon:
-                applicationLegalese: '',
-                children: <Widget>[
-                  Image.asset('assets/images/fyrework_logo.png'),
-                  Text(
-                    'FYRE.WORK',
-                    style: TextStyle(
-                        fontSize: 20, color: FyreworkrColors.fyreworkBlack),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    height: 50,
-                  ),
-                  Text(
-                    'Owned by',
-                    style: TextStyle(
-                        fontSize: 16, color: FyreworkrColors.fyreworkBlack),
-                  ),
-                  Text(
-                    'TRIBAL SENSATION OU.',
-                    style: TextStyle(
-                        fontSize: 16, color: FyreworkrColors.fyreworkBlack),
-                  ),
-                  Text(
-                    'Roosikrantsi tn 2-77, 10119, Tallinn, Harju, Estonia',
-                    style: TextStyle(
-                        fontSize: 16, color: FyreworkrColors.fyreworkBlack),
-                  ),
-                  Text(
-                    '#12437328',
-                    style: TextStyle(
-                        fontSize: 16, color: FyreworkrColors.fyreworkBlack),
-                  ),
-                ]);
+                barrierDismissible: true,
+                builder: (_) => platform == TargetPlatform.iOS
+                    ? CupertinoAlertDialog(
+                        title: Text('Edit profile pic...'),
+                        content: Text('will be implemented soon...'),
+                        actions: <Widget>[
+                          CupertinoDialogAction(
+                            child: Text('Yes'),
+                          ),
+                          CupertinoDialogAction(
+                            child: Text('No'),
+                          ),
+                        ],
+                      )
+                    : AlertDialog(
+                        title: Text('Edit profile pic...'),
+                        content: Text('will be implemented soon...'),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text('Yes'),
+                            onPressed: () {},
+                          ),
+                          FlatButton(
+                            child: Text('No'),
+                            onPressed: () {},
+                          ),
+                        ],
+                      ));
           },
-        )),
-      ]),
+        ),
+        GestureDetector(
+          child: ListTile(
+            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            leading: Text('Email address',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                )),
+          ),
+          onTap: () {},
+        ),
+        GestureDetector(
+          child: ListTile(
+              contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+              leading: Text('location',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ))),
+          onTap: () {},
+        ),
+        GestureDetector(
+          child: ListTile(
+              contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+              leading: Text('Mobile number',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ))),
+          onTap: () {},
+        ),
+      ],
     );
   }
 
@@ -509,16 +744,45 @@ class _MyProfileViewState extends State<MyProfileView> {
   }
 
   Widget showSignOut(context) {
-    return RaisedButton(
-      child: AutoSizeText("Sign out"),
-      onPressed: () async {
-        try {
-          // await Provider.of(context).auth.signOut();
-          await AuthService().signOut();
-        } catch (e) {
-          print(e);
-        }
-      },
+    return ListTile(
+      contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+      leading: Container(
+        width: 200,
+        child: Row(
+          children: [
+            SizedBox(
+              width: 16,
+              height: 16,
+              child: SvgPicture.asset(
+                signOut,
+                semanticsLabel: 'sign out',
+                color: Colors.white,
+              ),
+            ),
+            Container(
+              width: 5.0,
+            ),
+            GestureDetector(
+              child: Text(
+                'Log out',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+              onTap: () async {
+                try {
+                  // await Provider.of(context).auth.signOut();
+                  await AuthService().signOut();
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => StartPage()));
+                } catch (e) {
+                  print(e);
+                }
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

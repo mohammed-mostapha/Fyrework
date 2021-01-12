@@ -54,7 +54,7 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
         body: TabBarView(
           children: [
             AllGigsView(),
-            SearchPage(),
+            BuyerGigs(),
             ProviderGigs(),
           ],
         ),

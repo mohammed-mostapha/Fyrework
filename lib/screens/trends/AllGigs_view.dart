@@ -1,5 +1,5 @@
 import 'package:myApp/models/myUser.dart';
-import 'package:myApp/view_controllers/user_controller.dart';
+import 'package:myApp/view_controllers/myUser_controller.dart';
 import 'package:myApp/ui/widgets/gig_item.dart';
 import 'package:myApp/viewmodels/AllGigs_view_model.dart';
 import 'package:flutter/material.dart';
