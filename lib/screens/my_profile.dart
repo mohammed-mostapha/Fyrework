@@ -1,17 +1,19 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:myApp/locator.dart';
+import 'package:geolocator/geolocator.dart';
+
 import 'package:myApp/models/myUser.dart';
 import 'package:myApp/screens/authenticate/app_start.dart';
 import 'package:myApp/services/database.dart';
+import 'package:myApp/services/places_autocomplete.dart';
+import 'package:myApp/ui/shared/constants.dart';
 import 'package:myApp/ui/views/sign_up_view.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/services/auth_service.dart';
-import 'package:myApp/services/storage_repo.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:myApp/ui/widgets/userRelated_gigItem.dart';
 
@@ -33,17 +35,42 @@ class _MyProfileViewState extends State<MyProfileView> {
   final String signOut = 'assets/svgs/sign-out-alt.svg';
   final String policies = 'assets/svgs/file-signature.svg';
 
+  TextEditingController _myNewHashtag = TextEditingController();
+  TextEditingController _myNewUsername = TextEditingController();
+  TextEditingController _myNewName = TextEditingController();
+  TextEditingController _myNewEmailaddress = TextEditingController();
+  TextEditingController _myNewPhoneNumber = TextEditingController();
+
+  getUserLocation() async {
+    Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    List<Placemark> placemarks = await Geolocator()
+        .placemarkFromCoordinates(position.latitude, position.longitude);
+    Placemark placemark = placemarks[0];
+    // String completeAddress =
+    //     '${placemark.subThoroughfare} ${placemark.thoroughfare}, ${placemark.subLocality} ${placemark.locality}, ${placemark.subAdministrativeArea}, ${placemark.administrativeArea} ${placemark.postalCode}, ${placemark.country}';
+    // print(completeAddress);
+    String formattedAddress = "${placemark.locality}, ${placemark.country}";
+    setState(() {
+      PlacesAutocomplete.placesAutoCompleteController.text = formattedAddress;
+      print('${PlacesAutocomplete.placesAutoCompleteController.text}');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
           appBar: AppBar(
-            leading: Container(),
+            automaticallyImplyLeading: false,
             title: Container(
+              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
               child: Text(
-                // widget.passedUserFullName,
                 MyUser.username,
-                style: TextStyle(fontSize: 16, color: Colors.white),
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.normal),
               ),
             ),
           ),
@@ -267,7 +294,9 @@ class _MyProfileViewState extends State<MyProfileView> {
           border: Border(
             left: BorderSide(color: Colors.grey[50], width: 0.5),
           )),
-      width: MediaQuery.of(context).size.width / 1.5,
+      width: !profileEditingMenu
+          ? MediaQuery.of(context).size.width / 1.5
+          : MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: Column(
         children: [
@@ -276,7 +305,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                 ? generalSideMenu(platform)
                 : profileEditingSideMenu(platform),
           ),
-          showSignOut(context),
+          !profileEditingMenu ? showSignOut(context) : Container(),
         ],
       ),
     );
@@ -361,11 +390,7 @@ class _MyProfileViewState extends State<MyProfileView> {
             ),
             trailing: Icon(Icons.chevron_right, color: Colors.white),
           ),
-          onTap: () {
-            setState(() {
-              profileEditingMenu = true;
-            });
-          },
+          onTap: () {},
         ),
         GestureDetector(
           child: ListTile(
@@ -395,11 +420,7 @@ class _MyProfileViewState extends State<MyProfileView> {
             ),
             trailing: Icon(Icons.chevron_right, color: Colors.white),
           ),
-          onTap: () {
-            setState(() {
-              profileEditingMenu = true;
-            });
-          },
+          onTap: () {},
         ),
         GestureDetector(
           child: ListTile(
@@ -434,11 +455,7 @@ class _MyProfileViewState extends State<MyProfileView> {
             ),
             trailing: Icon(Icons.chevron_right, color: Colors.white),
           ),
-          onTap: () {
-            setState(() {
-              profileEditingMenu = true;
-            });
-          },
+          onTap: () {},
         ),
         GestureDetector(
           child: ListTile(
@@ -468,11 +485,7 @@ class _MyProfileViewState extends State<MyProfileView> {
             ),
             trailing: Icon(Icons.chevron_right, color: Colors.white),
           ),
-          onTap: () {
-            setState(() {
-              profileEditingMenu = true;
-            });
-          },
+          onTap: () {},
         ),
         GestureDetector(
           child: ListTile(
@@ -502,11 +515,7 @@ class _MyProfileViewState extends State<MyProfileView> {
             ),
             trailing: Icon(Icons.chevron_right, color: Colors.white),
           ),
-          onTap: () {
-            setState(() {
-              profileEditingMenu = true;
-            });
-          },
+          onTap: () {},
         ),
       ],
     );
@@ -518,7 +527,7 @@ class _MyProfileViewState extends State<MyProfileView> {
         ListTile(
           contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
           leading: Icon(
-            Icons.arrow_back,
+            Icons.chevron_left,
             color: Colors.white,
           ),
           onTap: () {
@@ -527,110 +536,239 @@ class _MyProfileViewState extends State<MyProfileView> {
             });
           },
         ),
-        GestureDetector(
-          child: ListTile(
-            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-            leading: Text('#Hashtag',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                )),
-          ),
-          onTap: () {},
-        ),
-        GestureDetector(
-          child: ListTile(
-            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-            leading: Text('@Handle name',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                )),
-          ),
-          onTap: () {},
-        ),
-        GestureDetector(
-          child: ListTile(
-            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-            leading: Text('Username',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                )),
-          ),
-          onTap: () {},
-        ),
-        GestureDetector(
-          child: ListTile(
-            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-            leading: Text(
+        ListTile(
+          contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+          leading: Container(
+            padding: EdgeInsets.fromLTRB(0, 1.5, 0, 0),
+            child: Text(
               'Profile Picture',
               style: TextStyle(fontSize: 16, color: Colors.white),
             ),
           ),
-          onTap: () {
-            showDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (_) => platform == TargetPlatform.iOS
-                    ? CupertinoAlertDialog(
-                        title: Text('Edit profile pic...'),
-                        content: Text('will be implemented soon...'),
-                        actions: <Widget>[
-                          CupertinoDialogAction(
-                            child: Text('Yes'),
-                          ),
-                          CupertinoDialogAction(
-                            child: Text('No'),
-                          ),
-                        ],
-                      )
-                    : AlertDialog(
-                        title: Text('Edit profile pic...'),
-                        content: Text('will be implemented soon...'),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text('Yes'),
-                            onPressed: () {},
-                          ),
-                          FlatButton(
-                            child: Text('No'),
-                            onPressed: () {},
-                          ),
-                        ],
-                      ));
-          },
+          trailing: Container(
+            width: MediaQuery.of(context).size.width / 1.5,
+            child: Row(
+              children: <Widget>[
+                CachedNetworkImage(
+                  imageBuilder: (context, imageProvider) => Container(
+                    width: 50.0,
+                    height: 50.0,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: imageProvider, fit: BoxFit.cover),
+                    ),
+                  ),
+                  imageUrl: MyUser.userAvatarUrl,
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                GestureDetector(
+                  child: Icon(
+                    Icons.camera_alt,
+                    color: Colors.white,
+                    size: 25,
+                  ),
+                  onTap: () {
+                    print('camera clicked');
+                  },
+                )
+              ],
+            ),
+          ),
         ),
         GestureDetector(
           child: ListTile(
             contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-            leading: Text('Email address',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                )),
+            leading: Container(
+              padding: EdgeInsets.fromLTRB(0, 1.5, 0, 0),
+              child: Text('#Hashtag',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  )),
+            ),
+            trailing: Container(
+              width: MediaQuery.of(context).size.width / 1.5,
+              child: TextFormField(
+                validator: EmailValidator.validate,
+                style: TextStyle(fontSize: 16.0, color: Colors.white),
+                decoration: profileEditingInputDecoration('#Hashtag'),
+                onChanged: (val) {
+                  setState(() => _myNewHashtag.text = val);
+                },
+                onSaved: (val) => _myNewHashtag.text = val,
+              ),
+            ),
           ),
           onTap: () {},
         ),
         GestureDetector(
           child: ListTile(
-              contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-              leading: Text('location',
+            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            leading: Container(
+              padding: EdgeInsets.fromLTRB(0, 1.5, 0, 0),
+              child: Text('Username',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white,
-                  ))),
+                  )),
+            ),
+            trailing: Container(
+              width: MediaQuery.of(context).size.width / 1.5,
+              child: TextFormField(
+                validator: EmailValidator.validate,
+                style: TextStyle(fontSize: 16.0, color: Colors.white),
+                decoration: profileEditingInputDecoration('Username'),
+                onChanged: (val) {
+                  setState(() => _myNewUsername.text = val);
+                },
+                onSaved: (val) => _myNewUsername.text = val,
+              ),
+            ),
+          ),
           onTap: () {},
         ),
         GestureDetector(
           child: ListTile(
-              contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-              leading: Text('Mobile number',
+            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            leading: Container(
+              padding: EdgeInsets.fromLTRB(0, 1.5, 0, 0),
+              child: Text('Name',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white,
-                  ))),
+                  )),
+            ),
+            trailing: Container(
+              width: MediaQuery.of(context).size.width / 1.5,
+              child: TextFormField(
+                validator: EmailValidator.validate,
+                style: TextStyle(fontSize: 16.0, color: Colors.white),
+                decoration: profileEditingInputDecoration('Name'),
+                onChanged: (val) {
+                  setState(() => _myNewName.text = val);
+                },
+                onSaved: (val) => _myNewName.text = val,
+              ),
+            ),
+          ),
           onTap: () {},
+        ),
+        GestureDetector(
+          child: ListTile(
+            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            leading: Container(
+              padding: EdgeInsets.fromLTRB(0, 1.5, 0, 0),
+              child: Text('Email address',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  )),
+            ),
+            trailing: Container(
+              width: MediaQuery.of(context).size.width / 1.5,
+              child: TextFormField(
+                validator: EmailValidator.validate,
+                style: TextStyle(fontSize: 16.0, color: Colors.white),
+                decoration: profileEditingInputDecoration('Email address'),
+                onChanged: (val) {
+                  setState(() => _myNewEmailaddress.text = val);
+                },
+                onSaved: (val) => _myNewEmailaddress.text = val,
+              ),
+            ),
+          ),
+          onTap: () {},
+        ),
+        GestureDetector(
+          child: ListTile(
+            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            leading: Container(
+              padding: EdgeInsets.fromLTRB(0, 1.5, 0, 0),
+              child: Text('location',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  )),
+            ),
+            trailing: Container(
+              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+              width: MediaQuery.of(context).size.width / 1.5,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Flexible(
+                    child: PlacesAutocomplete(
+                      signUpDecoraiton: false,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  GestureDetector(
+                    child: Icon(
+                      Icons.gps_fixed,
+                      color: Colors.white,
+                      size: 25,
+                    ),
+                    onTap: () {
+                      getUserLocation();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          onTap: () {},
+        ),
+        GestureDetector(
+          child: ListTile(
+            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            leading: Container(
+              padding: EdgeInsets.fromLTRB(0, 1.5, 0, 0),
+              child: Text('Mobile number',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  )),
+            ),
+            trailing: Container(
+              width: MediaQuery.of(context).size.width / 1.5,
+              child: TextFormField(
+                decoration: profileEditingInputDecoration('Mobile number'),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+                // Only numbers can be entered
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  WhitelistingTextInputFormatter.digitsOnly
+                ],
+                onChanged: (val) {
+                  setState(() => _myNewPhoneNumber.text = val);
+                },
+                onSaved: (value) => _myNewPhoneNumber.text = value,
+                validator: (value) => value.isEmpty ? '*' : null,
+              ),
+            ),
+          ),
+          onTap: () {},
+        ),
+        ListTile(
+          contentPadding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+          trailing: FlatButton(
+            color: Colors.white,
+            onPressed: () {},
+            child: Text(
+              'Save',
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
         ),
       ],
     );

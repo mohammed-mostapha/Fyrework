@@ -458,7 +458,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           width: double.infinity,
           child: TextFormField(
             validator: EmailValidator.validate,
-            style: TextStyle(fontSize: 22.0),
+            style: TextStyle(fontSize: 16.0),
             decoration: buildSignUpInputDecoration('Email'),
             onChanged: (val) {
               setState(() => _email = val);
@@ -486,7 +486,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               validator: NameValidator.validate,
               enableSuggestions: false,
               style: TextStyle(
-                fontSize: 22.0,
+                fontSize: 16.0,
               ),
               decoration: buildSignUpInputDecoration('Name'),
               onChanged: (val) {
@@ -498,7 +498,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               validator: NameValidator.validate,
               enableSuggestions: false,
               style: TextStyle(
-                fontSize: 22.0,
+                fontSize: 16.0,
               ),
               decoration: buildSignUpInputDecoration('Userame'),
               onChanged: (val) {
@@ -512,7 +512,9 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Flexible(
-                    child: PlacesAutocomplete(),
+                    child: PlacesAutocomplete(
+                      signUpDecoraiton: true,
+                    ),
                   ),
                   IconButton(
                     color: FyreworkrColors.fyreworkBlack,
@@ -573,7 +575,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       textFields.add(
         TextFormField(
           validator: EmailValidator.validate,
-          style: TextStyle(fontSize: 22.0),
+          style: TextStyle(fontSize: 16.0),
           decoration: buildSignUpInputDecoration('Email'),
           onChanged: (val) {
             setState(() => _email = val);
@@ -772,23 +774,9 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           showForgotPassword(_showForgotPassword),
-          // FlatButton(
-          //   padding: EdgeInsets.zero,
-          //   child: Container(
-          //     child: AutoSizeText(
-          //       _switchButtonText,
-          //       style: TextStyle(
-          //           color: FyreworkrColors.fyreworkBlack, fontSize: 16),
-          //       // maxLines: 1,
-          //     ),
-          //   ),
-          //   onPressed: () {
-          //     switchFormState(_newformState);
-          //   },
-          // ),
           GestureDetector(
             child: Text(
-              _submitButtonText,
+              _switchButtonText,
               style:
                   TextStyle(color: FyreworkrColors.fyreworkBlack, fontSize: 16),
               // maxLines: 1,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myApp/ui/shared/theme.dart';
 import 'package:uuid/uuid.dart';
 import '../ui/views/sign_up_view.dart';
 import 'address_search.dart';
@@ -6,9 +7,11 @@ import 'place_service.dart';
 import '../ui/shared/constants.dart';
 
 class PlacesAutocomplete extends StatefulWidget {
-  PlacesAutocomplete({Key key, this.title}) : super(key: key);
+  PlacesAutocomplete({Key key, this.title, this.signUpDecoraiton})
+      : super(key: key);
 
   final String title;
+  bool signUpDecoraiton;
   static TextEditingController placesAutoCompleteController =
       TextEditingController();
   @override
@@ -33,7 +36,14 @@ class _PlacesAutocompleteState extends State<PlacesAutocomplete> {
       child: Column(
         children: <Widget>[
           TextFormField(
-            decoration: buildSignUpInputDecoration('location'),
+            decoration: widget.signUpDecoraiton
+                ? buildSignUpInputDecoration('location')
+                : profileEditingInputDecoration('Location'),
+            style: TextStyle(
+                color: widget.signUpDecoraiton
+                    ? FyreworkrColors.fyreworkBlack
+                    : Colors.white,
+                fontSize: 16),
             controller: PlacesAutocomplete.placesAutoCompleteController,
             validator: (val) => val.isEmpty ? '' : null,
             onChanged: (val) {
