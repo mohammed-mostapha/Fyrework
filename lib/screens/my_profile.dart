@@ -165,30 +165,30 @@ class _MyProfileViewState extends State<MyProfileView> {
             MyUser.phoneNumber = phone;
           });
 
-          showDialog(
-              context: context,
-              builder: (context) => Container(
-                    child: Center(
-                      child: AlertDialog(
-                        title: Text('Verification completed'),
-                        content: FlatButton(
-                          color: Theme.of(context).primaryColor,
-                          onPressed: () {
-                            print(
-                                'verification completed - MyUser.phoneNumber: ${MyUser.phoneNumber}');
-                            Navigator.of(context, rootNavigator: true).pop();
-                          },
-                          child: Text(
-                            'Dismiss',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ));
+          // showDialog(
+          //     context: context,
+          //     builder: (context) => Container(
+          //           child: Center(
+          //             child: AlertDialog(
+          //               title: Text('Verification completed'),
+          //               content: FlatButton(
+          //                 color: Theme.of(context).primaryColor,
+          //                 onPressed: () {
+          //                   print(
+          //                       'verification completed - MyUser.phoneNumber: ${MyUser.phoneNumber}');
+          //                   Navigator.of(context, rootNavigator: true).pop();
+          //                 },
+          //                 child: Text(
+          //                   'Dismiss',
+          //                   style: TextStyle(
+          //                     fontSize: 16,
+          //                     color: Colors.white,
+          //                   ),
+          //                 ),
+          //               ),
+          //             ),
+          //           ),
+          //         ));
           // _firebaseAuth
           //     .signInWithCredential(authCredential)
           //     .then((AuthResult result) {
@@ -307,52 +307,23 @@ class _MyProfileViewState extends State<MyProfileView> {
   }
 
   Widget phoneVerifyer() {
-    return Dialog(
-      child: Container(
-        height: MediaQuery.of(context).size.height / 2,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text(
-                'You will receive a code to verify your phone number',
-                style: TextStyle(
-                  fontSize: 18,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              InternationalPhoneNumberInput(
-                onInputChanged: (PhoneNumber number) {
-                  print(number.phoneNumber);
-                  setState(() {
-                    phoneNumberToVerify = number.toString();
-                  });
-                },
-                onInputValidated: (bool value) {
-                  print(value);
-                },
-                ignoreBlank: false,
-                autoValidate: false,
-                selectorTextStyle: TextStyle(color: Colors.black),
-                textFieldController: _myNewPhoneNumberController,
-                inputBorder: OutlineInputBorder(),
-                selectorType: PhoneInputSelectorType.DIALOG,
-              ),
-              FlatButton(
-                color: Theme.of(context).primaryColor,
-                onPressed: () {
-                  Navigator.of(context, rootNavigator: true).pop();
-                  verifyPhoneNumber(phoneNumberToVerify, context);
-                },
-                child: Text(
-                  'Send code',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
-              )
-            ],
-          ),
-        ),
+    return Container(
+      child: InternationalPhoneNumberInput(
+        onInputChanged: (PhoneNumber number) {
+          print(number.phoneNumber);
+          setState(() {
+            phoneNumberToVerify = number.toString();
+          });
+        },
+        onInputValidated: (bool value) {
+          print(value);
+        },
+        ignoreBlank: false,
+        autoValidate: false,
+        selectorTextStyle: TextStyle(color: Colors.black),
+        textFieldController: _myNewPhoneNumberController,
+        // inputBorder: OutlineInputBorder(),
+        selectorType: PhoneInputSelectorType.DIALOG,
       ),
     );
   }
@@ -458,7 +429,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                     height: 10,
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
+                    padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -853,7 +824,7 @@ class _MyProfileViewState extends State<MyProfileView> {
               ),
             ),
             trailing: Container(
-              width: MediaQuery.of(context).size.width / 1.7,
+              width: MediaQuery.of(context).size.width / 1.5,
               child: Row(
                 children: <Widget>[
                   _myNewProfileImage == null
@@ -912,7 +883,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                     )),
               ),
               trailing: Container(
-                width: MediaQuery.of(context).size.width / 1.7,
+                width: MediaQuery.of(context).size.width / 1.5,
                 child: Expanded(
                   child: TypeAheadFormField(
                     // initialValue: MyUser.hashtag,
@@ -965,7 +936,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                     )),
               ),
               trailing: Container(
-                width: MediaQuery.of(context).size.width / 1.7,
+                width: MediaQuery.of(context).size.width / 1.5,
                 child: Expanded(
                   child: Container(
                     child: TextFormField(
@@ -996,7 +967,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                     )),
               ),
               trailing: Container(
-                width: MediaQuery.of(context).size.width / 1.7,
+                width: MediaQuery.of(context).size.width / 1.5,
                 child: Expanded(
                   child: TextFormField(
                     controller: _myNewName,
@@ -1018,14 +989,14 @@ class _MyProfileViewState extends State<MyProfileView> {
               contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
               leading: Container(
                 padding: EdgeInsets.fromLTRB(0, 1.5, 0, 0),
-                child: Text('Email address',
+                child: Text('Email',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.white,
                     )),
               ),
               trailing: Container(
-                width: MediaQuery.of(context).size.width / 1.7,
+                width: MediaQuery.of(context).size.width / 1.5,
                 child: Expanded(
                   child: TextFormField(
                     controller: _myNewEmailaddress,
@@ -1055,7 +1026,7 @@ class _MyProfileViewState extends State<MyProfileView> {
               ),
               trailing: Container(
                 // padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                width: MediaQuery.of(context).size.width / 1.7,
+                width: MediaQuery.of(context).size.width / 1.5,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -1122,7 +1093,7 @@ class _MyProfileViewState extends State<MyProfileView> {
             contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
             leading: Container(
               padding: EdgeInsets.fromLTRB(0, 1.5, 0, 0),
-              child: Text('Mobile number',
+              child: Text('Mobile',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white,
@@ -1130,23 +1101,22 @@ class _MyProfileViewState extends State<MyProfileView> {
             ),
             trailing: Container(
                 // padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                width: MediaQuery.of(context).size.width / 1.7,
+                width: MediaQuery.of(context).size.width / 1.5,
                 child: MyUser.phoneNumber == null
                     ? Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          FlatButton(
-                            color: Colors.white,
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (_) => phoneVerifyer(),
-                                barrierDismissible: true,
-                              );
+                          Expanded(
+                            child: phoneVerifyer(),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              verifyPhoneNumber(phoneNumberToVerify, context);
                             },
                             child: Text(
-                              'Add',
-                              style: TextStyle(fontSize: 16),
+                              'Verify',
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white),
                             ),
                           )
                         ],
@@ -1166,17 +1136,21 @@ class _MyProfileViewState extends State<MyProfileView> {
                         ],
                       )),
           )),
-
+          SizedBox(
+            height: 40,
+          ),
           ListTile(
             contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-            title: FlatButton(
-              color: Colors.white,
-              onPressed: () {
-                editMyProfile();
-              },
-              child: Text(
-                'Save',
-                style: TextStyle(fontSize: 16),
+            title: Center(
+              child: FlatButton(
+                color: Colors.white,
+                onPressed: () {
+                  editMyProfile();
+                },
+                child: Text(
+                  'Save',
+                  style: TextStyle(fontSize: 16),
+                ),
               ),
             ),
           ),
