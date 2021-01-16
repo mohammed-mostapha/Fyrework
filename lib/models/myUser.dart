@@ -23,6 +23,7 @@
 
 class MyUser {
   static String uid;
+  static String hashtag;
   static String name;
   static String username;
   static String email;
@@ -31,6 +32,7 @@ class MyUser {
   static String userLocation;
   static bool isMinor;
   static String location;
+  static String phoneNumber;
   static dynamic ongoingGigsByGigId;
   static int lengthOfOngoingGigsByGigId;
 
@@ -51,6 +53,7 @@ class MyUser {
   // uid = data['uid'],
   {
     uid = data['id'];
+    hashtag = data['hashtag'];
     name = data['name'];
     username = data['username'];
     email = data['email'];
@@ -59,6 +62,7 @@ class MyUser {
     userLocation = data['userLocation'];
     isMinor = data['isMinor'];
     location = data['location'];
+    phoneNumber = data['phoneNumber'];
     ongoingGigsByGigId = data['ongoingGigsByGigId'];
     lengthOfOngoingGigsByGigId = data['lengthOfOngoingGigsByGigId'];
   }

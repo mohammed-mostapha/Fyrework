@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:myApp/screens/my_profile.dart';
 import 'package:myApp/services/database.dart';
 import 'package:myApp/models/myUser.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,6 +34,7 @@ class AuthService {
 
   // Email & Password Sign Up
   Future createUserWithEmailAndPassword(
+    String hashtag,
     String name,
     String username,
     String email,
@@ -57,6 +59,7 @@ class AuthService {
     // create a new document for the user with the uid in users collection
     await DatabaseService(uid: user.uid).setUserData(
         user.uid,
+        hashtag,
         name,
         username,
         email,
@@ -147,19 +150,35 @@ class AuthService {
   }
 
   // signing up with phone number
-  Future createUserWithPhone(String phone, BuildContext context) async {
+  Future verifyPhoneNumber(String phone, BuildContext context) async {
     final _codeController = TextEditingController();
     _firebaseAuth.verifyPhoneNumber(
         phoneNumber: phone,
         timeout: Duration(seconds: 60),
         verificationCompleted: (AuthCredential authCredential) {
+          MyProfileView.myPhoneNumber = phone;
+          MyUser.phoneNumber = phone;
           showDialog(
               context: context,
               builder: (context) => Container(
-                    // height: 200,
                     child: Center(
                       child: AlertDialog(
                         title: Text('Verification completed'),
+                        content: FlatButton(
+                          color: Theme.of(context).primaryColor,
+                          onPressed: () {
+                            print(
+                                'MyProfileView.myPhoneNumber: ${MyProfileView.myPhoneNumber}');
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'Dismiss',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ));
@@ -172,46 +191,104 @@ class AuthService {
           // });
         },
         verificationFailed: (AuthException exception) {
-          return "error";
+          // return "error";
+          showDialog(
+              context: context,
+              builder: (context) => Container(
+                    // height: 200,
+                    child: Center(
+                      child: AlertDialog(
+                        title: Text('Verification failed'),
+                        content: FlatButton(
+                          color: Theme.of(context).primaryColor,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'Dismiss',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ));
         },
         codeSent: (String verificationId, [int forceResendingToken]) {
           showDialog(
               context: context,
-              barrierDismissible: false,
-              builder: (context) => AlertDialog(
-                    title: Column(
-                      children: <Widget>[
-                        AutoSizeText("We sent you a message."),
-                        AutoSizeText("Enter SMS code"),
-                      ],
+              barrierDismissible: true,
+              builder: (context) => Container(
+                    child: Center(
+                      child: AlertDialog(
+                        title: Text('Enter code from sms'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            TextField(
+                              controller: _codeController,
+                            )
+                          ],
+                        ),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text("submit"),
+                            textColor: FyreworkrColors.white,
+                            color: Theme.of(context).primaryColor,
+                            onPressed: () async {
+                              // try {
+                              //   await _firebaseAuth
+                              //       .signInWithCredential(
+                              //           PhoneAuthProvider.getCredential(
+                              //               verificationId: verificationId,
+                              //               smsCode:
+                              //                   _codeController.text.trim()))
+                              //       .then((value) async {
+                              //     if (value.user != null) {
+                              //       MyUser.phoneNumber = phone;
+                              //       MyProfileView.myPhoneNumber = phone;
+                              //     }
+                              //     print('print: all good');
+                              //     Navigator.of(context).pop();
+                              //   });
+
+                              //   // }).catchError((e) {
+                              //   //   return "error";
+                              //   // });
+                              // } catch (e) {
+                              //   FocusScope.of(context).unfocus();
+                              //   showDialog(
+                              //       context: context,
+                              //       builder: (context) => Container(
+                              //             child: Center(
+                              //               child: AlertDialog(
+                              //                 title:
+                              //                     Text('Verification failed'),
+                              //                 content: FlatButton(
+                              //                   color: Theme.of(context)
+                              //                       .primaryColor,
+                              //                   onPressed: () {
+                              //                     Navigator.of(context).pop();
+                              //                   },
+                              //                   child: Text(
+                              //                     'Dismiss',
+                              //                     style: TextStyle(
+                              //                       fontSize: 16,
+                              //                       color: Colors.white,
+                              //                     ),
+                              //                   ),
+                              //                 ),
+                              //               ),
+                              //             ),
+                              //           ));
+                              // }
+                            },
+                          )
+                        ],
+                      ),
                     ),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        TextField(
-                          controller: _codeController,
-                        )
-                      ],
-                    ),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: Text("submit"),
-                        textColor: FyreworkrColors.white,
-                        color: Colors.green,
-                        onPressed: () {
-                          var _credential = PhoneAuthProvider.getCredential(
-                              verificationId: verificationId,
-                              smsCode: _codeController.text.trim());
-                          // _firebaseAuth
-                          //     .signInWithCredential(_credential)
-                          //     .then((AuthResult result) {
-                          //   Navigator.of(context).pushReplacementNamed('/home');
-                          // }).catchError((e) {
-                          //   return "error";
-                          // });
-                        },
-                      )
-                    ],
                   ));
         },
         codeAutoRetrievalTimeout: (String verificationId) {
@@ -219,6 +296,36 @@ class AuthService {
           print(verificationId);
           print("Timeout");
         });
+  }
+}
+
+class HashtagValidator {
+  static String validate(String value) {
+    if (value.isEmpty) {
+      return '';
+    }
+    if (value.length < 2) {
+      return "Hashtag must be at least 2 characters long";
+    }
+    if (value.length > 30) {
+      return "Hashtag must not exceed 30 characters";
+    }
+    return null;
+  }
+}
+
+class UsernameValidator {
+  static String validate(String value) {
+    if (value.isEmpty) {
+      return '';
+    }
+    if (value.length < 2) {
+      return "Username must be at least 2 characters long";
+    }
+    if (value.length > 30) {
+      return "Username must not exceed 30 characters";
+    }
+    return null;
   }
 }
 
@@ -255,6 +362,8 @@ class PasswordValidator {
   static String validate(String value) {
     if (value.isEmpty) {
       return '';
+    } else if (value.length < 8) {
+      return "Password must be at least 8 characters long";
     }
     return null;
   }

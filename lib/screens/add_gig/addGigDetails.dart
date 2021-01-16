@@ -250,7 +250,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
 
                                     style: DefaultTextStyle.of(context)
                                         .style
-                                        .copyWith(fontSize: 17),
+                                        .copyWith(fontSize: 16),
                                     // decoration: InputDecoration(
                                     //     contentPadding: EdgeInsets.all(0),
                                     //     border: InputBorder.none,

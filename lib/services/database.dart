@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:myApp/models/myUser.dart';
 import 'package:myApp/models/otherUser.dart';
 
@@ -18,6 +19,7 @@ class DatabaseService {
 
   Future setUserData(
       String id,
+      String hashtag,
       String name,
       String username,
       String email,
@@ -29,12 +31,14 @@ class DatabaseService {
       int lengthOfOngoingGigsByGigId) async {
     return await _usersCollection.document(id).setData({
       'id': uid,
+      'hashtag': hashtag,
       'name': name,
       'username': username,
       'email': email,
       'password': password,
       'userAvatarUrl': userAvatarUrl,
       'location': location,
+      'phoneNumber': null,
       'isMinor?': isMinor,
       'ongoingGigsByGigId': ongoingGigsByGigId,
       'lengthOfOngoingGigsByGigId': lengthOfOngoingGigsByGigId,
@@ -45,6 +49,7 @@ class DatabaseService {
   OtherUser _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return OtherUser(
       uid: snapshot.data['Id'],
+      hashtag: snapshot.data['hashtag'],
       name: snapshot.data['name'],
       username: snapshot.data['username'],
       email: snapshot.data['email'],
@@ -52,6 +57,7 @@ class DatabaseService {
       userLocation: snapshot.data['userLocation'],
       isMinor: snapshot.data['isMinor'],
       location: snapshot.data['location'],
+      phoneNumber: snapshot.data['phoneNumber'],
       ongoingGigsByGigId: snapshot.data['ongoingGigsByGigId'],
       lengthOfOngoingGigsByGigId: snapshot.data['lengthOfOngoingGigsByGigId'],
     );
@@ -83,6 +89,34 @@ class DatabaseService {
     return _commentsCollection
         .where('gigIdHoldingComment', isEqualTo: gigIdCommentsIdentifier)
         .snapshots();
+  }
+
+  Future updateMyProfileData(
+    String uid,
+    // String profileAvatarUrl,
+    String myNewHashtag,
+    String myNewUsername,
+    String myNewName,
+    String myNewEmailaddress,
+    String myNewLocation,
+    String myNewPhoneNumber,
+  ) async {
+    try {
+      return await _usersCollection.document(uid).updateData(<String, dynamic>{
+        'hashtag': myNewHashtag,
+        // 'userAvatarUrl':
+        'username': myNewUsername,
+        'name': myNewName,
+        'email': myNewEmailaddress,
+        'location': myNewLocation,
+        'phone number': myNewPhoneNumber,
+      });
+    } catch (e) {
+      if (e is PlatformException) {
+        print(e.message);
+        return e.message;
+      }
+    }
   }
 
   Future updateOngoingGigsByGigId(String uid, dynamic gigId) async {

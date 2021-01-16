@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:myApp/locator.dart';
 import 'package:myApp/main.dart';
 import 'package:myApp/screens/add_gig/assets_picker/constants/picker_model.dart';
 import 'package:myApp/screens/add_gig/assets_picker/src/widget/asset_picker.dart';
+import 'package:myApp/screens/add_gig/popularHashtags.dart';
 import 'package:myApp/services/auth_service.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:myApp/ui/shared/theme.dart';
@@ -74,9 +76,10 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       });
   }
 
-  final formKey = GlobalKey<FormState>();
+  final signupFormKey = GlobalKey<FormState>();
   String _email,
       _password,
+      _myHashtag,
       _name,
       _username,
       _userAvatarUrl,
@@ -87,12 +90,13 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   dynamic _ongoingGigsByGigId;
   int _lengthOfOngoingGigsByGigId;
   final TextEditingController phoneNumberController = TextEditingController();
-  TextEditingController _ageOfUserController = new TextEditingController();
+  TextEditingController _ageOfUserController = TextEditingController();
+  TextEditingController _myHashtagController = TextEditingController();
   DateTime _defaultAge = Jiffy().subtract(years: 19);
   // DateTime _defaultAge = new DateTime.now();
 
   void switchFormState(String state) {
-    formKey.currentState.reset();
+    signupFormKey.currentState.reset();
     if (state == 'signUp') {
       setState(() {
         authFormType = AuthFormType.signUp;
@@ -107,7 +111,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   }
 
   bool validate() {
-    final form = formKey.currentState;
+    final form = signupFormKey.currentState;
     if (form.validate()) {
       form.save();
       return true;
@@ -135,7 +139,9 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             // await locator.get<UserController>().signInWithEmailAndPassword(
             //     email: _email.trim(), password: _password.trim());
 
-            Navigator.of(context).pushReplacementNamed('/home');
+            // Navigator.of(context).pushReplacementNamed('/home');
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => HomeController()));
             // _warning = 'Wrong email address or password';
             // Navigator.push(context,
             //     MaterialPageRoute(builder: (context) => HomeController()));
@@ -147,6 +153,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             File profilePictureToUpload = File(_profileImage.path);
 
             await AuthService().createUserWithEmailAndPassword(
+              _myHashtag.trim(),
               _name.trim(),
               _username.trim(),
               _email.trim(),
@@ -291,10 +298,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     );
     return Scaffold(
       body: Container(
-        // color: FyreworkrColors.fyreworkBlack,
-        color: Colors.grey[50],
-        height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
         child: SafeArea(
             child: Column(
           children: [
@@ -308,11 +313,11 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                   children: <Widget>[
                     SizedBox(height: _height * 0.025),
                     buildHeaderText(),
-                    SizedBox(height: _height * 0.05),
+                    // SizedBox(height: _height * 0.05),
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Form(
-                        key: formKey,
+                        key: signupFormKey,
                         child: Column(
                           children: buildInputs() + buildButtons(),
                         ),
@@ -350,7 +355,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             ],
           ),
           child: CircleAvatar(
-            radius: 80.0,
+            radius: 70.0,
             backgroundColor: Theme.of(context).primaryColor,
             backgroundImage: _profileImage == null
                 ? AssetImage("assets/images/black_placeholder.png")
@@ -463,7 +468,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             onChanged: (val) {
               setState(() => _email = val);
             },
-            onSaved: (val) => _name = val,
+            onSaved: (val) => _email = val,
           ),
         ),
       );
@@ -482,6 +487,28 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             SizedBox(
               height: 20,
             ),
+            TypeAheadFormField(
+              validator: (value) => value.isEmpty ? '' : null,
+              onSaved: (value) => _myHashtag = value,
+              textFieldConfiguration: TextFieldConfiguration(
+                controller: _myHashtagController,
+                // style: TextStyle(fontSize: 16),
+
+                decoration: buildSignUpInputDecoration('#Hashtags'),
+              ),
+              suggestionsCallback: (pattern) async {
+                return await BackendService.getSuggestions(pattern);
+              },
+              itemBuilder: (context, suggestions) {
+                return ListTile(
+                  title: Text(suggestions),
+                );
+              },
+              onSuggestionSelected: (suggestion) {
+                _myHashtagController.text = suggestion;
+                _myHashtag = suggestion;
+              },
+            ),
             TextFormField(
               validator: NameValidator.validate,
               enableSuggestions: false,
@@ -489,9 +516,9 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                 fontSize: 16.0,
               ),
               decoration: buildSignUpInputDecoration('Name'),
-              onChanged: (val) {
-                setState(() => _name = val);
-              },
+              // onChanged: (val) {
+              //   setState(() => _name = val);
+              // },
               onSaved: (val) => _name = val,
             ),
             TextFormField(
@@ -500,63 +527,52 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               style: TextStyle(
                 fontSize: 16.0,
               ),
-              decoration: buildSignUpInputDecoration('Userame'),
-              onChanged: (val) {
-                setState(() => _username = val);
-              },
+              decoration: buildSignUpInputDecoration('Username'),
+              // onChanged: (val) {
+              //   setState(() => _username = val);
+              // },
               onSaved: (val) => _username = val,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                PlacesAutocomplete(
+                  signUpDecoraiton: true,
+                ),
+                IconButton(
+                  color: FyreworkrColors.fyreworkBlack,
+                  onPressed: () {
+                    getUserLocation();
+                  },
+                  icon: Icon(Icons.gps_fixed),
+                ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Flexible(
-                    child: PlacesAutocomplete(
-                      signUpDecoraiton: true,
+                      child: Text(
+                    "Tick this box if you are under 18 years old.",
+                    style: TextStyle(
+                      color: Colors.grey,
                     ),
-                  ),
-                  IconButton(
-                    color: FyreworkrColors.fyreworkBlack,
-                    onPressed: () {
-                      getUserLocation();
+                  )),
+                  Checkbox(
+                    value: _isMinor,
+                    onChanged: (bool value) {
+                      setState(() {
+                        _isMinor = !_isMinor;
+                        print(_isMinor);
+                      });
                     },
-                    icon: Icon(Icons.gps_fixed),
+                    activeColor: FyreworkrColors.fyreworkBlack,
+                    checkColor: FyreworkrColors.white,
                   ),
                 ],
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  border: Border(
-                bottom: BorderSide(color: Colors.black26, width: 0.5),
-              )),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Flexible(
-                        child: Text(
-                      "Tick this box if you are under 18 years old.",
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    )),
-                    Checkbox(
-                      value: _isMinor,
-                      onChanged: (bool value) {
-                        setState(() {
-                          _isMinor = !_isMinor;
-                          print(_isMinor);
-                        });
-                      },
-                      activeColor: FyreworkrColors.fyreworkBlack,
-                      checkColor: FyreworkrColors.white,
-                    ),
-                  ],
-                ),
               ),
             ),
           ],
@@ -577,9 +593,9 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           validator: EmailValidator.validate,
           style: TextStyle(fontSize: 16.0),
           decoration: buildSignUpInputDecoration('Email'),
-          onChanged: (val) {
-            setState(() => _email = val);
-          },
+          // onChanged: (val) {
+          //   setState(() => _email = val);
+          // },
           onSaved: (val) => _email = val,
         ),
       );
@@ -604,9 +620,9 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                 style: TextStyle(fontSize: 22.0),
                 decoration: buildSignUpInputDecoration('Password'),
                 obscureText: true,
-                onChanged: (val) {
-                  setState(() => _password = val);
-                },
+                // onChanged: (val) {
+                //   setState(() => _password = val);
+                // },
                 onSaved: (val) => _password = val,
               ),
             ),

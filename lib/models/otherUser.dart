@@ -1,5 +1,6 @@
 class OtherUser {
   final String uid;
+  final String hashtag;
   final String name;
   final String username;
   final String email;
@@ -7,11 +8,13 @@ class OtherUser {
   final String userLocation;
   final bool isMinor;
   final String location;
+  final String phoneNumber;
   final dynamic ongoingGigsByGigId;
   final int lengthOfOngoingGigsByGigId;
 
   OtherUser({
     this.uid,
+    this.hashtag,
     this.name,
     this.username,
     this.email,
@@ -19,6 +22,7 @@ class OtherUser {
     this.userLocation,
     this.isMinor,
     this.location,
+    this.phoneNumber,
     this.ongoingGigsByGigId,
     this.lengthOfOngoingGigsByGigId,
   });

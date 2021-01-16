@@ -14,7 +14,7 @@ const textInputDecoration = InputDecoration(
 InputDecoration buildSignUpInputDecoration(String hint) {
   return InputDecoration(
     contentPadding: EdgeInsets.all(0),
-    hintStyle: TextStyle(fontSize: 18, color: Colors.black45),
+    hintStyle: TextStyle(fontSize: 16, color: Colors.black45),
     hintText: hint,
     filled: true,
     fillColor: Colors.grey[50],
