@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -152,6 +153,159 @@ class _MyProfileViewState extends State<MyProfileView> {
     }
   }
 
+  // signing up with phone number
+  Future verifyPhoneNumber(String phone, BuildContext context) async {
+    final _codeController = TextEditingController();
+    FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: phone,
+        timeout: Duration(seconds: 30),
+        verificationCompleted: (AuthCredential authCredential) {
+          setState(() {
+            MyProfileView.myPhoneNumber = phone;
+            MyUser.phoneNumber = phone;
+          });
+
+          showDialog(
+              context: context,
+              builder: (context) => Container(
+                    child: Center(
+                      child: AlertDialog(
+                        title: Text('Verification completed'),
+                        content: FlatButton(
+                          color: Theme.of(context).primaryColor,
+                          onPressed: () {
+                            print(
+                                'verification completed - MyUser.phoneNumber: ${MyUser.phoneNumber}');
+                            Navigator.of(context, rootNavigator: true).pop();
+                          },
+                          child: Text(
+                            'Dismiss',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ));
+          // _firebaseAuth
+          //     .signInWithCredential(authCredential)
+          //     .then((AuthResult result) {
+          //   Navigator.of(context).pushReplacementNamed('/home');
+          // }).catchError((e) {
+          //   return "error";
+          // });
+        },
+        verificationFailed: (AuthException exception) {
+          // return "error";
+          showDialog(
+              context: context,
+              builder: (context) => Container(
+                    // height: 200,
+                    child: Center(
+                      child: AlertDialog(
+                        title: Text('Verification failed'),
+                        content: FlatButton(
+                          color: Theme.of(context).primaryColor,
+                          onPressed: () {
+                            Navigator.of(context, rootNavigator: true).pop();
+                          },
+                          child: Text(
+                            'Dismiss',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ));
+        },
+        codeSent: (String verificationId, [int forceResendingToken]) {
+          return;
+          // showDialog(
+          //     context: context,
+          //     barrierDismissible: true,
+          //     builder: (context) => Container(
+          //           child: Center(
+          //             child: AlertDialog(
+          //               title: Text('Enter code from sms'),
+          //               content: Column(
+          //                 mainAxisSize: MainAxisSize.min,
+          //                 children: <Widget>[
+          //                   TextField(
+          //                     controller: _codeController,
+          //                   )
+          //                 ],
+          //               ),
+          //               actions: <Widget>[
+          //                 FlatButton(
+          //                   child: Text("submit"),
+          //                   textColor: FyreworkrColors.white,
+          //                   color: Theme.of(context).primaryColor,
+          //                   onPressed: () async {
+          //                     // try {
+          //                     //   await _firebaseAuth
+          //                     //       .signInWithCredential(
+          //                     //           PhoneAuthProvider.getCredential(
+          //                     //               verificationId: verificationId,
+          //                     //               smsCode:
+          //                     //                   _codeController.text.trim()))
+          //                     //       .then((value) async {
+          //                     //     if (value.user != null) {
+          //                     //       MyUser.phoneNumber = phone;
+          //                     //       MyProfileView.myPhoneNumber = phone;
+          //                     //     }
+          //                     //     print('print: all good');
+          //                     //     Navigator.of(context).pop();
+          //                     //   });
+
+          //                     //   // }).catchError((e) {
+          //                     //   //   return "error";
+          //                     //   // });
+          //                     // } catch (e) {
+          //                     //   FocusScope.of(context).unfocus();
+          //                     //   showDialog(
+          //                     //       context: context,
+          //                     //       builder: (context) => Container(
+          //                     //             child: Center(
+          //                     //               child: AlertDialog(
+          //                     //                 title:
+          //                     //                     Text('Verification failed'),
+          //                     //                 content: FlatButton(
+          //                     //                   color: Theme.of(context)
+          //                     //                       .primaryColor,
+          //                     //                   onPressed: () {
+          //                     //                     Navigator.of(context).pop();
+          //                     //                   },
+          //                     //                   child: Text(
+          //                     //                     'Dismiss',
+          //                     //                     style: TextStyle(
+          //                     //                       fontSize: 16,
+          //                     //                       color: Colors.white,
+          //                     //                     ),
+          //                     //                   ),
+          //                     //                 ),
+          //                     //               ),
+          //                     //             ),
+          //                     //           ));
+          //                     // }
+          //                   },
+          //                 )
+          //               ],
+          //             ),
+          //           ),
+          //         ));
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          verificationId = verificationId;
+          print(verificationId);
+          print("Timeout");
+        });
+  }
+
   Widget phoneVerifyer() {
     return Dialog(
       child: Container(
@@ -188,8 +342,8 @@ class _MyProfileViewState extends State<MyProfileView> {
               FlatButton(
                 color: Theme.of(context).primaryColor,
                 onPressed: () {
-                  Navigator.of(context).pop();
-                  AuthService().verifyPhoneNumber(phoneNumberToVerify, context);
+                  Navigator.of(context, rootNavigator: true).pop();
+                  verifyPhoneNumber(phoneNumberToVerify, context);
                 },
                 child: Text(
                   'Send code',
@@ -813,15 +967,17 @@ class _MyProfileViewState extends State<MyProfileView> {
               trailing: Container(
                 width: MediaQuery.of(context).size.width / 1.7,
                 child: Expanded(
-                  child: TextFormField(
-                    controller: _myNewUsername,
-                    validator: UsernameValidator.validate,
-                    style: TextStyle(fontSize: 16.0, color: Colors.white),
-                    decoration: profileEditingInputDecoration('Username'),
-                    // onChanged: (val) {
-                    //   setState(() => _myNewUsername.text = val);
-                    // },
-                    onSaved: (val) => _myNewUsername.text = val,
+                  child: Container(
+                    child: TextFormField(
+                      controller: _myNewUsername,
+                      validator: UsernameValidator.validate,
+                      style: TextStyle(fontSize: 16.0, color: Colors.white),
+                      decoration: profileEditingInputDecoration('Username'),
+                      // onChanged: (val) {
+                      //   setState(() => _myNewUsername.text = val);
+                      // },
+                      onSaved: (val) => _myNewUsername.text = val,
+                    ),
                   ),
                 ),
               ),

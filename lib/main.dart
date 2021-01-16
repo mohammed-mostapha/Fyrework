@@ -140,7 +140,7 @@ class _HomeControllerState extends State<HomeController> {
       },
       theme: ThemeData(
         primaryColor: FyreworkrColors.fyreworkBlack,
-        accentColor: FyreworkrColors.fyreworkBlack,
+        accentColor: Colors.white,
       ),
       supportedLocales: [
         Locale('en', 'US'),

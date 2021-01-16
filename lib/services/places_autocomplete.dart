@@ -23,7 +23,7 @@ class PlacesAutocomplete extends StatefulWidget {
 class _PlacesAutocompleteState extends State<PlacesAutocomplete> {
   @override
   void dispose() {
-    PlacesAutocomplete.placesAutoCompleteController.clear();
+    // PlacesAutocomplete.placesAutoCompleteController.clear();
     // PlacesAutocomplete.placesAutoCompleteController.dispose();
 
     print(
