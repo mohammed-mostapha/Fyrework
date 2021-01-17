@@ -26,6 +26,7 @@ import 'add_gig/assets_picker/constants/picker_model.dart';
 import 'add_gig/assets_picker/src/widget/asset_picker.dart';
 import 'add_gig/popularHashtags.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyProfileView extends StatefulWidget {
   @override
@@ -665,7 +666,35 @@ class _MyProfileViewState extends State<MyProfileView> {
             ),
             trailing: Icon(Icons.chevron_right, color: Colors.white),
           ),
-          onTap: () {},
+          onTap: () async {
+            const url = 'http://districthive.com/terms.php';
+            if (await canLaunch(url)) {
+              await launch(url, forceWebView: true, enableJavaScript: true);
+            } else {
+              // throw 'Could not launch $url';
+              showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                        title: Text(
+                          "Something went wrong",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        content: FlatButton(
+                          color: Theme.of(context).primaryColor,
+                          onPressed: () {
+                            Navigator.of(context, rootNavigator: true).pop();
+                          },
+                          child: Text(
+                            'Dismiss',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ));
+            }
+          },
         ),
         GestureDetector(
           child: ListTile(
@@ -695,7 +724,35 @@ class _MyProfileViewState extends State<MyProfileView> {
             ),
             trailing: Icon(Icons.chevron_right, color: Colors.white),
           ),
-          onTap: () {},
+          onTap: () async {
+            const url = 'http://districthive.com/privacy.php';
+            if (await canLaunch(url)) {
+              await launch(url, forceWebView: true, enableJavaScript: true);
+            } else {
+              // throw 'Could not launch $url';
+              showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                        title: Text(
+                          "Something went wrong",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        content: FlatButton(
+                          color: Theme.of(context).primaryColor,
+                          onPressed: () {
+                            Navigator.of(context, rootNavigator: true).pop();
+                          },
+                          child: Text(
+                            'Dismiss',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ));
+            }
+          },
         ),
         GestureDetector(
           child: ListTile(

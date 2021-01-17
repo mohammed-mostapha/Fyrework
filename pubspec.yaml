@@ -61,6 +61,7 @@ dependencies:
   sliding_card: ^0.1.2
   cached_network_image: ^2.4.1
   flutter_svg: ^0.19.1
+  url_launcher: ^5.7.6
 
   
  #for the assets picker 
