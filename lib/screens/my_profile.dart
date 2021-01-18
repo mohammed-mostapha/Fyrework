@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,17 +10,20 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:myApp/locator.dart';
 
 import 'package:myApp/models/myUser.dart';
 import 'package:myApp/screens/authenticate/app_start.dart';
 import 'package:myApp/services/database.dart';
 import 'package:myApp/services/places_autocomplete.dart';
+import 'package:myApp/services/storage_repo.dart';
 import 'package:myApp/ui/shared/constants.dart';
 import 'package:myApp/ui/views/sign_up_view.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/services/auth_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:myApp/ui/widgets/userRelated_gigItem.dart';
+import 'package:myApp/view_controllers/myUser_controller.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import 'add_gig/assets_picker/constants/picker_model.dart';
@@ -27,6 +31,7 @@ import 'add_gig/assets_picker/src/widget/asset_picker.dart';
 import 'add_gig/popularHashtags.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class MyProfileView extends StatefulWidget {
   @override
@@ -35,6 +40,22 @@ class MyProfileView extends StatefulWidget {
 }
 
 class _MyProfileViewState extends State<MyProfileView> {
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     EasyLoading.showSuccess('Great Success!');
+  //   });
+
+  // EasyLoading.addStatusCallback((status) {
+  //   print('EasyLoading Status $status');
+  //   if (status == EasyLoadingStatus.dismiss) {
+  //     _timer?.cancel();
+  //   }
+  // });
+  // EasyLoading.removeCallbacks();
+  // configLoading();
+  // }
+
   // AuthService _authService = locator.get<AuthService>();
   // StorageRepo _storageRepo = locator.get<StorageRepo>();
   AuthFormType authFormType;
@@ -53,9 +74,10 @@ class _MyProfileViewState extends State<MyProfileView> {
   List<AssetEntity> selectedProfilePictureList;
   File extractedProfilePictureFromList;
   File _myNewProfileImage;
-  String phoneNumberToVerify;
+  String _phoneNumberToVerify;
 
   final editMyProfileFormKey = GlobalKey<FormState>();
+  String _updatedProfileAvatar;
   TextEditingController _myNewHashtag =
       TextEditingController(text: MyUser.hashtag);
   TextEditingController _myNewUsername =
@@ -137,21 +159,50 @@ class _MyProfileViewState extends State<MyProfileView> {
   }
 
   void editMyProfile() async {
-    //first check userAvatarUrl
-    //then
+    try {
+      if (validate() && _myNewProfileImage != null) {
+        EasyLoading.show(status: 'loading...');
+        //deleting current profile picture
+        await StorageRepo().deleteProfilePicture(MyUser.userAvatarUrl);
 
-    if (validate()) {
-      print('print yes its valid');
-      await DatabaseService().updateMyProfileData(
-        MyUser.uid,
-        _myNewHashtag.text,
-        _myNewUsername.text,
-        _myNewName.text,
-        _myNewEmailaddress.text,
-        PlacesAutocomplete.placesAutoCompleteController.text,
-        _myNewPhoneNumberController.text,
+        // then upload the new pic
+        _updatedProfileAvatar = await locator
+            .get<StorageRepo>()
+            .uploadProfilePicture(_myNewProfileImage, MyUser.uid);
+
+        await DatabaseService()
+            .updateMyProfilePicture(MyUser.uid, _updatedProfileAvatar);
+        EasyLoading.dismiss().then(
+          (value) => EasyLoading.showSuccess('Done'),
+        );
+      }
+
+      if (validate()) {
+        EasyLoading.show(status: 'loading...');
+        await DatabaseService().updateMyProfileData(
+          MyUser.uid,
+          _myNewHashtag.text,
+          _myNewUsername.text,
+          _myNewName.text,
+          _myNewEmailaddress.text,
+          PlacesAutocomplete.placesAutoCompleteController.text,
+          // _myNewPhoneNumberController.text,
+          _phoneNumberToVerify,
+        );
+        EasyLoading.dismiss().then(
+          (value) => EasyLoading.showSuccess('Done'),
+        );
+      }
+    } catch (e) {
+      print(e);
+      EasyLoading.dismiss().then(
+        (value) => EasyLoading.showError('Something went wrong'),
       );
     }
+
+    await MyUserController().getCurrentUserFromFirebase(MyUser.uid);
+
+    setState(() {});
   }
 
   // signing up with phone number
@@ -313,7 +364,7 @@ class _MyProfileViewState extends State<MyProfileView> {
         onInputChanged: (PhoneNumber number) {
           print(number.phoneNumber);
           setState(() {
-            phoneNumberToVerify = number.toString();
+            _phoneNumberToVerify = number.toString();
           });
         },
         onInputValidated: (bool value) {
@@ -1159,7 +1210,7 @@ class _MyProfileViewState extends State<MyProfileView> {
             trailing: Container(
                 // padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 width: MediaQuery.of(context).size.width / 1.5,
-                child: MyUser.phoneNumber == null
+                child: (MyUser.phoneNumber == null || MyUser.phoneNumber == '')
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -1168,7 +1219,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              verifyPhoneNumber(phoneNumberToVerify, context);
+                              verifyPhoneNumber(_phoneNumberToVerify, context);
                             },
                             child: Text(
                               'Verify',

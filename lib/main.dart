@@ -10,6 +10,7 @@ import 'package:myApp/ui/views/sign_up_view.dart';
 import 'package:myApp/view_controllers/myUser_controller.dart';
 import 'locator.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +18,7 @@ void main() {
 
   // runApp(MyApp());
   runApp(HomeController());
+  configLoading();
 }
 
 class MyApp extends StatelessWidget {
@@ -42,6 +44,23 @@ class MyApp extends StatelessWidget {
       // ),
     );
   }
+}
+
+void configLoading() {
+  EasyLoading.instance
+    ..displayDuration = const Duration(milliseconds: 2000)
+    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+    // ..loadingStyle = EasyLoadingStyle.dark
+    ..loadingStyle = EasyLoadingStyle.custom
+    ..indicatorSize = 45.0
+    ..radius = 10.0
+    ..progressColor = Colors.yellow
+    ..backgroundColor = Colors.white
+    ..indicatorColor = Colors.black
+    ..textColor = Colors.black
+    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..userInteractions = false
+    ..dismissOnTap = false;
 }
 
 class HomeController extends StatefulWidget {
@@ -128,6 +147,7 @@ class _HomeControllerState extends State<HomeController> {
     //   }
     // });
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
         '/home': (BuildContext context) => HomeController(),
         '/signUp': (BuildContext context) => SignUpView(
@@ -142,6 +162,7 @@ class _HomeControllerState extends State<HomeController> {
         primaryColor: FyreworkrColors.fyreworkBlack,
         accentColor: Colors.white,
       ),
+      builder: EasyLoading.init(),
       supportedLocales: [
         Locale('en', 'US'),
         Locale('fr', 'FR'),

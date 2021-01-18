@@ -35,6 +35,14 @@ class StorageRepo {
     return usersProfilePicsStorageRef.getDownloadURL();
   }
 
+  //deleting user profile picture
+  Future<dynamic> deleteProfilePicture(String url) async {
+    print('print url: $url');
+    StorageReference profilePictureToDelete =
+        await usersProfilePicsStorage.getReferenceFromUrl(url);
+    await profilePictureToDelete.delete();
+  }
+
   //uploading gig media files
 
   Future<String> uploadMediaFile({

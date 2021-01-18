@@ -62,6 +62,7 @@ dependencies:
   cached_network_image: ^2.4.1
   flutter_svg: ^0.19.1
   url_launcher: ^5.7.6
+  flutter_easyloading: ^2.2.2
 
   
  #for the assets picker 

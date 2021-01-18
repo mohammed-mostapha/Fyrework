@@ -91,9 +91,28 @@ class DatabaseService {
         .snapshots();
   }
 
+  //update profile picture only
+  Future updateMyProfilePicture(
+    String uid,
+    String updatedProfileAvatar,
+  ) async {
+    try {
+      return await _usersCollection.document(uid).updateData(
+        <String, dynamic>{
+          'userAvatarUrl': updatedProfileAvatar,
+        },
+      );
+    } catch (e) {
+      if (e is PlatformException) {
+        print(e.message);
+        return e.message;
+      }
+    }
+  }
+  // end update profile picture only
+
   Future updateMyProfileData(
     String uid,
-    // String profileAvatarUrl,
     String myNewHashtag,
     String myNewUsername,
     String myNewName,
@@ -104,12 +123,11 @@ class DatabaseService {
     try {
       return await _usersCollection.document(uid).updateData(<String, dynamic>{
         'hashtag': myNewHashtag,
-        // 'userAvatarUrl':
         'username': myNewUsername,
         'name': myNewName,
         'email': myNewEmailaddress,
         'location': myNewLocation,
-        'phone number': myNewPhoneNumber,
+        'phoneNumber': myNewPhoneNumber,
       });
     } catch (e) {
       if (e is PlatformException) {
