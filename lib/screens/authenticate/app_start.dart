@@ -150,21 +150,17 @@ class _StartPageState extends State<StartPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    RaisedButton(
-                      padding: EdgeInsets.all(0),
-                      color: Colors.white,
-                      onPressed: () {
+                    GestureDetector(
+                      onTap: () {
                         Navigator.of(context).pushNamed("/signUp");
                       },
                       child: Container(
-                        height: 20,
-                        width: 60,
+                        height: 40,
+                        width: 80,
                         decoration: BoxDecoration(
+                          border: Border.all(width: 2, color: Colors.white),
                           borderRadius: BorderRadius.circular(5),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(color: Colors.white, spreadRadius: 8),
-                          ],
+                          color: Colors.black,
                         ),
                         // width: MediaQuery.of(context).size.width * 0.80,
                         // height: 50,
@@ -176,29 +172,25 @@ class _StartPageState extends State<StartPage> {
                                   .translate('Register'),
                               // 'Create account',
                               style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
+                                color: Colors.white,
+                                fontSize: 16,
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                    RaisedButton(
-                      padding: EdgeInsets.all(0),
-                      color: Colors.white,
-                      onPressed: () {
+                    GestureDetector(
+                      onTap: () {
                         Navigator.of(context).pushNamed("/signIn");
                       },
                       child: Container(
-                        height: 20,
-                        width: 60,
+                        height: 40,
+                        width: 80,
                         decoration: BoxDecoration(
+                          border: Border.all(width: 2, color: Colors.white),
                           borderRadius: BorderRadius.circular(5),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(color: Colors.white, spreadRadius: 8),
-                          ],
+                          color: Colors.black,
                         ),
                         // width: MediaQuery.of(context).size.width * 0.80,
                         // height: 50,
@@ -209,8 +201,8 @@ class _StartPageState extends State<StartPage> {
                               AppLocalizations.of(context).translate('Login'),
                               // 'Create account',
                               style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
+                                color: Colors.white,
+                                fontSize: 16,
                               ),
                             ),
                           ),

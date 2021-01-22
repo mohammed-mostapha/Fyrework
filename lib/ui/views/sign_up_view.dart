@@ -6,9 +6,9 @@ import 'package:myApp/locator.dart';
 import 'package:myApp/main.dart';
 import 'package:myApp/screens/add_gig/assets_picker/constants/picker_model.dart';
 import 'package:myApp/screens/add_gig/assets_picker/src/widget/asset_picker.dart';
-import 'package:myApp/screens/add_gig/popularHashtags.dart';
 import 'package:myApp/services/auth_service.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:myApp/services/popularHashtags.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
@@ -48,6 +48,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   AnimationController _cameraIconAnimationController;
   AnimationController _cameraColorAnimationController;
   Animation _cameraIconColorAnimation;
+
+  List _myFavoriteHashtags = List();
 
   _SignUpViewState({this.authFormType});
 
@@ -91,7 +93,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   int _lengthOfOngoingGigsByGigId;
   final TextEditingController phoneNumberController = TextEditingController();
   TextEditingController _ageOfUserController = TextEditingController();
-  TextEditingController _myHashtagController = TextEditingController();
+  TextEditingController _myFavoriteHashtagsController = TextEditingController();
   DateTime _defaultAge = Jiffy().subtract(years: 19);
   // DateTime _defaultAge = new DateTime.now();
 
@@ -487,17 +489,41 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             SizedBox(
               height: 20,
             ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              child: Wrap(
+                spacing: 2.5,
+                children: _myFavoriteHashtags
+                    .map((e) => Chip(
+                          backgroundColor: Colors.black,
+                          label: Text(
+                            '$e',
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+                          onDeleted: () {
+                            setState(() {
+                              _myFavoriteHashtags
+                                  .removeWhere((item) => item == e);
+                              print(_myFavoriteHashtags.length);
+                            });
+                          },
+                          deleteIconColor: Colors.white,
+                        ))
+                    .toList(),
+              ),
+            ),
             TypeAheadFormField(
               validator: (value) => value.isEmpty ? '' : null,
               onSaved: (value) => _myHashtag = value,
               textFieldConfiguration: TextFieldConfiguration(
-                controller: _myHashtagController,
+                controller: _myFavoriteHashtagsController,
                 // style: TextStyle(fontSize: 16),
 
-                decoration: buildSignUpInputDecoration('#Hashtags'),
+                decoration: buildSignUpInputDecoration('Favorite #Hashtags'),
               ),
               suggestionsCallback: (pattern) async {
-                return await BackendService.getSuggestions(pattern);
+                return await PopularHashtagsService.fetchPopularHashtags(
+                    pattern);
               },
               itemBuilder: (context, suggestions) {
                 return ListTile(
@@ -505,8 +531,16 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                 );
               },
               onSuggestionSelected: (suggestion) {
-                _myHashtagController.text = suggestion;
-                _myHashtag = suggestion;
+                // _myHashtagController.text = suggestion;
+                // _myHashtag = suggestion;
+                if (!_myFavoriteHashtags.contains(suggestion) &&
+                    _myFavoriteHashtags.length < 20) {
+                  setState(() {
+                    _myFavoriteHashtags.add(suggestion);
+                    _myFavoriteHashtagsController.clear();
+                    print(_myFavoriteHashtags);
+                  });
+                }
               },
             ),
             TextFormField(
