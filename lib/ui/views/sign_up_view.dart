@@ -10,6 +10,7 @@ import 'package:myApp/screens/add_gig/assets_picker/src/widget/asset_picker.dart
 import 'package:myApp/services/auth_service.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:myApp/services/popularHashtags.dart';
+import 'package:myApp/services/takenHandles.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
@@ -96,6 +97,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   final TextEditingController phoneNumberController = TextEditingController();
   TextEditingController _ageOfUserController = TextEditingController();
   TextEditingController _myFavoriteHashtagsController = TextEditingController();
+  TextEditingController _myHandleController = TextEditingController();
   DateTime _defaultAge = Jiffy().subtract(years: 19);
   // DateTime _defaultAge = new DateTime.now();
 
@@ -648,18 +650,65 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               // },
               onSaved: (val) => _name = val,
             ),
-            TextFormField(
-              validator: NameValidator.validate,
-              enableSuggestions: false,
-              style: TextStyle(
-                fontSize: 16.0,
-              ),
-              decoration: buildSignUpInputDecoration('Username'),
-              // onChanged: (val) {
-              //   setState(() => _username = val);
-              // },
-              onSaved: (val) => _username = val,
+            //2nd TypeAhead for Handles goes here
+            Row(
+              children: [
+                Expanded(
+                  child: TypeAheadFormField(
+                    validator: (value) =>
+                        _myFavoriteHashtags.length < 1 ? '' : null,
+                    onSaved: (value) => _myHashtag = value,
+                    textFieldConfiguration: TextFieldConfiguration(
+                      controller: _myHandleController,
+                      // style: TextStyle(fontSize: 16),
+                      inputFormatters: [
+                        new LengthLimitingTextInputFormatter(20),
+                        FilteringTextInputFormatter.allow(
+                            RegExp("[a-zA-Z0-9_]")),
+                      ],
+
+                      decoration: buildSignUpInputDecoration('@handle'),
+                    ),
+                    suggestionsCallback: (pattern) async {
+                      return await TakenHandlesService.fetchTakenHandles(
+                          pattern);
+                    },
+                    itemBuilder: (context, suggestions) {
+                      return ListTile(
+                        title: Text(suggestions),
+                      );
+                    },
+                    onSuggestionSelected: (suggestion) {
+                      // _myHashtagController.text = suggestion;
+                      // _myHashtag = suggestion;
+                      _myHandleController.text = suggestion;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                  child: GestureDetector(
+                    child: Text(
+                      'Add',
+                      style: TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                    onTap: () {},
+                  ),
+                ),
+              ],
             ),
+            // TextFormField(
+            //   validator: NameValidator.validate,
+            //   enableSuggestions: false,
+            //   style: TextStyle(
+            //     fontSize: 16.0,
+            //   ),
+            //   decoration: buildSignUpInputDecoration('@Handle'),
+            //   // onChanged: (val) {
+            //   //   setState(() => _username = val);
+            //   // },
+            //   onSaved: (val) => _username = val,
+            // ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[

@@ -16,6 +16,8 @@ class DatabaseService {
       Firestore.instance.collection('comments');
   final CollectionReference _popularHashtags =
       Firestore.instance.collection('popularHashtags');
+  final CollectionReference _takenHandles =
+      Firestore.instance.collection('takenHandles');
 
   Future setUserData(
       String id,
@@ -155,5 +157,19 @@ class DatabaseService {
       }
     });
     return filteredHashtags.toList();
+  }
+
+  //fetch taken Handles
+  Future fetchTakenHandles(String query) async {
+    List filteredTakenHandles = List();
+    QuerySnapshot querySnapshot = await _takenHandles.getDocuments();
+    List takenHandles =
+        querySnapshot.documents.map((doc) => doc.data['takenHandle']).toList();
+    takenHandles.forEach((element) {
+      if (element.contains(query)) {
+        filteredTakenHandles.add(element);
+      }
+    });
+    return filteredTakenHandles.toList();
   }
 }

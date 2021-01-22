@@ -1,10 +1,10 @@
 import 'dart:math';
 import 'package:myApp/services/database.dart';
 
-class PopularHashtagsService {
-  static Future<List> fetchPopularHashtags(String query) async {
+class TakenHandlesService {
+  static Future<List> fetchTakenHandles(String query) async {
     // List filteredHashtags = List();
     await Future.delayed(Duration(seconds: 1));
-    return await DatabaseService().fetchPopularHashtags(query);
+    return await DatabaseService().fetchTakenHandles(query);
   }
 }
