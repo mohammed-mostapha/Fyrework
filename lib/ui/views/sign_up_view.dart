@@ -142,7 +142,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         // final auth = AuthService();
         switch (authFormType) {
           case AuthFormType.signIn:
-            var result = await AuthService()
+            await AuthService()
                 .signInWithEmailAndPassword(_email.trim(), _password.trim());
             // await locator.get<UserController>().signInWithEmailAndPassword(
             //     email: _email.trim(), password: _password.trim());
@@ -305,45 +305,38 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         TextPosition(offset: _formattedDate.length),
       ),
     );
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        body: Container(
+    return Scaffold(
+      // resizeToAvoidBottomInset: true,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: SafeArea(
-              child: Column(
-            children: [
-              SizedBox(height: _height * 0.025),
-              serverSideAlert(),
-              clientSideAlert(),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: ListView(
-                    controller: scrollController,
-                    children: <Widget>[
-                      SizedBox(height: _height * 0.025),
-                      buildHeaderText(),
-                      // SizedBox(height: _height * 0.05),
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Form(
-                          key: signupFormKey,
-                          child: Column(
-                            children: buildInputs() + buildButtons(),
-                          ),
-                        ),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ListView(
+                controller: scrollController,
+                children: <Widget>[
+                  serverSideAlert(),
+                  clientSideAlert(),
+                  buildHeaderText(),
+                  // SizedBox(height: _height * 0.05),
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Form(
+                      key: signupFormKey,
+                      child: Column(
+                        children: buildInputs() + buildButtons(),
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          )),
+            ),
+          ),
         ),
       ),
     );
