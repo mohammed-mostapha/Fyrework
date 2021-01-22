@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:myApp/locator.dart';
+// import 'package:myApp/locator.dart';
 import 'package:myApp/main.dart';
 import 'package:myApp/screens/add_gig/assets_picker/constants/picker_model.dart';
 import 'package:myApp/screens/add_gig/assets_picker/src/widget/asset_picker.dart';
@@ -14,13 +14,14 @@ import 'package:myApp/services/takenHandles.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+// import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:myApp/services/places_autocomplete.dart';
-import 'package:myApp/view_controllers/myUser_controller.dart';
+// import 'package:myApp/view_controllers/myUser_controller.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../shared/constants.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 // enum AuthFormType { signIn, signUp, reset, phone }
 enum AuthFormType { signIn, signUp, reset }
@@ -85,9 +86,9 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   final signupFormKey = GlobalKey<FormState>();
   String _email,
       _password,
-      _myHashtag,
+      // _myHashtag,
       _name,
-      _username,
+      // _username,
       _userAvatarUrl,
       location,
       clientSideWarning,
@@ -142,6 +143,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         // final auth = AuthService();
         switch (authFormType) {
           case AuthFormType.signIn:
+            EasyLoading.show(status: 'loading...');
             await AuthService()
                 .signInWithEmailAndPassword(_email.trim(), _password.trim());
             // await locator.get<UserController>().signInWithEmailAndPassword(
@@ -153,17 +155,22 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             // _warning = 'Wrong email address or password';
             // Navigator.push(context,
             //     MaterialPageRoute(builder: (context) => HomeController()));
+            EasyLoading.dismiss();
             break;
           case AuthFormType.signUp:
+            EasyLoading.show(status: 'loading...');
+
             location = PlacesAutocomplete.placesAutoCompleteController.text;
 
             // uploading a profile pic for the user signing up
             File profilePictureToUpload = File(_profileImage.path);
 
             await AuthService().createUserWithEmailAndPassword(
-              _myHashtag.trim(),
+              // _myHashtag.trim(),
+              _myFavoriteHashtags,
               _name.trim(),
-              _username.trim(),
+              // _username.trim(),
+              _myHandleController.text,
               _email.trim(),
               _password.trim(),
               _userAvatarUrl,
@@ -177,7 +184,9 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             // await locator.get<UserController>().getProfilePictureDownloadUrl();
 
             Navigator.of(context).pushReplacementNamed('/home');
+            EasyLoading.dismiss();
             break;
+
           case AuthFormType.reset:
             await AuthService().sendPasswordResetEmail(_email.trim());
 
@@ -307,33 +316,35 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     );
     return Scaffold(
       // resizeToAvoidBottomInset: true,
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ListView(
-                controller: scrollController,
-                children: <Widget>[
-                  serverSideAlert(),
-                  clientSideAlert(),
-                  buildHeaderText(),
-                  // SizedBox(height: _height * 0.05),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Form(
-                      key: signupFormKey,
-                      child: Column(
-                        children: buildInputs() + buildButtons(),
+      body: SingleChildScrollView(
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: ListView(
+                  controller: scrollController,
+                  children: <Widget>[
+                    serverSideAlert(),
+                    clientSideAlert(),
+                    buildHeaderText(),
+                    SizedBox(height: _height * 0.05),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Form(
+                        key: signupFormKey,
+                        child: Column(
+                          children: buildInputs() + buildButtons(),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -572,7 +583,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                   child: TypeAheadFormField(
                     validator: (value) =>
                         _myFavoriteHashtags.length < 1 ? '' : null,
-                    onSaved: (value) => _myHashtag = value,
+                    // onSaved: (value) => _myHashtag = value,
                     textFieldConfiguration: TextFieldConfiguration(
                       controller: _myFavoriteHashtagsController,
                       // style: TextStyle(fontSize: 16),
@@ -659,9 +670,11 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               children: [
                 Expanded(
                   child: TypeAheadFormField(
-                    validator: (value) =>
-                        _myFavoriteHashtags.length < 1 ? '' : null,
-                    onSaved: (value) => _myHashtag = value,
+                    validator: (value) => (_myHandleController.text.isEmpty ||
+                            _myHandleController.text.length < 5)
+                        ? ''
+                        : null,
+                    // onSaved: (value) => _my = value,
                     textFieldConfiguration: TextFieldConfiguration(
                       controller: _myHandleController,
                       style: TextStyle(fontSize: 16.0),

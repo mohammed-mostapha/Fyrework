@@ -34,9 +34,11 @@ class AuthService {
 
   // Email & Password Sign Up
   Future createUserWithEmailAndPassword(
-    String hashtag,
+    // String hashtag,
+    List myFavoriteHashtags,
     String name,
-    String username,
+    // String username,
+    String handle,
     String email,
     String password,
     String userAvatarUrl,
@@ -59,9 +61,9 @@ class AuthService {
     // create a new document for the user with the uid in users collection
     await DatabaseService(uid: user.uid).setUserData(
         user.uid,
-        hashtag,
+        myFavoriteHashtags,
         name,
-        username,
+        handle,
         email,
         password,
         userAvatarUrl,

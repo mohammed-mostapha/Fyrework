@@ -21,7 +21,7 @@ class DatabaseService {
 
   Future setUserData(
       String id,
-      String hashtag,
+      List myFavoriteHashtags,
       String name,
       String username,
       String email,
@@ -33,7 +33,7 @@ class DatabaseService {
       int lengthOfOngoingGigsByGigId) async {
     return await _usersCollection.document(id).setData({
       'id': uid,
-      'hashtag': hashtag,
+      'FavoriteHashtags': FieldValue.arrayUnion(myFavoriteHashtags),
       'name': name,
       'username': username,
       'email': email,

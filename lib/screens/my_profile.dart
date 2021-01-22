@@ -1104,7 +1104,7 @@ class _MyProfileViewState extends State<MyProfileView> {
               contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
               leading: Container(
                 padding: EdgeInsets.fromLTRB(0, 1.5, 0, 0),
-                child: Text('Favorite #Hashtags',
+                child: Text('#Hashtags',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.white,
