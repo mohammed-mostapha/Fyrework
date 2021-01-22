@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:myApp/models/myUser.dart';
 import 'package:myApp/screens/add_gig/assets_picker/pages/multi_assets_picker.dart';
-import 'package:myApp/screens/add_gig/popularHashtags.dart';
 import 'package:myApp/screens/add_gig/sizeConfig.dart';
 import 'package:myApp/services/auth_service.dart';
 import 'package:myApp/services/places_autocomplete.dart';
@@ -21,6 +20,7 @@ import 'package:provider_architecture/provider_architecture.dart';
 import '../../ui/shared/theme.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sliding_card/sliding_card.dart';
+import 'package:myApp/services/popularHashtags.dart';
 
 class AddGigDetails extends StatefulWidget {
   // final gigHashtagsController = TextEditingController();
@@ -259,8 +259,8 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                         buildSignUpInputDecoration('#Hashtag'),
                                   ),
                                   suggestionsCallback: (pattern) async {
-                                    return await BackendService.getSuggestions(
-                                        pattern);
+                                    return await PopularHashtagsService
+                                        .fetchPopularHashtags(pattern);
                                   },
                                   itemBuilder: (context, suggestions) {
                                     return ListTile(

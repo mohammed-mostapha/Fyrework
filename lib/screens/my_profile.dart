@@ -28,7 +28,7 @@ import 'package:photo_manager/photo_manager.dart';
 
 import 'add_gig/assets_picker/constants/picker_model.dart';
 import 'add_gig/assets_picker/src/widget/asset_picker.dart';
-import 'add_gig/popularHashtags.dart';
+import 'package:myApp/services/popularHashtags.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -78,8 +78,7 @@ class _MyProfileViewState extends State<MyProfileView> {
 
   final editMyProfileFormKey = GlobalKey<FormState>();
   String _updatedProfileAvatar;
-  TextEditingController _myNewHashtag =
-      TextEditingController(text: MyUser.hashtag);
+  TextEditingController _myFavoriteHashtagsController = TextEditingController();
   TextEditingController _myNewUsername =
       TextEditingController(text: MyUser.username);
   TextEditingController _myNewName = TextEditingController(text: MyUser.name);
@@ -88,6 +87,11 @@ class _MyProfileViewState extends State<MyProfileView> {
   TextEditingController _myNewPhoneNumberController = TextEditingController(
       text: MyUser.phoneNumber == null ? '' : MyUser.phoneNumber);
   String myNewLocation = PlacesAutocomplete.placesAutoCompleteController.text;
+
+  List _myFavoriteHashtags = List();
+
+  String clientSideWarning;
+  String serverSideWarning;
 
   getUserLocation() async {
     Position position = await Geolocator()
@@ -181,7 +185,7 @@ class _MyProfileViewState extends State<MyProfileView> {
         EasyLoading.show(status: 'loading...');
         await DatabaseService().updateMyProfileData(
           MyUser.uid,
-          _myNewHashtag.text,
+          _myFavoriteHashtagsController.text,
           _myNewUsername.text,
           _myNewName.text,
           _myNewEmailaddress.text,
@@ -592,6 +596,99 @@ class _MyProfileViewState extends State<MyProfileView> {
     );
   }
 
+  Widget serverSideAlert() {
+    if (serverSideWarning != null) {
+      scrollController.animateTo(0,
+          duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+      return Container(
+        color: FyreworkrColors.fyreworkBlack,
+        width: double.infinity,
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Icon(
+                Icons.error_outline,
+                color: Colors.white,
+              ),
+            ),
+            Expanded(
+              child: Text(
+                serverSideWarning,
+                maxLines: 3,
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  setState(() {
+                    serverSideWarning = null;
+                  });
+                },
+              ),
+            )
+          ],
+        ),
+      );
+    }
+    return SizedBox(
+      height: 0,
+    );
+  }
+
+  Widget clientSideAlert() {
+    if (clientSideWarning != null) {
+      scrollController.animateTo(0,
+          duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+      return Container(
+        color: FyreworkrColors.fyreworkBlack,
+        width: double.infinity,
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Icon(
+                Icons.error_outline,
+                color: Colors.white,
+              ),
+            ),
+            Expanded(
+              child: Text(
+                clientSideWarning,
+                maxLines: 3,
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  setState(() {
+                    clientSideWarning = null;
+                  });
+                },
+              ),
+            )
+          ],
+        ),
+      );
+    }
+    return SizedBox(
+      height: 0,
+    );
+  }
   // Widget displayUserMetadata(context) {
   //   return Container(
   //     width: MediaQuery.of(context).size.width,
@@ -909,6 +1006,29 @@ class _MyProfileViewState extends State<MyProfileView> {
       key: editMyProfileFormKey,
       child: ListView(
         children: <Widget>[
+          Container(
+            width: double.infinity,
+            child: Wrap(
+              spacing: 2.5,
+              children: _myFavoriteHashtags
+                  .map((e) => Chip(
+                        backgroundColor: Colors.white,
+                        label: Text(
+                          '$e',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
+                        onDeleted: () {
+                          setState(() {
+                            _myFavoriteHashtags
+                                .removeWhere((item) => item == e);
+                            print(_myFavoriteHashtags.length);
+                          });
+                        },
+                        deleteIconColor: Colors.black,
+                      ))
+                  .toList(),
+            ),
+          ),
           ListTile(
             contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
             leading: Icon(
@@ -984,7 +1104,7 @@ class _MyProfileViewState extends State<MyProfileView> {
               contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
               leading: Container(
                 padding: EdgeInsets.fromLTRB(0, 1.5, 0, 0),
-                child: Text('#Hashtag',
+                child: Text('Favorite #Hashtags',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.white,
@@ -996,16 +1116,19 @@ class _MyProfileViewState extends State<MyProfileView> {
                   child: TypeAheadFormField(
                     // initialValue: MyUser.hashtag,
                     validator: (value) => value.isEmpty ? '' : null,
-                    onSaved: (value) => _myNewHashtag.text = value,
+                    onSaved: (value) =>
+                        _myFavoriteHashtagsController.text = value,
                     textFieldConfiguration: TextFieldConfiguration(
-                      controller: _myNewHashtag,
+                      controller: _myFavoriteHashtagsController,
                       style: DefaultTextStyle.of(context)
                           .style
                           .copyWith(fontSize: 16, color: Colors.white),
-                      decoration: profileEditingInputDecoration('#Hashtag'),
+                      decoration:
+                          profileEditingInputDecoration('Favorite #Hashtags'),
                     ),
                     suggestionsCallback: (pattern) async {
-                      return await BackendService.getSuggestions(pattern);
+                      return await PopularHashtagsService.fetchPopularHashtags(
+                          pattern);
                     },
                     itemBuilder: (context, suggestions) {
                       return ListTile(
@@ -1013,7 +1136,19 @@ class _MyProfileViewState extends State<MyProfileView> {
                       );
                     },
                     onSuggestionSelected: (suggestion) {
-                      _myNewHashtag.text = suggestion;
+                      // _myFavoriteHashtagsController.text = suggestion;
+                      if (_myFavoriteHashtags.length < 20 != true) {
+                        setState(() {
+                          clientSideWarning = 'Only 20 #Hashtags allowed';
+                        });
+                      } else if (!_myFavoriteHashtags.contains(suggestion) &&
+                          _myFavoriteHashtags.length < 20) {
+                        setState(() {
+                          _myFavoriteHashtags.add('#' + suggestion);
+                          _myFavoriteHashtagsController.clear();
+                          print(_myFavoriteHashtags);
+                        });
+                      }
                     },
                   ),
                 ),

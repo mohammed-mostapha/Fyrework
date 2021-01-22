@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:myApp/locator.dart';
 import 'package:myApp/main.dart';
@@ -86,7 +87,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       _username,
       _userAvatarUrl,
       location,
-      _warning,
+      clientSideWarning,
+      serverSideWarning,
       _phone;
   bool _isMinor = false;
   dynamic _ongoingGigsByGigId;
@@ -176,7 +178,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             await AuthService().sendPasswordResetEmail(_email.trim());
 
             setState(() {
-              _warning = 'A password reset link has been sent to $_email';
+              serverSideWarning =
+                  'A password reset link has been sent to $_email';
               authFormType = AuthFormType.signIn;
             });
             break;
@@ -194,19 +197,19 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         switch (authFormType) {
           case AuthFormType.signUp:
             setState(() {
-              _warning = 'This email address is already taken';
+              serverSideWarning = 'This email address is already taken';
             });
             break;
           case AuthFormType.signIn:
             setState(() {
-              _warning = 'Wrong email address or password';
+              serverSideWarning = 'Wrong email address or password';
             });
             break;
             // case AuthFormType.phone:
             break;
           case AuthFormType.reset:
             setState(() {
-              _warning = 'Wrong email address';
+              serverSideWarning = 'Wrong email address';
             });
             break;
         }
@@ -306,7 +309,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             child: Column(
           children: [
             SizedBox(height: _height * 0.025),
-            showAlert(),
+            serverSideAlert(),
+            clientSideAlert(),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -387,8 +391,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     );
   }
 
-  Widget showAlert() {
-    if (_warning != null) {
+  Widget serverSideAlert() {
+    if (serverSideWarning != null) {
       scrollController.animateTo(0,
           duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       return Container(
@@ -406,7 +410,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             ),
             Expanded(
               child: Text(
-                _warning,
+                serverSideWarning,
                 maxLines: 3,
                 style: TextStyle(fontSize: 16, color: Colors.white),
               ),
@@ -420,7 +424,54 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                 ),
                 onPressed: () {
                   setState(() {
-                    _warning = null;
+                    serverSideWarning = null;
+                  });
+                },
+              ),
+            )
+          ],
+        ),
+      );
+    }
+    return SizedBox(
+      height: 0,
+    );
+  }
+
+  Widget clientSideAlert() {
+    if (clientSideWarning != null) {
+      scrollController.animateTo(0,
+          duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+      return Container(
+        color: FyreworkrColors.fyreworkBlack,
+        width: double.infinity,
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Icon(
+                Icons.error_outline,
+                color: Colors.white,
+              ),
+            ),
+            Expanded(
+              child: Text(
+                clientSideWarning,
+                maxLines: 3,
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  setState(() {
+                    clientSideWarning = null;
                   });
                 },
               ),
@@ -490,7 +541,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               height: 20,
             ),
             Container(
-              width: MediaQuery.of(context).size.width,
+              width: double.infinity,
               child: Wrap(
                 spacing: 2.5,
                 children: _myFavoriteHashtags
@@ -512,36 +563,78 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                     .toList(),
               ),
             ),
-            TypeAheadFormField(
-              validator: (value) => value.isEmpty ? '' : null,
-              onSaved: (value) => _myHashtag = value,
-              textFieldConfiguration: TextFieldConfiguration(
-                controller: _myFavoriteHashtagsController,
-                // style: TextStyle(fontSize: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: TypeAheadFormField(
+                    validator: (value) =>
+                        _myFavoriteHashtags.length < 1 ? '' : null,
+                    onSaved: (value) => _myHashtag = value,
+                    textFieldConfiguration: TextFieldConfiguration(
+                      controller: _myFavoriteHashtagsController,
+                      // style: TextStyle(fontSize: 16),
+                      inputFormatters: [
+                        new LengthLimitingTextInputFormatter(20),
+                        FilteringTextInputFormatter.allow(
+                            RegExp("[a-zA-Z0-9_]")),
+                      ],
 
-                decoration: buildSignUpInputDecoration('Favorite #Hashtags'),
-              ),
-              suggestionsCallback: (pattern) async {
-                return await PopularHashtagsService.fetchPopularHashtags(
-                    pattern);
-              },
-              itemBuilder: (context, suggestions) {
-                return ListTile(
-                  title: Text(suggestions),
-                );
-              },
-              onSuggestionSelected: (suggestion) {
-                // _myHashtagController.text = suggestion;
-                // _myHashtag = suggestion;
-                if (!_myFavoriteHashtags.contains(suggestion) &&
-                    _myFavoriteHashtags.length < 20) {
-                  setState(() {
-                    _myFavoriteHashtags.add(suggestion);
-                    _myFavoriteHashtagsController.clear();
-                    print(_myFavoriteHashtags);
-                  });
-                }
-              },
+                      decoration:
+                          buildSignUpInputDecoration('Favorite #Hashtags'),
+                    ),
+                    suggestionsCallback: (pattern) async {
+                      return await PopularHashtagsService.fetchPopularHashtags(
+                          pattern);
+                    },
+                    itemBuilder: (context, suggestions) {
+                      return ListTile(
+                        title: Text(suggestions),
+                      );
+                    },
+                    onSuggestionSelected: (suggestion) {
+                      // _myHashtagController.text = suggestion;
+                      // _myHashtag = suggestion;
+                      if (_myFavoriteHashtags.length < 20 != true) {
+                        setState(() {
+                          clientSideWarning = 'Only 20 #Hashtags allowed';
+                        });
+                      } else if (!_myFavoriteHashtags.contains(suggestion) &&
+                          _myFavoriteHashtags.length < 20) {
+                        setState(() {
+                          _myFavoriteHashtags.add('#' + suggestion);
+                          _myFavoriteHashtagsController.clear();
+                          print(_myFavoriteHashtags);
+                        });
+                      }
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                  child: GestureDetector(
+                    child: Text(
+                      'Add',
+                      style: TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                    onTap: () {
+                      if (_myFavoriteHashtags.length < 20 != true) {
+                        setState(() {
+                          clientSideWarning = 'Only 20 #Hashtags allowed';
+                        });
+                      } else if (!_myFavoriteHashtags
+                              .contains(_myFavoriteHashtagsController.text) &&
+                          _myFavoriteHashtags.length < 20) {
+                        setState(() {
+                          _myFavoriteHashtags
+                              .add('#' + _myFavoriteHashtagsController.text);
+                          _myFavoriteHashtagsController.clear();
+                          print(_myFavoriteHashtags);
+                        });
+                      }
+                    },
+                  ),
+                ),
+              ],
             ),
             TextFormField(
               validator: NameValidator.validate,
@@ -894,7 +987,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                   Navigator.of(context).pushReplacementNamed('/home');
                 } catch (e) {
                   setState(() {
-                    _warning = e.message;
+                    serverSideWarning = e.message;
                   });
                 }
               },
