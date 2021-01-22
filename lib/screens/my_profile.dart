@@ -1141,7 +1141,9 @@ class _MyProfileViewState extends State<MyProfileView> {
                         setState(() {
                           clientSideWarning = 'Only 20 #Hashtags allowed';
                         });
-                      } else if (!_myFavoriteHashtags.contains(suggestion) &&
+                      } else if (_myFavoriteHashtagsController
+                              .text.isNotEmpty &&
+                          !_myFavoriteHashtags.contains(suggestion) &&
                           _myFavoriteHashtags.length < 20) {
                         setState(() {
                           _myFavoriteHashtags.add('#' + suggestion);

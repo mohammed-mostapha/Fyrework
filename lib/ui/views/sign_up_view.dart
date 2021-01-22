@@ -53,6 +53,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
   List _myFavoriteHashtags = List();
 
+  FocusNode handleFocus = FocusNode();
+
   _SignUpViewState({this.authFormType});
 
   @override
@@ -249,7 +251,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   }
 
   navigateToSelectProfilePicture() async {
-    ((BuildContext context, int index) async {
+    (BuildContext context, int index) async {
       final PickMethodModel model = pickMethods[index];
 
       final List<AssetEntity> retrievedAssets =
@@ -269,7 +271,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           }
         }();
       }
-    }(context, 0));
+    }(context, 0);
   }
 
   List<PickMethodModel> get pickMethods => <PickMethodModel>[
@@ -303,40 +305,46 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         TextPosition(offset: _formattedDate.length),
       ),
     );
-    return Scaffold(
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: SafeArea(
-            child: Column(
-          children: [
-            SizedBox(height: _height * 0.025),
-            serverSideAlert(),
-            clientSideAlert(),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: ListView(
-                  controller: scrollController,
-                  children: <Widget>[
-                    SizedBox(height: _height * 0.025),
-                    buildHeaderText(),
-                    // SizedBox(height: _height * 0.05),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Form(
-                        key: signupFormKey,
-                        child: Column(
-                          children: buildInputs() + buildButtons(),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: SafeArea(
+              child: Column(
+            children: [
+              SizedBox(height: _height * 0.025),
+              serverSideAlert(),
+              clientSideAlert(),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: ListView(
+                    controller: scrollController,
+                    children: <Widget>[
+                      SizedBox(height: _height * 0.025),
+                      buildHeaderText(),
+                      // SizedBox(height: _height * 0.05),
+                      Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Form(
+                          key: signupFormKey,
+                          child: Column(
+                            children: buildInputs() + buildButtons(),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
-        )),
+            ],
+          )),
+        ),
       ),
     );
   }
@@ -612,7 +620,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                   child: GestureDetector(
                     child: Text(
                       'Add',
@@ -623,13 +631,16 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                         setState(() {
                           clientSideWarning = 'Only 20 #Hashtags allowed';
                         });
-                      } else if (!_myFavoriteHashtags
+                      } else if (_myFavoriteHashtagsController
+                              .text.isNotEmpty &&
+                          !_myFavoriteHashtags
                               .contains(_myFavoriteHashtagsController.text) &&
                           _myFavoriteHashtags.length < 20) {
                         setState(() {
                           _myFavoriteHashtags
                               .add('#' + _myFavoriteHashtagsController.text);
                           _myFavoriteHashtagsController.clear();
+                          FocusScope.of(context).unfocus();
                           print(_myFavoriteHashtags);
                         });
                       }
@@ -660,14 +671,14 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                     onSaved: (value) => _myHashtag = value,
                     textFieldConfiguration: TextFieldConfiguration(
                       controller: _myHandleController,
-                      // style: TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 16.0),
                       inputFormatters: [
                         new LengthLimitingTextInputFormatter(20),
                         FilteringTextInputFormatter.allow(
                             RegExp("[a-zA-Z0-9_]")),
                       ],
-
                       decoration: buildSignUpInputDecoration('@handle'),
+                      focusNode: handleFocus,
                     ),
                     suggestionsCallback: (pattern) async {
                       return await TakenHandlesService.fetchTakenHandles(
@@ -675,40 +686,47 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                     },
                     itemBuilder: (context, suggestions) {
                       return ListTile(
-                        title: Text(suggestions),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              suggestions,
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.black),
+                            ),
+                            Text(
+                              '(Taken)',
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.black),
+                            ),
+                          ],
+                        ),
+                        // trailing: Text(
+                        //   '(Taken)',
+                        //   style: TextStyle(fontSize: 16, color: Colors.black),
+                        // ),
                       );
                     },
                     onSuggestionSelected: (suggestion) {
-                      // _myHashtagController.text = suggestion;
-                      // _myHashtag = suggestion;
-                      _myHandleController.text = suggestion;
+                      handleFocus.requestFocus();
                     },
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                   child: GestureDetector(
                     child: Text(
                       'Add',
                       style: TextStyle(fontSize: 16, color: Colors.black),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                    },
                   ),
                 ),
               ],
             ),
-            // TextFormField(
-            //   validator: NameValidator.validate,
-            //   enableSuggestions: false,
-            //   style: TextStyle(
-            //     fontSize: 16.0,
-            //   ),
-            //   decoration: buildSignUpInputDecoration('@Handle'),
-            //   // onChanged: (val) {
-            //   //   setState(() => _username = val);
-            //   // },
-            //   onSaved: (val) => _username = val,
-            // ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
