@@ -11,9 +11,9 @@ import 'package:myApp/ui/shared/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 // import 'package:myApp/ui/views/sign_up_view.dart';
-import 'package:myApp/view_controllers/myUser_controller.dart';
+// import 'package:myApp/view_controllers/myUser_controller.dart';
 import 'package:intl/intl.dart';
-import 'package:myApp/locator.dart';
+// import 'package:myApp/locator.dart';
 import 'package:myApp/models/gig.dart';
 import 'package:myApp/viewmodels/create_gig_view_model.dart';
 import 'package:provider_architecture/provider_architecture.dart';
@@ -81,7 +81,12 @@ class _AddGigDetailsState extends State<AddGigDetails> {
     'USD',
   ];
 
-  final _gigValueSnackBar = SnackBar(content: Text('who will do the Gig!!!'));
+  final _gigValueSnackBar = SnackBar(
+    content: Text(
+      'who will do the Gig!!!',
+      style: TextStyle(fontSize: 16),
+    ),
+  );
 
   void initState() {
     super.initState();

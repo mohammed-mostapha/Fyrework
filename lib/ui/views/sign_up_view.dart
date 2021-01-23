@@ -95,14 +95,24 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       serverSideWarning,
       _phone;
   bool _isMinor = false;
+  bool _showPassword = false;
+  bool _showConfirmPassword = false;
   dynamic _ongoingGigsByGigId;
   int _lengthOfOngoingGigsByGigId;
   final TextEditingController phoneNumberController = TextEditingController();
   TextEditingController _ageOfUserController = TextEditingController();
   TextEditingController _myFavoriteHashtagsController = TextEditingController();
   TextEditingController _myHandleController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _confirmPasswordController = TextEditingController();
   DateTime _defaultAge = Jiffy().subtract(years: 19);
   // DateTime _defaultAge = new DateTime.now();
+  final _passwordConfirmPassword = SnackBar(
+    content: Text(
+      'Password & Confirm password arenot identtical',
+      style: TextStyle(fontSize: 16),
+    ),
+  );
 
   void switchFormState(String state) {
     signupFormKey.currentState.reset();
@@ -130,6 +140,10 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   }
 
   void submit() async {
+    //check if password & confirm password are identical
+    if (_passwordController.text != _confirmPasswordController.text) {
+      Scaffold.of(context).showSnackBar(_passwordConfirmPassword);
+    }
     // checking whether the user picked a profile pic or not
     if (_profileImage == null) {
       _cameraIconAnimationController.forward().then((value) {
@@ -814,45 +828,132 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Expanded(
-              child: TextFormField(
-                validator: PasswordValidator.validate,
-                style: TextStyle(fontSize: 22.0),
-                decoration: buildSignUpInputDecoration('Password'),
-                obscureText: true,
-                // onChanged: (val) {
-                //   setState(() => _password = val);
-                // },
-                onSaved: (val) => _password = val,
-              ),
-            ),
-            SizedBox(
-              width: 20,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.circular(5),
-                boxShadow: [
-                  BoxShadow(color: Colors.white, spreadRadius: 8),
-                ],
-              ),
-              child: FlatButton(
-                color: Theme.of(context).primaryColor,
-                textColor: FyreworkrColors.white,
-                child: Text(
-                  _submitButtonText,
-                  style: TextStyle(
-                    fontSize: 16.0,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width / 2.5,
+                  child: TextFormField(
+                    controller: _passwordController,
+                    validator: PasswordValidator.validate,
+                    style: TextStyle(fontSize: 16.0),
+                    decoration: buildSignUpInputDecoration('Password'),
+                    obscureText: !_showPassword,
+                    onSaved: (val) => _password = val,
                   ),
-                  maxLines: 1,
                 ),
-                onPressed: submit,
-              ),
+                // SizedBox(
+                //   width: 20,
+                // ),
+                GestureDetector(
+                  child: _showPassword
+                      ? Icon(Icons.visibility)
+                      : Icon(Icons.visibility_off),
+                  onTap: () {
+                    setState(() {
+                      _showPassword = !_showPassword;
+                    });
+                  },
+                ),
+              ],
             ),
+
+            // SizedBox(
+            //   width: 20,
+            // ),
+            authFormType == AuthFormType.signIn
+                ? Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(5),
+                      boxShadow: [
+                        BoxShadow(color: Colors.white, spreadRadius: 8),
+                      ],
+                    ),
+                    child: FlatButton(
+                      color: Theme.of(context).primaryColor,
+                      textColor: FyreworkrColors.white,
+                      child: Text(
+                        _submitButtonText,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
+                        maxLines: 1,
+                      ),
+                      onPressed: submit,
+                    ),
+                  )
+                : Container(
+                    width: 0,
+                    height: 0,
+                  ),
           ],
         ),
       );
+      if (authFormType == AuthFormType.signUp) {
+        textFields.add(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width / 2.5,
+                    child: TextFormField(
+                      controller: _confirmPasswordController,
+                      validator: PasswordValidator.validate,
+                      style: TextStyle(fontSize: 16.0),
+                      decoration:
+                          buildSignUpInputDecoration('Confirm Password'),
+                      obscureText: !_showConfirmPassword,
+                      // onSaved: (val) => _password = val,
+                    ),
+                  ),
+                  // SizedBox(
+                  //   width: 20,
+                  // ),
+                  GestureDetector(
+                    child: _showConfirmPassword
+                        ? Icon(Icons.visibility)
+                        : Icon(Icons.visibility_off),
+                    onTap: () {
+                      setState(() {
+                        _showConfirmPassword = !_showConfirmPassword;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              // SizedBox(
+              //   width: 20,
+              // ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(5),
+                  boxShadow: [
+                    BoxShadow(color: Colors.white, spreadRadius: 8),
+                  ],
+                ),
+                child: FlatButton(
+                  color: Theme.of(context).primaryColor,
+                  textColor: FyreworkrColors.white,
+                  child: Text(
+                    _submitButtonText,
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
+                    maxLines: 1,
+                  ),
+                  onPressed: submit,
+                ),
+              )
+            ],
+          ),
+        );
+      }
+
       textFields.add(
         SizedBox(
           height: 20,
@@ -999,6 +1100,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             ),
             onTap: () {
               switchFormState(_newformState);
+              _passwordController.clear();
             },
           ),
         ],
