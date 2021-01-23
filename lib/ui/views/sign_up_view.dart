@@ -113,13 +113,13 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   // DateTime _defaultAge = new DateTime.now();
   final _passwordConfirmPasswordSnackBar = SnackBar(
     content: Text(
-      'Password & Confirm password are not identtical',
+      'Password & Confirm password are not identtical!',
       style: TextStyle(fontSize: 16),
     ),
   );
   final _duplicateHandleSnackBar = SnackBar(
     content: Text(
-      'Password & Confirm password are not identtical',
+      'Duplicate Handles are not allowed!',
       style: TextStyle(fontSize: 16),
     ),
   );
@@ -348,19 +348,19 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     return Scaffold(
       key: _signupScaffoldKey,
       // resizeToAvoidBottomInset: true,
-      body: SingleChildScrollView(
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: SafeArea(
           child: Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-            child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: ListView(
-                  controller: scrollController,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: SingleChildScrollView(
+                controller: scrollController,
+                child: Column(
                   children: <Widget>[
                     serverSideAlert(),
                     clientSideAlert(),
