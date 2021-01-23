@@ -63,7 +63,7 @@ class AllGigsView extends StatelessWidget {
                               )
                             : Center(
                                 child: AutoSizeText(
-                                "Nothing to show right now...you can add your own gig",
+                                "No gigs matching your criteria",
                                 style: TextStyle(fontSize: 18),
                                 textAlign: TextAlign.center,
                               )))
