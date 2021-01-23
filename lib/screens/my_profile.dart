@@ -408,78 +408,82 @@ class _MyProfileViewState extends State<MyProfileView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CachedNetworkImage(
-                        imageBuilder: (context, imageProvider) => Container(
-                          width: 90.0,
-                          height: 90.0,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                image: imageProvider, fit: BoxFit.cover),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CachedNetworkImage(
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 90.0,
+                            height: 90.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.cover),
+                            ),
+                          ),
+                          imageUrl: MyUser.userAvatarUrl,
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                        ),
+                        SizedBox(
+                          height: 50,
+                          child: Column(
+                            children: <Widget>[
+                              Expanded(
+                                child: Center(
+                                  child: Text(
+                                    "Ongoing",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Center(
+                                  child: Text(
+                                    MyUser.ongoingGigsByGigId != null
+                                        ? '${MyUser.ongoingGigsByGigId.length}'
+                                        : '0',
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        imageUrl: MyUser.userAvatarUrl,
-                        placeholder: (context, url) =>
-                            CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
-                      ),
-                      SizedBox(
-                        height: 50,
-                        child: Column(
-                          children: <Widget>[
-                            Expanded(
-                              child: Center(
-                                child: Text(
-                                  "Ongoing",
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.white),
+                        SizedBox(
+                          height: 50,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                child: Center(
+                                  child: Text(
+                                    "Completed",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              child: Center(
-                                child: Text(
-                                  MyUser.ongoingGigsByGigId != null
-                                      ? '${MyUser.ongoingGigsByGigId.length}'
-                                      : '0',
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.white),
+                              Expanded(
+                                child: Center(
+                                  child: Text(
+                                    "5",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 50,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Expanded(
-                              child: Center(
-                                child: Text(
-                                  "Completed",
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Center(
-                                child: Text(
-                                  "5",
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 10,

@@ -83,6 +83,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       });
   }
 
+  final _signupScaffoldKey = GlobalKey<ScaffoldState>();
   final signupFormKey = GlobalKey<FormState>();
   String _email,
       _password,
@@ -109,7 +110,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   // DateTime _defaultAge = new DateTime.now();
   final _passwordConfirmPassword = SnackBar(
     content: Text(
-      'Password & Confirm password arenot identtical',
+      'Password & Confirm password are not identtical',
       style: TextStyle(fontSize: 16),
     ),
   );
@@ -140,10 +141,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   }
 
   void submit() async {
-    //check if password & confirm password are identical
-    if (_passwordController.text != _confirmPasswordController.text) {
-      Scaffold.of(context).showSnackBar(_passwordConfirmPassword);
-    }
     // checking whether the user picked a profile pic or not
     if (_profileImage == null) {
       _cameraIconAnimationController.forward().then((value) {
@@ -151,7 +148,12 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         _cameraIconAnimationController.reverse();
       });
     }
-    if (validate()) {
+    //check if password & confirm password are identical
+    else if (_passwordController.text != _confirmPasswordController.text) {
+      _signupScaffoldKey.currentState.showSnackBar(_passwordConfirmPassword);
+    } else if (_profileImage != null &&
+        validate() &&
+        _passwordController.text == _confirmPasswordController.text) {
       try {
         // final auth = Provider.of(context).auth;
         // final auth = AuthService();
@@ -196,6 +198,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             );
 
             // await locator.get<UserController>().getProfilePictureDownloadUrl();
+            PlacesAutocomplete.placesAutoCompleteController.clear();
 
             Navigator.of(context).pushReplacementNamed('/home');
             EasyLoading.dismiss();
@@ -329,6 +332,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       ),
     );
     return Scaffold(
+      key: _signupScaffoldKey,
       // resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         child: GestureDetector(
