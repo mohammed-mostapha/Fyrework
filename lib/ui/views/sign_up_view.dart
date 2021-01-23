@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // import 'package:myApp/locator.dart';
 import 'package:myApp/main.dart';
 import 'package:myApp/screens/add_gig/assets_picker/constants/picker_model.dart';
@@ -53,6 +54,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   Animation _cameraIconColorAnimation;
 
   List _myFavoriteHashtags = List();
+  List _fetchedHandles = List();
+  bool handleDuplicated = false;
 
   FocusNode handleFocus = FocusNode();
 
@@ -108,7 +111,13 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   TextEditingController _confirmPasswordController = TextEditingController();
   DateTime _defaultAge = Jiffy().subtract(years: 19);
   // DateTime _defaultAge = new DateTime.now();
-  final _passwordConfirmPassword = SnackBar(
+  final _passwordConfirmPasswordSnackBar = SnackBar(
+    content: Text(
+      'Password & Confirm password are not identtical',
+      style: TextStyle(fontSize: 16),
+    ),
+  );
+  final _duplicateHandleSnackBar = SnackBar(
     content: Text(
       'Password & Confirm password are not identtical',
       style: TextStyle(fontSize: 16),
@@ -150,9 +159,14 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     }
     //check if password & confirm password are identical
     else if (_passwordController.text != _confirmPasswordController.text) {
-      _signupScaffoldKey.currentState.showSnackBar(_passwordConfirmPassword);
+      _signupScaffoldKey.currentState
+          .showSnackBar(_passwordConfirmPasswordSnackBar);
+    } else if (handleDuplicated) {
+      _signupScaffoldKey.currentState.showSnackBar(_duplicateHandleSnackBar);
     } else if (_profileImage != null &&
         validate() &&
+        _myHandleController.text.isNotEmpty &&
+        !handleDuplicated &&
         _passwordController.text == _confirmPasswordController.text) {
       try {
         // final auth = Provider.of(context).auth;
@@ -705,8 +719,22 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                       focusNode: handleFocus,
                     ),
                     suggestionsCallback: (pattern) async {
-                      return await TakenHandlesService.fetchTakenHandles(
-                          pattern);
+                      _fetchedHandles.clear();
+                      print('fetchedHandles: $_fetchedHandles');
+                      _fetchedHandles =
+                          await TakenHandlesService.fetchTakenHandles(pattern);
+                      print('fetchedHandles: $_fetchedHandles');
+                      if (_fetchedHandles.contains(_myHandleController.text)) {
+                        setState(() {
+                          handleDuplicated = true;
+                        });
+                      } else {
+                        setState(() {
+                          handleDuplicated = false;
+                        });
+                      }
+
+                      return _fetchedHandles;
                     },
                     itemBuilder: (context, suggestions) {
                       return ListTile(
@@ -735,6 +763,25 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                       handleFocus.requestFocus();
                     },
                   ),
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                  child: _myHandleController.text.isEmpty
+                      ? Container(
+                          width: 0,
+                          height: 0,
+                        )
+                      : handleDuplicated
+                          ? FaIcon(
+                              FontAwesomeIcons.timesCircle,
+                              size: 18,
+                              color: Colors.red,
+                            )
+                          : FaIcon(
+                              FontAwesomeIcons.checkCircle,
+                              size: 18,
+                              color: Theme.of(context).primaryColor,
+                            ),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
