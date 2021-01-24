@@ -11,9 +11,31 @@ import 'package:myApp/view_controllers/myUser_controller.dart';
 import 'locator.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-void main() {
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  var initializaitonSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+  var initializaitonSettingsIOS = IOSInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+      onDidReceiveLocalNotification:
+          (int id, String title, String body, String payload) async {});
+  var initializationSettings = InitializationSettings(
+      initializaitonSettingsAndroid, initializaitonSettingsIOS);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onSelectNotification: (String payload) async {
+    if (payload != null) {
+      debugPrint('notification payload $payload');
+    }
+  });
+
   setupLocator();
 
   // runApp(MyApp());
