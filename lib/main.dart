@@ -37,7 +37,7 @@ void main() async {
   });
 
   setupLocator();
-
+  //
   // runApp(MyApp());
   runApp(HomeController());
   configLoading();
