@@ -89,18 +89,18 @@ class AllGigsView extends StatelessWidget {
   }
 
   void scheduleNotification() async {
-    var scheduleNotificationDateTime =
-        DateTime.now().add(Duration(seconds: 10));
+    var scheduleNotificationDateTime = DateTime.now().add(Duration(seconds: 5));
 
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'Fyrework',
       'Fyrework',
       'Fyrework',
+      ongoing: false,
       showWhen: true,
       icon: 'ic_launcher_round',
       sound: RawResourceAndroidNotificationSound('ios_notification_sound'),
-      importance: Importance.Max,
-      priority: Priority.Max,
+      importance: Importance.max,
+      priority: Priority.max,
       largeIcon: DrawableResourceAndroidBitmap('ic_launcher_round'),
     );
 
@@ -112,12 +112,14 @@ class AllGigsView extends StatelessWidget {
     );
 
     var platformChannelSpecifics = NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformSChannelSpecifics);
+      android: androidPlatformChannelSpecifics,
+      iOS: iOSPlatformSChannelSpecifics,
+    );
 
     await flutterLocalNotificationsPlugin.schedule(
       1,
       'Fyrework',
-      'You \'ve got a new notificatin!',
+      'You have a new notification',
       scheduleNotificationDateTime,
       platformChannelSpecifics,
     );

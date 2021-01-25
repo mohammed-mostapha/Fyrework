@@ -20,7 +20,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   var initializaitonSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
+      AndroidInitializationSettings('ic_launcher_round');
   var initializaitonSettingsIOS = IOSInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -28,7 +28,7 @@ void main() async {
       onDidReceiveLocalNotification:
           (int id, String title, String body, String payload) async {});
   var initializationSettings = InitializationSettings(
-      initializaitonSettingsAndroid, initializaitonSettingsIOS);
+      android: initializaitonSettingsAndroid, iOS: initializaitonSettingsIOS);
   await flutterLocalNotificationsPlugin.initialize(initializationSettings,
       onSelectNotification: (String payload) async {
     if (payload != null) {
