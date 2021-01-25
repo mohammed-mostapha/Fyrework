@@ -20,7 +20,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   var initializaitonSettingsAndroid =
-      AndroidInitializationSettings('ic_launcher_round');
+      AndroidInitializationSettings('ic_notification');
   var initializaitonSettingsIOS = IOSInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
