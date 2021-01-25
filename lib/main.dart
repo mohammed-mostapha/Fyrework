@@ -96,6 +96,7 @@ class _HomeControllerState extends State<HomeController> {
   AuthService authService = locator.get<AuthService>();
   @override
   void initState() {
+    //
     // FirebaseAuth.instance.currentUser().then((user) => user != null
     // FirebaseAuth.instance.currentUser().then((user) => user != null
     // authService.getCurrentUser().then((user) => user != null
