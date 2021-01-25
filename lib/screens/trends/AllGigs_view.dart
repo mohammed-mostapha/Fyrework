@@ -72,12 +72,12 @@ class AllGigsView extends StatelessWidget {
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
-                                  RaisedButton(
-                                    child: Text('Notify'),
-                                    onPressed: () {
-                                      scheduleNotification();
-                                    },
-                                  ),
+                                  // RaisedButton(
+                                  //   child: Text('Notify'),
+                                  //   onPressed: () {
+                                  //     scheduleNotification();
+                                  //   },
+                                  // ),
                                 ],
                               ),
                             )),

@@ -1,9 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myApp/screens/trends/BuyerGigs.dart';
 import 'package:myApp/screens/trends/providerGigs.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/screens/trends/AllGigs_view.dart';
+import 'package:myApp/ui/widgets/badgeIcon.dart';
 
 class Trends extends StatefulWidget {
   @override
@@ -11,6 +13,8 @@ class Trends extends StatefulWidget {
 }
 
 class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
+  final String bell = 'assets/svgs/bell.svg';
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -19,11 +23,43 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Center(
-            child: Image.asset(
-              'assets/images/fyrework_logo.png',
-              width: 150,
-            ),
+          title: Row(
+            children: [
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(50, 0, 0, 0),
+                  child: Center(
+                    child: Image.asset(
+                      'assets/images/fyrework_logo.png',
+                      width: 150,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                width: 50,
+                child: StreamBuilder(
+                    builder: (_, snapshot) => GestureDetector(
+                          child: BadgeIcon(
+                            icon: SizedBox(
+                              width: 20,
+                              height: 40,
+                              child: SvgPicture.asset(
+                                bell,
+                                semanticsLabel: 'bell_notifications',
+                              ),
+                            ),
+                            badgeCount: 999,
+                            badgeColor: Colors.white,
+                            badgeTextStyle: TextStyle(
+                              fontSize: 12,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                          onTap: () {},
+                        )),
+              ),
+            ],
           ),
           bottom: TabBar(
             indicatorColor: FyreworkrColors.fyreworkBlack,
