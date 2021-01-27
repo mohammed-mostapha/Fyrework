@@ -16,16 +16,13 @@ class PickMethodModel {
       method;
 
   static PickMethodModel common = PickMethodModel(
-    icon: '🖼️',
-    name: 'Image picker',
-    description: 'Simply pick image from device.',
     method: (
       BuildContext context,
       List<AssetEntity> assets,
     ) async {
       return await AssetPicker.pickAssets(
         context,
-        maxAssets: 4,
+        maxAssets: 5,
         pathThumbSize: 84,
         gridCount: 4,
         selectedAssets: assets,

@@ -18,38 +18,38 @@ enum UrlType { IMAGE, VIDEO, UNKNOWN }
 class MultiAssetsPicker extends StatefulWidget {
   final bool appointed;
   final String gigId;
-  final String receivedUserId;
-  final String receivedUserProfilePictureDownloadUrl;
-  final String receivedUserFullName;
-  final String receivedUserLocation;
-  final String receivedGigLocation;
-  final List receivedGigHashtags;
+  final String userId;
+  final String userProfilePictureDownloadUrl;
+  final String userFullName;
+  final String userLocation;
+  final String gigLocation;
+  final List gigHashtags;
   final List<String> gigMeidaFilesDownloadUrls = List<String>();
-  final String receivedGigPost;
-  final dynamic receivedGigDeadLine;
-  final String receivedGigCurrency;
-  final dynamic receivedGigBudget;
-  final String receivedAdultContentText;
-  final bool receivedAdultContentBool;
-  final String receivedGigValue;
+  final String gigPost;
+  final dynamic gigDeadLine;
+  final String gigCurrency;
+  final dynamic gigBudget;
+  final String adultContentText;
+  final bool adultContentBool;
+  final String gigValue;
 
   MultiAssetsPicker({
     Key key,
     this.appointed,
     this.gigId,
-    this.receivedUserId,
-    this.receivedUserProfilePictureDownloadUrl,
-    this.receivedUserFullName,
-    this.receivedUserLocation,
-    this.receivedGigLocation,
-    this.receivedGigHashtags,
-    this.receivedGigPost,
-    this.receivedGigDeadLine,
-    this.receivedGigCurrency,
-    this.receivedGigBudget,
-    this.receivedAdultContentText,
-    this.receivedAdultContentBool,
-    this.receivedGigValue,
+    this.userId,
+    this.userProfilePictureDownloadUrl,
+    this.userFullName,
+    this.userLocation,
+    this.gigLocation,
+    this.gigHashtags,
+    this.gigPost,
+    this.gigDeadLine,
+    this.gigCurrency,
+    this.gigBudget,
+    this.adultContentText,
+    this.adultContentBool,
+    this.gigValue,
   }) : super(key: key);
 
   @override
@@ -57,19 +57,14 @@ class MultiAssetsPicker extends StatefulWidget {
 }
 
 class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addPostFrameCallback((_) => () {}());
-  // }
-
   String id;
   final db = Firestore.instance;
 
-  bool choosedAssets = false;
+  // bool choosedAssets = false;
 
   List<File> gigMediaFiles = List();
 
-  final int maxAssetsCount = 9;
+  final int maxAssetsCount = 5;
 
   List<AssetEntity> assets = <AssetEntity>[];
 
@@ -81,9 +76,6 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
 
   List<PickMethodModel> get pickMethods => <PickMethodModel>[
         PickMethodModel(
-          icon: '📹',
-          name: 'Common picker',
-          description: 'Pick images and videos.',
           method: (
             BuildContext context,
             List<AssetEntity> assets,
@@ -129,19 +121,17 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
   Widget methodItemBuilder(BuildContext _, int index) {
     final PickMethodModel model = pickMethods[index];
 
-    // if (!choosedAssets) {
-    (() async {
+    () async {
       final List<AssetEntity> result = await model.method(context, assets);
       if (result != null && result != assets) {
         assets = List<AssetEntity>.from(result);
         if (mounted) {
           setState(() {
-            choosedAssets = !choosedAssets;
+            // choosedAssets = !choosedAssets;
           });
         }
       }
-    }());
-    // } else {}
+    }();
   }
 
   Widget get methodListView => Expanded(
@@ -197,7 +187,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
               asset.title,
               style: const TextStyle(
                 height: 1.0,
-                fontSize: 10.0,
+                fontSize: 16.0,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -308,7 +298,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                   children: <Widget>[
                     const Text(
                       'Selected Assets',
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 16),
                     ),
                     Container(
                       height: 25.0,
@@ -323,7 +313,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                         '${assets.length}',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 20,
+                          fontSize: 16,
                           height: 1.0,
                         ),
                       ),
@@ -407,21 +397,20 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
           CreateGigViewModel().addGig(
             appointed: widget.appointed,
             gigId: widget.gigId,
-            userId: widget.receivedUserId,
-            userProfilePictureDownloadUrl:
-                widget.receivedUserProfilePictureDownloadUrl,
-            userFullName: widget.receivedUserFullName,
-            gigHashtags: widget.receivedGigHashtags,
-            userLocation: widget.receivedUserLocation,
-            gigLocation: widget.receivedGigLocation,
+            userId: widget.userId,
+            userProfilePictureDownloadUrl: widget.userProfilePictureDownloadUrl,
+            userFullName: widget.userFullName,
+            gigHashtags: widget.gigHashtags,
+            userLocation: widget.userLocation,
+            gigLocation: widget.gigLocation,
             gigMediaFilesDownloadUrls: widget.gigMeidaFilesDownloadUrls,
-            gigPost: widget.receivedGigPost,
-            gigDeadLine: widget.receivedGigDeadLine,
-            gigCurrency: widget.receivedGigCurrency,
-            gigBudget: widget.receivedGigBudget,
-            gigValue: widget.receivedGigValue,
-            adultContentText: widget.receivedAdultContentText,
-            adultContentBool: widget.receivedAdultContentBool,
+            gigPost: widget.gigPost,
+            gigDeadLine: widget.gigDeadLine,
+            gigCurrency: widget.gigCurrency,
+            gigBudget: widget.gigBudget,
+            gigValue: widget.gigValue,
+            adultContentText: widget.adultContentText,
+            adultContentBool: widget.adultContentBool,
           );
           clearGigMediaFiles();
           Navigator.pushAndRemoveUntil(
@@ -444,7 +433,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
   clearGigMediaFiles() {
     gigMediaFiles.clear();
     print(gigMediaFiles);
-    choosedAssets = false;
+    // choosedAssets = false;
   }
 
   @override
@@ -455,125 +444,98 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
 
   Widget get gigPreview {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.70,
-      child: Padding(
-        padding: EdgeInsets.all(10.0),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: ListView(
+      child: Column(
+        children: <Widget>[
+          Text('${widget.gigHashtags}', style: TextStyle(fontSize: 16)),
+          selectedAssetsWidget,
+          SizedBox(height: 10.0),
+          Text('${widget.gigPost}', style: TextStyle(fontSize: 16)),
+          SizedBox(
+            height: 10.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text('${widget.receivedGigHashtags}',
-                  style: TextStyle(fontSize: 18)),
-              selectedAssetsWidget,
-              SizedBox(height: 10.0),
-              Text('${widget.receivedGigPost}', style: TextStyle(fontSize: 18)),
-              SizedBox(
-                height: 10.0,
-              ),
-
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      FaIcon(
-                        FontAwesomeIcons.hourglassStart,
-                        size: 20,
-                      ),
-                      Container(
-                        width: 5.0,
-                        height: 0,
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: AutoSizeText(
-                          '${widget.receivedGigDeadLine}',
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                    ],
+                  FaIcon(
+                    FontAwesomeIcons.hourglassStart,
+                    size: 20,
                   ),
-                  SizedBox(height: 5),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        child: AutoSizeText(
-                          '${widget.receivedGigCurrency}',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
+                  Container(
+                    width: 5.0,
+                    height: 0,
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: AutoSizeText(
+                      '${widget.gigDeadLine}',
+                      style: TextStyle(
+                        fontSize: 16,
                       ),
-                      Container(
-                        width: 2.5,
-                        height: 0,
-                      ),
-                      Container(
-                        child: AutoSizeText(
-                          '${widget.receivedGigBudget}',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ],
               ),
-
-              widget.receivedAdultContentBool
-                  ? Container(
-                      alignment: Alignment.centerLeft,
-                      child: Column(
+              SizedBox(height: 5),
+              Row(
+                children: <Widget>[
+                  Container(
+                    child: AutoSizeText(
+                      '${widget.gigCurrency}',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    width: 2.5,
+                    height: 0,
+                  ),
+                  Container(
+                    child: AutoSizeText(
+                      '${widget.gigBudget}',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          widget.adultContentBool
+              ? Container(
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    children: [
+                      SizedBox(height: 10),
+                      Row(
                         children: [
-                          SizedBox(height: 10),
-                          Row(
-                            children: [
-                              FaIcon(
-                                FontAwesomeIcons.solidStar,
-                                size: 20,
+                          FaIcon(
+                            FontAwesomeIcons.solidStar,
+                            size: 20,
+                          ),
+                          Container(
+                            width: 5.0,
+                            height: 0,
+                          ),
+                          Expanded(
+                            child: AutoSizeText(
+                              "${widget.adultContentText}",
+                              style: TextStyle(
+                                fontSize: 16,
                               ),
-                              Container(
-                                width: 5.0,
-                                height: 0,
-                              ),
-                              Expanded(
-                                child: AutoSizeText(
-                                  "${widget.receivedAdultContentText}",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ],
                       ),
-                    )
-                  : Container(
-                      width: 0,
-                      height: 0,
-                    ),
-
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: <Widget>[
-              //     Text('Adult content', style: TextStyle(fontSize: 18)),
-              //     Text('${widget.receivedAdultContentBool}',
-              //         style: TextStyle(fontSize: 18)),
-              //   ],
-              // ),
-              // SizedBox(
-              //   height: 20.0,
-              // ),
-
-              // Center(
-              //   child: Text('${widget.receivedGigValue}',
-              //       style: TextStyle(fontSize: 18)),
-              // ),
-            ],
-          ),
-        ),
+                    ],
+                  ),
+                )
+              : Container(
+                  width: 0,
+                  height: 0,
+                ),
+        ],
       ),
     );
   }
@@ -591,92 +553,62 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
     }
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return SafeArea(
+  //     child: Scaffold(
+  //       body: Stack(
+  //         // alignment: Alignment.center,
+  //         children: <Widget>[
+  //           Container(child: methodListView),
+  //           Padding(
+  //             padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+  //             child: Container(
+  //               child: SingleChildScrollView(
+  //                 child: Column(
+  //                   children: <Widget>[
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                       children: <Widget>[
+  //                         RaisedButton(
+  //                             color: FyreworkrColors.fyreworkBlack,
+  //                             child: Text(
+  //                               'back',
+  //                               style: TextStyle(color: FyreworkrColors.white),
+  //                             ),
+  //                             onPressed: () {
+  //                               clearGigMediaFiles();
+  //                               print(gigMediaFiles.length);
+  //                             }),
+  //                         RaisedButton(
+  //                           color: FyreworkrColors.fyreworkBlack,
+  //                           child: Text(
+  //                             'PUBLISH',
+  //                             style: TextStyle(color: FyreworkrColors.white),
+  //                           ),
+  //                           onPressed: () {
+  //                             prepareGigMediaFilesAndPublish();
+  //                           },
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     gigPreview,
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // body: Container(
-      // child: methodListView,
-      //   // gigPreview,
-      //   // selectedAssetsWidget,
-      // ),
-      body: Stack(alignment: Alignment.center, children: <Widget>[
-        Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.10,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    RaisedButton(
-                        color: FyreworkrColors.fyreworkBlack,
-                        child: Text(
-                          'back',
-                          style: TextStyle(color: FyreworkrColors.white),
-                        ),
-                        onPressed: () {
-                          clearGigMediaFiles();
-                          print(gigMediaFiles.length);
-                        }),
-                    RaisedButton(
-                        color: FyreworkrColors.fyreworkBlack,
-                        child: Text(
-                          'PUBLISH',
-                          style: TextStyle(color: FyreworkrColors.white),
-                        ),
-                        onPressed: () {
-                          prepareGigMediaFilesAndPublish();
-                        }),
-                  ],
-                ),
-              ),
-            ),
-            gigPreview,
-          ],
-        ),
-        Container(height: 0, child: methodListView),
-        // Container(
-        //   width: 200,
-        //   height: 200,
-        //   child: CircularProgressIndicator(
-        //     valueColor:
-        //         AlwaysStoppedAnimation<Color>(FyreworkrColors.fyreworkBlack),
-        //     strokeWidth: 5,
-        //   ),
-        // ),
-      ]),
+    return SafeArea(
+      child: Scaffold(
+        body: Container(child: methodListView),
+      ),
     );
-  }
-
-  void createData() async {
-    DocumentReference ref = await db.collection('Gigs').add({
-      'Gig_hashtags': '${widget.receivedGigHashtags}',
-      'Gig_post': '${widget.receivedGigPost}',
-      // 'Gig_deadline': '${widget.receivedGigDeadLine}',
-      // 'Gig_currency': '${widget.receivedGigCurrency}',
-      // 'Gig_budget': '${widget.receivedGigBudget}',
-      // 'Gig_adult_content_bool': '${widget.receivedAdultContentBool}',
-      // 'Gig_value': '${widget.receivedGigValue}',
-    });
-    setState(() => id = ref.documentID);
-    print(ref.documentID);
-  }
-
-  void readData() async {
-    DocumentSnapshot snapshot = await db.collection('Gigs').document(id).get();
-    print(snapshot.data['jobName']);
-  }
-
-  void updateData(DocumentSnapshot doc) async {
-    await db
-        .collection('Gigs')
-        .document(doc.documentID)
-        .updateData({'job description': 'new job description'});
-  }
-
-  void deleteData(DocumentSnapshot doc) async {
-    await db.collection('Gigs').document(doc.documentID).delete();
-    setState(() => id = null);
   }
 }

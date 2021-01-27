@@ -100,8 +100,6 @@ class _AddGigDetailsState extends State<AddGigDetails> {
 
   Future saveFormValuesAndPickMediaFiles() async {
     _gigLocation = PlacesAutocomplete.placesAutoCompleteController.text;
-    // userProfilePictureDownloadUrl =
-    //     await locator.get<UserController>().getProfilePictureDownloadUrl();
     _userProfilePictureDownloadUrl = MyUser.userAvatarUrl;
     if (AppointmentCard.gigValue == null) {
       Scaffold.of(context).showSnackBar(_gigValueSnackBar);
@@ -112,21 +110,21 @@ class _AddGigDetailsState extends State<AddGigDetails> {
       var proceedToMultiAssetPicker = new MaterialPageRoute(
         builder: (BuildContext context) => MultiAssetsPicker(
           appointed: _appointed,
-          receivedUserId: _userId,
-          receivedUserProfilePictureDownloadUrl: _userProfilePictureDownloadUrl,
-          receivedUserFullName: _userFullName,
-          receivedUserLocation: _userLocation,
-          receivedGigLocation: _gigLocation,
-          receivedGigHashtags: _myFavoriteHashtags,
-          receivedGigPost: _gigPost,
-          receivedGigDeadLine: AppointmentCard.gigDeadline != null
+          userId: _userId,
+          userProfilePictureDownloadUrl: _userProfilePictureDownloadUrl,
+          userFullName: _userFullName,
+          userLocation: _userLocation,
+          gigLocation: _gigLocation,
+          gigHashtags: _myFavoriteHashtags,
+          gigPost: _gigPost,
+          gigDeadLine: AppointmentCard.gigDeadline != null
               ? (AppointmentCard.gigDeadline.toUtc().millisecondsSinceEpoch)
               : AppointmentCard.gigDeadline,
-          receivedGigCurrency: _gigCurrency,
-          receivedGigBudget: _gigBudget,
-          receivedAdultContentText: _adultContentText,
-          receivedAdultContentBool: _adultContentBool,
-          receivedGigValue: AppointmentCard.gigValue,
+          gigCurrency: _gigCurrency,
+          gigBudget: _gigBudget,
+          adultContentText: _adultContentText,
+          adultContentBool: _adultContentBool,
+          gigValue: AppointmentCard.gigValue,
         ),
       );
       Navigator.of(context).push(proceedToMultiAssetPicker);
