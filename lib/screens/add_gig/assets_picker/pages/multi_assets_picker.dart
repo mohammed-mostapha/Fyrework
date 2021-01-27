@@ -23,7 +23,7 @@ class MultiAssetsPicker extends StatefulWidget {
   final String receivedUserFullName;
   final String receivedUserLocation;
   final String receivedGigLocation;
-  final String receivedGigHashtags;
+  final List receivedGigHashtags;
   final List<String> gigMeidaFilesDownloadUrls = List<String>();
   final String receivedGigPost;
   final dynamic receivedGigDeadLine;

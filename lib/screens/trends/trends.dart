@@ -50,10 +50,11 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
                               ),
                             ),
                             badgeCount: 999,
-                            badgeColor: Colors.white,
+                            badgeColor: Theme.of(context).primaryColor,
                             badgeTextStyle: TextStyle(
                               fontSize: 12,
-                              color: Theme.of(context).primaryColor,
+                              // color: Theme.of(context).primaryColor,
+                              color: Colors.white,
                             ),
                           ),
                           onTap: () {},

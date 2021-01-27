@@ -54,7 +54,7 @@ class FirestoreService {
     }
   }
 
-  Future addGig(String hashtag, Gig gig) async {
+  Future addGig(List gigHashtags, Gig gig) async {
     var gigId;
     String userId = gig.gigOwnerId;
 
@@ -68,20 +68,20 @@ class FirestoreService {
       await DatabaseService(uid: userId)
           .updateOngoingGigsByGigId(userId, gigId);
 
-      // if the used hashtag doesn't exist in popularHashtags collection...add it
-      var usedHashtag = await _popularHashtagsCollectionReference
-          .where('hashtag', isEqualTo: hashtag)
-          .limit(1)
-          .getDocuments();
-      final List<DocumentSnapshot> hashtagsCheckList = usedHashtag.documents;
-      if (!(hashtagsCheckList.length > 0)) {
-        DocumentReference docRef =
-            _popularHashtagsCollectionReference.document();
-        docRef.setData({
-          'hashtag': hashtag,
-        });
-      } else {
-        //
+      // only add gigHashtags that dont already exist in popularHashtags cloud firestore collection
+      QuerySnapshot popularHashtagsDocuments =
+          await _popularHashtagsCollectionReference.getDocuments();
+      List<String> popularHashtagsValues = List();
+      popularHashtagsDocuments.documents.forEach((document) {
+        popularHashtagsValues.add("${document.data['hashtag']}");
+      });
+      print('popularHashtagsValues: $popularHashtagsValues');
+      for (int count = 0; count < gigHashtags.length; count++) {
+        if (!popularHashtagsValues.contains(gigHashtags[count])) {
+          _popularHashtagsCollectionReference
+              .document()
+              .setData({'hashtag': gigHashtags[count]});
+        }
       }
     } catch (e) {
       // TODO: Find or create a way to repeat error handling without so much repeated code

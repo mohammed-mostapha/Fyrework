@@ -644,10 +644,16 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                         setState(() {
                           clientSideWarning = 'Only 20 #Hashtags allowed';
                         });
+                      } else if (_myFavoriteHashtags.contains(suggestion)) {
+                        setState(() {
+                          clientSideWarning =
+                              'Duplicate #Hashtags are not allowed';
+                        });
+                        _myFavoriteHashtagsController.clear();
                       } else if (!_myFavoriteHashtags.contains(suggestion) &&
                           _myFavoriteHashtags.length < 20) {
                         setState(() {
-                          _myFavoriteHashtags.add('#' + suggestion);
+                          _myFavoriteHashtags.add(suggestion);
                           _myFavoriteHashtagsController.clear();
                           print(_myFavoriteHashtags);
                         });
@@ -666,11 +672,19 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                       if (_myFavoriteHashtags.length < 20 != true) {
                         setState(() {
                           clientSideWarning = 'Only 20 #Hashtags allowed';
+                          _myFavoriteHashtagsController.clear();
                         });
+                      } else if (_myFavoriteHashtags
+                          .contains('#' + _myFavoriteHashtagsController.text)) {
+                        setState(() {
+                          clientSideWarning =
+                              'Duplicate #Hashtags are not allowed';
+                        });
+                        _myFavoriteHashtagsController.clear();
                       } else if (_myFavoriteHashtagsController
                               .text.isNotEmpty &&
-                          !_myFavoriteHashtags
-                              .contains(_myFavoriteHashtagsController.text) &&
+                          !_myFavoriteHashtags.contains(
+                              '#' + _myFavoriteHashtagsController.text) &&
                           _myFavoriteHashtags.length < 20) {
                         setState(() {
                           _myFavoriteHashtags

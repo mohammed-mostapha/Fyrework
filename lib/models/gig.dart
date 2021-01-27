@@ -6,7 +6,7 @@ class Gig {
   final String userFullName;
   final String userLocation;
   final String gigLocation;
-  final String gigHashtags;
+  final List gigHashtags;
   final dynamic gigMediaFilesDownloadUrls;
   final String gigPost;
   final dynamic gigDeadline;

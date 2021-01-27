@@ -20,7 +20,7 @@ class CreateGigViewModel extends BaseModel {
     @required String userId,
     @required String userProfilePictureDownloadUrl,
     @required String userFullName,
-    @required String gigHashtags,
+    @required List gigHashtags,
     @required String userLocation,
     @required String gigLocation,
     @required List<String> gigMediaFilesDownloadUrls,
