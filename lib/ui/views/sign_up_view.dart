@@ -621,8 +621,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                       // style: TextStyle(fontSize: 16),
                       inputFormatters: [
                         new LengthLimitingTextInputFormatter(20),
-                        FilteringTextInputFormatter.allow(
-                            RegExp("[a-zA-Z0-9_]")),
+                        FilteringTextInputFormatter.allow(RegExp("[a-z0-9_]")),
                       ],
 
                       decoration:
@@ -726,8 +725,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                       style: TextStyle(fontSize: 16.0),
                       inputFormatters: [
                         new LengthLimitingTextInputFormatter(20),
-                        FilteringTextInputFormatter.allow(
-                            RegExp("[a-zA-Z0-9_]")),
+                        FilteringTextInputFormatter.allow(RegExp("[a-z0-9_]")),
                       ],
                       decoration: buildSignUpInputDecoration('@handle'),
                       focusNode: handleFocus,

@@ -258,7 +258,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                         new LengthLimitingTextInputFormatter(
                                             20),
                                         FilteringTextInputFormatter.allow(
-                                            RegExp("[a-zA-Z0-9_]")),
+                                            RegExp("[a-z0-9_]")),
                                       ],
 
                                       decoration: buildSignUpInputDecoration(
