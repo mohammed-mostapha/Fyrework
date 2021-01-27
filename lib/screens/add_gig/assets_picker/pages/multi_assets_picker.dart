@@ -57,6 +57,34 @@ class MultiAssetsPicker extends StatefulWidget {
 }
 
 class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final List<AssetEntity> result = await PickMethodModel(
+        method: (
+          BuildContext context,
+          List<AssetEntity> assets,
+        ) async {
+          return await AssetPicker.pickAssets(
+            context,
+            maxAssets: maxAssetsCount,
+            selectedAssets: assets,
+            requestType: RequestType.common,
+          );
+        },
+      ).method(context, assets);
+      if (result != null && result != assets) {
+        assets = List<AssetEntity>.from(result);
+        if (mounted) {
+          setState(() {
+            // choosedAssets = !choosedAssets;
+            print('count: ${result.length}');
+          });
+        }
+      }
+    });
+  }
+
   String id;
   final db = Firestore.instance;
 
@@ -73,22 +101,6 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
   int get assetsLength => assets.length;
 
   ThemeData get currentTheme => context.themeData;
-
-  List<PickMethodModel> get pickMethods => <PickMethodModel>[
-        PickMethodModel(
-          method: (
-            BuildContext context,
-            List<AssetEntity> assets,
-          ) async {
-            return await AssetPicker.pickAssets(
-              context,
-              maxAssets: maxAssetsCount,
-              selectedAssets: assets,
-              requestType: RequestType.common,
-            );
-          },
-        ),
-      ];
 
   Future<void> selectAssets(PickMethodModel model) async {
     final List<AssetEntity> result = await model.method(context, assets);
@@ -117,30 +129,6 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
       }
     });
   }
-
-  Widget methodItemBuilder(BuildContext _, int index) {
-    final PickMethodModel model = pickMethods[index];
-
-    () async {
-      final List<AssetEntity> result = await model.method(context, assets);
-      if (result != null && result != assets) {
-        assets = List<AssetEntity>.from(result);
-        if (mounted) {
-          setState(() {
-            // choosedAssets = !choosedAssets;
-          });
-        }
-      }
-    }();
-  }
-
-  Widget get methodListView => Expanded(
-        child: ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          itemCount: pickMethods.length,
-          itemBuilder: methodItemBuilder,
-        ),
-      );
 
   Widget _assetWidgetBuilder(AssetEntity asset) {
     Widget widget;
@@ -607,7 +595,8 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Container(child: methodListView),
+        // body: pickAssetsCommon(),
+        body: Container(),
       ),
     );
   }
