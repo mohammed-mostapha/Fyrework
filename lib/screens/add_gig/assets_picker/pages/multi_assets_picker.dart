@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_common_exports/flutter_common_exports.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:myApp/screens/home/home.dart';
 import 'package:myApp/services/storage_repo.dart';
@@ -360,67 +361,69 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
         ),
       );
 
-  prepareGigMediaFilesAndPublish() {
+  Future prepareGigMediaFilesAndPublish() async {
     Future<List<File>> assignAssetsToGigMediaFiles = assigingLists();
-    assignAssetsToGigMediaFiles.then((value) {
-      String storageResult;
-      if (gigMediaFiles != null) {
-        () async {
-          for (var i = 0; i < gigMediaFiles.length; i++) {
-            final parsedItemUrl = getUrlType(gigMediaFiles[i].path);
-            if (parsedItemUrl == UrlType.IMAGE) {
-              //uploading as an image file
-              storageResult = await StorageRepo().uploadMediaFile(
-                mediaFileToUpload: gigMediaFiles[i],
-                title: fileName.basename(gigMediaFiles[i].path + "imageFile"),
-              );
-            } else if (parsedItemUrl == UrlType.VIDEO) {
-              //uplloading as a video file
-              storageResult = await StorageRepo().uploadMediaFile(
-                mediaFileToUpload: gigMediaFiles[i],
-                title: fileName.basename(gigMediaFiles[i].path + "videoFile"),
-              );
-            } else {
-              // uploading and didn't specify an extension
-            }
-
-            //adding each downloadUrl to downloadUrls list
-            widget.gigMeidaFilesDownloadUrls.add(storageResult);
-          }
-
-          CreateGigViewModel().addGig(
-            appointed: widget.appointed,
-            gigId: widget.gigId,
-            userId: widget.userId,
-            userProfilePictureDownloadUrl: widget.userProfilePictureDownloadUrl,
-            userFullName: widget.userFullName,
-            gigHashtags: widget.gigHashtags,
-            userLocation: widget.userLocation,
-            gigLocation: widget.gigLocation,
-            gigMediaFilesDownloadUrls: widget.gigMeidaFilesDownloadUrls,
-            gigPost: widget.gigPost,
-            gigDeadLine: widget.gigDeadLine,
-            gigCurrency: widget.gigCurrency,
-            gigBudget: widget.gigBudget,
-            gigValue: widget.gigValue,
-            adultContentText: widget.adultContentText,
-            adultContentBool: widget.adultContentBool,
-          );
-          clearGigMediaFiles();
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => Home(passedSelectedIndex: 0),
-              ),
-              (route) => false);
-        }();
-      }
-    });
+    await assignAssetsToGigMediaFiles;
+    await uploadMediaFiles();
+    clearGigMediaFiles();
   }
 
   Future<List<File>> assigingLists() async {
     for (final mediaFile in assets) {
       gigMediaFiles.add(await mediaFile.originFile);
+    }
+  }
+
+  Future uploadMediaFiles() async {
+    String storageResult;
+    if (gigMediaFiles != null) {
+      for (var i = 0; i < gigMediaFiles.length; i++) {
+        final parsedItemUrl = getUrlType(gigMediaFiles[i].path);
+        if (parsedItemUrl == UrlType.IMAGE) {
+          //uploading as an image file
+          storageResult = await StorageRepo().uploadMediaFile(
+            mediaFileToUpload: gigMediaFiles[i],
+            title: fileName.basename(gigMediaFiles[i].path + "imageFile"),
+          );
+        } else if (parsedItemUrl == UrlType.VIDEO) {
+          //uploading as a video file
+          storageResult = await StorageRepo().uploadMediaFile(
+            mediaFileToUpload: gigMediaFiles[i],
+            title: fileName.basename(gigMediaFiles[i].path + "videoFile"),
+          );
+        } else {
+          // uploading and didn't specify an extension
+        }
+
+        //adding each downloadUrl to downloadUrls list
+        widget.gigMeidaFilesDownloadUrls.add(storageResult);
+      }
+
+      CreateGigViewModel().addGig(
+        appointed: widget.appointed,
+        gigId: widget.gigId,
+        userId: widget.userId,
+        userProfilePictureDownloadUrl: widget.userProfilePictureDownloadUrl,
+        userFullName: widget.userFullName,
+        gigHashtags: widget.gigHashtags,
+        userLocation: widget.userLocation,
+        gigLocation: widget.gigLocation,
+        gigMediaFilesDownloadUrls: widget.gigMeidaFilesDownloadUrls,
+        gigPost: widget.gigPost,
+        gigDeadLine: widget.gigDeadLine,
+        gigCurrency: widget.gigCurrency,
+        gigBudget: widget.gigBudget,
+        gigValue: widget.gigValue,
+        adultContentText: widget.adultContentText,
+        adultContentBool: widget.adultContentBool,
+      );
+      clearGigMediaFiles();
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => Home(passedSelectedIndex: 0),
+          ),
+          (route) => false);
     }
   }
 
@@ -453,60 +456,55 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GestureDetector(
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 5,
-                        ),
-                        // SizedBox(
-                        //   width: 25,
-                        //   height: 25,
-                        //   child: Transform(
-                        //     alignment: Alignment.center,
-                        //     transform: Matrix4.rotationY(math.pi),
-                        //     child: SvgPicture.asset(
-                        //       portal_exit,
-                        //       semanticsLabel: 'portal-exit',
-                        //       // color: Theme.of(context).primaryColor,
-                        //       // color: Theme.of(context).primaryColor,
-                        //     ),
-                        //   ),
-                        // ),
-                        // SizedBox(
-                        //   width: 5,
-                        // ),
-                        Text('Back',
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 1,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(2))),
+                      child: Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Back',
                             style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w500)),
-                      ],
+                                fontSize: 16,
+                                color: Theme.of(context).primaryColor),
+                          ),
+                        ),
+                      ),
                     ),
                     onTap: () {
                       Navigator.of(context).pop();
                     },
                   ),
                   GestureDetector(
-                    child: Row(
-                      children: [
-                        Text(
-                          'Publish',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w500),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 1,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(2))),
+                      child: Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Publish',
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Theme.of(context).primaryColor),
+                          ),
                         ),
-                        // SizedBox(
-                        //   width: 5,
-                        // ),
-                        // SizedBox(
-                        //   width: 25,
-                        //   height: 25,
-                        //   child: SvgPicture.asset(
-                        //     publish,
-                        //     semanticsLabel: 'publish',
-                        //     color: Theme.of(context).primaryColor,
-                        //   ),
-                        // ),
-                      ],
+                      ),
                     ),
-                    onTap: () {},
+                    onTap: () async {
+                      EasyLoading.show();
+                      await prepareGigMediaFilesAndPublish();
+                      print('should dismiss');
+                      EasyLoading.dismiss();
+                    },
                   ),
                 ],
               ),
@@ -520,7 +518,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                           child: Chip(
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
-                            backgroundColor: Colors.black,
+                            backgroundColor: Theme.of(context).primaryColor,
                             label: Text(
                               '$e',
                               style:

@@ -173,7 +173,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         // final auth = AuthService();
         switch (authFormType) {
           case AuthFormType.signIn:
-            EasyLoading.show(status: 'loading...');
+            EasyLoading.show();
             await AuthService()
                 .signInWithEmailAndPassword(_email.trim(), _password.trim());
             // await locator.get<UserController>().signInWithEmailAndPassword(

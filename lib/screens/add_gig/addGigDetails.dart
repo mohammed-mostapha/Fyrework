@@ -220,26 +220,33 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                 Container(
                                   width: double.infinity,
                                   child: Wrap(
-                                    spacing: 2.5,
                                     children: _myFavoriteHashtags
-                                        .map((e) => Chip(
-                                              backgroundColor: Colors.black,
-                                              label: Text(
-                                                '$e',
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.white),
+                                        .map((e) => Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      0, 0, 2.5, 2.5),
+                                              child: Chip(
+                                                materialTapTargetSize:
+                                                    MaterialTapTargetSize
+                                                        .shrinkWrap,
+                                                backgroundColor: Colors.black,
+                                                label: Text(
+                                                  '$e',
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.white),
+                                                ),
+                                                onDeleted: () {
+                                                  setState(() {
+                                                    _myFavoriteHashtags
+                                                        .removeWhere((item) =>
+                                                            item == e);
+                                                    print(_myFavoriteHashtags
+                                                        .length);
+                                                  });
+                                                },
+                                                deleteIconColor: Colors.white,
                                               ),
-                                              onDeleted: () {
-                                                setState(() {
-                                                  _myFavoriteHashtags
-                                                      .removeWhere(
-                                                          (item) => item == e);
-                                                  print(_myFavoriteHashtags
-                                                      .length);
-                                                });
-                                              },
-                                              deleteIconColor: Colors.white,
                                             ))
                                         .toList(),
                                   ),

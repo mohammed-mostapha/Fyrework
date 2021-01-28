@@ -240,6 +240,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
+                        // "${widget.gigHashtags.gigHashtags}",
                         "${widget.gigHashtags.gigHashtags}",
                         style: TextStyle(
                           fontSize: 18,
