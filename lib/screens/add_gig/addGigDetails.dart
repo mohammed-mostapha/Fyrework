@@ -207,337 +207,382 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                     key: _createGigFormKey,
                     // autovalidate: true,
                     // color: Colors.white,
-                    child: Padding(
-                      padding: EdgeInsets.all(20.0),
-                      child: SingleChildScrollView(
-                        controller: scrollController,
-                        child: Column(
-                          children: <Widget>[
-                            clientSideAlert(),
-                            Container(
-                              width: double.infinity,
-                              child: Wrap(
-                                spacing: 2.5,
-                                children: _myFavoriteHashtags
-                                    .map((e) => Chip(
-                                          backgroundColor: Colors.black,
-                                          label: Text(
-                                            '$e',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white),
-                                          ),
-                                          onDeleted: () {
-                                            setState(() {
-                                              _myFavoriteHashtags.removeWhere(
-                                                  (item) => item == e);
-                                              print(_myFavoriteHashtags.length);
-                                            });
-                                          },
-                                          deleteIconColor: Colors.white,
-                                        ))
-                                    .toList(),
-                              ),
-                            ),
-                            Row(
+                    child: SingleChildScrollView(
+                      controller: scrollController,
+                      child: Column(
+                        children: <Widget>[
+                          clientSideAlert(),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Flex(
+                              direction: Axis.vertical,
                               children: [
-                                Expanded(
-                                  child: TypeAheadFormField(
-                                    validator: (value) =>
-                                        _myFavoriteHashtags.length < 1
-                                            ? ''
-                                            : null,
-                                    // onSaved: (value) => _myHashtag = value,
-                                    textFieldConfiguration:
-                                        TextFieldConfiguration(
-                                      controller: _myFavoriteHashtagsController,
-                                      // style: TextStyle(fontSize: 16),
-                                      inputFormatters: [
-                                        new LengthLimitingTextInputFormatter(
-                                            20),
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp("[a-z0-9_]")),
-                                      ],
+                                Container(
+                                  width: double.infinity,
+                                  child: Wrap(
+                                    spacing: 2.5,
+                                    children: _myFavoriteHashtags
+                                        .map((e) => Chip(
+                                              backgroundColor: Colors.black,
+                                              label: Text(
+                                                '$e',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.white),
+                                              ),
+                                              onDeleted: () {
+                                                setState(() {
+                                                  _myFavoriteHashtags
+                                                      .removeWhere(
+                                                          (item) => item == e);
+                                                  print(_myFavoriteHashtags
+                                                      .length);
+                                                });
+                                              },
+                                              deleteIconColor: Colors.white,
+                                            ))
+                                        .toList(),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: TypeAheadFormField(
+                                        validator: (value) =>
+                                            _myFavoriteHashtags.length < 1
+                                                ? ''
+                                                : null,
+                                        // onSaved: (value) => _myHashtag = value,
+                                        textFieldConfiguration:
+                                            TextFieldConfiguration(
+                                          controller:
+                                              _myFavoriteHashtagsController,
+                                          // style: TextStyle(fontSize: 16),
+                                          inputFormatters: [
+                                            new LengthLimitingTextInputFormatter(
+                                                20),
+                                            FilteringTextInputFormatter.allow(
+                                                RegExp("[a-z0-9_]")),
+                                          ],
 
-                                      decoration: buildSignUpInputDecoration(
-                                          'Favorite #Hashtags'),
-                                    ),
-                                    suggestionsCallback: (pattern) async {
-                                      return await PopularHashtagsService
-                                          .fetchPopularHashtags(pattern);
-                                    },
-                                    itemBuilder: (context, suggestions) {
-                                      return ListTile(
-                                        title: Text(suggestions),
-                                      );
-                                    },
-                                    onSuggestionSelected: (suggestion) {
-                                      // _myHashtagController.text = suggestion;
-                                      // _myHashtag = suggestion;
-                                      if (_myFavoriteHashtags.length < 20 !=
-                                          true) {
-                                        setState(() {
-                                          clientSideWarning =
-                                              'Only 20 #Hashtags allowed';
-                                        });
-                                      } else if (_myFavoriteHashtags
-                                          .contains(suggestion)) {
-                                        setState(() {
-                                          clientSideWarning =
-                                              'Duplicate #Hashtags are not allowed';
-                                        });
-                                        _myFavoriteHashtagsController.clear();
-                                      } else if (!_myFavoriteHashtags
-                                              .contains(suggestion) &&
-                                          _myFavoriteHashtags.length < 20) {
-                                        setState(() {
-                                          _myFavoriteHashtags.add(suggestion);
-                                          _myFavoriteHashtagsController.clear();
-                                          print(_myFavoriteHashtags);
-                                        });
-                                      }
-                                    },
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                  child: GestureDetector(
-                                    child: Text(
-                                      'Add',
-                                      style: TextStyle(
-                                          fontSize: 16, color: Colors.black),
-                                    ),
-                                    onTap: () {
-                                      if (_myFavoriteHashtags.length < 20 !=
-                                          true) {
-                                        setState(() {
-                                          clientSideWarning =
-                                              'Only 20 #Hashtags allowed';
-                                          _myFavoriteHashtagsController.clear();
-                                        });
-                                      } else if (_myFavoriteHashtags.contains(
-                                          '#' +
-                                              _myFavoriteHashtagsController
-                                                  .text)) {
-                                        setState(() {
-                                          clientSideWarning =
-                                              'Duplicate #Hashtags are not allowed';
-                                        });
-                                        _myFavoriteHashtagsController.clear();
-                                      } else if (_myFavoriteHashtagsController
-                                              .text.isNotEmpty &&
-                                          !_myFavoriteHashtags.contains('#' +
-                                              _myFavoriteHashtagsController
-                                                  .text) &&
-                                          _myFavoriteHashtags.length < 20) {
-                                        setState(() {
-                                          _myFavoriteHashtags.add('#' +
-                                              _myFavoriteHashtagsController
-                                                  .text);
-                                          _myFavoriteHashtagsController.clear();
-                                          FocusScope.of(context).unfocus();
-                                          print(_myFavoriteHashtags);
-                                        });
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  PlacesAutocomplete(
-                                    signUpDecoraiton: true,
-                                  ),
-                                  IconButton(
-                                    color: FyreworkrColors.fyreworkBlack,
-                                    onPressed: () {
-                                      getUserLocation();
-                                    },
-                                    icon: Icon(Icons.gps_fixed),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                              child: TextFormField(
-                                decoration: buildSignUpInputDecoration(
-                                    'Describe your gig...'),
-                                inputFormatters: [
-                                  new LengthLimitingTextInputFormatter(500),
-                                ],
-                                validator: (value) =>
-                                    value.isEmpty ? '*' : null,
-                                onSaved: (value) => _gigPost = value,
-                                maxLines: null,
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          color: Colors.black26, width: 0.5))),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                                child: AppointmentCard(
-                                  onCardTapped: () {
-                                    if (slidingCardController.isCardSeparated ==
-                                        true) {
-                                      slidingCardController.collapseCard();
-                                    } else {
-                                      slidingCardController.expandCard();
-                                    }
-                                  },
-                                  slidingCardController: slidingCardController,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              // height: 100,
-                              decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          color: Colors.black26, width: 0.5))),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Container(
-                                      width: 100,
-                                      child: DropdownButtonHideUnderline(
-                                        child: DropdownButtonFormField(
-                                          dropdownColor:
-                                              Theme.of(context).primaryColor,
-                                          decoration: InputDecoration(
-                                            border: InputBorder.none,
-                                            focusedBorder: InputBorder.none,
-                                            enabledBorder: InputBorder.none,
-                                            errorBorder: InputBorder.none,
-                                            disabledBorder: InputBorder.none,
-                                          ),
-                                          items: _currencies
-                                              .map((value) => DropdownMenuItem(
-                                                    child: Container(
-                                                      width: 40,
-                                                      height: 40,
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color: Colors.white,
-                                                      ),
-                                                      child: Center(
-                                                        child: Text(
-                                                          value,
-                                                          style: TextStyle(
-                                                            color: FyreworkrColors
-                                                                .fyreworkBlack,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    value: value,
-                                                  ))
-                                              .toList(),
-                                          onChanged: (selectedCurrency) {
-                                            setState(() {
-                                              _gigCurrency = selectedCurrency;
-                                            });
-                                          },
-                                          value: _gigCurrency,
-                                          isExpanded: false,
-                                          hint: Text(
-                                            'Currency',
-                                            style: TextStyle(fontSize: 17),
-                                          ),
-                                          validator: (value) =>
-                                              value == null ? '*' : null,
+                                          decoration:
+                                              buildSignUpInputDecoration(
+                                                  'Favorite #Hashtags'),
                                         ),
+                                        suggestionsCallback: (pattern) async {
+                                          return await PopularHashtagsService
+                                              .fetchPopularHashtags(pattern);
+                                        },
+                                        itemBuilder: (context, suggestions) {
+                                          return ListTile(
+                                            title: Text(suggestions),
+                                          );
+                                        },
+                                        onSuggestionSelected: (suggestion) {
+                                          // _myHashtagController.text = suggestion;
+                                          // _myHashtag = suggestion;
+                                          if (_myFavoriteHashtags.length < 20 !=
+                                              true) {
+                                            setState(() {
+                                              clientSideWarning =
+                                                  'Only 20 #Hashtags allowed';
+                                            });
+                                          } else if (_myFavoriteHashtags
+                                              .contains(suggestion)) {
+                                            setState(() {
+                                              clientSideWarning =
+                                                  'Duplicate #Hashtags are not allowed';
+                                            });
+                                            _myFavoriteHashtagsController
+                                                .clear();
+                                          } else if (!_myFavoriteHashtags
+                                                  .contains(suggestion) &&
+                                              _myFavoriteHashtags.length < 20) {
+                                            setState(() {
+                                              _myFavoriteHashtags
+                                                  .add(suggestion);
+                                              _myFavoriteHashtagsController
+                                                  .clear();
+                                              print(_myFavoriteHashtags);
+                                            });
+                                          }
+                                        },
                                       ),
                                     ),
-                                    Container(
-                                      padding: EdgeInsets.fromLTRB(
-                                          0,
-                                          0,
-                                          MediaQuery.of(context).size.width / 6,
-                                          0),
-                                      width:
-                                          MediaQuery.of(context).size.width / 3,
-                                      child: TextFormField(
-                                        decoration: InputDecoration(
-                                          hintText: 'Budget',
-                                          border: InputBorder.none,
-                                          contentPadding:
-                                              EdgeInsets.symmetric(vertical: 7),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 0, 10, 0),
+                                      child: GestureDetector(
+                                        child: Text(
+                                          'Add',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black),
                                         ),
-                                        // Only numbers can be entered
-                                        keyboardType: TextInputType.number,
-                                        inputFormatters: <TextInputFormatter>[
-                                          WhitelistingTextInputFormatter
-                                              .digitsOnly
-                                        ],
-                                        onSaved: (value) => _gigBudget = value,
-                                        validator: (value) =>
-                                            value.isEmpty ? '*' : null,
+                                        onTap: () {
+                                          if (_myFavoriteHashtags.length < 20 !=
+                                              true) {
+                                            setState(() {
+                                              clientSideWarning =
+                                                  'Only 20 #Hashtags allowed';
+                                              _myFavoriteHashtagsController
+                                                  .clear();
+                                            });
+                                          } else if (_myFavoriteHashtags
+                                              .contains('#' +
+                                                  _myFavoriteHashtagsController
+                                                      .text)) {
+                                            setState(() {
+                                              clientSideWarning =
+                                                  'Duplicate #Hashtags are not allowed';
+                                            });
+                                            _myFavoriteHashtagsController
+                                                .clear();
+                                          } else if (_myFavoriteHashtagsController
+                                                  .text.isNotEmpty &&
+                                              !_myFavoriteHashtags.contains('#' +
+                                                  _myFavoriteHashtagsController
+                                                      .text) &&
+                                              _myFavoriteHashtags.length < 20) {
+                                            setState(() {
+                                              _myFavoriteHashtags.add('#' +
+                                                  _myFavoriteHashtagsController
+                                                      .text);
+                                              _myFavoriteHashtagsController
+                                                  .clear();
+                                              FocusScope.of(context).unfocus();
+                                              print(_myFavoriteHashtags);
+                                            });
+                                          }
+                                        },
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                            ),
-                            Container(
-                              height: 50,
-                              decoration: BoxDecoration(),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: 20,
-                                    child: Checkbox(
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                      value: _adultContentBool,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          _adultContentBool =
-                                              !_adultContentBool;
-                                          if (_adultContentBool == true) {
-                                            _adultContentText = "Adult content";
-                                          } else {
-                                            _adultContentText = '';
-                                          }
-                                        });
-                                      },
-                                      activeColor:
-                                          FyreworkrColors.fyreworkBlack,
-                                      checkColor: FyreworkrColors.white,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Flexible(
-                                    child: Text(
-                                      "Adult content that should not be visible to minors.",
-                                      style: TextStyle(
-                                        color: Colors.grey,
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 8.0, 0, 8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      PlacesAutocomplete(
+                                        signUpDecoraiton: true,
                                       ),
+                                      IconButton(
+                                        color: FyreworkrColors.fyreworkBlack,
+                                        onPressed: () {
+                                          getUserLocation();
+                                        },
+                                        icon: Icon(Icons.gps_fixed),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 10, 10, 10),
+                                  child: TextFormField(
+                                    decoration: buildSignUpInputDecoration(
+                                        'Describe your gig...'),
+                                    inputFormatters: [
+                                      new LengthLimitingTextInputFormatter(500),
+                                    ],
+                                    validator: (value) =>
+                                        value.isEmpty ? '*' : null,
+                                    onSaved: (value) => _gigPost = value,
+                                    maxLines: null,
+                                  ),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.black26,
+                                              width: 0.5))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        0, 10, 10, 10),
+                                    child: AppointmentCard(
+                                      onCardTapped: () {
+                                        if (slidingCardController
+                                                .isCardSeparated ==
+                                            true) {
+                                          slidingCardController.collapseCard();
+                                        } else {
+                                          slidingCardController.expandCard();
+                                        }
+                                      },
+                                      slidingCardController:
+                                          slidingCardController,
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                                Container(
+                                  // height: 100,
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.black26,
+                                              width: 0.5))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        0, 10, 10, 10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Container(
+                                          width: 100,
+                                          child: DropdownButtonHideUnderline(
+                                            child: Container(
+                                              child: DropdownButtonFormField(
+                                                // dropdownColor: Theme.of(context)
+                                                //     .primaryColor,
+                                                dropdownColor: Theme.of(context)
+                                                    .primaryColor,
+                                                decoration: InputDecoration(
+                                                  border: InputBorder.none,
+                                                  focusedBorder:
+                                                      InputBorder.none,
+                                                  enabledBorder:
+                                                      InputBorder.none,
+                                                  errorBorder: InputBorder.none,
+                                                  disabledBorder:
+                                                      InputBorder.none,
+                                                ),
+                                                items: _currencies
+                                                    .map((value) =>
+                                                        DropdownMenuItem(
+                                                          child: Container(
+                                                            width: 40,
+                                                            height: 40,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                            child: Center(
+                                                              child: Text(
+                                                                value,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: FyreworkrColors
+                                                                      .fyreworkBlack,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          value: value,
+                                                        ))
+                                                    .toList(),
+                                                onChanged: (selectedCurrency) {
+                                                  setState(() {
+                                                    _gigCurrency =
+                                                        selectedCurrency;
+                                                  });
+                                                },
+                                                value: _gigCurrency,
+                                                isExpanded: false,
+                                                hint: Text(
+                                                  'Currency',
+                                                  style:
+                                                      TextStyle(fontSize: 17),
+                                                ),
+                                                validator: (value) =>
+                                                    value == null ? '*' : null,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.fromLTRB(
+                                              0,
+                                              0,
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  6,
+                                              0),
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              3,
+                                          child: TextFormField(
+                                            decoration: InputDecoration(
+                                              hintText: 'Budget',
+                                              border: InputBorder.none,
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                      vertical: 7),
+                                            ),
+                                            // Only numbers can be entered
+                                            keyboardType: TextInputType.number,
+                                            inputFormatters: <
+                                                TextInputFormatter>[
+                                              WhitelistingTextInputFormatter
+                                                  .digitsOnly
+                                            ],
+                                            onSaved: (value) =>
+                                                _gigBudget = value,
+                                            validator: (value) =>
+                                                value.isEmpty ? '*' : null,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  height: 50,
+                                  decoration: BoxDecoration(),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        width: 20,
+                                        child: Checkbox(
+                                          materialTapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
+                                          value: _adultContentBool,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              _adultContentBool =
+                                                  !_adultContentBool;
+                                              if (_adultContentBool == true) {
+                                                _adultContentText =
+                                                    "Adult content";
+                                              } else {
+                                                _adultContentText = '';
+                                              }
+                                            });
+                                          },
+                                          activeColor:
+                                              FyreworkrColors.fyreworkBlack,
+                                          checkColor: FyreworkrColors.white,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Flexible(
+                                        child: Text(
+                                          "Adult content that should not be visible to minors.",
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -670,143 +715,151 @@ class _AppointmentCardState extends State<AppointmentCard> {
       ),
     );
 
-    return SlidingCard(
-      slimeCardElevation: 0.5,
-      // slidingAnimationReverseCurve: Curves.bounceInOut,
-      cardsGap: SizeConfig.safeBlockVertical,
-      controller: widget.slidingCardController,
-      slidingCardWidth: SizeConfig.horizontalBloc * 90,
-      visibleCardHeight: SizeConfig.safeBlockVertical * 17,
-      hiddenCardHeight: SizeConfig.safeBlockVertical * 15,
-      frontCardWidget: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Container(
-            child: Row(
-              children: <Widget>[
-                SizedBox(
-                  width: 20,
-                  child: Radio(
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    value: 'I need a provider',
-                    groupValue: AppointmentCard.gigValue,
-                    activeColor: Theme.of(context).primaryColor,
-                    onChanged: (T) {
-                      widget.onCardTapped();
-                      setState(() {
-                        AppointmentCard.gigValue = T;
-                        // AppointmentCard.gigDeadline = _formattedDate;
-                        AppointmentCard.gigDeadline =
-                            new DateTime.now().add(Duration(days: 30));
-
-                        print('deadline: ${AppointmentCard.gigDeadline}');
-                        // Gig().gigValue = gigValue;
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Text(
-                  'I need a provider',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 17,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width / 3,
-            child: Row(
-              children: <Widget>[
-                SizedBox(
-                  width: 20,
-                  child: Radio(
+    return Padding(
+      padding: MediaQuery.of(context).orientation == Orientation.landscape
+          ? EdgeInsets.only(bottom: 30)
+          : EdgeInsets.zero,
+      child: SlidingCard(
+        slimeCardElevation: 0.5,
+        // slidingAnimationReverseCurve: Curves.bounceInOut,
+        cardsGap: SizeConfig.safeBlockVertical,
+        controller: widget.slidingCardController,
+        slidingCardWidth: SizeConfig.horizontalBloc * 90,
+        visibleCardHeight: SizeConfig.safeBlockVertical * 17,
+        hiddenCardHeight: SizeConfig.safeBlockVertical * 15,
+        frontCardWidget: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Container(
+              child: Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: 20,
+                    child: Radio(
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      value: 'Gigs I can do',
+                      value: 'I need a provider',
                       groupValue: AppointmentCard.gigValue,
                       activeColor: Theme.of(context).primaryColor,
                       onChanged: (T) {
-                        widget.slidingCardController.collapseCard();
+                        widget.onCardTapped();
                         setState(() {
                           AppointmentCard.gigValue = T;
-                          AppointmentCard.gigDeadline = null;
+                          // AppointmentCard.gigDeadline = _formattedDate;
+                          AppointmentCard.gigDeadline =
+                              new DateTime.now().add(Duration(days: 30));
+
                           print('deadline: ${AppointmentCard.gigDeadline}');
                           // Gig().gigValue = gigValue;
                         });
-                      }),
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    'I need a provider',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 17,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width / 3,
+              child: Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: 20,
+                    child: Radio(
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        value: 'Gigs I can do',
+                        groupValue: AppointmentCard.gigValue,
+                        activeColor: Theme.of(context).primaryColor,
+                        onChanged: (T) {
+                          widget.slidingCardController.collapseCard();
+                          setState(() {
+                            AppointmentCard.gigValue = T;
+                            AppointmentCard.gigDeadline = null;
+                            print('deadline: ${AppointmentCard.gigDeadline}');
+                            // Gig().gigValue = gigValue;
+                          });
+                        }),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    'Gigs I can do',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 17,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        backCardWidget: Container(
+          // height: 100,
+          // decoration: BoxDecoration(
+          //   border: Border(bottom: BorderSide()),
+          // ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.40,
+                  child: ButtonTheme(
+                    padding: EdgeInsets.all(0),
+                    child: GestureDetector(
+                      onTap: () {
+                        _selectedDate(context);
+                      },
+                      child: Text(
+                        '${AppointmentCard.gigDeadline}',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      // child: TextFormField(
+                      //   style: TextStyle(color: Colors.grey, fontSize: 17),
+                      //   enabled: false,
+                      //   controller: _deadLineController,
+                      //   decoration: InputDecoration(
+                      //     border: InputBorder.none,
+                      //     focusedBorder: InputBorder.none,
+                      //     enabledBorder: InputBorder.none,
+                      //     errorBorder: InputBorder.none,
+                      //     disabledBorder: InputBorder.none,
+                      //   ),
+                      //   onChanged: (deadline) {
+                      //     setState(() {
+                      //       AppointmentCard.gigDeadline = deadline;
+                      //     });
+                      //   },
+                      //   onSaved: (value) => AppointmentCard.gigDeadline != null
+                      //       ? AppointmentCard.gigDeadline = value
+                      //       : AppointmentCard.gigDeadline = null,
+                      // ),
+                    ),
+                  ),
                 ),
-                SizedBox(
-                  width: 5,
-                ),
-                Text(
-                  'Gigs I can do',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 17,
+                Container(
+                  width: MediaQuery.of(context).size.width / 3,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text(
+                      'Deadline',
+                      style: TextStyle(fontSize: 17, color: Colors.grey),
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-      backCardWidget: Container(
-        // height: 100,
-        // decoration: BoxDecoration(
-        //   border: Border(bottom: BorderSide()),
-        // ),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.40,
-                child: ButtonTheme(
-                  padding: EdgeInsets.all(0),
-                  child: FlatButton(
-                    onPressed: () {
-                      _selectedDate(context);
-                    },
-                    child: Text(
-                      '${AppointmentCard.gigDeadline}',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    // child: TextFormField(
-                    //   style: TextStyle(color: Colors.grey, fontSize: 17),
-                    //   enabled: false,
-                    //   controller: _deadLineController,
-                    //   decoration: InputDecoration(
-                    //     border: InputBorder.none,
-                    //     focusedBorder: InputBorder.none,
-                    //     enabledBorder: InputBorder.none,
-                    //     errorBorder: InputBorder.none,
-                    //     disabledBorder: InputBorder.none,
-                    //   ),
-                    //   onChanged: (deadline) {
-                    //     setState(() {
-                    //       AppointmentCard.gigDeadline = deadline;
-                    //     });
-                    //   },
-                    //   onSaved: (value) => AppointmentCard.gigDeadline != null
-                    //       ? AppointmentCard.gigDeadline = value
-                    //       : AppointmentCard.gigDeadline = null,
-                    // ),
-                  ),
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width / 3,
-                child: Text(
-                  'Deadline',
-                  style: TextStyle(fontSize: 17, color: Colors.grey),
-                ),
-              ),
-            ],
           ),
         ),
       ),

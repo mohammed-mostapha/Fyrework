@@ -316,9 +316,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
   List<PickMethodModel> get pickMethods => <PickMethodModel>[
         PickMethodModel(
-          icon: '📹',
-          name: 'Common picker',
-          description: 'Pick images and videos.',
           method: (
             BuildContext context,
             List<AssetEntity> assets,

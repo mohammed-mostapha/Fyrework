@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_common_exports/flutter_common_exports.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:myApp/screens/home/home.dart';
 import 'package:myApp/services/storage_repo.dart';
 import 'package:myApp/ui/shared/theme.dart';
@@ -12,6 +13,7 @@ import '../src/wechat_assets_picker.dart';
 import '../constants/picker_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'dart:math' as math;
 
 enum UrlType { IMAGE, VIDEO, UNKNOWN }
 
@@ -57,6 +59,9 @@ class MultiAssetsPicker extends StatefulWidget {
 }
 
 class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
+  final String publish = 'assets/svgs/bullhorn.svg';
+  final String portal_exit = 'assets/svgs/portal-exit.svg';
+
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -271,52 +276,52 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
         height: assets.isNotEmpty ? isDisplayingDetail ? 250.0 : 80.0 : 40.0,
         child: Column(
           children: <Widget>[
-            SizedBox(
-              height: 50.0,
-              child: GestureDetector(
-                // onTap: () {
-                //   if (assets.isNotEmpty) {
-                //     setState(() {
-                //       isDisplayingDetail = !isDisplayingDetail;
-                //     });
-                //   }
-                // },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    const Text(
-                      'Selected Assets',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Container(
-                      height: 25.0,
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 10.0,
-                      ),
-                      padding: const EdgeInsets.all(4.0),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: FyreworkrColors.fyreworkBlack),
-                      child: Text(
-                        '${assets.length}',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          height: 1.0,
-                        ),
-                      ),
-                    ),
-                    // if (assets.isNotEmpty)
-                    //   Icon(
-                    //     isDisplayingDetail
-                    //         ? Icons.arrow_downward
-                    //         : Icons.arrow_upward,
-                    //     size: 18.0,
-                    //   ),
-                  ],
-                ),
-              ),
-            ),
+            // SizedBox(
+            //   height: 50.0,
+            //   child: GestureDetector(
+            //     // onTap: () {
+            //     //   if (assets.isNotEmpty) {
+            //     //     setState(() {
+            //     //       isDisplayingDetail = !isDisplayingDetail;
+            //     //     });
+            //     //   }
+            //     // },
+            //     child: Row(
+            //       mainAxisSize: MainAxisSize.min,
+            //       children: <Widget>[
+            //         const Text(
+            //           'Selected Assets',
+            //           style: TextStyle(fontSize: 16),
+            //         ),
+            //         Container(
+            //           height: 25.0,
+            //           margin: const EdgeInsets.symmetric(
+            //             horizontal: 10.0,
+            //           ),
+            //           padding: const EdgeInsets.all(4.0),
+            //           decoration: BoxDecoration(
+            //               shape: BoxShape.circle,
+            //               color: FyreworkrColors.fyreworkBlack),
+            //           child: Text(
+            //             '${assets.length}',
+            //             style: TextStyle(
+            //               color: Colors.white,
+            //               fontSize: 16,
+            //               height: 1.0,
+            //             ),
+            //           ),
+            //         ),
+            //         // if (assets.isNotEmpty)
+            //         //   Icon(
+            //         //     isDisplayingDetail
+            //         //         ? Icons.arrow_downward
+            //         //         : Icons.arrow_upward,
+            //         //     size: 18.0,
+            //         //   ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
             selectedAssetsListView,
           ],
         ),
@@ -326,15 +331,16 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
         child: ListView.builder(
           shrinkWrap: true,
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          // padding: const EdgeInsets.symmetric(horizontal: 8.0),
           scrollDirection: Axis.horizontal,
           itemCount: assetsLength,
           itemBuilder: (BuildContext _, int index) {
             return Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 8.0,
-                vertical: 16.0,
-              ),
+              // padding: const EdgeInsets.symmetric(
+              //   // horizontal: 8.0,
+              //   vertical: 16.0,
+              // ),
+              padding: EdgeInsets.fromLTRB(0, 16, 4, 16),
               child: AspectRatio(
                 aspectRatio: 1.0,
                 child: Stack(
@@ -432,98 +438,181 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
 
   Widget get gigPreview {
     return Container(
-      child: Column(
-        children: <Widget>[
-          Text('${widget.gigHashtags}', style: TextStyle(fontSize: 16)),
-          selectedAssetsWidget,
-          SizedBox(height: 10.0),
-          Text('${widget.gigPost}', style: TextStyle(fontSize: 16)),
-          SizedBox(
-            height: 10.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Row(
-                children: <Widget>[
-                  FaIcon(
-                    FontAwesomeIcons.hourglassStart,
-                    size: 20,
-                  ),
-                  Container(
-                    width: 5.0,
-                    height: 0,
-                  ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: AutoSizeText(
-                      '${widget.gigDeadLine}',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 5),
-              Row(
-                children: <Widget>[
-                  Container(
-                    child: AutoSizeText(
-                      '${widget.gigCurrency}',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Container(
-                    width: 2.5,
-                    height: 0,
-                  ),
-                  Container(
-                    child: AutoSizeText(
-                      '${widget.gigBudget}',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          widget.adultContentBool
-              ? Container(
-                  alignment: Alignment.centerLeft,
-                  child: Column(
-                    children: [
-                      SizedBox(height: 10),
-                      Row(
-                        children: [
-                          FaIcon(
-                            FontAwesomeIcons.solidStar,
-                            size: 20,
-                          ),
-                          Container(
-                            width: 5.0,
-                            height: 0,
-                          ),
-                          Expanded(
-                            child: AutoSizeText(
-                              "${widget.adultContentText}",
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 5,
+                        ),
+                        SizedBox(
+                          width: 25,
+                          height: 25,
+                          child: Transform(
+                            alignment: Alignment.center,
+                            transform: Matrix4.rotationY(math.pi),
+                            child: SvgPicture.asset(
+                              portal_exit,
+                              semanticsLabel: 'portal-exit',
+                              // color: Theme.of(context).primaryColor,
+                              // color: Theme.of(context).primaryColor,
                             ),
                           ),
-                        ],
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text('Back', style: TextStyle(fontSize: 20)),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  GestureDetector(
+                    child: Row(
+                      children: [
+                        Text('Publish', style: TextStyle(fontSize: 20)),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        SizedBox(
+                          width: 25,
+                          height: 25,
+                          child: SvgPicture.asset(
+                            publish,
+                            semanticsLabel: 'publish',
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                    onTap: () {},
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              Wrap(
+                spacing: 2.5,
+                children: widget.gigHashtags
+                    .map((e) => Chip(
+                          backgroundColor: Colors.black,
+                          label: Text(
+                            '$e',
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+                          onDeleted: () {
+                            setState(() {
+                              widget.gigHashtags
+                                  .removeWhere((item) => item == e);
+                              print(widget.gigHashtags.length);
+                            });
+                          },
+                          deleteIconColor: Colors.white,
+                        ))
+                    .toList(),
+              ),
+              selectedAssetsWidget,
+              SizedBox(height: 10.0),
+              Text('${widget.gigPost}', style: TextStyle(fontSize: 16)),
+              SizedBox(
+                height: 10.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      FaIcon(
+                        FontAwesomeIcons.hourglassStart,
+                        size: 20,
+                      ),
+                      Container(
+                        width: 5.0,
+                        height: 0,
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: AutoSizeText(
+                          '${widget.gigDeadLine}',
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                )
-              : Container(
-                  width: 0,
-                  height: 0,
-                ),
-        ],
+                  SizedBox(height: 5),
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        child: AutoSizeText(
+                          '${widget.gigCurrency}',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Container(
+                        width: 2.5,
+                        height: 0,
+                      ),
+                      Container(
+                        child: AutoSizeText(
+                          '${widget.gigBudget}',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              widget.adultContentBool
+                  ? Container(
+                      alignment: Alignment.centerLeft,
+                      child: Column(
+                        children: [
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              FaIcon(
+                                FontAwesomeIcons.solidStar,
+                                size: 20,
+                              ),
+                              Container(
+                                width: 5.0,
+                                height: 0,
+                              ),
+                              Expanded(
+                                child: AutoSizeText(
+                                  "${widget.adultContentText}",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(
+                      width: 0,
+                      height: 0,
+                    ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -596,7 +685,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
     return SafeArea(
       child: Scaffold(
         // body: pickAssetsCommon(),
-        body: Container(),
+        body: gigPreview,
       ),
     );
   }
