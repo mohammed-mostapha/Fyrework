@@ -114,7 +114,7 @@ class FirestoreService {
     }
   }
 
-  Stream listenToGigsRealTime() {
+  Stream listenToAllGigsRealTime() {
     // Register the handler for when the gigs data changes
     _gigsCollectionReference.snapshots().listen((gigsSnapshot) {
       if (gigsSnapshot.documents.isNotEmpty) {
@@ -129,25 +129,25 @@ class FirestoreService {
     return _gigsController.stream;
   }
 
-  Stream listenToCommentsRealTime(String gigIdCommentsIdentifier) {
-    // Register the handler for when the comments data changes
-    _commentsCollectionReference.snapshots().listen((commentsSnapshot) {
-      if (commentsSnapshot.documents.isNotEmpty) {
-        var commentsByGigId = commentsSnapshot.documents
-            .where((element) =>
-                element.documentID.contains(gigIdCommentsIdentifier))
-            .map((snapshot) =>
-                Comment.fromMap(snapshot.data, snapshot.documentID))
-            .where((mappedItem) =>
-                mappedItem.gigIdHoldingComment == gigIdCommentsIdentifier)
-            .toList();
+  // Stream listenToCommentsRealTime(String gigIdCommentsIdentifier) {
+  //   // Register the handler for when the comments data changes
+  //   _commentsCollectionReference.snapshots().listen((commentsSnapshot) {
+  //     if (commentsSnapshot.documents.isNotEmpty) {
+  //       var commentsByGigId = commentsSnapshot.documents
+  //           .where((element) =>
+  //               element.documentID.contains(gigIdCommentsIdentifier))
+  //           .map((snapshot) =>
+  //               Comment.fromMap(snapshot.data, snapshot.documentID))
+  //           .where((mappedItem) =>
+  //               mappedItem.gigIdHoldingComment == gigIdCommentsIdentifier)
+  //           .toList();
 
-        _commentsController.add(commentsByGigId);
-      }
-    });
+  //       _commentsController.add(commentsByGigId);
+  //     }
+  //   });
 
-    return _commentsController.stream;
-  }
+  //   return _commentsController.stream;
+  // }
 
   Future deleteGig(String commentId) async {
     await _gigsCollectionReference.document(commentId).delete();

@@ -31,8 +31,8 @@ class GigItem extends StatefulWidget {
   final gigValue;
   final gigLikes;
   final appointedUserId;
-  final Gig adultContentText;
-  final Gig adultContentBool;
+  final adultContentText;
+  final adultContentBool;
   final Function onDeleteItem;
   GigItem({
     Key key,
@@ -100,13 +100,13 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
           context,
           MaterialPageRoute(
               builder: (context) => AddCommentsView(
-                    passedGigId: widget.gigId.gigId,
-                    passedGigOwnerId: widget.gigOwnerId.gigOwnerId,
+                    passedGigId: widget.gigId,
+                    passedGigOwnerId: widget.gigOwnerId,
                     passedCurrentUserId: widget.currentUserId,
-                    passedGigAppointed: widget.appointed.appointed,
-                    passedGigValue: widget.gigValue.gigValue,
-                    passedGigCurrency: widget.gigCurrency.gigCurrency,
-                    passedGigBudget: widget.gigBudget.gigBudget,
+                    passedGigAppointed: widget.appointed,
+                    passedGigValue: widget.gigValue,
+                    passedGigCurrency: widget.gigCurrency,
+                    passedGigBudget: widget.gigBudget,
                   )));
     });
   }
@@ -142,8 +142,8 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
         context,
         MaterialPageRoute(
             builder: (context) => UserProfileView(
-                  passedUserUid: widget.gigOwnerId.gigOwnerId,
-                  passedUserFullName: widget.userFullName.userFullName,
+                  passedUserUid: widget.gigOwnerId,
+                  passedUserFullName: widget.userFullName,
                   fromComment: false,
                   fromGig: true,
                 )));
@@ -195,7 +195,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                                   backgroundColor:
                                       Theme.of(context).primaryColor,
                                   backgroundImage: NetworkImage(
-                                      "${widget.userProfilePictureDownloadUrl.userProfilePictureDownloadUrl}"),
+                                      "${widget.userProfilePictureDownloadUrl}"),
                                 ),
                                 Container(
                                   width: 10,
@@ -203,7 +203,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                                 ),
                                 Flexible(
                                   child: Text(
-                                    "${widget.userFullName.userFullName}",
+                                    "${widget.userFullName}",
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                         fontSize: 18,
@@ -218,19 +218,18 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                       RaisedButton(
                         color: Theme.of(context).primaryColor,
                         child: Text(
-                          widget.gigOwnerId.gigOwnerId == widget.currentUserId
+                          widget.gigOwnerId == widget.currentUserId
                               ? 'Your gig'
                               : widget.gigValue.gigValue == 'Gigs I can do'
                                   ? 'Hire me'
                                   : 'Apply',
                           style: TextStyle(color: FyreworkrColors.white),
                         ),
-                        onPressed:
-                            widget.gigOwnerId.gigOwnerId == widget.currentUserId
+                        onPressed: widget.gigOwnerId == widget.currentUserId
+                            ? () {}
+                            : widget.gigValue.gigValue == 'Gigs I can do'
                                 ? () {}
-                                : widget.gigValue.gigValue == 'Gigs I can do'
-                                    ? () {}
-                                    : () {},
+                                : () {},
                       )
                     ],
                   ),
@@ -241,7 +240,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                       fit: BoxFit.scaleDown,
                       child: Text(
                         // "${widget.gigHashtags.gigHashtags}",
-                        "${widget.gigHashtags.gigHashtags}",
+                        "${widget.gigHashtags}",
                         style: TextStyle(
                           fontSize: 18,
                         ),
@@ -259,8 +258,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
               alignment: Alignment.center,
               children: <Widget>[
                 GigItemMediaPreviewer(
-                  receivedGigMediaFilesUrls: widget
-                      .gigMediaFilesDownloadUrls.gigMediaFilesDownloadUrls,
+                  receivedGigMediaFilesUrls: widget.gigMediaFilesDownloadUrls,
                 ),
                 showLikeOverlay
                     ? Icon(
@@ -281,14 +279,14 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
               children: <Widget>[
                 Row(
                   children: <Widget>[
-                    widget.gigLikes.gigLikes != null &&
-                            widget.gigLikes.gigLikes != 0 &&
-                            widget.gigLikes.gigLikes > 0
+                    widget.gigLikes != null &&
+                            widget.gigLikes != 0 &&
+                            widget.gigLikes > 0
                         ? Flexible(
                             child: Text(
-                            '${widget.gigLikes.gigLikes}' + ' ' + 'likes',
+                            '${widget.gigLikes}' + ' ' + 'likes',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 16,
                             ),
                           ))
                         : Container(
@@ -300,9 +298,9 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "${widget.gigPost.gigPost}",
+                    "${widget.gigPost}",
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                     ),
                   ),
                 ),
@@ -332,11 +330,11 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                             fit: BoxFit.scaleDown,
                             child: Text(
                               // "${widget.gigDeadline.gigDeadline}",
-                              widget.gigDeadline.gigDeadline != null
+                              widget.gigDeadline != null
                                   // ? "${widget.gigDeadline.gigDeadline}"
                                   ? DateFormat('yyyy-MM-dd').format(
                                       DateTime.fromMillisecondsSinceEpoch(
-                                          widget.gigDeadline.gigDeadline))
+                                          widget.gigDeadline))
                                   : "Book Gig",
                               style: TextStyle(
                                 fontSize: 18,
@@ -353,9 +351,10 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              "${widget.gigCurrency.gigCurrency}",
+                              "${widget.gigCurrency}",
                               style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ),
@@ -367,9 +366,10 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              "${widget.gigBudget.gigBudget}",
+                              "${widget.gigBudget}",
                               style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ),
@@ -378,7 +378,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                   ],
                 ),
                 // SizedBox(height: 10.0),
-                widget.adultContentBool.adultContentBool
+                widget.adultContentBool
                     ? Container(
                         alignment: Alignment.centerLeft,
                         child: Column(
@@ -395,7 +395,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    "${widget.adultContentText.adultContentText}",
+                                    "${widget.adultContentText}",
                                     style: TextStyle(
                                       fontSize: 8,
                                     ),

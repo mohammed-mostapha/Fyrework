@@ -71,6 +71,11 @@ class DatabaseService {
     return _usersCollection.document(id).snapshots().map(_userDataFromSnapshot);
   }
 
+  // listening to all gigs
+  Stream<QuerySnapshot> listenToAllGigs() {
+    return _gigsCollection.snapshots();
+  }
+
   Stream<QuerySnapshot> userOngoingGigsByGigOwnerId(String userId) {
     return _gigsCollection.where('gigOwnerId', isEqualTo: userId).snapshots();
   }
@@ -172,4 +177,25 @@ class DatabaseService {
     });
     return filteredTakenHandles.toList();
   }
+
+//    Future deleteGig(int index) async {
+//     var dialogResponse = await _dialogService.showConfirmationDialog(
+//       title: 'Are you sure?',
+//       description: 'Do you really want to delete this gig?',
+//       confirmationTitle: 'Yes',
+//       cancelTitle: 'No',
+//     );
+//     if (dialogResponse.confirmed) {
+//       await _firestoreService.deleteGig(_gigs[index].gigId);
+//     }
+//   }
+
+//   Future navigateToCreateView() async {
+//     await _navigationService.navigateTo(CreateGigViewRoute);
+//   }
+
+//   void editGig(int index) {
+//     _navigationService.navigateTo(CreateGigViewRoute, arguments: _gigs[index]);
+//   }
+// }
 }
