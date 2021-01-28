@@ -6,7 +6,6 @@ import 'package:flutter_common_exports/flutter_common_exports.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:myApp/screens/home/home.dart';
 import 'package:myApp/services/storage_repo.dart';
-import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/viewmodels/create_gig_view_model.dart';
 import 'package:path/path.dart' as fileName;
 import '../src/wechat_assets_picker.dart';
@@ -14,6 +13,7 @@ import '../constants/picker_model.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:math' as math;
+import 'package:intl/intl.dart';
 
 enum UrlType { IMAGE, VIDEO, UNKNOWN }
 
@@ -59,8 +59,8 @@ class MultiAssetsPicker extends StatefulWidget {
 }
 
 class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
-  final String publish = 'assets/svgs/bullhorn.svg';
-  final String portal_exit = 'assets/svgs/portal-exit.svg';
+  final String hourglassStart = 'assets/svgs/hourglass-start.svg';
+  var formattedGigDeadline;
 
   void initState() {
     super.initState();
@@ -437,6 +437,11 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
   }
 
   Widget get gigPreview {
+    if (widget.gigDeadLine != null) {
+      formattedGigDeadline = DateFormat.yMMMd()
+          .format(DateTime.fromMillisecondsSinceEpoch(widget.gigDeadLine));
+    }
+
     return Container(
       child: Padding(
         padding: const EdgeInsets.all(10),
@@ -453,24 +458,26 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                         SizedBox(
                           width: 5,
                         ),
-                        SizedBox(
-                          width: 25,
-                          height: 25,
-                          child: Transform(
-                            alignment: Alignment.center,
-                            transform: Matrix4.rotationY(math.pi),
-                            child: SvgPicture.asset(
-                              portal_exit,
-                              semanticsLabel: 'portal-exit',
-                              // color: Theme.of(context).primaryColor,
-                              // color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text('Back', style: TextStyle(fontSize: 20)),
+                        // SizedBox(
+                        //   width: 25,
+                        //   height: 25,
+                        //   child: Transform(
+                        //     alignment: Alignment.center,
+                        //     transform: Matrix4.rotationY(math.pi),
+                        //     child: SvgPicture.asset(
+                        //       portal_exit,
+                        //       semanticsLabel: 'portal-exit',
+                        //       // color: Theme.of(context).primaryColor,
+                        //       // color: Theme.of(context).primaryColor,
+                        //     ),
+                        //   ),
+                        // ),
+                        // SizedBox(
+                        //   width: 5,
+                        // ),
+                        Text('Back',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w500)),
                       ],
                     ),
                     onTap: () {
@@ -480,19 +487,23 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                   GestureDetector(
                     child: Row(
                       children: [
-                        Text('Publish', style: TextStyle(fontSize: 20)),
-                        SizedBox(
-                          width: 5,
+                        Text(
+                          'Publish',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w500),
                         ),
-                        SizedBox(
-                          width: 25,
-                          height: 25,
-                          child: SvgPicture.asset(
-                            publish,
-                            semanticsLabel: 'publish',
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
+                        // SizedBox(
+                        //   width: 5,
+                        // ),
+                        // SizedBox(
+                        //   width: 25,
+                        //   height: 25,
+                        //   child: SvgPicture.asset(
+                        //     publish,
+                        //     semanticsLabel: 'publish',
+                        //     color: Theme.of(context).primaryColor,
+                        //   ),
+                        // ),
                       ],
                     ),
                     onTap: () {},
@@ -503,22 +514,27 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                 height: 25,
               ),
               Wrap(
-                spacing: 2.5,
                 children: widget.gigHashtags
-                    .map((e) => Chip(
-                          backgroundColor: Colors.black,
-                          label: Text(
-                            '$e',
-                            style: TextStyle(fontSize: 16, color: Colors.white),
+                    .map((e) => Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 2.5, 2.5),
+                          child: Chip(
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            backgroundColor: Colors.black,
+                            label: Text(
+                              '$e',
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white),
+                            ),
+                            onDeleted: () {
+                              setState(() {
+                                widget.gigHashtags
+                                    .removeWhere((item) => item == e);
+                                print(widget.gigHashtags.length);
+                              });
+                            },
+                            deleteIconColor: Colors.white,
                           ),
-                          onDeleted: () {
-                            setState(() {
-                              widget.gigHashtags
-                                  .removeWhere((item) => item == e);
-                              print(widget.gigHashtags.length);
-                            });
-                          },
-                          deleteIconColor: Colors.white,
                         ))
                     .toList(),
               ),
@@ -529,29 +545,41 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                 height: 10.0,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: widget.gigDeadLine != null
+                    ? MainAxisAlignment.spaceBetween
+                    : MainAxisAlignment.start,
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      FaIcon(
-                        FontAwesomeIcons.hourglassStart,
-                        size: 20,
-                      ),
-                      Container(
-                        width: 5.0,
-                        height: 0,
-                      ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: AutoSizeText(
-                          '${widget.gigDeadLine}',
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
+                  widget.gigDeadLine != null
+                      ? Row(
+                          children: <Widget>[
+                            SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: SvgPicture.asset(
+                                hourglassStart,
+                                semanticsLabel: 'hourglass-start',
+                                // color: Theme.of(context).primaryColor,
+                                // color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            Container(
+                              width: 5.0,
+                              height: 0,
+                            ),
+                            Container(
+                              child: Text(
+                                '$formattedGigDeadline',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container(
+                          width: 0,
+                          height: 0,
                         ),
-                      ),
-                    ],
-                  ),
                   SizedBox(height: 5),
                   Row(
                     children: <Widget>[
@@ -559,7 +587,8 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                         child: AutoSizeText(
                           '${widget.gigCurrency}',
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                       Container(
@@ -570,7 +599,8 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                         child: AutoSizeText(
                           '${widget.gigBudget}',
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                     ],
@@ -586,8 +616,8 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                           Row(
                             children: [
                               FaIcon(
-                                FontAwesomeIcons.solidStar,
-                                size: 20,
+                                FontAwesomeIcons.asterisk,
+                                size: 8,
                               ),
                               Container(
                                 width: 5.0,
@@ -597,7 +627,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                                 child: AutoSizeText(
                                   "${widget.adultContentText}",
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 8,
                                   ),
                                 ),
                               ),

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:core';
+import 'package:flutter_svg/svg.dart';
 import 'package:myApp/models/gig.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -67,6 +68,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
   bool liked = false;
   bool showLikeOverlay = false;
   AnimationController _likeAnimationController;
+  final String hourglassStart = 'assets/svgs/hourglass-start.svg';
 
   List<String> gigMediaFilesDownloadedUrls = List<String>();
 
@@ -309,10 +311,15 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        FaIcon(
-                          FontAwesomeIcons.hourglassStart,
-                          size: 15,
-                          color: Theme.of(context).primaryColor,
+                        SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: SvgPicture.asset(
+                            hourglassStart,
+                            semanticsLabel: 'hourglass-start',
+                            // color: Theme.of(context).primaryColor,
+                            // color: Theme.of(context).primaryColor,
+                          ),
                         ),
                         Container(
                           width: 5.0,
@@ -379,18 +386,17 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                             Row(
                               children: [
                                 FaIcon(
-                                  FontAwesomeIcons.solidStar,
-                                  size: 15,
+                                  FontAwesomeIcons.asterisk,
+                                  size: 8,
                                 ),
                                 Container(
                                   width: 5.0,
-                                  height: 0,
                                 ),
                                 Expanded(
                                   child: Text(
                                     "${widget.adultContentText.adultContentText}",
                                     style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 8,
                                     ),
                                   ),
                                 ),
