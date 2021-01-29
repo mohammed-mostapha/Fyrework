@@ -1,11 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:myApp/screens/trends/BuyerGigs.dart';
-import 'package:myApp/screens/trends/providerGigs.dart';
+import 'package:myApp/screens/trends/providerGigs_view.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/screens/trends/AllGigs_view.dart';
 import 'package:myApp/ui/widgets/badgeIcon.dart';
+
+import 'clientGigs_view.dart';
 
 class Trends extends StatefulWidget {
   @override
@@ -13,7 +14,7 @@ class Trends extends StatefulWidget {
 }
 
 class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
-  final String bell = 'assets/svgs/bell.svg';
+  final String bell = 'assets/svgs/light/bell.svg';
 
   @override
   Widget build(BuildContext context) {
@@ -91,8 +92,8 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
         body: TabBarView(
           children: [
             AllGigsView(),
-            BuyerGigs(),
-            ProviderGigs(),
+            ClientGigsView(),
+            ProvierGigsView(),
           ],
         ),
       ),

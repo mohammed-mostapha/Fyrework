@@ -60,14 +60,14 @@ class _MyProfileViewState extends State<MyProfileView> {
   // StorageRepo _storageRepo = locator.get<StorageRepo>();
   AuthFormType authFormType;
   bool profileEditingMenu = false;
-  final String shieldCheck = 'assets/svgs/shield-check.svg';
-  final String lock = 'assets/svgs/lock.svg';
-  final String balanceScale = 'assets/svgs/balance-scale.svg';
-  final String userIcon = 'assets/svgs/user.svg';
-  final String legals = 'assets/svgs/file-contract.svg';
-  final String signOut = 'assets/svgs/sign-out-alt.svg';
-  final String policies = 'assets/svgs/file-signature.svg';
-  final String grid = 'assets/svgs/th.svg';
+  final String shieldCheck = 'assets/svgs/light/shield-check.svg';
+  final String lock = 'assets/svgs/light/lock.svg';
+  final String balanceScale = 'assets/svgs/light/balance-scale.svg';
+  final String userIcon = 'assets/svgs/light/user.svg';
+  final String legals = 'assets/svgs/light/file-contract.svg';
+  final String signOut = 'assets/svgs/light/sign-out-alt.svg';
+  final String policies = 'assets/svgs/light/file-signature.svg';
+  final String grid = 'assets/svgs/light/th.svg';
 
   final int maxAssetsCount = 1;
 

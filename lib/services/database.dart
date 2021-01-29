@@ -76,6 +76,20 @@ class DatabaseService {
     return _gigsCollection.snapshots();
   }
 
+  // listening to client gigs
+  Stream<QuerySnapshot> listenToCilentGigs() {
+    return _gigsCollection
+        .where('gigValue', isEqualTo: 'I need a provider')
+        .snapshots();
+  }
+
+  // listening to provider gigs
+  Stream<QuerySnapshot> listenToProviderGigs() {
+    return _gigsCollection
+        .where('gigValue', isEqualTo: 'Gigs I can do')
+        .snapshots();
+  }
+
   Stream<QuerySnapshot> userOngoingGigsByGigOwnerId(String userId) {
     return _gigsCollection.where('gigOwnerId', isEqualTo: userId).snapshots();
   }

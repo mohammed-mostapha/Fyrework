@@ -65,10 +65,13 @@ class GigItem extends StatefulWidget {
 }
 
 class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
+  final String heart = 'assets/svgs/light/heart.svg';
+  final String heartSolid = 'assets/svgs/solid/heart.svg';
+  final String comment = 'assets/svgs/light/comment.svg';
+  final String hourglassStart = 'assets/svgs/light/hourglass-start.svg';
   bool liked = false;
   bool showLikeOverlay = false;
   AnimationController _likeAnimationController;
-  final String hourglassStart = 'assets/svgs/hourglass-start.svg';
 
   List<String> gigMediaFilesDownloadedUrls = List<String>();
 
@@ -153,22 +156,31 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     ScaleTransition likeButton = ScaleTransition(
       scale: _likeAnimationController,
-      child: IconButton(
-          icon: Icon(
-            liked ? Icons.favorite : Icons.favorite_border,
-            color: liked ? Colors.red[400] : Colors.grey,
-            size: 30,
+      child: GestureDetector(
+        child: SizedBox(
+          width: 20,
+          height: 20,
+          child: SvgPicture.asset(
+            liked ? heartSolid : heart,
+            semanticsLabel: 'Like',
+            color: liked ? Colors.red[400] : Theme.of(context).primaryColor,
           ),
-          onPressed: () => _likedPressed()),
+        ),
+        onTap: () => _likedPressed(),
+      ),
     );
 
-    IconButton commentButton = IconButton(
-      icon: FaIcon(
-        FontAwesomeIcons.comment,
-        size: 27,
-        color: Colors.grey,
+    GestureDetector commentButton = GestureDetector(
+      child: SizedBox(
+        width: 20,
+        height: 20,
+        child: SvgPicture.asset(
+          comment,
+          semanticsLabel: 'Comment',
+          color: Theme.of(context).primaryColor,
+        ),
       ),
-      onPressed: () => _commentButtonPressed(),
+      onTap: () => _commentButtonPressed(),
     );
 
     return Container(
@@ -177,7 +189,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
         children: [
           Container(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: Column(
                 children: <Widget>[
                   Row(
@@ -215,36 +227,60 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
-                      RaisedButton(
-                        color: Theme.of(context).primaryColor,
-                        child: Text(
-                          widget.gigOwnerId == widget.currentUserId
-                              ? 'Your gig'
-                              : widget.gigValue.gigValue == 'Gigs I can do'
-                                  ? 'Hire me'
-                                  : 'Apply',
-                          style: TextStyle(color: FyreworkrColors.white),
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 1,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(2))),
+                        child: Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              child: Text(
+                                widget.gigOwnerId == widget.currentUserId
+                                    ? 'Edit Your gig'
+                                    : widget.gigValue.gigValue ==
+                                            'Gigs I can do'
+                                        ? 'Hire me'
+                                        : 'Apply',
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                              onTap: widget.gigOwnerId == widget.currentUserId
+                                  ? () {
+                                      print('edit you gig');
+                                    }
+                                  : widget.gigValue.gigValue == 'Gigs I can do'
+                                      ? () {}
+                                      : () {},
+                            ),
+                          ),
                         ),
-                        onPressed: widget.gigOwnerId == widget.currentUserId
-                            ? () {}
-                            : widget.gigValue.gigValue == 'Gigs I can do'
-                                ? () {}
-                                : () {},
                       )
                     ],
                   ),
                   SizedBox(height: 10),
                   Container(
-                    alignment: Alignment.centerLeft,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        // "${widget.gigHashtags.gigHashtags}",
-                        "${widget.gigHashtags}",
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
+                    width: double.infinity,
+                    child: Wrap(
+                      children: widget.gigHashtags
+                          .map<Widget>((e) => Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 0, 2.5, 2.5),
+                                child: Chip(
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  backgroundColor: Colors.black,
+                                  label: Text(
+                                    '$e',
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white),
+                                  ),
+                                ),
+                              ))
+                          .toList(),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -270,13 +306,22 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
               ],
             ),
           ),
-          Row(
-            children: <Widget>[likeButton, commentButton],
-          ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
+            padding: const EdgeInsets.fromLTRB(8, 0, 8, 16.0),
             child: Column(
               children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    likeButton,
+                    SizedBox(
+                      width: 15,
+                    ),
+                    commentButton
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
                 Row(
                   children: <Widget>[
                     widget.gigLikes != null &&
@@ -388,7 +433,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                               children: [
                                 FaIcon(
                                   FontAwesomeIcons.asterisk,
-                                  size: 8,
+                                  size: 10,
                                 ),
                                 Container(
                                   width: 5.0,
@@ -397,7 +442,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                                   child: Text(
                                     "${widget.adultContentText}",
                                     style: TextStyle(
-                                      fontSize: 8,
+                                      fontSize: 10,
                                     ),
                                   ),
                                 ),
