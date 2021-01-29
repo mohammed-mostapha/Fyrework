@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_common_exports/src/extensions/build_context_extension.dart';
 import 'package:myApp/services/firestore_service.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/widgets/user_profile.dart';
@@ -16,7 +15,7 @@ class CommentItem extends StatefulWidget {
   final commentId;
   final commentOwnerId;
   final commentOwnerProfilePictureUrl;
-  final commentOwnerFullName;
+  final commentOwnerUsername;
   final commentBody;
   final gigCurrency;
   final commentTime;
@@ -34,7 +33,7 @@ class CommentItem extends StatefulWidget {
     this.commentId,
     this.commentOwnerId,
     this.commentOwnerProfilePictureUrl,
-    this.commentOwnerFullName,
+    this.commentOwnerUsername,
     this.commentBody,
     this.gigCurrency,
     this.commentTime,
@@ -51,7 +50,6 @@ class CommentItem extends StatefulWidget {
 }
 
 class _CommentItemState extends State<CommentItem> {
-  ThemeData get currentTheme => context.themeData;
   Timer _timer;
   int _commentViewIndex = 0;
   double _commentOpacity = 0.9;
@@ -98,7 +96,7 @@ class _CommentItemState extends State<CommentItem> {
         MaterialPageRoute(
             builder: (context) => UserProfileView(
                   passedUserUid: widget.commentOwnerId,
-                  passedUserFullName: widget.commentOwnerFullName,
+                  // passedUserFullName: widget.commentOwnerUsername,
                   fromComment: true,
                   fromGig: false,
                 )));
@@ -132,7 +130,7 @@ class _CommentItemState extends State<CommentItem> {
                         ),
                         Flexible(
                           child: Text(
-                            '${widget.commentOwnerFullName}',
+                            '${widget.commentOwnerUsername}',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w900,
@@ -292,7 +290,7 @@ class _CommentItemState extends State<CommentItem> {
                                     Text('You rejected '),
                                     GestureDetector(
                                       child: Text(
-                                        '${widget.commentOwnerFullName}\'s proposal',
+                                        '${widget.commentOwnerUsername}\'s proposal',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -324,7 +322,7 @@ class _CommentItemState extends State<CommentItem> {
                                         Text('You appointed this gig to '),
                                         GestureDetector(
                                           child: Text(
-                                            '${widget.commentOwnerFullName}',
+                                            '${widget.commentOwnerUsername}',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w900),
                                           ),

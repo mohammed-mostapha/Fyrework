@@ -23,7 +23,7 @@ class MultiAssetsPicker extends StatefulWidget {
   final String gigId;
   final String userId;
   final String userProfilePictureDownloadUrl;
-  final String userFullName;
+  final String username;
   final String userLocation;
   final String gigLocation;
   final List gigHashtags;
@@ -42,7 +42,7 @@ class MultiAssetsPicker extends StatefulWidget {
     this.gigId,
     this.userId,
     this.userProfilePictureDownloadUrl,
-    this.userFullName,
+    this.username,
     this.userLocation,
     this.gigLocation,
     this.gigHashtags,
@@ -60,7 +60,7 @@ class MultiAssetsPicker extends StatefulWidget {
 }
 
 class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
-  final String hourglassStart = 'assets/svgs/hourglass-start.svg';
+  final String hourglassStart = 'assets/svgs/light/hourglass-start.svg';
   var formattedGigDeadline;
 
   void initState() {
@@ -277,52 +277,6 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
         height: assets.isNotEmpty ? isDisplayingDetail ? 250.0 : 80.0 : 40.0,
         child: Column(
           children: <Widget>[
-            // SizedBox(
-            //   height: 50.0,
-            //   child: GestureDetector(
-            //     // onTap: () {
-            //     //   if (assets.isNotEmpty) {
-            //     //     setState(() {
-            //     //       isDisplayingDetail = !isDisplayingDetail;
-            //     //     });
-            //     //   }
-            //     // },
-            //     child: Row(
-            //       mainAxisSize: MainAxisSize.min,
-            //       children: <Widget>[
-            //         const Text(
-            //           'Selected Assets',
-            //           style: TextStyle(fontSize: 16),
-            //         ),
-            //         Container(
-            //           height: 25.0,
-            //           margin: const EdgeInsets.symmetric(
-            //             horizontal: 10.0,
-            //           ),
-            //           padding: const EdgeInsets.all(4.0),
-            //           decoration: BoxDecoration(
-            //               shape: BoxShape.circle,
-            //               color: FyreworkrColors.fyreworkBlack),
-            //           child: Text(
-            //             '${assets.length}',
-            //             style: TextStyle(
-            //               color: Colors.white,
-            //               fontSize: 16,
-            //               height: 1.0,
-            //             ),
-            //           ),
-            //         ),
-            //         // if (assets.isNotEmpty)
-            //         //   Icon(
-            //         //     isDisplayingDetail
-            //         //         ? Icons.arrow_downward
-            //         //         : Icons.arrow_upward,
-            //         //     size: 18.0,
-            //         //   ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
             selectedAssetsListView,
           ],
         ),
@@ -404,7 +358,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
         gigId: widget.gigId,
         userId: widget.userId,
         userProfilePictureDownloadUrl: widget.userProfilePictureDownloadUrl,
-        userFullName: widget.userFullName,
+        username: widget.username,
         gigHashtags: widget.gigHashtags,
         userLocation: widget.userLocation,
         gigLocation: widget.gigLocation,

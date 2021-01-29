@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:core';
 import 'package:flutter_svg/svg.dart';
-import 'package:myApp/models/gig.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myApp/screens/add_gig/assets_picker/src/constants/constants.dart';
 import 'package:myApp/services/firestore_service.dart';
-import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/views/add_comments_view.dart';
 import 'package:myApp/ui/widgets/gig_item_media_previewer.dart';
 import 'package:myApp/ui/widgets/user_profile.dart';
@@ -18,9 +16,9 @@ class GigItem extends StatefulWidget {
   final currentUserId;
   final gigOwnerId;
   final gigOwnerEmail;
-  final userProfilePictureDownloadUrl;
-  final userFullName;
-  final userLocation;
+  final gigOwnerAvatarUrl;
+  final gigOwnerUsername;
+  final gigOwnerLocation;
   final gigLocation;
   final gigHashtags;
   final gigMediaFilesDownloadUrls;
@@ -42,9 +40,9 @@ class GigItem extends StatefulWidget {
     this.currentUserId,
     this.gigOwnerId,
     this.gigOwnerEmail,
-    this.userProfilePictureDownloadUrl,
-    this.userFullName,
-    this.userLocation,
+    this.gigOwnerAvatarUrl,
+    this.gigOwnerUsername,
+    this.gigOwnerLocation,
     this.gigLocation,
     this.gigHashtags,
     this.gigMediaFilesDownloadUrls,
@@ -146,7 +144,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
         MaterialPageRoute(
             builder: (context) => UserProfileView(
                   passedUserUid: widget.gigOwnerId,
-                  passedUserFullName: widget.userFullName,
+                  // passedUsername: widget.gigOwnerUsername,
                   fromComment: false,
                   fromGig: true,
                 )));
@@ -206,7 +204,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                                   backgroundColor:
                                       Theme.of(context).primaryColor,
                                   backgroundImage: NetworkImage(
-                                      "${widget.userProfilePictureDownloadUrl}"),
+                                      "${widget.gigOwnerAvatarUrl}"),
                                 ),
                                 Container(
                                   width: 10,
@@ -214,7 +212,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                                 ),
                                 Flexible(
                                   child: Text(
-                                    "${widget.userFullName}",
+                                    "${widget.gigOwnerUsername}",
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                         fontSize: 16,

@@ -4,7 +4,7 @@ class Comment {
   final String commentId;
   final String commentOwnerId;
   final String commentOwnerProfilePictureUrl;
-  final String commentOwnerFullName;
+  final String commentOwnerUsername;
   final String commentBody;
   dynamic commentTime;
   final bool privateComment;
@@ -20,7 +20,7 @@ class Comment {
     this.commentId,
     this.commentOwnerId,
     this.commentOwnerProfilePictureUrl,
-    this.commentOwnerFullName,
+    this.commentOwnerUsername,
     this.commentBody,
     this.commentTime,
     this.privateComment,
@@ -39,7 +39,7 @@ class Comment {
       'commentId': commentId,
       'commentOwnerId': commentOwnerId,
       'commentOwnerProfilePictureUrl': commentOwnerProfilePictureUrl,
-      'commentOwnerFullName': commentOwnerFullName,
+      'commentOwnerUsername': commentOwnerUsername,
       'commentBody': commentBody,
       // 'commentTime': DateTime.now().millisecondsSinceEpoch.toString(),
       'commentTime': commentTime,
@@ -61,7 +61,7 @@ class Comment {
       commentId: map['commentId'],
       commentOwnerId: map['commentOwnerId'],
       commentOwnerProfilePictureUrl: map['commentOwnerProfilePictureUrl'],
-      commentOwnerFullName: map['commentOwnerFullName'],
+      commentOwnerUsername: map['commentOwnerUsername'],
       commentBody: map['commentBody'],
       commentTime: map['commentTime'],
       privateComment: map['privateComment'],

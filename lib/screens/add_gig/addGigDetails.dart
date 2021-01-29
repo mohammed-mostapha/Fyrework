@@ -44,7 +44,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
 
   String _userId = MyUser.uid;
   String _userProfilePictureDownloadUrl = MyUser.userAvatarUrl;
-  String _userFullName = MyUser.name;
+  String _username = MyUser.name;
   String _userLocation = MyUser.location;
 
   final _createGigFormKey = GlobalKey<FormState>();
@@ -114,7 +114,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
           appointed: _appointed,
           userId: _userId,
           userProfilePictureDownloadUrl: _userProfilePictureDownloadUrl,
-          userFullName: _userFullName,
+          username: _username,
           userLocation: _userLocation,
           gigLocation: _gigLocation,
           gigHashtags: _myFavoriteHashtags,

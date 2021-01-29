@@ -45,7 +45,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
   bool rejected = false;
   String offeredBudget;
   String userId = MyUser.uid;
-  String userFullName = MyUser.username;
+  String username = MyUser.username;
   dynamic userProfilePictureUrl = MyUser.userAvatarUrl;
 
   final _proposalFormKey = GlobalKey<FormState>();
@@ -60,7 +60,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
       AddCommentsViewModel().addComment(
         gigIdHoldingComment: widget.passedGigId,
         gigOwnerId: widget.passedGigOwnerId,
-        commentOwnerFullName: userFullName,
+        commentOwnerUsername: username,
         commentBody: _addCommentsController.text,
         commentOwnerId: userId,
         commentOwnerProfilePictureUrl: userProfilePictureUrl,
@@ -88,7 +88,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
       await AddCommentsViewModel().addComment(
         gigIdHoldingComment: widget.passedGigId,
         gigOwnerId: widget.passedGigOwnerId,
-        commentOwnerFullName: userFullName,
+        commentOwnerUsername: username,
         commentBody: _addCommentsController.text,
         commentOwnerId: userId,
         commentOwnerProfilePictureUrl: userProfilePictureUrl,
@@ -287,7 +287,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                       widget.passedCurrentUserId
                                   ? 'Your gig'
                                   : !widget.passedGigAppointed
-                                      ? widget.passedGigValue == 'Gigs I can do'
+                                      ? widget.passedGigValue == 'Gig I can do'
                                           ? 'Hire me'
                                           : 'Apply'
                                       : 'Appointed',
@@ -355,7 +355,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                             await AddCommentsViewModel().addComment(
                               gigIdHoldingComment: widget.passedGigId,
                               gigOwnerId: widget.passedGigOwnerId,
-                              commentOwnerFullName: userFullName,
+                              commentOwnerUsername: username,
                               commentBody: submittedString,
                               commentOwnerId: userId,
                               commentOwnerProfilePictureUrl:

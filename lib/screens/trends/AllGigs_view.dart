@@ -38,10 +38,9 @@ class AllGigsView extends StatelessWidget {
                             gigId: getDocData['gigId'],
                             currentUserId: currentUserId,
                             gigOwnerId: getDocData['gigOwnerId'],
-                            userProfilePictureDownloadUrl:
-                                getDocData['userProfilePictureDownloadUrl'],
-                            userFullName: getDocData['userFullName'],
-                            userLocation: getDocData['userLocation'],
+                            gigOwnerAvatarUrl: getDocData['gigOwnerAvatarUrl'],
+                            gigOwnerUsername: getDocData['gigOwnerUsername'],
+                            gigOwnerLocation: getDocData['gigOwnerLocation'],
                             gigLocation: getDocData['gigLocation'],
                             gigHashtags: getDocData['gigHashtags'],
                             gigMediaFilesDownloadUrls:

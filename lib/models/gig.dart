@@ -2,9 +2,9 @@ class Gig {
   final bool appointed;
   final String gigId;
   final String gigOwnerId;
-  final String userProfilePictureDownloadUrl;
-  final String userFullName;
-  final String userLocation;
+  final String gigOwnerAvatarUrl;
+  final String gigOwnerUsername;
+  final String gigOwnerLocation;
   final String gigLocation;
   final List gigHashtags;
   final dynamic gigMediaFilesDownloadUrls;
@@ -17,14 +17,14 @@ class Gig {
   final bool adultContentBool;
   final int gigLikes;
   final String appointedUserId;
-  final String appointedUserFullName;
+  final String appointedusername;
   Gig({
     this.appointed,
     this.gigId,
     this.gigOwnerId,
-    this.userProfilePictureDownloadUrl,
-    this.userFullName,
-    this.userLocation,
+    this.gigOwnerAvatarUrl,
+    this.gigOwnerUsername,
+    this.gigOwnerLocation,
     this.gigLocation,
     this.gigHashtags,
     this.gigMediaFilesDownloadUrls,
@@ -37,7 +37,7 @@ class Gig {
     this.adultContentText,
     this.adultContentBool,
     this.appointedUserId,
-    this.appointedUserFullName,
+    this.appointedusername,
   });
 
   Map<String, dynamic> toMap() {
@@ -45,9 +45,9 @@ class Gig {
       'appointed': appointed,
       'gigId': gigId,
       'gigOwnerId': gigOwnerId,
-      'userProfilePictureDownloadUrl': userProfilePictureDownloadUrl,
-      'userFullName': userFullName,
-      'userLocation': userLocation,
+      'gigOwnerAvatarUrl': gigOwnerAvatarUrl,
+      'gigOwnerUsername': gigOwnerUsername,
+      'gigOwnerLocation': gigOwnerLocation,
       'gigLocation': gigLocation,
       'gigHashtags': gigHashtags,
       'gigMediaFilesDownloadUrls': gigMediaFilesDownloadUrls,
@@ -60,7 +60,7 @@ class Gig {
       'adultContentBool': adultContentBool,
       'gigLikes': gigLikes,
       'appointedUserId': appointedUserId,
-      'appointedUserFullName': appointedUserFullName,
+      'appointedusername': appointedusername,
     };
   }
 
@@ -71,9 +71,9 @@ class Gig {
       appointed: map['appointed'],
       gigId: map['gigId'],
       gigOwnerId: map['gigOwnerId'],
-      userProfilePictureDownloadUrl: map['userProfilePictureDownloadUrl'],
-      userFullName: map['userFullName'],
-      userLocation: map['userLocation'],
+      gigOwnerAvatarUrl: map['gigOwnerAvatarUrl'],
+      gigOwnerUsername: map['gigOwnerUsername'],
+      gigOwnerLocation: map['gigOwnerLocation'],
       gigLocation: map['gigLocation'],
       gigHashtags: map['gigHashtags'],
       gigMediaFilesDownloadUrls: map['gigMediaFilesDownloadUrls'],
@@ -86,7 +86,7 @@ class Gig {
       adultContentBool: map['adultContentBool'],
       gigLikes: map['gigLikes'],
       appointedUserId: map['appointedUserId'],
-      appointedUserFullName: map['appointedUserFullName'],
+      appointedusername: map['appointedusername'],
     );
   }
 }

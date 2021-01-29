@@ -13,13 +13,13 @@ import 'gig_item.dart';
 
 class UserProfileView extends StatefulWidget {
   final String passedUserUid;
-  final String passedUserFullName;
+  // final String passedUsername;
   bool fromGig = false;
   bool fromComment = false;
   UserProfileView({
     Key key,
     @required this.passedUserUid,
-    @required this.passedUserFullName,
+    // @required this.passedUsername,
     @required this.fromGig,
     @required this.fromComment,
   }) : super(key: key);
