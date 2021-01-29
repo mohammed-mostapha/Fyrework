@@ -658,11 +658,23 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
                   child: GestureDetector(
                     child: Text(
                       'Add',
-                      style: TextStyle(fontSize: 16, color: Colors.black),
+                      style: TextStyle(
+                        shadows: [
+                          Shadow(
+                              color: Theme.of(context).primaryColor,
+                              offset: Offset(0, -2.5))
+                        ],
+                        fontSize: 16,
+                        color: Colors.transparent,
+                        decoration: TextDecoration.underline,
+                        decorationThickness: 2,
+                        decorationColor: Theme.of(context).primaryColor,
+                        decorationStyle: TextDecorationStyle.dotted,
+                      ),
                     ),
                     onTap: () {
                       if (_myFavoriteHashtags.length < 20 != true) {

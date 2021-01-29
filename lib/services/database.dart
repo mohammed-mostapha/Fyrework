@@ -86,7 +86,7 @@ class DatabaseService {
   // listening to provider gigs
   Stream<QuerySnapshot> listenToProviderGigs() {
     return _gigsCollection
-        .where('gigValue', isEqualTo: 'Gigs I can do')
+        .where('gigValue', isEqualTo: 'Gig I can do')
         .snapshots();
   }
 

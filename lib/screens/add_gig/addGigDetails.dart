@@ -171,23 +171,50 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                   color: FyreworkrColors.fyreworkBlack //change your color here
                   ),
               actions: <Widget>[
-                IgnorePointer(
-                  ignoring: false,
-                  child: Opacity(
-                    opacity: 1,
-                    child: FlatButton(
-                      child: Text(
-                        'Next',
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                      onPressed: () async {
-                        await saveFormValuesAndPickMediaFiles();
-                      },
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 15, 10),
+                  child: OutlineButton(
+                    borderSide:
+                        BorderSide(color: Theme.of(context).primaryColor),
+                    child: Text(
+                      'Next',
+                      style: TextStyle(fontSize: 16),
                     ),
+                    onPressed: () async {
+                      await saveFormValuesAndPickMediaFiles();
+                    },
                   ),
                 ),
+                // Container(
+                //   decoration: BoxDecoration(
+                //       border: Border.all(
+                //         width: 1,
+                //         color: Theme.of(context).primaryColor,
+                //       ),
+                //       borderRadius: BorderRadius.all(Radius.circular(2))),
+                //   child: FlatButton(
+                //     child: Text(
+                //       'Next',
+                //       style: TextStyle(
+                //         fontSize: 20,
+                //       ),
+                //     ),
+                //     onPressed: () async {
+                //       await saveFormValuesAndPickMediaFiles();
+                //     },
+                //   ),
+                // ),
+                // FlatButton(
+                //   child: Text(
+                //     'Next',
+                //     style: TextStyle(
+                //       fontSize: 20,
+                //     ),
+                //   ),
+                //   onPressed: () async {
+                //     await saveFormValuesAndPickMediaFiles();
+                //   },
+                // ),
               ],
               title: Padding(
                 padding: const EdgeInsets.all(0),
@@ -307,12 +334,26 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                 ),
                                 Padding(
                                   padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                      const EdgeInsets.fromLTRB(0, 5, 10, 0),
                                   child: GestureDetector(
                                     child: Text(
                                       'Add',
                                       style: TextStyle(
-                                          fontSize: 16, color: Colors.black),
+                                        shadows: [
+                                          Shadow(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              offset: Offset(0, -2.5))
+                                        ],
+                                        fontSize: 16,
+                                        color: Colors.transparent,
+                                        decoration: TextDecoration.underline,
+                                        decorationThickness: 2,
+                                        decorationColor:
+                                            Theme.of(context).primaryColor,
+                                        decorationStyle:
+                                            TextDecorationStyle.dotted,
+                                      ),
                                     ),
                                     onTap: () {
                                       if (_myFavoriteHashtags.length < 20 !=
@@ -738,7 +779,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
                     width: 20,
                     child: Radio(
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        value: 'Gigs I can do',
+                        value: 'Gig I can do',
                         groupValue: AppointmentCard.gigValue,
                         activeColor: Theme.of(context).primaryColor,
                         onChanged: (T) {
@@ -755,7 +796,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
                     width: 5,
                   ),
                   Text(
-                    'Gigs I can do',
+                    'Gig I can do',
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: 17,

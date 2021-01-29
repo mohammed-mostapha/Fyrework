@@ -189,7 +189,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
         children: [
           Container(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
               child: Column(
                 children: <Widget>[
                   Row(
@@ -218,7 +218,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                                     "${widget.userFullName}",
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
@@ -241,18 +241,18 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                               child: Text(
                                 widget.gigOwnerId == widget.currentUserId
                                     ? 'Edit Your gig'
-                                    : widget.gigValue.gigValue ==
-                                            'Gigs I can do'
+                                    : widget.gigValue == 'Gigs I can do'
                                         ? 'Hire me'
                                         : 'Apply',
                                 style: TextStyle(
+                                    fontSize: 16,
                                     color: Theme.of(context).primaryColor),
                               ),
                               onTap: widget.gigOwnerId == widget.currentUserId
                                   ? () {
                                       print('edit you gig');
                                     }
-                                  : widget.gigValue.gigValue == 'Gigs I can do'
+                                  : widget.gigValue == 'Gigs I can do'
                                       ? () {}
                                       : () {},
                             ),
@@ -261,29 +261,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                       )
                     ],
                   ),
-                  SizedBox(height: 10),
-                  Container(
-                    width: double.infinity,
-                    child: Wrap(
-                      children: widget.gigHashtags
-                          .map<Widget>((e) => Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(0, 0, 2.5, 2.5),
-                                child: Chip(
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                  backgroundColor: Colors.black,
-                                  label: Text(
-                                    '$e',
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.white),
-                                  ),
-                                ),
-                              ))
-                          .toList(),
-                    ),
-                  ),
-                  SizedBox(height: 10),
+                  // SizedBox(height: 10),
                 ],
               ),
             ),
@@ -350,6 +328,24 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                   ),
                 ),
                 SizedBox(height: 5),
+                Container(
+                  width: double.infinity,
+                  child: Wrap(
+                    children: widget.gigHashtags
+                        .map<Widget>((e) => Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(0, 0, 2.5, 2.5),
+                              child: Text(
+                                '$e',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                            ))
+                        .toList(),
+                  ),
+                ),
+                SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -382,7 +378,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                                           widget.gigDeadline))
                                   : "Book Gig",
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 16,
                               ),
                             ),
                           ),
@@ -433,7 +429,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                               children: [
                                 FaIcon(
                                   FontAwesomeIcons.asterisk,
-                                  size: 10,
+                                  size: 12,
                                 ),
                                 Container(
                                   width: 5.0,
@@ -442,7 +438,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                                   child: Text(
                                     "${widget.adultContentText}",
                                     style: TextStyle(
-                                      fontSize: 10,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ),
