@@ -196,7 +196,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       GestureDetector(
-                        onTap: showUserProfile,
                         child: Flexible(
                           child: Container(
                             width: 200,
@@ -226,6 +225,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                             ),
                           ),
                         ),
+                        onTap: showUserProfile,
                       ),
                       Container(
                         decoration: BoxDecoration(

@@ -107,304 +107,306 @@ class _CommentItemState extends State<CommentItem> {
   @override
   Widget build(BuildContext context) {
     // public comment view
-    Widget publicCommentView = ListTile(
-      leading: CircleAvatar(
-        backgroundImage:
-            NetworkImage('${widget.commentOwnerProfilePictureUrl}'),
-        radius: 20,
-      ),
-      title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    Widget publicCommentView = Container(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
           children: [
-            Text(
-              '${widget.commentOwnerFullName}',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w900,
-                color: widget.commentOwnerId == widget.passedCurrentUserId
-                    ? Colors.white
-                    : FyreworkrColors.fyreworkBlack,
-              ),
-            ),
-            (widget.gigOwnerId == widget.passedCurrentUserId &&
-                    widget.gigOwnerId != widget.commentOwnerId &&
-                    widget.proposal &&
-                    !widget.approved &&
-                    widget.rejected)
-                ? Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 2,
-                          color: Colors.red,
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(2))),
-                    child: Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Rejected',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      ),
-                    ),
-                  )
-                : (widget.gigOwnerId == widget.passedCurrentUserId &&
-                        widget.gigOwnerId != widget.commentOwnerId &&
-                        widget.proposal &&
-                        widget.approved &&
-                        !widget.rejected)
-                    ? Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 2,
-                              color: Colors.green,
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(2))),
-                        child: Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Approved',
-                              style: TextStyle(color: Colors.green),
-                            ),
-                          ),
-                        ),
-                      )
-                    : (widget.commentOwnerId == widget.passedCurrentUserId &&
-                            !widget.proposal)
-                        ? Switch(
-                            activeColor: Colors.blue,
-                            inactiveThumbColor: Colors.grey[200],
-                            inactiveTrackColor: Colors.grey[200],
-                            activeTrackColor: Colors.grey[200],
-                            value: widget.privateComment,
-                            onChanged: (value) {
-                              FirestoreService().commentPrivacyToggle(
-                                  widget.commentId, value);
-                              commentViewShifter();
-                            },
-                          )
-                        : Container(
-                            width: 0,
-                            height: 0,
-                          ),
-          ],
-        ),
-        // Container(
-        //   height: 5,
-        // ),
-        Container(
-          child: ExpandableText(
-            '${widget.commentBody}',
-            expandText: ' more',
-            collapseText: ' less',
-            maxLines: 3,
-            linkColor: widget.commentOwnerId == widget.passedCurrentUserId
-                ? Colors.white
-                : FyreworkrColors.fyreworkBlack,
-            style: TextStyle(
-              fontSize: 18,
-              color: widget.commentOwnerId == widget.passedCurrentUserId
-                  ? Colors.white
-                  : Colors.grey[700],
-            ),
-          ),
-        ),
-        Container(height: 5),
-        (widget.gigOwnerId == widget.passedCurrentUserId &&
-                widget.commentOwnerId != widget.passedCurrentUserId &&
-                widget.proposal &&
-                !widget.approved &&
-                !widget.rejected)
-            ? Column(
-                children: [
-                  Container(
-                    color: Colors.white,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  child: Container(
+                    width: 200,
                     child: Row(
-                      children: <Widget>[
-                        Text('${widget.gigCurrency}'),
-                        Container(
-                          width: 5,
+                      children: [
+                        CircleAvatar(
+                          maxRadius: 20,
+                          backgroundColor: Theme.of(context).primaryColor,
+                          backgroundImage: NetworkImage(
+                              "${widget.commentOwnerProfilePictureUrl}"),
                         ),
-                        Text('${widget.offeredBudget}'),
+                        Container(
+                          width: 10,
+                          height: 0,
+                        ),
+                        Flexible(
+                          child: Text(
+                            '${widget.commentOwnerFullName}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w900,
+                              color: widget.commentOwnerId ==
+                                      widget.passedCurrentUserId
+                                  ? Colors.white
+                                  : FyreworkrColors.fyreworkBlack,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      RaisedButton(
-                          color: widget.commentOwnerId ==
-                                  widget.passedCurrentUserId
-                              ? Colors.white
-                              : FyreworkrColors.fyreworkBlack,
-                          child: Expanded(
-                            child: Text(
-                              'Approve',
-                              style: TextStyle(
-                                color: widget.commentOwnerId ==
-                                        widget.passedCurrentUserId
-                                    ? FyreworkrColors.fyreworkBlack
-                                    : Colors.white,
-                              ),
-                            ),
-                          ),
-                          onPressed: () {
-                            FirestoreService().appointedGigToUser(
-                                widget.gigIdHoldingComment,
-                                widget.commentOwnerId,
-                                widget.commentId);
-                          }),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      RaisedButton(
-                          color: widget.commentOwnerId ==
-                                  widget.passedCurrentUserId
-                              ? Colors.white
-                              : FyreworkrColors.fyreworkBlack,
-                          child: Expanded(
-                            child: Text(
-                              'Reject',
-                              style: TextStyle(
-                                color: widget.commentOwnerId ==
-                                        widget.passedCurrentUserId
-                                    ? FyreworkrColors.fyreworkBlack
-                                    : Colors.white,
-                              ),
-                            ),
-                          ),
-                          onPressed: () {
-                            FirestoreService().rejectProposal(widget.commentId);
-                          }),
-                    ],
-                  )
-                ],
-              )
-            : (widget.gigOwnerId == widget.passedCurrentUserId &&
-                    widget.commentOwnerId != widget.passedCurrentUserId &&
-                    widget.proposal &&
-                    widget.rejected)
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        child: Wrap(
-                          direction: Axis.horizontal,
-                          alignment: WrapAlignment.start,
-                          children: [
-                            Text('You rejected '),
-                            GestureDetector(
-                              child: Text(
-                                '${widget.commentOwnerFullName}\'s proposal',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              onTap: () {
-                                showUserProfile();
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 5,
-                      ),
-                    ],
-                  )
-                : (widget.gigOwnerId == widget.passedCurrentUserId &&
+                  onTap: showUserProfile,
+                ),
+                Container(
+                  child: (widget.gigOwnerId == widget.passedCurrentUserId &&
+                          widget.gigOwnerId != widget.commentOwnerId &&
+                          widget.proposal &&
+                          !widget.approved &&
+                          widget.rejected)
+                      ? RejectedLabel()
+                      : (widget.gigOwnerId == widget.passedCurrentUserId &&
+                              widget.gigOwnerId != widget.commentOwnerId &&
+                              widget.proposal &&
+                              widget.approved &&
+                              !widget.rejected)
+                          ? ApprovedLabel()
+                          : (widget.commentOwnerId ==
+                                      widget.passedCurrentUserId &&
+                                  !widget.proposal)
+                              ? Switch(
+                                  activeColor: Colors.blue,
+                                  inactiveThumbColor: Colors.grey[200],
+                                  inactiveTrackColor: Colors.grey[200],
+                                  activeTrackColor: Colors.grey[200],
+                                  value: widget.privateComment,
+                                  onChanged: (value) {
+                                    FirestoreService().commentPrivacyToggle(
+                                        widget.commentId, value);
+                                    commentViewShifter();
+                                  },
+                                )
+                              : Container(
+                                  width: 0,
+                                  height: 0,
+                                ),
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  child: ExpandableText(
+                    '${widget.commentBody}',
+                    expandText: ' more',
+                    collapseText: ' less',
+                    maxLines: 3,
+                    linkColor:
+                        widget.commentOwnerId == widget.passedCurrentUserId
+                            ? Colors.white
+                            : FyreworkrColors.fyreworkBlack,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: widget.commentOwnerId == widget.passedCurrentUserId
+                          ? Colors.white
+                          : Colors.grey[700],
+                    ),
+                  ),
+                ),
+                Container(height: 5),
+                (widget.gigOwnerId == widget.passedCurrentUserId &&
                         widget.commentOwnerId != widget.passedCurrentUserId &&
                         widget.proposal &&
-                        widget.approved)
+                        !widget.approved &&
+                        !widget.rejected)
                     ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            child: Wrap(
-                              direction: Axis.horizontal,
-                              alignment: WrapAlignment.start,
-                              children: [
-                                Text('You appointed this gig to '),
-                                GestureDetector(
-                                  child: Text(
-                                    '${widget.commentOwnerFullName}',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w900),
-                                  ),
-                                  onTap: () {
-                                    showUserProfile();
-                                  },
+                            color: Colors.white,
+                            child: Row(
+                              children: <Widget>[
+                                Text('${widget.gigCurrency}'),
+                                Container(
+                                  width: 5,
                                 ),
+                                Text('${widget.offeredBudget}'),
                               ],
                             ),
                           ),
-                          Container(
-                            height: 5,
-                          ),
-                        ],
-                      )
-                    : (widget.commentOwnerId == widget.passedCurrentUserId &&
-                            widget.proposal)
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                    // color: !widget.approved
-                                    //     ? !widget.rejected
-                                    //         ? Colors.white
-                                    //         : Colors.red
-                                    //     : Colors.green,
-                                    border: Border.all(
-                                      width: 2,
-                                      color: !widget.approved
-                                          ? !widget.rejected
-                                              ? Colors.white
-                                              : Colors.red
-                                          : Colors.green,
-                                    ),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(2))),
-                                child: Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              RaisedButton(
+                                  color: widget.commentOwnerId ==
+                                          widget.passedCurrentUserId
+                                      ? Colors.white
+                                      : FyreworkrColors.fyreworkBlack,
+                                  child: Expanded(
                                     child: Text(
-                                      !widget.approved
-                                          ? !widget.rejected
-                                              ? 'Pending approval'
-                                              : 'Rejected'
-                                          : 'Approved',
+                                      'Approve',
                                       style: TextStyle(
-                                        color: !widget.approved
-                                            ? !widget.rejected
-                                                ? Colors.white
-                                                : Colors.red
-                                            : Colors.green,
-                                        //  !widget.approved
-                                        //     ? Colors.black
-                                        //     : Colors.white,
+                                        color: widget.commentOwnerId ==
+                                                widget.passedCurrentUserId
+                                            ? FyreworkrColors.fyreworkBlack
+                                            : Colors.white,
                                       ),
                                     ),
                                   ),
+                                  onPressed: () {
+                                    FirestoreService().appointedGigToUser(
+                                        widget.gigIdHoldingComment,
+                                        widget.commentOwnerId,
+                                        widget.commentId);
+                                  }),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              RaisedButton(
+                                  color: widget.commentOwnerId ==
+                                          widget.passedCurrentUserId
+                                      ? Colors.white
+                                      : FyreworkrColors.fyreworkBlack,
+                                  child: Expanded(
+                                    child: Text(
+                                      'Reject',
+                                      style: TextStyle(
+                                        color: widget.commentOwnerId ==
+                                                widget.passedCurrentUserId
+                                            ? FyreworkrColors.fyreworkBlack
+                                            : Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    FirestoreService()
+                                        .rejectProposal(widget.commentId);
+                                  }),
+                            ],
+                          )
+                        ],
+                      )
+                    : (widget.gigOwnerId == widget.passedCurrentUserId &&
+                            widget.commentOwnerId !=
+                                widget.passedCurrentUserId &&
+                            widget.proposal &&
+                            widget.rejected)
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                child: Wrap(
+                                  direction: Axis.horizontal,
+                                  alignment: WrapAlignment.start,
+                                  children: [
+                                    Text('You rejected '),
+                                    GestureDetector(
+                                      child: Text(
+                                        '${widget.commentOwnerFullName}\'s proposal',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      onTap: () {
+                                        showUserProfile();
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ),
                               Container(
-                                height: 10,
+                                height: 5,
                               ),
                             ],
                           )
-                        : Container(
-                            width: 0,
-                            height: 0,
-                          ),
-      ]),
-      subtitle: Text(
-        timeAgo.format(widget.commentTime.toDate()),
-        style: TextStyle(
-          fontSize: 12,
-          color: widget.commentOwnerId == widget.passedCurrentUserId
-              ? Colors.white
-              : FyreworkrColors.fyreworkBlack,
+                        : (widget.gigOwnerId == widget.passedCurrentUserId &&
+                                widget.commentOwnerId !=
+                                    widget.passedCurrentUserId &&
+                                widget.proposal &&
+                                widget.approved)
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    child: Wrap(
+                                      direction: Axis.horizontal,
+                                      alignment: WrapAlignment.start,
+                                      children: [
+                                        Text('You appointed this gig to '),
+                                        GestureDetector(
+                                          child: Text(
+                                            '${widget.commentOwnerFullName}',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w900),
+                                          ),
+                                          onTap: () {
+                                            showUserProfile();
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 5,
+                                  ),
+                                ],
+                              )
+                            : (widget.commentOwnerId ==
+                                        widget.passedCurrentUserId &&
+                                    widget.proposal)
+                                ? Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            // color: !widget.approved
+                                            //     ? !widget.rejected
+                                            //         ? Colors.white
+                                            //         : Colors.red
+                                            //     : Colors.green,
+                                            border: Border.all(
+                                              width: 2,
+                                              color: !widget.approved
+                                                  ? !widget.rejected
+                                                      ? Colors.white
+                                                      : Colors.red
+                                                  : Colors.green,
+                                            ),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(2))),
+                                        child: Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              !widget.approved
+                                                  ? !widget.rejected
+                                                      ? 'Pending approval'
+                                                      : 'Rejected'
+                                                  : 'Approved',
+                                              style: TextStyle(
+                                                color: !widget.approved
+                                                    ? !widget.rejected
+                                                        ? Colors.white
+                                                        : Colors.red
+                                                    : Colors.green,
+                                                //  !widget.approved
+                                                //     ? Colors.black
+                                                //     : Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        height: 10,
+                                      ),
+                                    ],
+                                  )
+                                : Container(
+                                    width: 0,
+                                    height: 0,
+                                  ),
+                Text(
+                  timeAgo.format(widget.commentTime.toDate()),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: widget.commentOwnerId == widget.passedCurrentUserId
+                        ? Colors.white
+                        : FyreworkrColors.fyreworkBlack,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -530,5 +532,59 @@ class _CommentItemState extends State<CommentItem> {
   void dispose() {
     _timer.cancel();
     super.dispose();
+  }
+}
+
+class ApprovedLabel extends StatelessWidget {
+  const ApprovedLabel({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(
+            width: 2,
+            color: Colors.green,
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(2))),
+      child: Expanded(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'Approved',
+            style: TextStyle(color: Colors.green),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class RejectedLabel extends StatelessWidget {
+  const RejectedLabel({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(
+            width: 2,
+            color: Colors.red,
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(2))),
+      child: Expanded(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'Rejected',
+            style: TextStyle(color: Colors.red),
+          ),
+        ),
+      ),
+    );
   }
 }

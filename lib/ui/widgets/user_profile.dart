@@ -35,15 +35,28 @@ class _UserProfileViewState extends State<UserProfileView> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: FyreworkrColors.fyreworkBlack,
-        body: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: StreamBuilder(
-              stream: DatabaseService().fetchUserData(widget.passedUserUid),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Column(
+      child: StreamBuilder(
+          stream: DatabaseService().fetchUserData(widget.passedUserUid),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Scaffold(
+                backgroundColor: FyreworkrColors.fyreworkBlack,
+                appBar: AppBar(
+                  automaticallyImplyLeading: false,
+                  title: Container(
+                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    child: Text(
+                      snapshot.data.username,
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.normal),
+                    ),
+                  ),
+                ),
+                body: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
@@ -249,19 +262,19 @@ class _UserProfileViewState extends State<UserProfileView> {
                         ),
                       ),
                     ],
-                  );
-                } else {
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                }
-              }),
-        ),
-      ),
+                  ),
+                ),
+              );
+            } else {
+              return Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+          }),
     );
   }
 
