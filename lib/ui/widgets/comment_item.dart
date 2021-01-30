@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:myApp/models/myUser.dart';
 import 'package:myApp/services/firestore_service.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/widgets/user_profile.dart';
@@ -9,7 +10,7 @@ import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:expandable_text/expandable_text.dart';
 
 class CommentItem extends StatefulWidget {
-  final passedCurrentUserId;
+  // final passedCurrentUserId;
   final gigIdHoldingComment;
   final gigOwnerId;
   final commentId;
@@ -27,7 +28,7 @@ class CommentItem extends StatefulWidget {
   final Function onDeleteItem;
   CommentItem({
     Key key,
-    this.passedCurrentUserId,
+    // this.passedCurrentUserId,
     this.gigIdHoldingComment,
     this.gigOwnerId,
     this.commentId,
@@ -50,6 +51,8 @@ class CommentItem extends StatefulWidget {
 }
 
 class _CommentItemState extends State<CommentItem> {
+  bool myGig;
+  bool myComment;
   Timer _timer;
   int _commentViewIndex = 0;
   double _commentOpacity = 0.9;
@@ -104,6 +107,8 @@ class _CommentItemState extends State<CommentItem> {
 
   @override
   Widget build(BuildContext context) {
+    myGig = widget.gigOwnerId == MyUser.uid ? true : false;
+    myComment = widget.commentOwnerId == MyUser.uid ? true : false;
     // public comment view
     Widget publicCommentView = Container(
       child: Padding(
@@ -134,8 +139,7 @@ class _CommentItemState extends State<CommentItem> {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w900,
-                              color: widget.commentOwnerId ==
-                                      widget.passedCurrentUserId
+                              color: myComment
                                   ? Colors.white
                                   : FyreworkrColors.fyreworkBlack,
                             ),
@@ -147,21 +151,19 @@ class _CommentItemState extends State<CommentItem> {
                   onTap: showUserProfile,
                 ),
                 Container(
-                  child: (widget.gigOwnerId == widget.passedCurrentUserId &&
+                  child: (myGig &&
                           widget.gigOwnerId != widget.commentOwnerId &&
                           widget.proposal &&
                           !widget.approved &&
                           widget.rejected)
                       ? RejectedLabel()
-                      : (widget.gigOwnerId == widget.passedCurrentUserId &&
+                      : (myGig &&
                               widget.gigOwnerId != widget.commentOwnerId &&
                               widget.proposal &&
                               widget.approved &&
                               !widget.rejected)
                           ? ApprovedLabel()
-                          : (widget.commentOwnerId ==
-                                      widget.passedCurrentUserId &&
-                                  !widget.proposal)
+                          : (myComment && !widget.proposal)
                               ? Switch(
                                   activeColor: Colors.blue,
                                   inactiveThumbColor: Colors.grey[200],
@@ -190,21 +192,18 @@ class _CommentItemState extends State<CommentItem> {
                     expandText: ' more',
                     collapseText: ' less',
                     maxLines: 3,
-                    linkColor:
-                        widget.commentOwnerId == widget.passedCurrentUserId
-                            ? Colors.white
-                            : FyreworkrColors.fyreworkBlack,
+                    linkColor: myComment
+                        ? Colors.white
+                        : FyreworkrColors.fyreworkBlack,
                     style: TextStyle(
                       fontSize: 18,
-                      color: widget.commentOwnerId == widget.passedCurrentUserId
-                          ? Colors.white
-                          : Colors.grey[700],
+                      color: myComment ? Colors.white : Colors.grey[700],
                     ),
                   ),
                 ),
                 Container(height: 5),
-                (widget.gigOwnerId == widget.passedCurrentUserId &&
-                        widget.commentOwnerId != widget.passedCurrentUserId &&
+                (myGig &&
+                        !myComment &&
                         widget.proposal &&
                         !widget.approved &&
                         !widget.rejected)
@@ -226,16 +225,14 @@ class _CommentItemState extends State<CommentItem> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
                               RaisedButton(
-                                  color: widget.commentOwnerId ==
-                                          widget.passedCurrentUserId
+                                  color: myComment
                                       ? Colors.white
                                       : FyreworkrColors.fyreworkBlack,
                                   child: Expanded(
                                     child: Text(
                                       'Approve',
                                       style: TextStyle(
-                                        color: widget.commentOwnerId ==
-                                                widget.passedCurrentUserId
+                                        color: myComment
                                             ? FyreworkrColors.fyreworkBlack
                                             : Colors.white,
                                       ),
@@ -251,16 +248,14 @@ class _CommentItemState extends State<CommentItem> {
                                 width: 10,
                               ),
                               RaisedButton(
-                                  color: widget.commentOwnerId ==
-                                          widget.passedCurrentUserId
+                                  color: myComment
                                       ? Colors.white
                                       : FyreworkrColors.fyreworkBlack,
                                   child: Expanded(
                                     child: Text(
                                       'Reject',
                                       style: TextStyle(
-                                        color: widget.commentOwnerId ==
-                                                widget.passedCurrentUserId
+                                        color: myComment
                                             ? FyreworkrColors.fyreworkBlack
                                             : Colors.white,
                                       ),
@@ -274,9 +269,8 @@ class _CommentItemState extends State<CommentItem> {
                           )
                         ],
                       )
-                    : (widget.gigOwnerId == widget.passedCurrentUserId &&
-                            widget.commentOwnerId !=
-                                widget.passedCurrentUserId &&
+                    : (myGig &&
+                            !myComment &&
                             widget.proposal &&
                             widget.rejected)
                         ? Column(
@@ -306,9 +300,8 @@ class _CommentItemState extends State<CommentItem> {
                               ),
                             ],
                           )
-                        : (widget.gigOwnerId == widget.passedCurrentUserId &&
-                                widget.commentOwnerId !=
-                                    widget.passedCurrentUserId &&
+                        : (myGig &&
+                                !myComment &&
                                 widget.proposal &&
                                 widget.approved)
                             ? Column(
@@ -338,9 +331,7 @@ class _CommentItemState extends State<CommentItem> {
                                   ),
                                 ],
                               )
-                            : (widget.commentOwnerId ==
-                                        widget.passedCurrentUserId &&
-                                    widget.proposal)
+                            : (myComment && widget.proposal)
                                 ? Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
@@ -397,7 +388,7 @@ class _CommentItemState extends State<CommentItem> {
                   timeAgo.format(widget.commentTime.toDate()),
                   style: TextStyle(
                     fontSize: 12,
-                    color: widget.commentOwnerId == widget.passedCurrentUserId
+                    color: myComment
                         ? Colors.white
                         : FyreworkrColors.fyreworkBlack,
                   ),
@@ -416,9 +407,7 @@ class _CommentItemState extends State<CommentItem> {
       child: Center(
         child: Text('Private comment',
             style: TextStyle(
-              color: widget.commentOwnerId == widget.passedCurrentUserId
-                  ? Colors.white
-                  : FyreworkrColors.fyreworkBlack,
+              color: myComment ? Colors.white : FyreworkrColors.fyreworkBlack,
             )),
       ),
     );
@@ -475,20 +464,20 @@ class _CommentItemState extends State<CommentItem> {
     var locale = 'en';
     return Container(
         decoration: BoxDecoration(
-          color: widget.commentOwnerId == widget.passedCurrentUserId
+          color: myComment
               // ? FyreworkrColors.fyreworkBlack
               ? Theme.of(context).primaryColor
               : Colors.white,
           border: Border(
-            top: widget.commentOwnerId == widget.passedCurrentUserId
+            top: myComment
                 ? BorderSide(width: 0.3, color: Colors.grey[50])
                 : BorderSide(width: 0.3, color: FyreworkrColors.fyreworkBlack),
-            bottom: widget.commentOwnerId == widget.passedCurrentUserId
+            bottom: myComment
                 ? BorderSide(width: 0.3, color: Colors.green)
                 : BorderSide(width: 0.3, color: FyreworkrColors.fyreworkBlack),
           ),
         ),
-        child: (widget.gigOwnerId == widget.passedCurrentUserId)
+        child: myGig
             ? IndexedStack(
                 index: _commentViewIndex,
                 children: [
@@ -503,7 +492,7 @@ class _CommentItemState extends State<CommentItem> {
                       duration: Duration(milliseconds: 500)),
                 ],
               )
-            : widget.commentOwnerId == widget.passedCurrentUserId
+            : myComment
                 ?
                 // AnimatedSwitcher(
                 //     duration: Duration(seconds: 1), child: commentViewShift)

@@ -1,16 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:myApp/models/myUser.dart';
 import 'package:myApp/services/database.dart';
 import 'package:myApp/ui/widgets/comment_item.dart';
 
 class CommentsView extends StatelessWidget {
   final String gigIdCommentsIdentifier;
   final String gigOwnerId;
-  final String passedCurrentUserId;
+  // final String passedCurrentUserId
   const CommentsView(
       {Key key,
       @required this.gigIdCommentsIdentifier,
-      @required this.passedCurrentUserId,
+      // @required this.passedCurrentUserId,
       this.gigOwnerId})
       : super(key: key);
   @override
@@ -29,7 +30,7 @@ class CommentsView extends StatelessWidget {
                       return GestureDetector(
                         // onTap: () => model.editGig(index),
                         child: CommentItem(
-                          passedCurrentUserId: passedCurrentUserId,
+                          // passedCurrentUserId: MyUser.uid,`
                           gigIdHoldingComment:
                               getDocData['gigIdHoldingComment'],
                           gigOwnerId: getDocData['gigOwnerId'],

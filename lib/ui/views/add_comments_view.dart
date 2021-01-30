@@ -33,6 +33,7 @@ class AddCommentsView extends StatefulWidget {
 }
 
 class _AddCommentsViewState extends State<AddCommentsView> {
+  bool myGig;
   bool appointed;
   String appointedUserId;
   List appliersOrHirersByUserId;
@@ -257,6 +258,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
 
   @override
   Widget build(BuildContext context) {
+    myGig = widget.passedGigOwnerId == MyUser.uid ? true : false;
 //first check if this gig is appointed or not
     return StreamBuilder<DocumentSnapshot>(
       stream: Firestore.instance
@@ -319,7 +321,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  widget.passedGigOwnerId == MyUser.uid
+                                  myGig
                                       ? 'Your gig'
                                       : !appointed
                                           ? !appliersOrHirersByUserId
@@ -337,8 +339,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                       fontSize: 16, color: Colors.white),
                                 ),
                               ),
-                              onTap: widget.passedGigOwnerId ==
-                                      widget.passedCurrentUserId
+                              onTap: myGig
                                   ? () {}
                                   : !appointed
                                       ? !appliersOrHirersByUserId
@@ -367,7 +368,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                 children: <Widget>[
                   Expanded(
                     child: CommentsView(
-                      passedCurrentUserId: userId,
+                      // passedCurrentUserId: userId,
                       gigIdCommentsIdentifier: widget.passedGigId,
                       gigOwnerId: widget.passedGigOwnerId,
                     ),
