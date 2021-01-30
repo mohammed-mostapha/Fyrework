@@ -7,7 +7,8 @@ class Comment {
   final String commentOwnerUsername;
   final String commentBody;
   dynamic commentTime;
-  final bool privateComment;
+  final bool isPrivateComment;
+  final bool persistentPrivateComment;
   final bool proposal;
   final bool approved;
   final bool rejected;
@@ -23,7 +24,8 @@ class Comment {
     this.commentOwnerUsername,
     this.commentBody,
     this.commentTime,
-    this.privateComment,
+    this.isPrivateComment,
+    this.persistentPrivateComment,
     this.proposal,
     this.approved,
     this.rejected,
@@ -43,7 +45,8 @@ class Comment {
       'commentBody': commentBody,
       // 'commentTime': DateTime.now().millisecondsSinceEpoch.toString(),
       'commentTime': commentTime,
-      'privateComment': privateComment,
+      'isPrivateComment': isPrivateComment,
+      'persistentPrivateComment': persistentPrivateComment,
       'proposal': proposal,
       'approved': approved,
       'rejected': rejected,
@@ -64,7 +67,8 @@ class Comment {
       commentOwnerUsername: map['commentOwnerUsername'],
       commentBody: map['commentBody'],
       commentTime: map['commentTime'],
-      privateComment: map['privateComment'],
+      isPrivateComment: map['isPrivateComment'],
+      persistentPrivateComment: map['persistentPrivateComment'],
       proposal: map['proposal'],
       approved: map['approved'],
       rejected: map['rejected'],

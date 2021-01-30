@@ -35,6 +35,7 @@ class AddCommentsView extends StatefulWidget {
 class _AddCommentsViewState extends State<AddCommentsView> {
   bool myGig;
   bool appointed;
+  bool appointedUser;
   String appointedUserId;
   List appliersOrHirersByUserId;
 
@@ -43,7 +44,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
     super.initState();
   }
 
-  bool privateComment = false;
+  bool isPrivateComment = false;
   bool proposal = false;
   bool approved = false;
   bool rejected = false;
@@ -58,7 +59,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
   TextEditingController _addProposalController = TextEditingController();
   TextEditingController _offeredBudgetController = TextEditingController();
 
-  addComment() {
+  addComment(bool persistentPrivateComment) {
     if (_addCommentsController.text.isNotEmpty) {
       print('_addCommentsController: ${_addCommentsController.text}');
       AddCommentsViewModel().addComment(
@@ -70,7 +71,8 @@ class _AddCommentsViewState extends State<AddCommentsView> {
         commentOwnerProfilePictureUrl: userProfilePictureUrl,
         commentId: '',
         commentTime: new DateTime.now(),
-        privateComment: privateComment,
+        isPrivateComment: isPrivateComment,
+        persistentPrivateComment: persistentPrivateComment,
         proposal: proposal,
         approved: approved,
         rejected: rejected,
@@ -96,7 +98,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
 
   submitProposal() async {
     if (_proposalFormKey.currentState.validate()) {
-      privateComment = true;
+      isPrivateComment = true;
       proposal = true;
       await AddCommentsViewModel().addComment(
         gigIdHoldingComment: widget.passedGigId,
@@ -107,7 +109,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
         commentOwnerProfilePictureUrl: userProfilePictureUrl,
         commentId: '',
         commentTime: new DateTime.now(),
-        privateComment: privateComment,
+        isPrivateComment: isPrivateComment,
         proposal: proposal,
         approved: approved,
         rejected: rejected,
@@ -115,7 +117,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
         offeredBudget: _offeredBudgetController.text,
       );
       addToGigAppliersOrHirersList();
-      privateComment = false;
+      isPrivateComment = false;
       proposal = false;
       _addCommentsController.clear();
       _addProposalController.clear();
@@ -259,6 +261,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
   @override
   Widget build(BuildContext context) {
     myGig = widget.passedGigOwnerId == MyUser.uid ? true : false;
+
 //first check if this gig is appointed or not
     return StreamBuilder<DocumentSnapshot>(
       stream: Firestore.instance
@@ -281,6 +284,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
         appointed = snapshot.data['appointed'];
         appointedUserId = snapshot.data['appointedUserId'];
         appliersOrHirersByUserId = snapshot.data['appliersOrHirersByUserId'];
+        appointedUser = appointedUserId == MyUser.uid ? true : false;
 
         return Container(
           child: ViewModelProvider<AddCommentsViewModel>.withConsumer(
@@ -373,69 +377,138 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                       gigOwnerId: widget.passedGigOwnerId,
                     ),
                   ),
-                  ListTile(
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        CustomSwitch(
-                          activeColor: FyreworkrColors.fyreworkBlack,
-                          value: privateComment,
-                          onChanged: (value) {
-                            setState(() {
-                              privateComment = value;
-                            });
-                          },
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Expanded(
-                          child: TextFormField(
-                            controller: _addCommentsController,
-                            decoration: InputDecoration(
-                              hintText: "Add comment...",
-                              border: InputBorder.none,
-                            ),
-                            onFieldSubmitted: (String submittedString) async {
-                              if (submittedString.isNotEmpty) {
-                                await AddCommentsViewModel().addComment(
-                                  gigIdHoldingComment: widget.passedGigId,
-                                  gigOwnerId: widget.passedGigOwnerId,
-                                  commentOwnerUsername: username,
-                                  commentBody: submittedString,
-                                  commentOwnerId: userId,
-                                  commentOwnerProfilePictureUrl:
-                                      userProfilePictureUrl,
-                                  commentId: '',
-                                  commentTime: new DateTime.now(),
-                                  privateComment: privateComment,
-                                  proposal: proposal,
-                                  approved: approved,
-                                  rejected: rejected,
-                                  gigCurrency: widget.passedGigCurrency,
-                                  offeredBudget: offeredBudget,
-                                );
-                              }
+                  !appointed
+                      ? ListTile(
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              CustomSwitch(
+                                activeColor: FyreworkrColors.fyreworkBlack,
+                                value: isPrivateComment,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isPrivateComment = value;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Expanded(
+                                child: TextFormField(
+                                  controller: _addCommentsController,
+                                  decoration: InputDecoration(
+                                    hintText: "Add comment...",
+                                    border: InputBorder.none,
+                                  ),
+                                  onFieldSubmitted:
+                                      (String submittedString) async {
+                                    if (submittedString.isNotEmpty) {
+                                      await AddCommentsViewModel().addComment(
+                                        gigIdHoldingComment: widget.passedGigId,
+                                        gigOwnerId: widget.passedGigOwnerId,
+                                        commentOwnerUsername: username,
+                                        commentBody: submittedString,
+                                        commentOwnerId: userId,
+                                        commentOwnerProfilePictureUrl:
+                                            userProfilePictureUrl,
+                                        commentId: '',
+                                        commentTime: new DateTime.now(),
+                                        isPrivateComment: isPrivateComment,
+                                        proposal: proposal,
+                                        approved: approved,
+                                        rejected: rejected,
+                                        gigCurrency: widget.passedGigCurrency,
+                                        offeredBudget: offeredBudget,
+                                      );
+                                    }
 
-                              _addCommentsController.clear();
-                              _addProposalController.clear();
-                              _offeredBudgetController.clear();
-                            },
-                            style: TextStyle(color: Colors.black),
+                                    _addCommentsController.clear();
+                                    _addProposalController.clear();
+                                    _offeredBudgetController.clear();
+                                  },
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.send,
+                                  color: FyreworkrColors.fyreworkBlack,
+                                ),
+                                onPressed: () {
+                                  addComment(false);
+                                },
+                              ),
+                            ],
                           ),
-                        ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.send,
-                            color: FyreworkrColors.fyreworkBlack,
-                          ),
-                          onPressed: () {
-                            addComment();
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
+                        )
+                      : myGig || appointedUser
+                          ? ListTile(
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Expanded(
+                                    child: TextFormField(
+                                      controller: _addCommentsController,
+                                      decoration: InputDecoration(
+                                        hintText: "Add private comment",
+                                        border: InputBorder.none,
+                                      ),
+                                      onFieldSubmitted:
+                                          (String submittedString) async {
+                                        if (submittedString.isNotEmpty) {
+                                          await AddCommentsViewModel()
+                                              .addComment(
+                                            gigIdHoldingComment:
+                                                widget.passedGigId,
+                                            gigOwnerId: widget.passedGigOwnerId,
+                                            commentOwnerUsername: username,
+                                            commentBody: submittedString,
+                                            commentOwnerId: userId,
+                                            commentOwnerProfilePictureUrl:
+                                                userProfilePictureUrl,
+                                            commentId: '',
+                                            commentTime: new DateTime.now(),
+                                            isPrivateComment: isPrivateComment,
+                                            persistentPrivateComment: true,
+                                            proposal: proposal,
+                                            approved: approved,
+                                            rejected: rejected,
+                                            gigCurrency:
+                                                widget.passedGigCurrency,
+                                            offeredBudget: offeredBudget,
+                                          );
+                                        }
+
+                                        _addCommentsController.clear();
+                                        _addProposalController.clear();
+                                        _offeredBudgetController.clear();
+                                      },
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.send,
+                                      color: FyreworkrColors.fyreworkBlack,
+                                    ),
+                                    onPressed: () {
+                                      addComment(true);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            )
+                          : ListTile(
+                              title: Text(
+                                'Private work stream',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            )
                 ],
               ),
             ),

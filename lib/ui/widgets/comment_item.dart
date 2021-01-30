@@ -20,7 +20,8 @@ class CommentItem extends StatefulWidget {
   final commentBody;
   final gigCurrency;
   final commentTime;
-  final privateComment;
+  final isPrivateComment;
+  final persistentPrivateComment;
   final proposal;
   final approved;
   final rejected;
@@ -38,7 +39,8 @@ class CommentItem extends StatefulWidget {
     this.commentBody,
     this.gigCurrency,
     this.commentTime,
-    this.privateComment,
+    this.isPrivateComment,
+    this.persistentPrivateComment,
     this.proposal,
     this.approved,
     this.rejected,
@@ -62,7 +64,7 @@ class _CommentItemState extends State<CommentItem> {
   }
 
   void commentViewShifter() {
-    if (!widget.privateComment) {
+    if (!widget.isPrivateComment) {
       print('condition 1');
       setState(() {
         _commentOpacity = 0;
@@ -169,7 +171,7 @@ class _CommentItemState extends State<CommentItem> {
                                   inactiveThumbColor: Colors.grey[200],
                                   inactiveTrackColor: Colors.grey[200],
                                   activeTrackColor: Colors.grey[200],
-                                  value: widget.privateComment,
+                                  value: widget.isPrivateComment,
                                   onChanged: (value) {
                                     FirestoreService().commentPrivacyToggle(
                                         widget.commentId, value);
@@ -463,56 +465,56 @@ class _CommentItemState extends State<CommentItem> {
 
     var locale = 'en';
     return Container(
-        decoration: BoxDecoration(
-          color: myComment
-              // ? FyreworkrColors.fyreworkBlack
-              ? Theme.of(context).primaryColor
-              : Colors.white,
-          border: Border(
-            top: myComment
-                ? BorderSide(width: 0.3, color: Colors.grey[50])
-                : BorderSide(width: 0.3, color: FyreworkrColors.fyreworkBlack),
-            bottom: myComment
-                ? BorderSide(width: 0.3, color: Colors.green)
-                : BorderSide(width: 0.3, color: FyreworkrColors.fyreworkBlack),
-          ),
+      decoration: BoxDecoration(
+        color: myComment
+            // ? FyreworkrColors.fyreworkBlack
+            ? Theme.of(context).primaryColor
+            : Colors.white,
+        border: Border(
+          top: myComment
+              ? BorderSide(width: 0.3, color: Colors.grey[50])
+              : BorderSide(width: 0.3, color: FyreworkrColors.fyreworkBlack),
+          bottom: myComment
+              ? BorderSide(width: 0.3, color: Colors.green)
+              : BorderSide(width: 0.3, color: FyreworkrColors.fyreworkBlack),
         ),
-        child: myGig
-            ? IndexedStack(
-                index: _commentViewIndex,
-                children: [
-                  AnimatedOpacity(
+      ),
+      child: myGig || myComment
+          ? IndexedStack(
+              index: _commentViewIndex,
+              children: [
+                AnimatedOpacity(
+                  opacity: _commentOpacity,
+                  child: publicCommentView,
+                  duration: Duration(milliseconds: 500),
+                ),
+                AnimatedOpacity(
                     opacity: _commentOpacity,
-                    child: publicCommentView,
-                    duration: Duration(milliseconds: 500),
-                  ),
-                  AnimatedOpacity(
-                      opacity: _commentOpacity,
-                      child: privateCommentView,
-                      duration: Duration(milliseconds: 500)),
-                ],
-              )
-            : myComment
-                ?
-                // AnimatedSwitcher(
-                //     duration: Duration(seconds: 1), child: commentViewShift)
-                IndexedStack(
-                    index: _commentViewIndex,
-                    children: [
-                      AnimatedOpacity(
-                        opacity: _commentOpacity,
-                        child: publicCommentView,
-                        duration: Duration(milliseconds: 500),
-                      ),
-                      AnimatedOpacity(
-                          opacity: _commentOpacity,
-                          child: privateCommentView,
-                          duration: Duration(milliseconds: 500)),
-                    ],
-                  )
-                : widget.privateComment
-                    ? privateCommentView
-                    : publicCommentView);
+                    child: privateCommentView,
+                    duration: Duration(milliseconds: 500)),
+              ],
+            )
+          // : myComment
+          //     ? IndexedStack(
+          //         index: _commentViewIndex,
+          //         children: [
+          //           AnimatedOpacity(
+          //             opacity: _commentOpacity,
+          //             child: publicCommentView,
+          //             duration: Duration(milliseconds: 500),
+          //           ),
+          //           AnimatedOpacity(
+          //               opacity: _commentOpacity,
+          //               child: privateCommentView,
+          //               duration: Duration(milliseconds: 500)),
+          //         ],
+          //       )
+          : widget.persistentPrivateComment
+              ? privateCommentView
+              : widget.isPrivateComment
+                  ? privateCommentView
+                  : publicCommentView,
+    );
   }
 
   @override

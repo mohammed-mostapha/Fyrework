@@ -22,15 +22,14 @@ class AddCommentsViewModel extends BaseModel {
     @required String commentOwnerUsername,
     @required String commentBody,
     @required DateTime commentTime,
-    @required bool privateComment,
+    @required bool isPrivateComment,
+    bool persistentPrivateComment,
     @required bool proposal,
     @required bool approved,
     @required bool rejected,
     @required String gigCurrency,
     @required String offeredBudget,
   }) async {
-    setBusy(true);
-
     var result;
     if (!_editting) {
       result = await _firestoreService.addComment(
@@ -43,7 +42,8 @@ class AddCommentsViewModel extends BaseModel {
             commentOwnerUsername: commentOwnerUsername,
             commentBody: commentBody,
             commentTime: commentTime,
-            privateComment: privateComment,
+            isPrivateComment: isPrivateComment,
+            persistentPrivateComment: persistentPrivateComment,
             proposal: proposal,
             approved: approved,
             rejected: rejected,
@@ -66,7 +66,8 @@ class AddCommentsViewModel extends BaseModel {
           commentOwnerUsername: commentOwnerUsername,
           commentBody: commentBody,
           commentTime: commentTime,
-          privateComment: privateComment,
+          isPrivateComment: isPrivateComment,
+          persistentPrivateComment: persistentPrivateComment,
           proposal: proposal,
           approved: approved,
           rejected: rejected,
@@ -75,7 +76,6 @@ class AddCommentsViewModel extends BaseModel {
         ),
       );
     }
-    setBusy(false);
   }
 
   void setEdittingComment(Comment edittingComment) {
