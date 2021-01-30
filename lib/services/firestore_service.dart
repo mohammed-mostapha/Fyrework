@@ -192,7 +192,7 @@ class FirestoreService {
     try {
       var appointedUser =
           await _usersCollectionReference.document(appointedUserId).get();
-      var appointedUserFullName = appointedUser.data['name'];
+      var appointedUsername = appointedUser.data['username'];
 
       await DatabaseService(uid: appointedUserId)
           .updateOngoingGigsByGigId(appointedUserId, gigId);
@@ -200,13 +200,13 @@ class FirestoreService {
       await _gigsCollectionReference.document(gigId).updateData({
         'appointed': true,
         'appointedUserId': appointedUserId,
-        'appointedUserFullName': appointedUserFullName
+        'appointedUsername': appointedUsername
       });
 
       await _commentsCollectionReference.document(commentId).updateData({
         'approved': true,
         'appointedUserId': appointedUserId,
-        'appointedUserFullName': appointedUserFullName,
+        'appointedUsername': appointedUsername,
       }).then((value) async {
         await _commentsCollectionReference
             .where('approved', isEqualTo: false)

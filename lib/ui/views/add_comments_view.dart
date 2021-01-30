@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myApp/models/myUser.dart';
@@ -16,7 +17,6 @@ class AddCommentsView extends StatefulWidget {
   final String passedGigOwnerId;
   final String passedCurrentUserId;
   final String passedGigValue;
-  final bool passedGigAppointed;
   final String passedGigCurrency;
   final String passedGigBudget;
   AddCommentsView({
@@ -25,7 +25,6 @@ class AddCommentsView extends StatefulWidget {
     @required this.passedGigOwnerId,
     @required this.passedCurrentUserId,
     @required this.passedGigValue,
-    @required this.passedGigAppointed,
     @required this.passedGigCurrency,
     @required this.passedGigBudget,
   }) : super(key: key);
@@ -34,6 +33,10 @@ class AddCommentsView extends StatefulWidget {
 }
 
 class _AddCommentsViewState extends State<AddCommentsView> {
+  bool appointed;
+  String appointedUserId;
+  List appliersOrHirersByUserId;
+
   @override
   void initState() {
     super.initState();
@@ -81,6 +84,15 @@ class _AddCommentsViewState extends State<AddCommentsView> {
     }
   }
 
+  addToGigAppliersOrHirersList() {
+    Firestore.instance
+        .collection('gigs')
+        .document(widget.passedGigId)
+        .updateData({
+      'appliersOrHirersByUserId': FieldValue.arrayUnion([MyUser.uid])
+    });
+  }
+
   submitProposal() async {
     if (_proposalFormKey.currentState.validate()) {
       privateComment = true;
@@ -101,6 +113,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
         gigCurrency: widget.passedGigCurrency,
         offeredBudget: _offeredBudgetController.text,
       );
+      addToGigAppliersOrHirersList();
       privateComment = false;
       proposal = false;
       _addCommentsController.clear();
@@ -244,157 +257,194 @@ class _AddCommentsViewState extends State<AddCommentsView> {
 
   @override
   Widget build(BuildContext context) {
-// new code
-    return Container(
-      child: ViewModelProvider<AddCommentsViewModel>.withConsumer(
-        viewModelBuilder: () {
-          return AddCommentsViewModel();
-        },
-        builder: (context, model, child) => Scaffold(
-          appBar: new AppBar(
-            backgroundColor: Theme.of(context).primaryColor,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'Comments',
-                  style: TextStyle(fontSize: 16),
-                ),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Text(
-                        '${widget.passedGigCurrency} ${widget.passedGigBudget}',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 1,
-                              color: Colors.white,
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(2))),
-                        child: Expanded(
-                            child: GestureDetector(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              widget.passedGigOwnerId ==
-                                      widget.passedCurrentUserId
-                                  ? 'Your gig'
-                                  : !widget.passedGigAppointed
-                                      ? widget.passedGigValue == 'Gig I can do'
-                                          ? 'Hire me'
-                                          : 'Apply'
-                                      : 'Appointed',
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
-                            ),
-                          ),
-                          onTap: widget.passedGigOwnerId ==
-                                  widget.passedCurrentUserId
-                              ? () {}
-                              : !widget.passedGigAppointed
-                                  ? () {
-                                      _showApplyOrHireTemplate();
-                                    }
-                                  : () {},
-                        )),
-                      )
-                    ],
-                  ),
-                ),
-              ],
+//first check if this gig is appointed or not
+    return StreamBuilder<DocumentSnapshot>(
+      stream: Firestore.instance
+          .collection('gigs')
+          .document(widget.passedGigId)
+          .snapshots(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (!snapshot.hasData) {
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: CircularProgressIndicator(
+              valueColor:
+                  AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
             ),
-            bottom: PreferredSize(
-                child: Container(
-                  color: FyreworkrColors.fyreworkBlack,
-                  height: 0.5,
-                ),
-                preferredSize: Size.fromHeight(4.0)),
-          ),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                child: CommentsView(
-                  passedCurrentUserId: userId,
-                  gigIdCommentsIdentifier: widget.passedGigId,
-                  gigOwnerId: widget.passedGigOwnerId,
-                ),
-              ),
-              ListTile(
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CustomSwitch(
-                      activeColor: FyreworkrColors.fyreworkBlack,
-                      value: privateComment,
-                      onChanged: (value) {
-                        setState(() {
-                          privateComment = value;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _addCommentsController,
-                        decoration: InputDecoration(
-                          hintText: "Add comment...",
-                          border: InputBorder.none,
-                        ),
-                        onFieldSubmitted: (String submittedString) async {
-                          if (submittedString.isNotEmpty) {
-                            await AddCommentsViewModel().addComment(
-                              gigIdHoldingComment: widget.passedGigId,
-                              gigOwnerId: widget.passedGigOwnerId,
-                              commentOwnerUsername: username,
-                              commentBody: submittedString,
-                              commentOwnerId: userId,
-                              commentOwnerProfilePictureUrl:
-                                  userProfilePictureUrl,
-                              commentId: '',
-                              commentTime: new DateTime.now(),
-                              privateComment: privateComment,
-                              proposal: proposal,
-                              approved: approved,
-                              rejected: rejected,
-                              gigCurrency: widget.passedGigCurrency,
-                              offeredBudget: offeredBudget,
-                            );
-                          }
+          );
+        }
 
-                          _addCommentsController.clear();
-                          _addProposalController.clear();
-                          _offeredBudgetController.clear();
-                        },
-                        style: TextStyle(color: Colors.black),
-                      ),
+        appointed = snapshot.data['appointed'];
+        appointedUserId = snapshot.data['appointedUserId'];
+        appliersOrHirersByUserId = snapshot.data['appliersOrHirersByUserId'];
+
+        return Container(
+          child: ViewModelProvider<AddCommentsViewModel>.withConsumer(
+            viewModelBuilder: () {
+              return AddCommentsViewModel();
+            },
+            builder: (context, model, child) => Scaffold(
+              appBar: new AppBar(
+                backgroundColor: Theme.of(context).primaryColor,
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      'Comments',
+                      style: TextStyle(fontSize: 16),
                     ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.send,
-                        color: FyreworkrColors.fyreworkBlack,
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Text(
+                            '${widget.passedGigCurrency} ${widget.passedGigBudget}',
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 1,
+                                  color: Colors.white,
+                                ),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(2))),
+                            child: Expanded(
+                                child: GestureDetector(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  widget.passedGigOwnerId == MyUser.uid
+                                      ? 'Your gig'
+                                      : !appointed
+                                          ? !appliersOrHirersByUserId
+                                                  .contains(MyUser.uid)
+                                              ? widget.passedGigValue ==
+                                                      'Gig I can do'
+                                                  ? 'Hire me'
+                                                  : 'Apply'
+                                              : 'Applied'
+                                          // : 'Appointed',
+                                          : appointedUserId == MyUser.uid
+                                              ? 'tick Icon'
+                                              : 'Appointed',
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.white),
+                                ),
+                              ),
+                              onTap: widget.passedGigOwnerId ==
+                                      widget.passedCurrentUserId
+                                  ? () {}
+                                  : !appointed
+                                      ? !appliersOrHirersByUserId
+                                              .contains(MyUser.uid)
+                                          ? () {
+                                              _showApplyOrHireTemplate();
+                                            }
+                                          : () {}
+                                      : () {},
+                            )),
+                          )
+                        ],
                       ),
-                      onPressed: () {
-                        addComment();
-                      },
                     ),
                   ],
                 ),
+                bottom: PreferredSize(
+                    child: Container(
+                      color: FyreworkrColors.fyreworkBlack,
+                      height: 0.5,
+                    ),
+                    preferredSize: Size.fromHeight(4.0)),
               ),
-            ],
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: CommentsView(
+                      passedCurrentUserId: userId,
+                      gigIdCommentsIdentifier: widget.passedGigId,
+                      gigOwnerId: widget.passedGigOwnerId,
+                    ),
+                  ),
+                  ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CustomSwitch(
+                          activeColor: FyreworkrColors.fyreworkBlack,
+                          value: privateComment,
+                          onChanged: (value) {
+                            setState(() {
+                              privateComment = value;
+                            });
+                          },
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _addCommentsController,
+                            decoration: InputDecoration(
+                              hintText: "Add comment...",
+                              border: InputBorder.none,
+                            ),
+                            onFieldSubmitted: (String submittedString) async {
+                              if (submittedString.isNotEmpty) {
+                                await AddCommentsViewModel().addComment(
+                                  gigIdHoldingComment: widget.passedGigId,
+                                  gigOwnerId: widget.passedGigOwnerId,
+                                  commentOwnerUsername: username,
+                                  commentBody: submittedString,
+                                  commentOwnerId: userId,
+                                  commentOwnerProfilePictureUrl:
+                                      userProfilePictureUrl,
+                                  commentId: '',
+                                  commentTime: new DateTime.now(),
+                                  privateComment: privateComment,
+                                  proposal: proposal,
+                                  approved: approved,
+                                  rejected: rejected,
+                                  gigCurrency: widget.passedGigCurrency,
+                                  offeredBudget: offeredBudget,
+                                );
+                              }
+
+                              _addCommentsController.clear();
+                              _addProposalController.clear();
+                              _offeredBudgetController.clear();
+                            },
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.send,
+                            color: FyreworkrColors.fyreworkBlack,
+                          ),
+                          onPressed: () {
+                            addComment();
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
+//end check
+
+// new code
 
 //end new code
   }

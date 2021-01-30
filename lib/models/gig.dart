@@ -18,8 +18,9 @@ class Gig {
   final int gigLikes;
   final String appointedUserId;
   final String appointedusername;
+  final List appliersOrHirersByUserId;
   Gig({
-    this.appointed,
+    this.appointed = false,
     this.gigId,
     this.gigOwnerId,
     this.gigOwnerAvatarUrl,
@@ -38,6 +39,7 @@ class Gig {
     this.adultContentBool,
     this.appointedUserId,
     this.appointedusername,
+    this.appliersOrHirersByUserId,
   });
 
   Map<String, dynamic> toMap() {
@@ -61,6 +63,7 @@ class Gig {
       'gigLikes': gigLikes,
       'appointedUserId': appointedUserId,
       'appointedusername': appointedusername,
+      'appliersOrHirersByUserId': appliersOrHirersByUserId,
     };
   }
 
@@ -87,6 +90,7 @@ class Gig {
       gigLikes: map['gigLikes'],
       appointedUserId: map['appointedUserId'],
       appointedusername: map['appointedusername'],
+      appliersOrHirersByUserId: map['appliersOrHirersByUserId'],
     );
   }
 }
