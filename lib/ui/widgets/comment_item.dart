@@ -509,11 +509,9 @@ class _CommentItemState extends State<CommentItem> {
           //               duration: Duration(milliseconds: 500)),
           //         ],
           //       )
-          : widget.persistentPrivateComment
-              ? privateCommentView
-              : widget.isPrivateComment
-                  ? privateCommentView
-                  : publicCommentView,
+          : widget.persistentPrivateComment == null
+              ? widget.isPrivateComment ? privateCommentView : publicCommentView
+              : privateCommentView,
     );
   }
 

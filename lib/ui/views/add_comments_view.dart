@@ -504,9 +504,11 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                               ),
                             )
                           : ListTile(
-                              title: Text(
-                                'Private work stream',
-                                style: TextStyle(fontSize: 16),
+                              title: Center(
+                                child: Text(
+                                  'Private work stream',
+                                  style: TextStyle(fontSize: 16),
+                                ),
                               ),
                             )
                 ],
