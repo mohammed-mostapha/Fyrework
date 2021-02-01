@@ -1,12 +1,9 @@
 import 'dart:async';
 import 'dart:core';
 
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:myApp/models/gig.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myApp/services/firestore_service.dart';
-import 'package:myApp/ui/shared/theme.dart';
 import 'package:flutter_common_exports/src/extensions/build_context_extension.dart';
 import 'package:myApp/ui/views/add_comments_view.dart';
 import 'package:myApp/ui/widgets/gig_item_media_previewer.dart';
@@ -187,7 +184,7 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                             width: 10,
                             height: 0,
                           ),
-                          AutoSizeText(
+                          Text(
                             "${widget.userFullName}",
                             style: TextStyle(
                               fontSize: 16,
@@ -218,7 +215,7 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                 SizedBox(height: 10),
                 Container(
                   alignment: Alignment.centerLeft,
-                  child: AutoSizeText(
+                  child: Text(
                     "${widget.gigHashtags}",
                     style: TextStyle(
                       fontSize: 16,
@@ -274,7 +271,7 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                 ),
                 Container(
                   alignment: Alignment.centerLeft,
-                  child: AutoSizeText(
+                  child: Text(
                     "${widget.gigPost}",
                     style: TextStyle(
                       fontSize: 16,
@@ -297,7 +294,7 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                         ),
                         Container(
                           alignment: Alignment.centerLeft,
-                          child: AutoSizeText(
+                          child: Text(
                             "${widget.gigDeadline}",
                             style: TextStyle(
                               fontSize: 16,
@@ -310,7 +307,7 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                     Row(
                       children: <Widget>[
                         Container(
-                          child: AutoSizeText(
+                          child: Text(
                             "${widget.gigCurrency}",
                             style: TextStyle(
                               fontSize: 16,
@@ -322,7 +319,7 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                           height: 0,
                         ),
                         Container(
-                          child: AutoSizeText(
+                          child: Text(
                             "${widget.gigBudget}",
                             style: TextStyle(
                               fontSize: 16,
@@ -351,7 +348,7 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                                   height: 0,
                                 ),
                                 Expanded(
-                                  child: AutoSizeText(
+                                  child: Text(
                                     "${widget.adultContentText}",
                                     style: TextStyle(
                                       fontSize: 16,

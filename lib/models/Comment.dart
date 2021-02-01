@@ -3,7 +3,7 @@ class Comment {
   final String gigOwnerId;
   final String commentId;
   final String commentOwnerId;
-  final String commentOwnerProfilePictureUrl;
+  final String commentOwnerAvatarUrl;
   final String commentOwnerUsername;
   final String commentBody;
   dynamic commentTime;
@@ -20,7 +20,7 @@ class Comment {
     this.gigOwnerId,
     this.commentId,
     this.commentOwnerId,
-    this.commentOwnerProfilePictureUrl,
+    this.commentOwnerAvatarUrl,
     this.commentOwnerUsername,
     this.commentBody,
     this.commentTime,
@@ -40,7 +40,7 @@ class Comment {
       'gigOwnerId': gigOwnerId,
       'commentId': commentId,
       'commentOwnerId': commentOwnerId,
-      'commentOwnerProfilePictureUrl': commentOwnerProfilePictureUrl,
+      'commentOwnerAvatarUrl': commentOwnerAvatarUrl,
       'commentOwnerUsername': commentOwnerUsername,
       'commentBody': commentBody,
       // 'commentTime': DateTime.now().millisecondsSinceEpoch.toString(),
@@ -63,7 +63,7 @@ class Comment {
       gigOwnerId: map['gigOwnerId'],
       commentId: map['commentId'],
       commentOwnerId: map['commentOwnerId'],
-      commentOwnerProfilePictureUrl: map['commentOwnerProfilePictureUrl'],
+      commentOwnerAvatarUrl: map['commentOwnerAvatarUrl'],
       commentOwnerUsername: map['commentOwnerUsername'],
       commentBody: map['commentBody'],
       commentTime: map['commentTime'],

@@ -16,7 +16,6 @@ import '../wechat_assets_picker.dart';
 
 import '../constants/constants.dart';
 import '../constants/zoom_page_transition.dart';
-import 'builder/audio_page_builder.dart';
 import 'builder/fade_image_builder.dart';
 import 'builder/image_page_builder.dart';
 import 'builder/video_page_builder.dart';
@@ -250,7 +249,7 @@ class AssetPickerViewerState extends State<AssetPickerViewer>
     Widget builder;
     switch (asset.type) {
       case AssetType.audio:
-        builder = AudioPageBuilder(asset: asset, state: this);
+        // builder = AudioPageBuilder(asset: asset, state: this);
         break;
       case AssetType.image:
         builder = ImagePageBuilder(asset: asset, state: this);

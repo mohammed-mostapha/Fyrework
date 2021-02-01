@@ -11,7 +11,6 @@ import 'package:myApp/viewmodels/create_gig_view_model.dart';
 import 'package:path/path.dart' as fileName;
 import '../src/wechat_assets_picker.dart';
 import '../constants/picker_model.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:math' as math;
 import 'package:intl/intl.dart';
@@ -536,7 +535,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                   Row(
                     children: <Widget>[
                       Container(
-                        child: AutoSizeText(
+                        child: Text(
                           '${widget.gigCurrency}',
                           style: TextStyle(
                             fontSize: 16,
@@ -548,7 +547,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                         height: 0,
                       ),
                       Container(
-                        child: AutoSizeText(
+                        child: Text(
                           '${widget.gigBudget}',
                           style: TextStyle(
                             fontSize: 16,
@@ -576,7 +575,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                                 height: 0,
                               ),
                               Expanded(
-                                child: AutoSizeText(
+                                child: Text(
                                   "${widget.adultContentText}",
                                   style: TextStyle(
                                     fontSize: 8,

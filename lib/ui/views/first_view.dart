@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:myApp/ui/widgets/custom_dialog.dart';
 
 class FirstView extends StatelessWidget {
@@ -28,7 +27,7 @@ class FirstView extends StatelessWidget {
               SizedBox(
                 height: _height * 0.10,
               ),
-              AutoSizeText('The Community waits you...',
+              Text('The Community waits you...',
                   maxLines: 2,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 40, color: Colors.white)),

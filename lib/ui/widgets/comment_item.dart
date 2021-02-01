@@ -11,11 +11,12 @@ import 'package:expandable_text/expandable_text.dart';
 
 class CommentItem extends StatefulWidget {
   // final passedCurrentUserId;
+  final isGigAppointed;
   final gigIdHoldingComment;
   final gigOwnerId;
   final commentId;
   final commentOwnerId;
-  final commentOwnerProfilePictureUrl;
+  final commentOwnerAvatarUrl;
   final commentOwnerUsername;
   final commentBody;
   final gigCurrency;
@@ -30,11 +31,12 @@ class CommentItem extends StatefulWidget {
   CommentItem({
     Key key,
     // this.passedCurrentUserId,
+    this.isGigAppointed,
     this.gigIdHoldingComment,
     this.gigOwnerId,
     this.commentId,
     this.commentOwnerId,
-    this.commentOwnerProfilePictureUrl,
+    this.commentOwnerAvatarUrl,
     this.commentOwnerUsername,
     this.commentBody,
     this.gigCurrency,
@@ -128,8 +130,8 @@ class _CommentItemState extends State<CommentItem> {
                         CircleAvatar(
                           maxRadius: 20,
                           backgroundColor: Theme.of(context).primaryColor,
-                          backgroundImage: NetworkImage(
-                              "${widget.commentOwnerProfilePictureUrl}"),
+                          backgroundImage:
+                              NetworkImage("${widget.commentOwnerAvatarUrl}"),
                         ),
                         Container(
                           width: 10,
@@ -165,7 +167,9 @@ class _CommentItemState extends State<CommentItem> {
                               widget.approved &&
                               !widget.rejected)
                           ? ApprovedLabel()
-                          : (myComment && !widget.proposal)
+                          : (myComment &&
+                                  !widget.proposal &&
+                                  !widget.isGigAppointed)
                               ? Switch(
                                   activeColor: Colors.blue,
                                   inactiveThumbColor: Colors.grey[200],

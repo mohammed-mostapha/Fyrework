@@ -5,6 +5,7 @@ import 'package:myApp/services/database.dart';
 import 'package:myApp/ui/widgets/comment_item.dart';
 
 class CommentsView extends StatelessWidget {
+  final bool isGigAppointed;
   final String gigIdCommentsIdentifier;
   final String gigOwnerId;
   // final String passedCurrentUserId
@@ -12,6 +13,7 @@ class CommentsView extends StatelessWidget {
       {Key key,
       @required this.gigIdCommentsIdentifier,
       // @required this.passedCurrentUserId,
+      @required this.isGigAppointed,
       this.gigOwnerId})
       : super(key: key);
   @override
@@ -31,13 +33,14 @@ class CommentsView extends StatelessWidget {
                         // onTap: () => model.editGig(index),
                         child: CommentItem(
                           // passedCurrentUserId: MyUser.uid,`
+                          isGigAppointed: isGigAppointed,
                           gigIdHoldingComment:
                               getDocData['gigIdHoldingComment'],
                           gigOwnerId: getDocData['gigOwnerId'],
                           commentId: getDocData['commentId'],
                           commentOwnerId: getDocData['commentOwnerId'],
-                          commentOwnerProfilePictureUrl:
-                              getDocData['commentOwnerProfilePictureUrl'],
+                          commentOwnerAvatarUrl:
+                              getDocData['commentOwnerAvatarUrl'],
                           commentOwnerUsername:
                               getDocData['commentOwnerUsername'],
                           commentBody: getDocData['commentBody'],

@@ -9,7 +9,6 @@ import 'package:myApp/main.dart';
 import 'package:myApp/screens/add_gig/assets_picker/constants/picker_model.dart';
 import 'package:myApp/screens/add_gig/assets_picker/src/widget/asset_picker.dart';
 import 'package:myApp/services/auth_service.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:myApp/services/popularHashtags.dart';
 import 'package:myApp/services/takenHandles.dart';
 import 'package:myApp/ui/shared/theme.dart';
@@ -113,7 +112,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   // DateTime _defaultAge = new DateTime.now();
   final _passwordConfirmPasswordSnackBar = SnackBar(
     content: Text(
-      'Password & Confirm password are not identtical!',
+      'Password & Confirm password are not identical!',
       style: TextStyle(fontSize: 16),
     ),
   );
@@ -528,7 +527,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     );
   }
 
-  AutoSizeText buildHeaderText() {
+  Text buildHeaderText() {
     String _headerText;
     if (authFormType == AuthFormType.signIn) {
       _headerText = "Sign In";
@@ -541,7 +540,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     else {
       _headerText = "Register";
     }
-    return AutoSizeText(
+    return Text(
       _headerText,
       maxLines: 1,
       textAlign: TextAlign.center,

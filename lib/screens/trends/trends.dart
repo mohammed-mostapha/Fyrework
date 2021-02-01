@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myApp/screens/trends/providerGigs_view.dart';
@@ -67,12 +66,12 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
             indicatorColor: FyreworkrColors.fyreworkBlack,
             tabs: [
               Tab(
-                child: AutoSizeText('All',
+                child: Text('All',
                     style: TextStyle(color: FyreworkrColors.fyreworkBlack),
                     maxLines: 1),
               ),
               Tab(
-                child: AutoSizeText(
+                child: Text(
                   'Gigs',
                   style: TextStyle(
                     color: FyreworkrColors.fyreworkBlack,
@@ -81,7 +80,7 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
                 ),
               ),
               Tab(
-                child: AutoSizeText('Providers',
+                child: Text('Providers',
                     style: TextStyle(color: FyreworkrColors.fyreworkBlack),
                     maxLines: 1),
               ),

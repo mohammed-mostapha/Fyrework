@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 
 class CustomDialog extends StatelessWidget {
   final grayColor = const Color(0xFF939393);
@@ -45,14 +44,14 @@ class CustomDialog extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 SizedBox(height: 24.0),
-                AutoSizeText(
+                Text(
                   title,
                   maxLines: 2,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.black, fontSize: 25.0),
                 ),
                 SizedBox(height: 24.0),
-                AutoSizeText(
+                Text(
                   description,
                   maxLines: 4,
                   textAlign: TextAlign.center,
@@ -64,7 +63,7 @@ class CustomDialog extends StatelessWidget {
                   color: Colors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0)),
-                  child: AutoSizeText(
+                  child: Text(
                     primaryButtonText,
                     maxLines: 1,
                     style: TextStyle(
@@ -91,7 +90,7 @@ class CustomDialog extends StatelessWidget {
   showSecondaryButton(BuildContext context) {
     if (secondaryButtonText != null && secondaryButtonRoute != null) {
       return FlatButton(
-        child: AutoSizeText(
+        child: Text(
           secondaryButtonText,
           maxLines: 1,
           style: TextStyle(
