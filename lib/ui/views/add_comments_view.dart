@@ -147,7 +147,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
             child: Padding(
               padding: MediaQuery.of(context).viewInsets,
               child: Container(
-                height: MediaQuery.of(context).size.height / 1.5,
+                // height: MediaQuery.of(context).size.height / 2,
                 decoration: BoxDecoration(
                   color: Theme.of(context).accentColor,
                   // color: Colors.red,
@@ -157,19 +157,19 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
                   child: Form(
                     key: _proposalFormKey,
                     child: ListView(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: Container(
                             child: TextFormField(
-                              controller: _addCommentsController,
-                              decoration:
-                                  buildSignUpInputDecoration('Your proposal'),
+                              controller: _addProposalController,
+                              decoration: buildSignUpInputDecoration(
+                                  'Describe your proposal in brief'),
                               inputFormatters: [
                                 new LengthLimitingTextInputFormatter(500),
                               ],
@@ -183,6 +183,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                         ),
                         //choosing payment method
                         PaymentMethod(
+                          passidGigCurrency: widget.passedGigCurrency,
                           onCardTapped: () {
                             print('card tapped');
                             if (slidingCardController.isCardSeparated == true) {
@@ -193,108 +194,9 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                           },
                           slidingCardController: slidingCardController,
                         ),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        //   crossAxisAlignment: CrossAxisAlignment.start,
-                        //   children: [
-                        // Column(
-                        //   children: [
-                        //     SizedBox(
-                        //       width: 40,
-                        //       height: 40,
-                        //       child: SvgPicture.asset(
-                        //         paypalIcon,
-                        //         semanticsLabel: 'user',
-                        //         // color: Colors.white,
-                        //       ),
-                        //     ),
-                        //     Container(
-                        //       child: SizedBox(
-                        //         width: 20,
-                        //         child: Radio(
-                        //           materialTapTargetSize:
-                        //               MaterialTapTargetSize.shrinkWrap,
-                        //           value: 'Paypal',
-                        //           groupValue: preferredPaymentMethod,
-                        //           activeColor:
-                        //               Theme.of(context).primaryColor,
-                        //           onChanged: (T) {
-                        //             setState(() {
-                        //               preferredPaymentMethod = T;
 
-                        //               // Gig().gigValue = gigValue;
-                        //             });
-                        //           },
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
-                        // Column(
-                        //   children: [
-                        //     SizedBox(
-                        //       width: 40,
-                        //       height: 40,
-                        //       child: SvgPicture.asset(
-                        //         pay,
-                        //         semanticsLabel: 'pay',
-                        //         // color: Colors.white,
-                        //       ),
-                        //     ),
-                        //     Container(
-                        //       child: SizedBox(
-                        //         width: 20,
-                        //         child: Radio(
-                        //             materialTapTargetSize:
-                        //                 MaterialTapTargetSize
-                        //                     .shrinkWrap,
-                        //             value: 'Cash',
-                        //             groupValue: preferredPaymentMethod,
-                        //             activeColor:
-                        //                 Theme.of(context).primaryColor,
-                        //             onChanged: (T) {
-                        //               setState(() {
-                        //                 preferredPaymentMethod = T;
-                        //               });
-                        //             }),
-                        //       ),
-                        //     ),
-                        //     Row(
-                        //       mainAxisAlignment: MainAxisAlignment.end,
-                        //       children: <Widget>[
-                        //         Text(
-                        //           '${widget.passedGigCurrency}',
-                        //           style: TextStyle(fontSize: 16),
-                        //         ),
-                        //         SizedBox(
-                        //           width: 10,
-                        //         ),
-                        //         Container(
-                        //           width: 100,
-                        //           child: TextFormField(
-                        //             controller: _addCommentsController,
-                        //             decoration: buildSignUpInputDecoration(
-                        //                 'Budget'),
-                        //             keyboardType: TextInputType.number,
-                        //             validator: (value) =>
-                        //                 value.isEmpty ? '*' : null,
-                        //             maxLines: null,
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ],
-                        // ),
-                        //   ],
-                        // ),
-
-                        //end choosing payment method
-
-                        // Container(
-                        //   height: 20,
-                        // ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 20),
+                          padding: const EdgeInsets.all(20),
                           child: Align(
                             alignment: Alignment.bottomCenter,
                             child: Container(
@@ -609,20 +511,9 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                       ),
                                     ),
                                   ),
-
                                   SizedBox(
                                     width: 10,
                                   ),
-
-                                  // IconButton(
-                                  //   icon: Icon(
-                                  //     Icons.send,
-                                  //     color: FyreworkrColors.fyreworkBlack,
-                                  //   ),
-                                  //   onPressed: () {
-                                  //     addComment(true);
-                                  //   },
-                                  // ),
                                   Container(
                                     width: 40,
                                     height: 40,
@@ -671,16 +562,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
         );
       },
     );
-//end check
-
-// new code
-
-//end new code
   }
-
-  // showApplyOrHireTemplate() {
-  //   Scaffold.of(context).showSnackBar(SnackBar(content: Text('snackbar')));
-  // }
 
   @override
   void dispose() {
@@ -693,14 +575,15 @@ class _AddCommentsViewState extends State<AddCommentsView> {
 
 //Cash in hand
 class PaymentMethod extends StatefulWidget {
+  final String passidGigCurrency;
+  final SlidingCardController slidingCardController;
+  final Function onCardTapped;
   PaymentMethod({
     Key key,
+    this.passidGigCurrency,
     this.slidingCardController,
     @required this.onCardTapped,
   }) : super(key: key);
-
-  final SlidingCardController slidingCardController;
-  final Function onCardTapped;
 
   @override
   _PaymentMethodState createState() => _PaymentMethodState();
@@ -721,13 +604,20 @@ class _PaymentMethodState extends State<PaymentMethod> {
           ? EdgeInsets.only(bottom: 30)
           : EdgeInsets.zero,
       child: SlidingCard(
-        slimeCardElevation: 0.5,
         // slidingAnimationReverseCurve: Curves.bounceInOut,
         cardsGap: SizeConfig.safeBlockVertical,
         controller: widget.slidingCardController,
         slidingCardWidth: SizeConfig.horizontalBloc * 90,
-        visibleCardHeight: SizeConfig.safeBlockVertical * 17,
-        hiddenCardHeight: SizeConfig.safeBlockVertical * 15,
+        // visibleCardHeight: SizeConfig.safeBlockVertical * 30,
+        visibleCardHeight:
+            MediaQuery.of(context).orientation == Orientation.portrait
+                ? SizeConfig.safeBlockVertical * 22
+                : SizeConfig.safeBlockVertical * 30,
+        // hiddenCardHeight: SizeConfig.safeBlockVertical * 20,
+        hiddenCardHeight:
+            MediaQuery.of(context).orientation == Orientation.portrait
+                ? SizeConfig.safeBlockVertical * 15
+                : SizeConfig.safeBlockVertical * 20,
         frontCardWidget: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -764,6 +654,11 @@ class _PaymentMethodState extends State<PaymentMethod> {
                 ),
               ],
             ),
+            VerticalDivider(
+              thickness: 1,
+              endIndent: 20,
+              color: Colors.black26,
+            ),
             Column(
               children: [
                 SizedBox(
@@ -799,17 +694,17 @@ class _PaymentMethodState extends State<PaymentMethod> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             Text(
-              // '${AddCommentsView().passedGigCurrency}',
-              'Currency',
+              widget.passidGigCurrency,
+              // 'Currency',
               style: TextStyle(fontSize: 16),
             ),
             SizedBox(
               width: 10,
             ),
             Container(
-              width: 100,
+              width: 70,
               child: TextFormField(
-                decoration: buildSignUpInputDecoration('Budget'),
+                decoration: buildSignUpInputDecoration('0.00'),
                 keyboardType: TextInputType.number,
                 validator: (value) => value.isEmpty ? '*' : null,
                 onSaved: (value) => proposalBudget = value,

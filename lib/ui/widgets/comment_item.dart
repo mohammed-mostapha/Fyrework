@@ -103,7 +103,6 @@ class _CommentItemState extends State<CommentItem> {
         MaterialPageRoute(
             builder: (context) => UserProfileView(
                   passedUserUid: widget.commentOwnerId,
-                  // passedUserFullName: widget.commentOwnerUsername,
                   fromComment: true,
                   fromGig: false,
                 )));
@@ -349,11 +348,6 @@ class _CommentItemState extends State<CommentItem> {
                                     children: [
                                       Container(
                                         decoration: BoxDecoration(
-                                            // color: !widget.approved
-                                            //     ? !widget.rejected
-                                            //         ? Colors.white
-                                            //         : Colors.red
-                                            //     : Colors.green,
                                             border: Border.all(
                                               width: 2,
                                               color: !widget.approved
@@ -379,9 +373,6 @@ class _CommentItemState extends State<CommentItem> {
                                                         ? Colors.white
                                                         : Colors.red
                                                     : Colors.green,
-                                                //  !widget.approved
-                                                //     ? Colors.black
-                                                //     : Colors.white,
                                               ),
                                             ),
                                           ),
@@ -423,9 +414,6 @@ class _CommentItemState extends State<CommentItem> {
             )),
       ),
     );
-
-    // Widget commentViewShifter =
-    //     widget.privateComment ? privateCommentView : publicCommentView;
 
     timeAgo.setLocaleMessages('de', timeAgo.DeMessages());
     timeAgo.setLocaleMessages('dv', timeAgo.DvMessages());
@@ -476,10 +464,7 @@ class _CommentItemState extends State<CommentItem> {
     var locale = 'en';
     return Container(
       decoration: BoxDecoration(
-        color: myComment
-            // ? FyreworkrColors.fyreworkBlack
-            ? Theme.of(context).primaryColor
-            : Colors.white,
+        color: myComment ? Theme.of(context).primaryColor : Colors.white,
         border: Border(
           top: myComment
               ? BorderSide(width: 0.3, color: Colors.grey[50])
@@ -504,22 +489,7 @@ class _CommentItemState extends State<CommentItem> {
                     duration: Duration(milliseconds: 500)),
               ],
             )
-          // : myComment
-          //     ? IndexedStack(
-          //         index: _commentViewIndex,
-          //         children: [
-          //           AnimatedOpacity(
-          //             opacity: _commentOpacity,
-          //             child: publicCommentView,
-          //             duration: Duration(milliseconds: 500),
-          //           ),
-          //           AnimatedOpacity(
-          //               opacity: _commentOpacity,
-          //               child: privateCommentView,
-          //               duration: Duration(milliseconds: 500)),
-          //         ],
-          //       )
-          : widget.persistentPrivateComment == null
+          : !widget.persistentPrivateComment
               ? widget.isPrivateComment ? privateCommentView : publicCommentView
               : privateCommentView,
     );
