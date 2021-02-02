@@ -110,6 +110,7 @@ flutter:
     - assets/svgs/light/
     - assets/svgs/solid/
     - assets/svgs/regular/
+    - assets/svgs/flaticon/
     - languages/
 
   # An image asset can refer to one or more resolution-specific "variants", see

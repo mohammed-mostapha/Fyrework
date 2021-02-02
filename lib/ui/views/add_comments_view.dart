@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:myApp/models/myUser.dart';
+import 'package:myApp/screens/add_gig/sizeConfig.dart';
+import 'package:myApp/ui/shared/constants.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/views/comments_view.dart';
 import 'package:myApp/ui/widgets/provider_widget.dart';
@@ -12,6 +14,7 @@ import 'package:myApp/locator.dart';
 import 'package:myApp/services/auth_service.dart';
 import 'package:myApp/services/storage_repo.dart';
 import 'package:custom_switch/custom_switch.dart';
+import 'package:sliding_card/sliding_card.dart';
 
 class AddCommentsView extends StatefulWidget {
   final String passedGigId;
@@ -33,7 +36,15 @@ class AddCommentsView extends StatefulWidget {
   _AddCommentsViewState createState() => _AddCommentsViewState();
 }
 
+SlidingCardController slidingCardController;
+
 class _AddCommentsViewState extends State<AddCommentsView> {
+  @override
+  void initState() {
+    super.initState();
+    slidingCardController = SlidingCardController();
+  }
+
   bool myGig;
   bool appointed;
   bool appointedUser;
@@ -42,11 +53,6 @@ class _AddCommentsViewState extends State<AddCommentsView> {
   final String paperClip = 'assets/svgs/solid/paperclip.svg';
   final String paperPlane = 'assets/svgs/solid/paper-plane.svg';
   final String checkCircle = 'assets/svgs/regular/check-circle.svg';
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   bool isPrivateComment = false;
   bool proposal = false;
@@ -141,9 +147,10 @@ class _AddCommentsViewState extends State<AddCommentsView> {
             child: Padding(
               padding: MediaQuery.of(context).viewInsets,
               child: Container(
-                height: MediaQuery.of(context).size.height / 2,
+                height: MediaQuery.of(context).size.height / 1.5,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).canvasColor,
+                  color: Theme.of(context).accentColor,
+                  // color: Colors.red,
                   borderRadius: BorderRadius.only(
                     topLeft: const Radius.circular(10),
                     topRight: const Radius.circular(10),
@@ -153,106 +160,162 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                   padding: const EdgeInsets.all(8.0),
                   child: Form(
                     key: _proposalFormKey,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            height: 100,
-                            decoration: BoxDecoration(
-                              border: Border(
-                                  bottom: BorderSide(
-                                      color: Colors.grey.shade400, width: 1)),
-                            ),
-                            child: Column(
-                              children: <Widget>[
-                                TextFormField(
-                                  controller: _addCommentsController,
-                                  // textInputAction: TextInputAction.newline,
-                                  maxLines: null,
-                                  keyboardType: TextInputType.multiline,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: 'Your proposal',
-                                    fillColor: Colors.transparent,
-                                    filled: true,
-                                  ),
-                                  inputFormatters: [
-                                    new LengthLimitingTextInputFormatter(500),
-                                  ],
-                                  validator: (value) =>
-                                      value.isEmpty ? '*' : null,
-                                ),
+                    child: ListView(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Container(
+                            child: TextFormField(
+                              controller: _addCommentsController,
+                              decoration:
+                                  buildSignUpInputDecoration('Your proposal'),
+                              inputFormatters: [
+                                new LengthLimitingTextInputFormatter(500),
                               ],
+                              validator: (value) => value.isEmpty ? '*' : null,
+                              maxLines: null,
                             ),
                           ),
-                          Container(
-                            height: 20,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        //choosing payment method
+                        PaymentMethod(
+                          onCardTapped: () {
+                            print('card tapped');
+                            if (slidingCardController.isCardSeparated == true) {
+                              slidingCardController.collapseCard();
+                            } else {
+                              slidingCardController.expandCard();
+                            }
+                          },
+                          slidingCardController: slidingCardController,
+                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        //   crossAxisAlignment: CrossAxisAlignment.start,
+                        //   children: [
+                        // Column(
+                        //   children: [
+                        //     SizedBox(
+                        //       width: 40,
+                        //       height: 40,
+                        //       child: SvgPicture.asset(
+                        //         paypalIcon,
+                        //         semanticsLabel: 'user',
+                        //         // color: Colors.white,
+                        //       ),
+                        //     ),
+                        //     Container(
+                        //       child: SizedBox(
+                        //         width: 20,
+                        //         child: Radio(
+                        //           materialTapTargetSize:
+                        //               MaterialTapTargetSize.shrinkWrap,
+                        //           value: 'Paypal',
+                        //           groupValue: preferredPaymentMethod,
+                        //           activeColor:
+                        //               Theme.of(context).primaryColor,
+                        //           onChanged: (T) {
+                        //             setState(() {
+                        //               preferredPaymentMethod = T;
+
+                        //               // Gig().gigValue = gigValue;
+                        //             });
+                        //           },
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        // Column(
+                        //   children: [
+                        //     SizedBox(
+                        //       width: 40,
+                        //       height: 40,
+                        //       child: SvgPicture.asset(
+                        //         pay,
+                        //         semanticsLabel: 'pay',
+                        //         // color: Colors.white,
+                        //       ),
+                        //     ),
+                        //     Container(
+                        //       child: SizedBox(
+                        //         width: 20,
+                        //         child: Radio(
+                        //             materialTapTargetSize:
+                        //                 MaterialTapTargetSize
+                        //                     .shrinkWrap,
+                        //             value: 'Cash',
+                        //             groupValue: preferredPaymentMethod,
+                        //             activeColor:
+                        //                 Theme.of(context).primaryColor,
+                        //             onChanged: (T) {
+                        //               setState(() {
+                        //                 preferredPaymentMethod = T;
+                        //               });
+                        //             }),
+                        //       ),
+                        //     ),
+                        //     Row(
+                        //       mainAxisAlignment: MainAxisAlignment.end,
+                        //       children: <Widget>[
+                        //         Text(
+                        //           '${widget.passedGigCurrency}',
+                        //           style: TextStyle(fontSize: 16),
+                        //         ),
+                        //         SizedBox(
+                        //           width: 10,
+                        //         ),
+                        //         Container(
+                        //           width: 100,
+                        //           child: TextFormField(
+                        //             controller: _addCommentsController,
+                        //             decoration: buildSignUpInputDecoration(
+                        //                 'Budget'),
+                        //             keyboardType: TextInputType.number,
+                        //             validator: (value) =>
+                        //                 value.isEmpty ? '*' : null,
+                        //             maxLines: null,
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ],
+                        // ),
+                        //   ],
+                        // ),
+
+                        //end choosing payment method
+
+                        // Container(
+                        //   height: 20,
+                        // ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              width: 100.0,
+                              child: RaisedButton(
+                                  splashColor: Colors.green,
+                                  color: FyreworkrColors.fyreworkBlack,
+                                  child: Text(
+                                    widget.passedGigValue == 'Gigs I can do'
+                                        ? 'Hire'
+                                        : 'Apply',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  onPressed: () {
+                                    // Navigator.pop(context);
+                                    submitProposal();
+                                  }),
+                            ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              Text(
-                                '${widget.passedGigCurrency}',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              Container(
-                                height: 20,
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          color: Colors.grey.shade400,
-                                          width: 1)),
-                                ),
-                                width: 100,
-                                child: TextFormField(
-                                  controller: _offeredBudgetController,
-                                  decoration: InputDecoration(
-                                      hintText: 'Budget',
-                                      border: InputBorder.none,
-                                      contentPadding: EdgeInsets.only(
-                                          left: 15,
-                                          bottom: 11,
-                                          top: 11,
-                                          right: 15)),
-                                  // Only numbers can be entered
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: <TextInputFormatter>[
-                                    WhitelistingTextInputFormatter.digitsOnly
-                                  ],
-                                  validator: (value) =>
-                                      value.isEmpty ? '*' : null,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                width: 100.0,
-                                child: RaisedButton(
-                                    splashColor: Colors.green,
-                                    color: FyreworkrColors.fyreworkBlack,
-                                    child: Text(
-                                      widget.passedGigValue == 'Gigs I can do'
-                                          ? 'Hire'
-                                          : 'Apply',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    onPressed: () {
-                                      // Navigator.pop(context);
-                                      submitProposal();
-                                    }),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
+                        )
+                      ],
                     ),
                   ),
                 ),
@@ -264,6 +327,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     myGig = widget.passedGigOwnerId == MyUser.uid ? true : false;
 
 //first check if this gig is appointed or not
@@ -370,10 +434,14 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                           ),
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(2))),
-                                      child: Text(
-                                        'Appointed',
-                                        style: TextStyle(
-                                            fontSize: 16, color: Colors.white),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          'Appointed',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     )
                         ],
@@ -619,6 +687,145 @@ class _AddCommentsViewState extends State<AddCommentsView> {
     _addCommentsController.dispose();
     _addProposalController.dispose();
     _offeredBudgetController.dispose();
+    super.dispose();
+  }
+}
+
+//Cash in hand
+class PaymentMethod extends StatefulWidget {
+  PaymentMethod({
+    Key key,
+    this.slidingCardController,
+    @required this.onCardTapped,
+  }) : super(key: key);
+
+  final SlidingCardController slidingCardController;
+  final Function onCardTapped;
+
+  @override
+  _PaymentMethodState createState() => _PaymentMethodState();
+}
+
+class _PaymentMethodState extends State<PaymentMethod> {
+  final String paypalIcon = 'assets/svgs/flaticon/paypal.svg';
+  final String pay = 'assets/svgs/flaticon/pay.svg';
+  String proposalBudget;
+  TextEditingController _submitProposalController = TextEditingController();
+
+  String preferredPaymentMethod;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: MediaQuery.of(context).orientation == Orientation.landscape
+          ? EdgeInsets.only(bottom: 30)
+          : EdgeInsets.zero,
+      child: SlidingCard(
+        slimeCardElevation: 0.5,
+        // slidingAnimationReverseCurve: Curves.bounceInOut,
+        cardsGap: SizeConfig.safeBlockVertical,
+        controller: widget.slidingCardController,
+        slidingCardWidth: SizeConfig.horizontalBloc * 90,
+        visibleCardHeight: SizeConfig.safeBlockVertical * 17,
+        hiddenCardHeight: SizeConfig.safeBlockVertical * 15,
+        frontCardWidget: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              children: [
+                SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: SvgPicture.asset(
+                    paypalIcon,
+                    semanticsLabel: 'paypal',
+                    // color: Colors.white,
+                  ),
+                ),
+                Container(
+                  child: SizedBox(
+                    width: 20,
+                    child: Radio(
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      value: 'Paypal',
+                      groupValue: preferredPaymentMethod,
+                      activeColor: Theme.of(context).primaryColor,
+                      onChanged: (T) {
+                        setState(() {
+                          preferredPaymentMethod = T;
+                          widget.slidingCardController.collapseCard();
+                          proposalBudget = null;
+                          // Gig().gigValue = gigValue;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: SvgPicture.asset(
+                    pay,
+                    semanticsLabel: 'pay',
+                    // color: Colors.white,
+                  ),
+                ),
+                Container(
+                  child: SizedBox(
+                    width: 20,
+                    child: Radio(
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        value: 'Cash',
+                        groupValue: preferredPaymentMethod,
+                        activeColor: Theme.of(context).primaryColor,
+                        onChanged: (T) {
+                          setState(() {
+                            preferredPaymentMethod = T;
+                            widget.onCardTapped();
+                          });
+                        }),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        backCardWidget: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Text(
+              // '${AddCommentsView().passedGigCurrency}',
+              'Currency',
+              style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Container(
+              width: 100,
+              child: TextFormField(
+                decoration: buildSignUpInputDecoration('Budget'),
+                keyboardType: TextInputType.number,
+                validator: (value) => value.isEmpty ? '*' : null,
+                onSaved: (value) => proposalBudget = value,
+                maxLines: null,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    // Additional disposal code
+    _submitProposalController.dispose();
     super.dispose();
   }
 }
