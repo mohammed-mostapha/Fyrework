@@ -154,6 +154,9 @@ class _CommentItemState extends State<CommentItem> {
                   ),
                   onTap: showUserProfile,
                 ),
+                SizedBox(
+                  height: 5,
+                ),
                 Container(
                   child: (myGig &&
                           widget.gigOwnerId != widget.commentOwnerId &&
@@ -188,6 +191,9 @@ class _CommentItemState extends State<CommentItem> {
                                 ),
                 ),
               ],
+            ),
+            SizedBox(
+              height: 5,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

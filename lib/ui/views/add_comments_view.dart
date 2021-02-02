@@ -41,6 +41,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
   List appliersOrHirersByUserId;
   final String paperClip = 'assets/svgs/solid/paperclip.svg';
   final String paperPlane = 'assets/svgs/solid/paper-plane.svg';
+  final String checkCircle = 'assets/svgs/regular/check-circle.svg';
 
   @override
   void initState() {
@@ -315,48 +316,66 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                           SizedBox(
                             width: 10,
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 1,
-                                  color: Colors.white,
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(2))),
-                            child: GestureDetector(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  myGig
-                                      ? 'Your gig'
-                                      : !appointed
-                                          ? !appliersOrHirersByUserId
-                                                  .contains(MyUser.uid)
-                                              ? widget.passedGigValue ==
-                                                      'Gig I can do'
-                                                  ? 'Hire me'
-                                                  : 'Apply'
-                                              : 'Applied'
-                                          // : 'Appointed',
-                                          : appointedUserId == MyUser.uid
-                                              ? 'tick Icon'
-                                              : 'Appointed',
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.white),
-                                ),
-                              ),
-                              onTap: myGig
-                                  ? () {}
-                                  : !appointed
-                                      ? !appliersOrHirersByUserId
-                                              .contains(MyUser.uid)
-                                          ? () {
-                                              _showApplyOrHireTemplate();
-                                            }
-                                          : () {}
-                                      : () {},
-                            ),
-                          )
+                          !appointed
+                              ? Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                        width: 1,
+                                        color: Colors.white,
+                                      ),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(2))),
+                                  child: GestureDetector(
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          myGig
+                                              ? 'Your gig'
+                                              : !appliersOrHirersByUserId
+                                                      .contains(MyUser.uid)
+                                                  ? widget.passedGigValue ==
+                                                          'Gig I can do'
+                                                      ? 'Hire'
+                                                      : 'Apply'
+                                                  : 'Request sent',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white),
+                                        )),
+                                    onTap: myGig
+                                        ? () {}
+                                        : !appointed
+                                            ? !appliersOrHirersByUserId
+                                                    .contains(MyUser.uid)
+                                                ? () {
+                                                    _showApplyOrHireTemplate();
+                                                  }
+                                                : () {}
+                                            : () {},
+                                  ),
+                                )
+                              : appointedUserId == MyUser.uid
+                                  ? SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: SvgPicture.asset(checkCircle,
+                                          semanticsLabel: 'check-circle',
+                                          color: Colors.green),
+                                    )
+                                  : Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                            width: 1,
+                                            color: Colors.white,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(2))),
+                                      child: Text(
+                                        'Appointed',
+                                        style: TextStyle(
+                                            fontSize: 16, color: Colors.white),
+                                      ),
+                                    )
                         ],
                       ),
                     ),
