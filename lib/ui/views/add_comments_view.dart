@@ -3,18 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:myApp/models/myUser.dart';
-import 'package:myApp/screens/add_gig/sizeConfig.dart';
 import 'package:myApp/ui/shared/constants.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/ui/views/comments_view.dart';
-import 'package:myApp/ui/widgets/provider_widget.dart';
 import 'package:myApp/viewmodels/add_comments_view_model.dart';
 import 'package:provider_architecture/provider_architecture.dart';
-import 'package:myApp/locator.dart';
-import 'package:myApp/services/auth_service.dart';
-import 'package:myApp/services/storage_repo.dart';
 import 'package:custom_switch/custom_switch.dart';
-import 'package:sliding_card/sliding_card.dart';
 
 class AddCommentsView extends StatefulWidget {
   final String passedGigId;
@@ -36,14 +30,11 @@ class AddCommentsView extends StatefulWidget {
   _AddCommentsViewState createState() => _AddCommentsViewState();
 }
 
-SlidingCardController slidingCardController;
-
 class _AddCommentsViewState extends State<AddCommentsView> {
-  @override
-  void initState() {
-    super.initState();
-    slidingCardController = SlidingCardController();
-  }
+  final String paypalIcon = 'assets/svgs/flaticon/paypal.svg';
+  final String pay = 'assets/svgs/flaticon/pay.svg';
+  String proposalBudget;
+  String preferredPaymentMethod;
 
   bool myGig;
   bool appointed;
@@ -182,38 +173,148 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                           height: 20,
                         ),
                         //choosing payment method
-                        PaymentMethod(
-                          passidGigCurrency: widget.passedGigCurrency,
-                          onCardTapped: () {
-                            print('card tapped');
-                            if (slidingCardController.isCardSeparated == true) {
-                              slidingCardController.collapseCard();
-                            } else {
-                              slidingCardController.expandCard();
-                            }
-                          },
-                          slidingCardController: slidingCardController,
+                        // PaymentMethod(
+                        //   passidGigCurrency: widget.passedGigCurrency,
+                        //   onCardTapped: () {
+                        //     print('card tapped');
+                        //     if (slidingCardController.isCardSeparated == true) {
+                        //       slidingCardController.collapseCard();
+                        //     } else {
+                        //       slidingCardController.expandCard();
+                        //     }
+                        //   },
+                        //   slidingCardController: slidingCardController,
+                        // ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    width: 40,
+                                    height: 40,
+                                    child: SvgPicture.asset(
+                                      paypalIcon,
+                                      semanticsLabel: 'paypal',
+                                      // color: Colors.white,
+                                    ),
+                                  ),
+                                  Container(
+                                    child: SizedBox(
+                                      width: 20,
+                                      child: Radio(
+                                        materialTapTargetSize:
+                                            MaterialTapTargetSize.shrinkWrap,
+                                        value: 'Paypal',
+                                        groupValue: preferredPaymentMethod,
+                                        activeColor:
+                                            Theme.of(context).primaryColor,
+                                        onChanged: (T) {
+                                          setState(() {
+                                            preferredPaymentMethod = T;
+                                            proposalBudget = null;
+                                            // Gig().gigValue = gigValue;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Divider(
+                                thickness: 1,
+                                color: Colors.black26,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    width: 40,
+                                    height: 40,
+                                    child: SvgPicture.asset(
+                                      pay,
+                                      semanticsLabel: 'pay',
+                                      // color: Colors.white,
+                                    ),
+                                  ),
+                                  Container(
+                                    child: SizedBox(
+                                      width: 20,
+                                      child: Radio(
+                                          materialTapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
+                                          value: 'Cash',
+                                          groupValue: preferredPaymentMethod,
+                                          activeColor:
+                                              Theme.of(context).primaryColor,
+                                          onChanged: (T) {
+                                            setState(() {
+                                              preferredPaymentMethod = T;
+                                            });
+                                          }),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
 
                         Padding(
-                          padding: const EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(8),
                           child: Align(
                             alignment: Alignment.bottomCenter,
-                            child: Container(
-                              width: 100.0,
-                              child: RaisedButton(
-                                  splashColor: Colors.green,
-                                  color: FyreworkrColors.fyreworkBlack,
-                                  child: Text(
-                                    widget.passedGigValue == 'Gigs I can do'
-                                        ? 'Hire'
-                                        : 'Apply',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  onPressed: () {
-                                    // Navigator.pop(context);
-                                    submitProposal();
-                                  }),
+                            child: Row(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Widget>[
+                                    Text(
+                                      widget.passedGigCurrency,
+                                      // 'Currency',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Container(
+                                      width: 70,
+                                      child: TextFormField(
+                                        decoration:
+                                            buildSignUpInputDecoration('0.00'),
+                                        keyboardType: TextInputType.number,
+                                        validator: (value) =>
+                                            value.isEmpty ? '*' : null,
+                                        onSaved: (value) =>
+                                            proposalBudget = value,
+                                        maxLines: null,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  width: 100.0,
+                                  child: RaisedButton(
+                                      splashColor: Colors.green,
+                                      color: FyreworkrColors.fyreworkBlack,
+                                      child: Text(
+                                        widget.passedGigValue == 'Gigs I can do'
+                                            ? 'Hire'
+                                            : 'Apply',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      onPressed: () {
+                                        // Navigator.pop(context);
+                                        submitProposal();
+                                      }),
+                                ),
+                              ],
                             ),
                           ),
                         )
@@ -229,7 +330,6 @@ class _AddCommentsViewState extends State<AddCommentsView> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
     myGig = widget.passedGigOwnerId == MyUser.uid ? true : false;
 
 //first check if this gig is appointed or not
@@ -283,15 +383,25 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                             width: 10,
                           ),
                           !appointed
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                        width: 1,
-                                        color: Colors.white,
-                                      ),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(2))),
-                                  child: GestureDetector(
+                              ? GestureDetector(
+                                  onTap: myGig
+                                      ? () {}
+                                      : !appointed
+                                          ? !appliersOrHirersByUserId
+                                                  .contains(MyUser.uid)
+                                              ? () {
+                                                  _showApplyOrHireTemplate();
+                                                }
+                                              : () {}
+                                          : () {},
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                          width: 1,
+                                          color: Colors.white,
+                                        ),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(2))),
                                     child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
@@ -308,16 +418,6 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                               fontSize: 16,
                                               color: Colors.white),
                                         )),
-                                    onTap: myGig
-                                        ? () {}
-                                        : !appointed
-                                            ? !appliersOrHirersByUserId
-                                                    .contains(MyUser.uid)
-                                                ? () {
-                                                    _showApplyOrHireTemplate();
-                                                  }
-                                                : () {}
-                                            : () {},
                                   ),
                                 )
                               : appointedUserId == MyUser.uid
@@ -569,165 +669,6 @@ class _AddCommentsViewState extends State<AddCommentsView> {
     _addCommentsController.dispose();
     _addProposalController.dispose();
     _offeredBudgetController.dispose();
-    super.dispose();
-  }
-}
-
-//Cash in hand
-class PaymentMethod extends StatefulWidget {
-  final String passidGigCurrency;
-  final SlidingCardController slidingCardController;
-  final Function onCardTapped;
-  PaymentMethod({
-    Key key,
-    this.passidGigCurrency,
-    this.slidingCardController,
-    @required this.onCardTapped,
-  }) : super(key: key);
-
-  @override
-  _PaymentMethodState createState() => _PaymentMethodState();
-}
-
-class _PaymentMethodState extends State<PaymentMethod> {
-  final String paypalIcon = 'assets/svgs/flaticon/paypal.svg';
-  final String pay = 'assets/svgs/flaticon/pay.svg';
-  String proposalBudget;
-  TextEditingController _submitProposalController = TextEditingController();
-
-  String preferredPaymentMethod;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: MediaQuery.of(context).orientation == Orientation.landscape
-          ? EdgeInsets.only(bottom: 30)
-          : EdgeInsets.zero,
-      child: SlidingCard(
-        // slidingAnimationReverseCurve: Curves.bounceInOut,
-        cardsGap: SizeConfig.safeBlockVertical,
-        controller: widget.slidingCardController,
-        slidingCardWidth: SizeConfig.horizontalBloc * 90,
-        // visibleCardHeight: SizeConfig.safeBlockVertical * 30,
-        visibleCardHeight:
-            MediaQuery.of(context).orientation == Orientation.portrait
-                ? SizeConfig.safeBlockVertical * 22
-                : SizeConfig.safeBlockVertical * 30,
-        // hiddenCardHeight: SizeConfig.safeBlockVertical * 20,
-        hiddenCardHeight:
-            MediaQuery.of(context).orientation == Orientation.portrait
-                ? SizeConfig.safeBlockVertical * 15
-                : SizeConfig.safeBlockVertical * 20,
-        frontCardWidget: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                children: [
-                  SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: SvgPicture.asset(
-                      paypalIcon,
-                      semanticsLabel: 'paypal',
-                      // color: Colors.white,
-                    ),
-                  ),
-                  Container(
-                    child: SizedBox(
-                      width: 20,
-                      child: Radio(
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        value: 'Paypal',
-                        groupValue: preferredPaymentMethod,
-                        activeColor: Theme.of(context).primaryColor,
-                        onChanged: (T) {
-                          setState(() {
-                            preferredPaymentMethod = T;
-                            widget.slidingCardController.collapseCard();
-                            proposalBudget = null;
-                            // Gig().gigValue = gigValue;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              VerticalDivider(
-                thickness: 1,
-                endIndent: 20,
-                color: Colors.black26,
-              ),
-              Column(
-                children: [
-                  SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: SvgPicture.asset(
-                      pay,
-                      semanticsLabel: 'pay',
-                      // color: Colors.white,
-                    ),
-                  ),
-                  Container(
-                    child: SizedBox(
-                      width: 20,
-                      child: Radio(
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          value: 'Cash',
-                          groupValue: preferredPaymentMethod,
-                          activeColor: Theme.of(context).primaryColor,
-                          onChanged: (T) {
-                            setState(() {
-                              preferredPaymentMethod = T;
-                              widget.onCardTapped();
-                            });
-                          }),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        backCardWidget: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Text(
-                widget.passidGigCurrency,
-                // 'Currency',
-                style: TextStyle(fontSize: 16),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Container(
-                width: 70,
-                child: TextFormField(
-                  decoration: buildSignUpInputDecoration('0.00'),
-                  keyboardType: TextInputType.number,
-                  validator: (value) => value.isEmpty ? '*' : null,
-                  onSaved: (value) => proposalBudget = value,
-                  maxLines: null,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    // Additional disposal code
-    _submitProposalController.dispose();
     super.dispose();
   }
 }
