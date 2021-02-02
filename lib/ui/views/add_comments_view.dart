@@ -618,100 +618,107 @@ class _PaymentMethodState extends State<PaymentMethod> {
             MediaQuery.of(context).orientation == Orientation.portrait
                 ? SizeConfig.safeBlockVertical * 15
                 : SizeConfig.safeBlockVertical * 20,
-        frontCardWidget: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              children: [
-                SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: SvgPicture.asset(
-                    paypalIcon,
-                    semanticsLabel: 'paypal',
-                    // color: Colors.white,
-                  ),
-                ),
-                Container(
-                  child: SizedBox(
-                    width: 20,
-                    child: Radio(
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      value: 'Paypal',
-                      groupValue: preferredPaymentMethod,
-                      activeColor: Theme.of(context).primaryColor,
-                      onChanged: (T) {
-                        setState(() {
-                          preferredPaymentMethod = T;
-                          widget.slidingCardController.collapseCard();
-                          proposalBudget = null;
-                          // Gig().gigValue = gigValue;
-                        });
-                      },
+        frontCardWidget: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                children: [
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: SvgPicture.asset(
+                      paypalIcon,
+                      semanticsLabel: 'paypal',
+                      // color: Colors.white,
                     ),
                   ),
-                ),
-              ],
-            ),
-            VerticalDivider(
-              thickness: 1,
-              endIndent: 20,
-              color: Colors.black26,
-            ),
-            Column(
-              children: [
-                SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: SvgPicture.asset(
-                    pay,
-                    semanticsLabel: 'pay',
-                    // color: Colors.white,
-                  ),
-                ),
-                Container(
-                  child: SizedBox(
-                    width: 20,
-                    child: Radio(
+                  Container(
+                    child: SizedBox(
+                      width: 20,
+                      child: Radio(
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        value: 'Cash',
+                        value: 'Paypal',
                         groupValue: preferredPaymentMethod,
                         activeColor: Theme.of(context).primaryColor,
                         onChanged: (T) {
                           setState(() {
                             preferredPaymentMethod = T;
-                            widget.onCardTapped();
+                            widget.slidingCardController.collapseCard();
+                            proposalBudget = null;
+                            // Gig().gigValue = gigValue;
                           });
-                        }),
+                        },
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        backCardWidget: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Text(
-              widget.passidGigCurrency,
-              // 'Currency',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Container(
-              width: 70,
-              child: TextFormField(
-                decoration: buildSignUpInputDecoration('0.00'),
-                keyboardType: TextInputType.number,
-                validator: (value) => value.isEmpty ? '*' : null,
-                onSaved: (value) => proposalBudget = value,
-                maxLines: null,
+                ],
               ),
-            ),
-          ],
+              VerticalDivider(
+                thickness: 1,
+                endIndent: 20,
+                color: Colors.black26,
+              ),
+              Column(
+                children: [
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: SvgPicture.asset(
+                      pay,
+                      semanticsLabel: 'pay',
+                      // color: Colors.white,
+                    ),
+                  ),
+                  Container(
+                    child: SizedBox(
+                      width: 20,
+                      child: Radio(
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          value: 'Cash',
+                          groupValue: preferredPaymentMethod,
+                          activeColor: Theme.of(context).primaryColor,
+                          onChanged: (T) {
+                            setState(() {
+                              preferredPaymentMethod = T;
+                              widget.onCardTapped();
+                            });
+                          }),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        backCardWidget: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Text(
+                widget.passidGigCurrency,
+                // 'Currency',
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Container(
+                width: 70,
+                child: TextFormField(
+                  decoration: buildSignUpInputDecoration('0.00'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) => value.isEmpty ? '*' : null,
+                  onSaved: (value) => proposalBudget = value,
+                  maxLines: null,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
