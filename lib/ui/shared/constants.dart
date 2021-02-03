@@ -16,6 +16,7 @@ InputDecoration buildSignUpInputDecoration(String hint) {
     contentPadding: EdgeInsets.all(0),
     hintStyle: TextStyle(fontSize: 16, color: Colors.black45),
     hintText: hint,
+    errorStyle: TextStyle(height: 0),
     // filled: true,
     fillColor: Colors.grey[50],
     enabledBorder: UnderlineInputBorder(

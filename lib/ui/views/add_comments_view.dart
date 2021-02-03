@@ -31,8 +31,10 @@ class AddCommentsView extends StatefulWidget {
 }
 
 class _AddCommentsViewState extends State<AddCommentsView> {
+  final _proposalFormKey = GlobalKey<FormState>();
   final String paypalIcon = 'assets/svgs/flaticon/paypal.svg';
-  final String pay = 'assets/svgs/flaticon/pay.svg';
+  final String cash = 'assets/svgs/flaticon/cash.svg';
+  final String alternatePayment = 'assets/svgs/flaticon/alternate_payment.svg';
   String proposalBudget;
   String preferredPaymentMethod;
 
@@ -45,6 +47,13 @@ class _AddCommentsViewState extends State<AddCommentsView> {
   final String paperPlane = 'assets/svgs/solid/paper-plane.svg';
   final String checkCircle = 'assets/svgs/regular/check-circle.svg';
 
+  final _paymentMethodSnackBar = SnackBar(
+    content: Text(
+      'Select a payment method',
+      style: TextStyle(fontSize: 16),
+    ),
+  );
+
   bool isPrivateComment = false;
   bool proposal = false;
   bool approved = false;
@@ -53,8 +62,6 @@ class _AddCommentsViewState extends State<AddCommentsView> {
   String userId = MyUser.uid;
   String username = MyUser.username;
   dynamic userProfilePictureUrl = MyUser.userAvatarUrl;
-
-  final _proposalFormKey = GlobalKey<FormState>();
 
   TextEditingController _addCommentsController = TextEditingController();
   TextEditingController _addProposalController = TextEditingController();
@@ -130,200 +137,263 @@ class _AddCommentsViewState extends State<AddCommentsView> {
 
   _showApplyOrHireTemplate() {
     showModalBottomSheet(
-        context: context,
         isScrollControlled: true,
-        builder: (context) {
-          return Container(
-            color: Color(0xFF737373),
-            child: Padding(
-              padding: MediaQuery.of(context).viewInsets,
-              child: Container(
-                // height: MediaQuery.of(context).size.height / 2,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).accentColor,
-                  // color: Colors.red,
-                  borderRadius: BorderRadius.only(
-                    topLeft: const Radius.circular(10),
-                    topRight: const Radius.circular(10),
-                  ),
-                ),
+        enableDrag: true,
+        context: context,
+        builder: (BuildContext context) {
+          return Scaffold(
+            body: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setModalState) {
+              return Container(
+                color: Color(0xFF737373),
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                  child: Form(
-                    key: _proposalFormKey,
-                    child: ListView(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Container(
-                            child: TextFormField(
-                              controller: _addProposalController,
-                              decoration: buildSignUpInputDecoration(
-                                  'Describe your proposal in brief'),
-                              inputFormatters: [
-                                new LengthLimitingTextInputFormatter(500),
-                              ],
-                              validator: (value) => value.isEmpty ? '*' : null,
-                              maxLines: null,
+                  padding: MediaQuery.of(context).viewInsets,
+                  child: Container(
+                    // height: MediaQuery.of(context).size.height / 2,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).accentColor,
+                      // color: Colors.red,
+                      borderRadius: BorderRadius.only(
+                        topLeft: const Radius.circular(10),
+                        topRight: const Radius.circular(10),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 10),
+                      child: Form(
+                        key: _proposalFormKey,
+                        child: ListView(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Container(
+                                child: TextFormField(
+                                  controller: _addProposalController,
+                                  decoration: buildSignUpInputDecoration(
+                                      'Describe your proposal in brief'),
+                                  inputFormatters: [
+                                    new LengthLimitingTextInputFormatter(500),
+                                  ],
+                                  validator: (value) =>
+                                      value.isEmpty ? '' : null,
+                                  maxLines: null,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        //choosing payment method
-                        // PaymentMethod(
-                        //   passidGigCurrency: widget.passedGigCurrency,
-                        //   onCardTapped: () {
-                        //     print('card tapped');
-                        //     if (slidingCardController.isCardSeparated == true) {
-                        //       slidingCardController.collapseCard();
-                        //     } else {
-                        //       slidingCardController.expandCard();
-                        //     }
-                        //   },
-                        //   slidingCardController: slidingCardController,
-                        // ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(
-                                    width: 40,
-                                    height: 40,
-                                    child: SvgPicture.asset(
-                                      paypalIcon,
-                                      semanticsLabel: 'paypal',
-                                      // color: Colors.white,
-                                    ),
-                                  ),
-                                  Container(
-                                    child: SizedBox(
-                                      width: 20,
-                                      child: Radio(
-                                        materialTapTargetSize:
-                                            MaterialTapTargetSize.shrinkWrap,
-                                        value: 'Paypal',
-                                        groupValue: preferredPaymentMethod,
-                                        activeColor:
-                                            Theme.of(context).primaryColor,
-                                        onChanged: (T) {
-                                          setState(() {
-                                            preferredPaymentMethod = T;
-                                            proposalBudget = null;
-                                            // Gig().gigValue = gigValue;
-                                          });
-                                        },
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width: 40,
+                                        height: 40,
+                                        child: SvgPicture.asset(
+                                          paypalIcon,
+                                          semanticsLabel: 'paypal',
+                                          // color: Colors.white,
+                                        ),
                                       ),
-                                    ),
+                                      Text('Request PayPal escrow deposit',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Theme.of(context)
+                                                  .primaryColor)),
+                                      Container(
+                                        child: SizedBox(
+                                          width: 20,
+                                          child: Radio(
+                                            materialTapTargetSize:
+                                                MaterialTapTargetSize
+                                                    .shrinkWrap,
+                                            value: 'Paypal',
+                                            groupValue: preferredPaymentMethod,
+                                            activeColor:
+                                                Theme.of(context).primaryColor,
+                                            onChanged: (T) {
+                                              setModalState(() {
+                                                preferredPaymentMethod = T;
+                                                proposalBudget = null;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Divider(
+                                    thickness: 0.5,
+                                    color: Colors.black26,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width: 40,
+                                        height: 40,
+                                        child: SvgPicture.asset(
+                                          cash,
+                                          semanticsLabel: 'pay',
+                                          // color: Colors.white,
+                                        ),
+                                      ),
+                                      Text('Get paid by cash',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Theme.of(context)
+                                                  .primaryColor)),
+                                      Container(
+                                        child: SizedBox(
+                                          width: 20,
+                                          child: Radio(
+                                              materialTapTargetSize:
+                                                  MaterialTapTargetSize
+                                                      .shrinkWrap,
+                                              value: 'Cash',
+                                              groupValue:
+                                                  preferredPaymentMethod,
+                                              activeColor: Theme.of(context)
+                                                  .primaryColor,
+                                              onChanged: (T) {
+                                                setModalState(() {
+                                                  preferredPaymentMethod = T;
+                                                });
+                                              }),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Divider(
+                                    thickness: 0.5,
+                                    color: Colors.black26,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width: 40,
+                                        height: 40,
+                                        child: SvgPicture.asset(
+                                          alternatePayment,
+                                          semanticsLabel: 'alternate payment',
+                                          // color: Colors.white,
+                                        ),
+                                      ),
+                                      Text('Agree alternate with the poster',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Theme.of(context)
+                                                  .primaryColor)),
+                                      Container(
+                                        child: SizedBox(
+                                          width: 20,
+                                          child: Radio(
+                                              materialTapTargetSize:
+                                                  MaterialTapTargetSize
+                                                      .shrinkWrap,
+                                              value: 'alternate payment',
+                                              groupValue:
+                                                  preferredPaymentMethod,
+                                              activeColor: Theme.of(context)
+                                                  .primaryColor,
+                                              onChanged: (T) {
+                                                setModalState(() {
+                                                  preferredPaymentMethod = T;
+                                                });
+                                              }),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                              Divider(
-                                thickness: 1,
-                                color: Colors.black26,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width: 40,
-                                    height: 40,
-                                    child: SvgPicture.asset(
-                                      pay,
-                                      semanticsLabel: 'pay',
-                                      // color: Colors.white,
-                                    ),
-                                  ),
-                                  Container(
-                                    child: SizedBox(
-                                      width: 20,
-                                      child: Radio(
-                                          materialTapTargetSize:
-                                              MaterialTapTargetSize.shrinkWrap,
-                                          value: 'Cash',
-                                          groupValue: preferredPaymentMethod,
-                                          activeColor:
-                                              Theme.of(context).primaryColor,
-                                          onChanged: (T) {
-                                            setState(() {
-                                              preferredPaymentMethod = T;
-                                            });
-                                          }),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Row(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: <Widget>[
-                                    Text(
-                                      widget.passedGigCurrency,
-                                      // 'Currency',
-                                      style: TextStyle(fontSize: 16),
+                            ),
+                            Divider(
+                              thickness: 0.5,
+                              color: Colors.black26,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          widget.passedGigCurrency,
+                                          // 'Currency',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Container(
+                                          width: 70,
+                                          child: TextFormField(
+                                            decoration:
+                                                buildSignUpInputDecoration(
+                                                    '0.00'),
+                                            keyboardType: TextInputType.number,
+                                            validator: (value) =>
+                                                value.isEmpty ? '' : null,
+                                            onSaved: (value) =>
+                                                proposalBudget = value,
+                                            maxLines: null,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     SizedBox(
-                                      width: 10,
+                                      width: 20,
                                     ),
                                     Container(
-                                      width: 70,
-                                      child: TextFormField(
-                                        decoration:
-                                            buildSignUpInputDecoration('0.00'),
-                                        keyboardType: TextInputType.number,
-                                        validator: (value) =>
-                                            value.isEmpty ? '*' : null,
-                                        onSaved: (value) =>
-                                            proposalBudget = value,
-                                        maxLines: null,
-                                      ),
+                                      width: 100.0,
+                                      child: RaisedButton(
+                                          materialTapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
+                                          splashColor: Colors.green,
+                                          color: FyreworkrColors.fyreworkBlack,
+                                          child: Text(
+                                            widget.passedGigValue ==
+                                                    'Gigs I can do'
+                                                ? 'Hire'
+                                                : 'Apply',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          onPressed: () {
+                                            // Navigator.pop(context);
+
+                                            preferredPaymentMethod == null
+                                                ? Scaffold.of(context)
+                                                    .showSnackBar(
+                                                        _paymentMethodSnackBar)
+                                                : submitProposal();
+                                          }),
                                     ),
                                   ],
                                 ),
-                                Container(
-                                  width: 100.0,
-                                  child: RaisedButton(
-                                      splashColor: Colors.green,
-                                      color: FyreworkrColors.fyreworkBlack,
-                                      child: Text(
-                                        widget.passedGigValue == 'Gigs I can do'
-                                            ? 'Hire'
-                                            : 'Apply',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      onPressed: () {
-                                        // Navigator.pop(context);
-                                        submitProposal();
-                                      }),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
+              );
+            }),
           );
         });
   }

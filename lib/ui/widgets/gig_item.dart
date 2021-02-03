@@ -66,6 +66,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
   final String heart = 'assets/svgs/light/heart.svg';
   final String heartSolid = 'assets/svgs/solid/heart.svg';
   final String comment = 'assets/svgs/light/comment.svg';
+  final String mapMarkerAlt = 'assets/svgs/light/map-marker-alt.svg';
   final String hourglassStart = 'assets/svgs/light/hourglass-start.svg';
   bool liked = false;
   bool showLikeOverlay = false;
@@ -287,12 +288,42 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
             child: Column(
               children: <Widget>[
                 Row(
-                  children: <Widget>[
-                    likeButton,
-                    SizedBox(
-                      width: 15,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      child: Row(
+                        children: <Widget>[
+                          likeButton,
+                          SizedBox(
+                            width: 15,
+                          ),
+                          commentButton
+                        ],
+                      ),
                     ),
-                    commentButton
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2,
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: SvgPicture.asset(
+                              mapMarkerAlt,
+                              semanticsLabel: 'Comment',
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                          Flexible(
+                            child: Text('${widget.gigLocation}',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Theme.of(context).primaryColor)),
+                          )
+                        ],
+                      ),
+                    )
                   ],
                 ),
                 SizedBox(
