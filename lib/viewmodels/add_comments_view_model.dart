@@ -29,6 +29,7 @@ class AddCommentsViewModel extends BaseModel {
     @required bool rejected,
     @required String gigCurrency,
     @required String offeredBudget,
+    String preferredPaymentMethod,
   }) async {
     var result;
     if (!_editting) {
@@ -49,6 +50,7 @@ class AddCommentsViewModel extends BaseModel {
             rejected: rejected,
             gigCurrency: gigCurrency,
             offeredBudget: offeredBudget,
+            preferredPaymentMethod: preferredPaymentMethod,
           ),
           gigIdHoldingComment);
 
@@ -73,6 +75,7 @@ class AddCommentsViewModel extends BaseModel {
           rejected: rejected,
           gigCurrency: gigCurrency,
           offeredBudget: offeredBudget,
+          preferredPaymentMethod: preferredPaymentMethod,
         ),
       );
     }

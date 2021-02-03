@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:myApp/models/myUser.dart';
 import 'package:myApp/services/firestore_service.dart';
 import 'package:myApp/ui/shared/theme.dart';
@@ -27,6 +28,7 @@ class CommentItem extends StatefulWidget {
   final approved;
   final rejected;
   final offeredBudget;
+  final preferredPaymentMethod;
   final Function onDeleteItem;
   CommentItem({
     Key key,
@@ -47,6 +49,7 @@ class CommentItem extends StatefulWidget {
     this.approved,
     this.rejected,
     this.offeredBudget,
+    this.preferredPaymentMethod,
     this.onDeleteItem,
   }) : super(key: key);
 
@@ -55,6 +58,9 @@ class CommentItem extends StatefulWidget {
 }
 
 class _CommentItemState extends State<CommentItem> {
+  final String paypalIcon = 'assets/svgs/flaticon/paypal.svg';
+  final String cash = 'assets/svgs/flaticon/cash.svg';
+  final String alternatePayment = 'assets/svgs/flaticon/alternate_payment.svg';
   bool myGig;
   bool myComment;
   Timer _timer;
@@ -204,15 +210,15 @@ class _CommentItemState extends State<CommentItem> {
                     collapseText: ' less',
                     maxLines: 3,
                     linkColor: myComment
-                        ? Colors.white
-                        : FyreworkrColors.fyreworkBlack,
+                        ? Theme.of(context).accentColor
+                        : Theme.of(context).primaryColor,
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       color: myComment ? Colors.white : Colors.grey[700],
                     ),
                   ),
                 ),
-                Container(height: 5),
+                Container(height: 10),
                 (myGig &&
                         !myComment &&
                         widget.proposal &&
@@ -224,11 +230,25 @@ class _CommentItemState extends State<CommentItem> {
                             color: Colors.white,
                             child: Row(
                               children: <Widget>[
-                                Text('${widget.gigCurrency}'),
+                                Text(
+                                  '${widget.gigCurrency}',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: myComment
+                                          ? Theme.of(context).primaryColor
+                                          : Theme.of(context).accentColor),
+                                ),
                                 Container(
                                   width: 5,
                                 ),
-                                Text('${widget.offeredBudget}'),
+                                Text(
+                                  '${widget.offeredBudget}',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: myComment
+                                          ? Theme.of(context).primaryColor
+                                          : Theme.of(context).accentColor),
+                                ),
                               ],
                             ),
                           ),
@@ -346,37 +366,91 @@ class _CommentItemState extends State<CommentItem> {
                                 ? Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                              width: 2,
-                                              color: !widget.approved
-                                                  ? !widget.rejected
-                                                      ? Colors.white
-                                                      : Colors.red
-                                                  : Colors.green,
-                                            ),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(2))),
-                                        child: Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              !widget.approved
-                                                  ? !widget.rejected
-                                                      ? 'Pending approval'
-                                                      : 'Rejected'
-                                                  : 'Approved',
-                                              style: TextStyle(
-                                                color: !widget.approved
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: <Widget>[
+                                              Text(
+                                                '${widget.gigCurrency}',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Theme.of(context)
+                                                        .accentColor),
+                                              ),
+                                              Container(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                '${widget.offeredBudget}',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Theme.of(context)
+                                                        .accentColor),
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              widget.preferredPaymentMethod !=
+                                                      null
+                                                  ? SizedBox(
+                                                      width: 40,
+                                                      height: 40,
+                                                      child: SvgPicture.asset(
+                                                        widget.preferredPaymentMethod ==
+                                                                'paypal'
+                                                            ? paypalIcon
+                                                            : widget.preferredPaymentMethod ==
+                                                                    'cash'
+                                                                ? cash
+                                                                : alternatePayment,
+                                                        semanticsLabel:
+                                                            'paypal',
+                                                        // color: Colors.white,
+                                                      ),
+                                                    )
+                                                  : SizedBox(
+                                                      width: 0,
+                                                      height: 0,
+                                                    ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 20,
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  width: 2,
+                                                  color: !widget.approved
+                                                      ? !widget.rejected
+                                                          ? Colors.white
+                                                          : Colors.red
+                                                      : Colors.green,
+                                                ),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(2))),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                !widget.approved
                                                     ? !widget.rejected
-                                                        ? Colors.white
-                                                        : Colors.red
-                                                    : Colors.green,
+                                                        ? 'Pending approval'
+                                                        : 'Rejected'
+                                                    : 'Approved',
+                                                style: TextStyle(
+                                                  color: !widget.approved
+                                                      ? !widget.rejected
+                                                          ? Colors.white
+                                                          : Colors.red
+                                                      : Colors.green,
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
+                                        ],
                                       ),
                                       Container(
                                         height: 10,

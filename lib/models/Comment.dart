@@ -14,6 +14,7 @@ class Comment {
   final bool rejected;
   final String gigCurrency;
   final String offeredBudget;
+  final String preferredPaymentMethod;
 
   Comment({
     this.gigIdHoldingComment,
@@ -31,6 +32,7 @@ class Comment {
     this.rejected,
     this.gigCurrency,
     this.offeredBudget,
+    this.preferredPaymentMethod,
   });
 
   Map<String, dynamic> toMap() {
@@ -52,6 +54,7 @@ class Comment {
       'rejected': rejected,
       'gigCurrency': gigCurrency,
       'offeredBudget': offeredBudget,
+      'preferredPaymentMethod': preferredPaymentMethod,
     };
   }
 
@@ -74,6 +77,7 @@ class Comment {
       rejected: map['rejected'],
       gigCurrency: map['gigCurrency'],
       offeredBudget: map['offeredBudget'],
+      preferredPaymentMethod: map['preferredPaymentMethod'],
     );
   }
 }

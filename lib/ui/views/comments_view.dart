@@ -53,6 +53,8 @@ class CommentsView extends StatelessWidget {
                           approved: getDocData['approved'],
                           rejected: getDocData['rejected'],
                           offeredBudget: getDocData['offeredBudget'],
+                          preferredPaymentMethod:
+                              getDocData['preferredPaymentMethod'],
                           // onDeleteItem: () =>
                           //     model.deleteComment(index),
                         ),
