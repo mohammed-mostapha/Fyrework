@@ -395,8 +395,8 @@ class _CommentItemState extends State<CommentItem> {
                                               widget.preferredPaymentMethod !=
                                                       null
                                                   ? SizedBox(
-                                                      width: 40,
-                                                      height: 40,
+                                                      width: 25,
+                                                      height: 25,
                                                       child: SvgPicture.asset(
                                                         widget.preferredPaymentMethod ==
                                                                 'paypal'
@@ -407,7 +407,7 @@ class _CommentItemState extends State<CommentItem> {
                                                                 : alternatePayment,
                                                         semanticsLabel:
                                                             'paypal',
-                                                        // color: Colors.white,
+                                                        color: Colors.white,
                                                       ),
                                                     )
                                                   : SizedBox(
