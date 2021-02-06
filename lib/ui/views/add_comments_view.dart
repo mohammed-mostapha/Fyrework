@@ -196,20 +196,28 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        SizedBox(
-                                          width: 40,
-                                          height: 40,
-                                          child: SvgPicture.asset(
-                                            paypalIcon,
-                                            semanticsLabel: 'paypal',
-                                            // color: Colors.white,
-                                          ),
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 30,
+                                              height: 30,
+                                              child: SvgPicture.asset(
+                                                paypalIcon,
+                                                semanticsLabel: 'paypal',
+                                                // color: Colors.white,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                                'Request PayPal escrow deposit',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Theme.of(context)
+                                                        .primaryColor)),
+                                          ],
                                         ),
-                                        Text('Request PayPal escrow deposit',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Theme.of(context)
-                                                    .primaryColor)),
                                         Container(
                                           child: SizedBox(
                                             width: 20,
@@ -241,20 +249,27 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        SizedBox(
-                                          width: 40,
-                                          height: 40,
-                                          child: SvgPicture.asset(
-                                            cash,
-                                            semanticsLabel: 'pay',
-                                            // color: Colors.white,
-                                          ),
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 30,
+                                              height: 30,
+                                              child: SvgPicture.asset(
+                                                cash,
+                                                semanticsLabel: 'pay',
+                                                // color: Colors.white,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text('Get paid by cash',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Theme.of(context)
+                                                        .primaryColor)),
+                                          ],
                                         ),
-                                        Text('Get paid by cash',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Theme.of(context)
-                                                    .primaryColor)),
                                         Container(
                                           child: SizedBox(
                                             width: 20,
@@ -284,20 +299,29 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        SizedBox(
-                                          width: 40,
-                                          height: 40,
-                                          child: SvgPicture.asset(
-                                            alternatePayment,
-                                            semanticsLabel: 'alternate payment',
-                                            // color: Colors.white,
-                                          ),
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 30,
+                                              height: 30,
+                                              child: SvgPicture.asset(
+                                                alternatePayment,
+                                                semanticsLabel:
+                                                    'alternate payment',
+                                                // color: Colors.white,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                                'Agree alternate with the poster',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Theme.of(context)
+                                                        .primaryColor)),
+                                          ],
                                         ),
-                                        Text('Agree alternate with the poster',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Theme.of(context)
-                                                    .primaryColor)),
                                         Container(
                                           child: SizedBox(
                                             width: 20,

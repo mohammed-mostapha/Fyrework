@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -40,24 +39,6 @@ class MyProfileView extends StatefulWidget {
 }
 
 class _MyProfileViewState extends State<MyProfileView> {
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     EasyLoading.showSuccess('Great Success!');
-  //   });
-
-  // EasyLoading.addStatusCallback((status) {
-  //   print('EasyLoading Status $status');
-  //   if (status == EasyLoadingStatus.dismiss) {
-  //     _timer?.cancel();
-  //   }
-  // });
-  // EasyLoading.removeCallbacks();
-  // configLoading();
-  // }
-
-  // AuthService _authService = locator.get<AuthService>();
-  // StorageRepo _storageRepo = locator.get<StorageRepo>();
   AuthFormType authFormType;
   bool profileEditingMenu = false;
   final String shieldCheck = 'assets/svgs/light/shield-check.svg';

@@ -1,12 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-// import 'package:myApp/services/auth_service.dart';
+import 'package:myApp/models/myUser.dart';
 import 'package:myApp/screens/add_gig/addGigDetails.dart';
 import 'package:myApp/screens/myJobs.dart';
 import 'package:myApp/screens/my_profile.dart';
 import 'package:myApp/screens/trends/trends.dart';
-
 import 'package:myApp/ui/shared/theme.dart';
-import 'package:myApp/view_controllers/myUser_controller.dart';
+import 'package:flutter_svg/svg.dart';
 
 class Home extends StatefulWidget {
   final int passedSelectedIndex;
@@ -16,6 +16,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final String home_outlined = 'assets/svgs/flaticon/home_outlined.svg';
+  final String home_filled = 'assets/svgs/flaticon/home_filled.svg';
+  final String add_outlined = 'assets/svgs/flaticon/add_outlined.svg';
+  final String add_filled = 'assets/svgs/flaticon/add_filled.svg';
+  final String search_thin = 'assets/svgs/flaticon/search_thin.svg';
+  final String search_thick = 'assets/svgs/flaticon/search_thick.svg';
+
   int passedSelectedIndex;
   _HomeState(this.passedSelectedIndex);
 
@@ -70,25 +77,58 @@ class _HomeState extends State<Home> {
           onTap: _onItemTapped,
           items: [
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                color: _selectedIndex == 0 ? Colors.white : Colors.grey[600],
+              icon: SizedBox(
+                width: 20,
+                height: 20,
+                child: SvgPicture.asset(
+                  _selectedIndex == 0 ? home_filled : home_outlined,
+                  semanticsLabel: 'home',
+                  color: Theme.of(context).accentColor,
+                ),
               ),
               title: Text('home'),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.add_box,
-                  color: _selectedIndex == 1 ? Colors.white : Colors.grey[600]),
+              icon: SizedBox(
+                width: 20,
+                height: 20,
+                child: SvgPicture.asset(
+                  _selectedIndex == 1 ? add_filled : add_outlined,
+                  semanticsLabel: 'add',
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
               title: Text('add'),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.work,
-                  color: _selectedIndex == 2 ? Colors.white : Colors.grey[600]),
-              title: Text('work'),
+              icon: SizedBox(
+                width: 20,
+                height: 20,
+                child: SvgPicture.asset(
+                  _selectedIndex == 2 ? search_thick : search_thin,
+                  semanticsLabel: 'search',
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
+              title: Text('search'),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle,
-                  color: _selectedIndex == 3 ? Colors.white : Colors.grey[600]),
+              icon: SizedBox(
+                width: 20,
+                height: 20,
+                child: CachedNetworkImage(
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: imageProvider, fit: BoxFit.cover),
+                    ),
+                  ),
+                  imageUrl: MyUser.userAvatarUrl,
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
+              ),
               title: Text('account'),
             )
           ],

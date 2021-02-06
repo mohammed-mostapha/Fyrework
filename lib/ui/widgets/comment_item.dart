@@ -121,7 +121,7 @@ class _CommentItemState extends State<CommentItem> {
     // public comment view
     Widget publicCommentView = Container(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Column(
           children: [
             Row(
@@ -229,75 +229,137 @@ class _CommentItemState extends State<CommentItem> {
                           Container(
                             color: Colors.white,
                             child: Row(
-                              children: <Widget>[
-                                Text(
-                                  '${widget.gigCurrency}',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: myComment
-                                          ? Theme.of(context).primaryColor
-                                          : Theme.of(context).accentColor),
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: <Widget>[
+                                    Text(
+                                      '${widget.gigCurrency}',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: myComment
+                                            ? Theme.of(context).accentColor
+                                            : Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      '${widget.offeredBudget}',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: myComment
+                                            ? Theme.of(context).accentColor
+                                            : Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    widget.preferredPaymentMethod != null
+                                        ? SizedBox(
+                                            width: 20,
+                                            height: 20,
+                                            child: SvgPicture.asset(
+                                              widget.preferredPaymentMethod ==
+                                                      'paypal'
+                                                  ? paypalIcon
+                                                  : widget.preferredPaymentMethod ==
+                                                          'cash'
+                                                      ? cash
+                                                      : alternatePayment,
+                                              semanticsLabel: 'paypal',
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                          )
+                                        : SizedBox(
+                                            width: 0,
+                                            height: 0,
+                                          ),
+                                  ],
                                 ),
-                                Container(
-                                  width: 5,
-                                ),
-                                Text(
-                                  '${widget.offeredBudget}',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: myComment
-                                          ? Theme.of(context).primaryColor
-                                          : Theme.of(context).accentColor),
-                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Widget>[
+                                    GestureDetector(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                width: 1,
+                                                color: myComment
+                                                    ? Colors.white
+                                                    : FyreworkrColors
+                                                        .fyreworkBlack,
+                                              ),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(2))),
+                                          // color: myComment
+                                          //     ? Colors.white
+                                          //     : FyreworkrColors.fyreworkBlack,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              'Approve',
+                                              style: TextStyle(
+                                                color: myComment
+                                                    ? Theme.of(context)
+                                                        .accentColor
+                                                    : Theme.of(context)
+                                                        .primaryColor,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          FirestoreService().appointedGigToUser(
+                                              widget.gigIdHoldingComment,
+                                              widget.commentOwnerId,
+                                              widget.commentId);
+                                        }),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    GestureDetector(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                              width: 1,
+                                              color: myComment
+                                                  ? Theme.of(context)
+                                                      .accentColor
+                                                  : Theme.of(context)
+                                                      .primaryColor,
+                                            ),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(2))),
+                                        // color: myComment
+                                        //     ? Colors.white
+                                        //     : FyreworkrColors.fyreworkBlack,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            'Reject',
+                                            style: TextStyle(
+                                                color: myComment
+                                                    ? Theme.of(context)
+                                                        .accentColor
+                                                    : Theme.of(context)
+                                                        .primaryColor),
+                                          ),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        FirestoreService()
+                                            .rejectProposal(widget.commentId);
+                                      },
+                                    ),
+                                  ],
+                                )
                               ],
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              RaisedButton(
-                                  color: myComment
-                                      ? Colors.white
-                                      : FyreworkrColors.fyreworkBlack,
-                                  child: Expanded(
-                                    child: Text(
-                                      'Approve',
-                                      style: TextStyle(
-                                        color: myComment
-                                            ? FyreworkrColors.fyreworkBlack
-                                            : Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    FirestoreService().appointedGigToUser(
-                                        widget.gigIdHoldingComment,
-                                        widget.commentOwnerId,
-                                        widget.commentId);
-                                  }),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              RaisedButton(
-                                  color: myComment
-                                      ? Colors.white
-                                      : FyreworkrColors.fyreworkBlack,
-                                  child: Expanded(
-                                    child: Text(
-                                      'Reject',
-                                      style: TextStyle(
-                                        color: myComment
-                                            ? FyreworkrColors.fyreworkBlack
-                                            : Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    FirestoreService()
-                                        .rejectProposal(widget.commentId);
-                                  }),
-                            ],
-                          )
                         ],
                       )
                     : (myGig &&
@@ -395,8 +457,8 @@ class _CommentItemState extends State<CommentItem> {
                                               widget.preferredPaymentMethod !=
                                                       null
                                                   ? SizedBox(
-                                                      width: 25,
-                                                      height: 25,
+                                                      width: 20,
+                                                      height: 20,
                                                       child: SvgPicture.asset(
                                                         widget.preferredPaymentMethod ==
                                                                 'paypal'
