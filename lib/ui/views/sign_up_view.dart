@@ -169,11 +169,13 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       try {
         switch (authFormType) {
           case AuthFormType.signIn:
+            print('trying to sign in');
             EasyLoading.show();
             await AuthService()
                 .signInWithEmailAndPassword(_email.trim(), _password.trim());
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => HomeController()));
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => HomeController()),
+                ModalRoute.withName('/'));
             EasyLoading.dismiss();
             break;
           case AuthFormType.signUp:
@@ -197,12 +199,11 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               _ongoingGigsByGigId,
               _lengthOfOngoingGigsByGigId,
             );
-
-            // await locator.get<UserController>().getProfilePictureDownloadUrl();
             PlacesAutocomplete.placesAutoCompleteController.clear();
 
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => HomeController()));
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => HomeController()),
+                ModalRoute.withName('/'));
             EasyLoading.dismiss();
             break;
 
