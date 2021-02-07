@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:myApp/models/myUser.dart';
 import 'package:myApp/models/otherUser.dart';
@@ -11,6 +10,7 @@ import 'package:myApp/screens/trends/trends.dart';
 import 'package:myApp/services/database.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:myApp/ui/widgets/user_profile.dart';
 
 class Home extends StatefulWidget {
   final int passedSelectedIndex;
@@ -185,58 +185,89 @@ class HashtagsOrHandles extends SearchDelegate<OtherUser> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    showUserProfile(String userId) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => UserProfileView(
+                    passedUserUid: userId,
+                    // passedUsername: widget.gigOwnerUsername,
+                    fromComment: false,
+                    fromGig: true,
+                  )));
+    }
+
     return StreamBuilder<QuerySnapshot>(
         stream: DatabaseService().fetchUsersInSearchByHandle(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return Center(
               child: Text(
-                'Search by \n#Hashtags or @Handles',
+                '',
+                style: TextStyle(
+                    fontSize: 16, color: Theme.of(context).primaryColor),
               ),
             );
           }
+          if (snapshot.data.documents.length > 0) {
+            final results = snapshot.data.documents
+                .where((a) => a['username'].contains(query));
 
-          final results = snapshot.data.documents
-              .where((a) => a['username'].contains(query));
-          return ListView(
-            children: results
-                .map<Widget>(
-                    // (u) => Text(u['username'],),
-                    (u) => Padding(
-                          padding: const EdgeInsets.all(0.1),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                border: Border(
-                                    bottom: BorderSide(
-                                        width: 0.3, color: Colors.grey[50]))),
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage(u['userAvatarUrl']),
-                                radius: 20,
-                              ),
-                              title: Text(u['username'],
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: Theme.of(context).accentColor),
-                                  overflow: TextOverflow.ellipsis),
-                              trailing: Container(
-                                width: MediaQuery.of(context).size.width / 2,
-                                child: Text(
-                                  u['location'],
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Theme.of(context).accentColor,
+            return ListView(
+              children: results
+                  .map<Widget>(
+                      // (u) => Text(u['username'],),
+                      (u) => GestureDetector(
+                            child: Padding(
+                              padding: const EdgeInsets.all(0.1),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context).primaryColor,
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            width: 0.3,
+                                            color: Colors.grey[50]))),
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundImage:
+                                        NetworkImage(u['userAvatarUrl']),
+                                    radius: 20,
                                   ),
-                                  overflow: TextOverflow.ellipsis,
+                                  title: Text(u['username'],
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Theme.of(context).accentColor),
+                                      overflow: TextOverflow.ellipsis),
+                                  trailing: Container(
+                                    width:
+                                        MediaQuery.of(context).size.width / 2,
+                                    child: Text(
+                                      u['location'],
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Theme.of(context).accentColor,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ))
-                .toList(),
-          );
+                            onTap: () {
+                              showUserProfile(u['id']);
+                            },
+                          ))
+                  .toList(),
+            );
+          } else {
+            return Center(
+              child: Text(
+                'No results found',
+                style: TextStyle(
+                    fontSize: 16, color: Theme.of(context).primaryColor),
+              ),
+            );
+          }
         });
   }
 }

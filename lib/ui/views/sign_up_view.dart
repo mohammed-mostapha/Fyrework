@@ -148,6 +148,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   void submit() async {
     // checking whether the user picked a profile pic or not
     if (_profileImage == null) {
+      scrollController.animateTo(0,
+          duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       _cameraIconAnimationController.forward().then((value) {
         _cameraColorAnimationController.forward();
         _cameraIconAnimationController.reverse();
@@ -165,22 +167,13 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         !handleDuplicated &&
         _passwordController.text == _confirmPasswordController.text) {
       try {
-        // final auth = Provider.of(context).auth;
-        // final auth = AuthService();
         switch (authFormType) {
           case AuthFormType.signIn:
             EasyLoading.show();
             await AuthService()
                 .signInWithEmailAndPassword(_email.trim(), _password.trim());
-            // await locator.get<UserController>().signInWithEmailAndPassword(
-            //     email: _email.trim(), password: _password.trim());
-
-            // Navigator.of(context).pushReplacementNamed('/home');
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => HomeController()));
-            // _warning = 'Wrong email address or password';
-            // Navigator.push(context,
-            //     MaterialPageRoute(builder: (context) => HomeController()));
             EasyLoading.dismiss();
             break;
           case AuthFormType.signUp:
@@ -583,22 +576,27 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             Container(
               width: double.infinity,
               child: Wrap(
-                spacing: 2.5,
                 children: _myFavoriteHashtags
-                    .map((e) => Chip(
-                          backgroundColor: Colors.black,
-                          label: Text(
-                            '$e',
-                            style: TextStyle(fontSize: 16, color: Colors.white),
+                    .map((e) => Padding(
+                          padding: const EdgeInsets.all(2.5),
+                          child: Chip(
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            backgroundColor: Colors.black,
+                            label: Text(
+                              '$e',
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white),
+                            ),
+                            onDeleted: () {
+                              setState(() {
+                                _myFavoriteHashtags
+                                    .removeWhere((item) => item == e);
+                                print(_myFavoriteHashtags.length);
+                              });
+                            },
+                            deleteIconColor: Colors.white,
                           ),
-                          onDeleted: () {
-                            setState(() {
-                              _myFavoriteHashtags
-                                  .removeWhere((item) => item == e);
-                              print(_myFavoriteHashtags.length);
-                            });
-                          },
-                          deleteIconColor: Colors.white,
                         ))
                     .toList(),
               ),

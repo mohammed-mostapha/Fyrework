@@ -173,6 +173,13 @@ class DatabaseService {
     });
   }
 
+  //add user favorite hashtags to popular hashtags collection
+  Future addToPopularHashtags(List favoriteHashtags) async {
+    for (String favoriteHashtag in favoriteHashtags) {
+      _popularHashtags.add({'hashtag': favoriteHashtag});
+    }
+  }
+
   //fetch popular hashtags
   Future fetchPopularHashtags(String query) async {
     List filteredHashtags = List();
@@ -185,6 +192,11 @@ class DatabaseService {
       }
     });
     return filteredHashtags.toList();
+  }
+
+  //add handle to  takenHandles collection
+  Future addToTakenHandles(String username) async {
+    _takenHandles.add({'takenHandle': username});
   }
 
   //fetch taken Handles

@@ -6,13 +6,14 @@ import 'package:flutter_common_exports/flutter_common_exports.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:myApp/screens/home/home.dart';
+import 'package:myApp/services/database.dart';
 import 'package:myApp/services/storage_repo.dart';
 import 'package:myApp/viewmodels/create_gig_view_model.dart';
 import 'package:path/path.dart' as fileName;
 import '../src/wechat_assets_picker.dart';
 import '../constants/picker_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'dart:math' as math;
+// import 'dart:math' as math;
 import 'package:intl/intl.dart';
 
 enum UrlType { IMAGE, VIDEO, UNKNOWN }
@@ -371,6 +372,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
         adultContentBool: widget.adultContentBool,
       );
       clearGigMediaFiles();
+      await DatabaseService().addToPopularHashtags(widget.gigHashtags);
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
@@ -611,56 +613,6 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
     }
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return SafeArea(
-  //     child: Scaffold(
-  //       body: Stack(
-  //         // alignment: Alignment.center,
-  //         children: <Widget>[
-  //           Container(child: methodListView),
-  //           Padding(
-  //             padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-  //             child: Container(
-  //               child: SingleChildScrollView(
-  //                 child: Column(
-  //                   children: <Widget>[
-  //                     Row(
-  //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                       children: <Widget>[
-  //                         RaisedButton(
-  //                             color: FyreworkrColors.fyreworkBlack,
-  //                             child: Text(
-  //                               'back',
-  //                               style: TextStyle(color: FyreworkrColors.white),
-  //                             ),
-  //                             onPressed: () {
-  //                               clearGigMediaFiles();
-  //                               print(gigMediaFiles.length);
-  //                             }),
-  //                         RaisedButton(
-  //                           color: FyreworkrColors.fyreworkBlack,
-  //                           child: Text(
-  //                             'PUBLISH',
-  //                             style: TextStyle(color: FyreworkrColors.white),
-  //                           ),
-  //                           onPressed: () {
-  //                             prepareGigMediaFilesAndPublish();
-  //                           },
-  //                         ),
-  //                       ],
-  //                     ),
-  //                     gigPreview,
-  //                   ],
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
   @override
   Widget build(BuildContext context) {
     return SafeArea(

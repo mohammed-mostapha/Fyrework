@@ -69,18 +69,14 @@ class AuthService {
       ongoingGigsByGigId,
       lengthOfOngoingGigsByGigId,
     );
-    // return _userFromFirebaseUser(user);
-    // MyUserController().getCurrentUserFromFirebase(user.uid);
+
+    await DatabaseService().addToPopularHashtags(myFavoriteHashtags);
+    await DatabaseService().addToTakenHandles(handle);
 
     // Update the displayName of the user in authData
     await updateUserName(name, authResult.user);
     return authResult.user.uid;
   }
-
-  // // create user obj based on FirebaseUser
-  // User _userFromFirebaseUser(FirebaseUser user) {
-  //   return user != null ? User(uid: user.uid) : null;
-  // }
 
   Future updateUserName(String name, FirebaseUser currentUser) async {
     var userUpdateInfo = UserUpdateInfo();
