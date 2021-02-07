@@ -112,6 +112,7 @@ class _HomeControllerState extends State<HomeController> {
     authService.getCurrentUser().then((user) async {
       if (user != null) {
         String myUid = await authService.getCurrentUID();
+        print('your uid is: $myUid');
         MyUserController()
             .getCurrentUserFromFirebase(myUid)
             .then((value) => setState(() {

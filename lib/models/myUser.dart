@@ -23,7 +23,7 @@
 
 class MyUser {
   static String uid;
-  static String hashtag;
+  static List favoriteHashtags;
   static String name;
   static String username;
   static String email;
@@ -52,8 +52,9 @@ class MyUser {
 
   // uid = data['uid'],
   {
+    print('fromData before');
     uid = data['id'];
-    hashtag = data['hashtag'];
+    favoriteHashtags = data['favoriteHashtags'];
     name = data['name'];
     username = data['username'];
     email = data['email'];
@@ -65,6 +66,7 @@ class MyUser {
     phoneNumber = data['phoneNumber'];
     ongoingGigsByGigId = data['ongoingGigsByGigId'];
     lengthOfOngoingGigsByGigId = data['lengthOfOngoingGigsByGigId'];
+    print('fromData uid: $uid');
   }
 
   // Map<String, dynamic> toJson() {

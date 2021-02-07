@@ -33,10 +33,8 @@ class AuthService {
 
   // Email & Password Sign Up
   Future createUserWithEmailAndPassword(
-    // String hashtag,
     List myFavoriteHashtags,
     String name,
-    // String username,
     String handle,
     String email,
     String password,
@@ -52,25 +50,27 @@ class AuthService {
 
     FirebaseUser user = authResult.user;
 
-    //just waiting for uier.uid to use
+    //upload userAvatar
     userAvatarUrl = await locator
         .get<StorageRepo>()
         .uploadProfilePicture(profilePictureToUpload, user.uid);
 
     // create a new document for the user with the uid in users collection
     await DatabaseService(uid: user.uid).setUserData(
-        user.uid,
-        myFavoriteHashtags,
-        name,
-        handle,
-        email,
-        password,
-        userAvatarUrl,
-        location,
-        isMinor,
-        ongoingGigsByGigId,
-        lengthOfOngoingGigsByGigId);
+      user.uid,
+      myFavoriteHashtags,
+      name,
+      handle,
+      email,
+      password,
+      userAvatarUrl,
+      location,
+      isMinor,
+      ongoingGigsByGigId,
+      lengthOfOngoingGigsByGigId,
+    );
     // return _userFromFirebaseUser(user);
+    // MyUserController().getCurrentUserFromFirebase(user.uid);
 
     // Update the displayName of the user in authData
     await updateUserName(name, authResult.user);

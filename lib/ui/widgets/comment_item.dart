@@ -598,36 +598,41 @@ class _CommentItemState extends State<CommentItem> {
     timeAgo.setLocaleMessages('sv_short', timeAgo.SvShortMessages());
 
     var locale = 'en';
-    return Container(
-      decoration: BoxDecoration(
-        color: myComment ? Theme.of(context).primaryColor : Colors.white,
-        border: Border(
-          top: myComment
-              ? BorderSide(width: 0.3, color: Colors.grey[50])
-              : BorderSide(width: 0.3, color: FyreworkrColors.fyreworkBlack),
-          bottom: myComment
-              ? BorderSide(width: 0.3, color: Colors.green)
-              : BorderSide(width: 0.3, color: FyreworkrColors.fyreworkBlack),
+    return Padding(
+      padding: const EdgeInsets.all(0.1),
+      child: Container(
+        decoration: BoxDecoration(
+          color: myComment ? Theme.of(context).primaryColor : Colors.white,
+          border: Border(
+            top: myComment
+                ? BorderSide(width: 0.3, color: Colors.grey[50])
+                : BorderSide(width: 0.3, color: FyreworkrColors.fyreworkBlack),
+            bottom: myComment
+                ? BorderSide(width: 0.3, color: Colors.grey[50])
+                : BorderSide(width: 0.3, color: FyreworkrColors.fyreworkBlack),
+          ),
         ),
-      ),
-      child: myGig || myComment
-          ? IndexedStack(
-              index: _commentViewIndex,
-              children: [
-                AnimatedOpacity(
-                  opacity: _commentOpacity,
-                  child: publicCommentView,
-                  duration: Duration(milliseconds: 500),
-                ),
-                AnimatedOpacity(
+        child: myGig || myComment
+            ? IndexedStack(
+                index: _commentViewIndex,
+                children: [
+                  AnimatedOpacity(
                     opacity: _commentOpacity,
-                    child: privateCommentView,
-                    duration: Duration(milliseconds: 500)),
-              ],
-            )
-          : !widget.persistentPrivateComment
-              ? widget.isPrivateComment ? privateCommentView : publicCommentView
-              : privateCommentView,
+                    child: publicCommentView,
+                    duration: Duration(milliseconds: 500),
+                  ),
+                  AnimatedOpacity(
+                      opacity: _commentOpacity,
+                      child: privateCommentView,
+                      duration: Duration(milliseconds: 500)),
+                ],
+              )
+            : !widget.persistentPrivateComment
+                ? widget.isPrivateComment
+                    ? privateCommentView
+                    : publicCommentView
+                : privateCommentView,
+      ),
     );
   }
 

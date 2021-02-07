@@ -1,6 +1,6 @@
 class OtherUser {
   final String uid;
-  final String hashtag;
+  final List favoriteHashtags;
   final String name;
   final String username;
   final String email;
@@ -14,7 +14,7 @@ class OtherUser {
 
   OtherUser({
     this.uid,
-    this.hashtag,
+    this.favoriteHashtags,
     this.name,
     this.username,
     this.email,

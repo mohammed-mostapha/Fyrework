@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:myApp/models/myUser.dart';
 import 'package:myApp/models/otherUser.dart';
 
 class DatabaseService {
@@ -20,20 +19,21 @@ class DatabaseService {
       Firestore.instance.collection('takenHandles');
 
   Future setUserData(
-      String id,
-      List myFavoriteHashtags,
-      String name,
-      String username,
-      String email,
-      String password,
-      String userAvatarUrl,
-      String location,
-      bool isMinor,
-      dynamic ongoingGigsByGigId,
-      int lengthOfOngoingGigsByGigId) async {
+    String id,
+    List myFavoriteHashtags,
+    String name,
+    String username,
+    String email,
+    String password,
+    String userAvatarUrl,
+    String location,
+    bool isMinor,
+    dynamic ongoingGigsByGigId,
+    int lengthOfOngoingGigsByGigId,
+  ) async {
     return await _usersCollection.document(id).setData({
       'id': uid,
-      'FavoriteHashtags': FieldValue.arrayUnion(myFavoriteHashtags),
+      'favoriteHashtags': FieldValue.arrayUnion(myFavoriteHashtags),
       'name': name,
       'username': username,
       'email': email,
@@ -51,7 +51,7 @@ class DatabaseService {
   OtherUser _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return OtherUser(
       uid: snapshot.data['Id'],
-      hashtag: snapshot.data['hashtag'],
+      favoriteHashtags: snapshot.data['favoriteHashtags'],
       name: snapshot.data['name'],
       username: snapshot.data['username'],
       email: snapshot.data['email'],
@@ -67,8 +67,17 @@ class DatabaseService {
 
   // get user doc stream
   Stream<OtherUser> fetchUserData(String id) {
-    print('print working in DB');
     return _usersCollection.document(id).snapshots().map(_userDataFromSnapshot);
+  }
+
+  // fetch users in search by query(username)
+  Stream<QuerySnapshot> fetchUsersInSearchByHandle() {
+    return _usersCollection.snapshots();
+  }
+
+  // fetch users in search by query(FavoriteHashtags)
+  Stream<QuerySnapshot> fetchUsersInSearchByFavoriteHashtags() {
+    return _usersCollection.snapshots();
   }
 
   // listening to all gigs

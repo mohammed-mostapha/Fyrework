@@ -146,7 +146,7 @@ class _MyProfileViewState extends State<MyProfileView> {
   void editMyProfile() async {
     try {
       if (validate() && _myNewProfileImage != null) {
-        EasyLoading.show(status: 'loading...');
+        EasyLoading.show();
         //deleting current profile picture
         await StorageRepo().deleteProfilePicture(MyUser.userAvatarUrl);
 
@@ -158,12 +158,12 @@ class _MyProfileViewState extends State<MyProfileView> {
         await DatabaseService()
             .updateMyProfilePicture(MyUser.uid, _updatedProfileAvatar);
         EasyLoading.dismiss().then(
-          (value) => EasyLoading.showSuccess('Done'),
+          (value) => EasyLoading.showSuccess(''),
         );
       }
 
       if (validate()) {
-        EasyLoading.show(status: 'loading...');
+        EasyLoading.show();
         await DatabaseService().updateMyProfileData(
           MyUser.uid,
           _myFavoriteHashtagsController.text,
@@ -175,13 +175,13 @@ class _MyProfileViewState extends State<MyProfileView> {
           _phoneNumberToVerify,
         );
         EasyLoading.dismiss().then(
-          (value) => EasyLoading.showSuccess('Done'),
+          (value) => EasyLoading.showSuccess(''),
         );
       }
     } catch (e) {
       print(e);
       EasyLoading.dismiss().then(
-        (value) => EasyLoading.showError('Something went wrong'),
+        (value) => EasyLoading.showError(''),
       );
     }
 

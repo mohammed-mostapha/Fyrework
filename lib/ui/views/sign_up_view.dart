@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// import 'package:myApp/locator.dart';
 import 'package:myApp/main.dart';
 import 'package:myApp/screens/add_gig/assets_picker/constants/picker_model.dart';
 import 'package:myApp/screens/add_gig/assets_picker/src/widget/asset_picker.dart';
@@ -14,9 +13,7 @@ import 'package:myApp/services/takenHandles.dart';
 import 'package:myApp/ui/shared/theme.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-// import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:myApp/services/places_autocomplete.dart';
-// import 'package:myApp/view_controllers/myUser_controller.dart';
 import 'package:photo_manager/photo_manager.dart';
 import '../shared/constants.dart';
 import 'package:jiffy/jiffy.dart';
@@ -187,7 +184,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             EasyLoading.dismiss();
             break;
           case AuthFormType.signUp:
-            EasyLoading.show(status: 'loading...');
+            EasyLoading.show();
 
             location = PlacesAutocomplete.placesAutoCompleteController.text;
 
@@ -195,10 +192,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             File profilePictureToUpload = File(_profileImage.path);
 
             await AuthService().createUserWithEmailAndPassword(
-              // _myHashtag.trim(),
               _myFavoriteHashtags,
               _name.trim(),
-              // _username.trim(),
               _myHandleController.text,
               _email.trim(),
               _password.trim(),
@@ -213,7 +208,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             // await locator.get<UserController>().getProfilePictureDownloadUrl();
             PlacesAutocomplete.placesAutoCompleteController.clear();
 
-            Navigator.of(context).pushReplacementNamed('/home');
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => HomeController()));
             EasyLoading.dismiss();
             break;
 
@@ -434,6 +430,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   }
 
   Widget serverSideAlert() {
+    EasyLoading.dismiss();
     if (serverSideWarning != null) {
       scrollController.animateTo(0,
           duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
@@ -482,6 +479,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
   Widget clientSideAlert() {
     if (clientSideWarning != null) {
+      EasyLoading.dismiss();
       scrollController.animateTo(0,
           duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       return Container(

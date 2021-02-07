@@ -22,8 +22,8 @@ class FirestoreService {
   final StreamController<List<Gig>> _gigsController =
       StreamController<List<Gig>>.broadcast();
 
-  final StreamController<List<Comment>> _commentsController =
-      StreamController<List<Comment>>.broadcast();
+  // final StreamController<List<Comment>> _commentsController =
+  //     StreamController<List<Comment>>.broadcast();
 
   // Future createUser(User user) async {
   //   try {
@@ -43,6 +43,7 @@ class FirestoreService {
       var userData = await _usersCollectionReference.document(uid).get();
       print('print from getUserData function: ${userData.data}');
       MyUser.fromData(userData.data);
+      print('myUser: $MyUser');
       print('print second from getUserData function: ${MyUser.uid}');
     } catch (e) {
       // TODO: Find or create a way to repeat error handling without so much repeated code
