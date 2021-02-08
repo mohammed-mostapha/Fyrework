@@ -37,7 +37,7 @@ class DatabaseService {
       'name': name,
       'username': username,
       'email': email,
-      'password': password,
+      // 'password': password,
       'userAvatarUrl': userAvatarUrl,
       'location': location,
       'phoneNumber': null,

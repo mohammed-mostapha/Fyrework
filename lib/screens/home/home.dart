@@ -221,6 +221,7 @@ class HashtagsOrHandles extends SearchDelegate<OtherUser> {
                             child: Padding(
                               padding: const EdgeInsets.all(0.1),
                               child: Container(
+                                padding: EdgeInsets.symmetric(vertical: 5),
                                 decoration: BoxDecoration(
                                     color: Theme.of(context).primaryColor,
                                     border: Border(
@@ -229,25 +230,73 @@ class HashtagsOrHandles extends SearchDelegate<OtherUser> {
                                             color: Colors.grey[50]))),
                                 child: ListTile(
                                   leading: CircleAvatar(
+                                    backgroundColor:
+                                        Theme.of(context).primaryColor,
                                     backgroundImage:
                                         NetworkImage(u['userAvatarUrl']),
-                                    radius: 20,
+                                    radius: 25,
                                   ),
-                                  title: Text(u['username'],
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: Theme.of(context).accentColor),
-                                      overflow: TextOverflow.ellipsis),
+                                  title: Container(
+                                    padding: EdgeInsets.only(left: 10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(u['username'],
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Theme.of(context)
+                                                    .accentColor),
+                                            overflow: TextOverflow.ellipsis),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(u['name'],
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.grey[500],
+                                                fontWeight: FontWeight.bold),
+                                            overflow: TextOverflow.ellipsis),
+                                      ],
+                                    ),
+                                  ),
                                   trailing: Container(
+                                    padding: EdgeInsets.only(left: 10),
+                                    height: 43.0,
                                     width:
                                         MediaQuery.of(context).size.width / 2,
-                                    child: Text(
-                                      u['location'],
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Theme.of(context).accentColor,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                          child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount:
+                                                u['favoriteHashtags'].length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              final hashtagItem =
+                                                  u['favoriteHashtags'][index] +
+                                                      ' ';
+                                              return Text('$hashtagItem',
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: Theme.of(context)
+                                                          .accentColor));
+                                            },
+                                          ),
+                                        ),
+                                        Text(
+                                          u['location'],
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.grey[500],
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),

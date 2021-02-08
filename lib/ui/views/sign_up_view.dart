@@ -97,6 +97,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   bool _isMinor = false;
   bool _showPassword = false;
   bool _showConfirmPassword = false;
+  bool _shouldAddHashtag = false;
   dynamic _ongoingGigsByGigId;
   int _lengthOfOngoingGigsByGigId;
   final TextEditingController phoneNumberController = TextEditingController();
@@ -107,6 +108,12 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   TextEditingController _confirmPasswordController = TextEditingController();
   DateTime _defaultAge = Jiffy().subtract(years: 19);
   // DateTime _defaultAge = new DateTime.now();
+  final _myFavoriteHashtagsControllerNotEmpty = SnackBar(
+    content: Text(
+      'need to add that hashtag!',
+      style: TextStyle(fontSize: 16),
+    ),
+  );
   final _passwordConfirmPasswordSnackBar = SnackBar(
     content: Text(
       'Password & Confirm password are not identical!',
@@ -147,29 +154,11 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
   void submit() async {
     // checking whether the user picked a profile pic or not
-    if (_profileImage == null) {
-      scrollController.animateTo(0,
-          duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
-      _cameraIconAnimationController.forward().then((value) {
-        _cameraColorAnimationController.forward();
-        _cameraIconAnimationController.reverse();
-      });
-    }
-    //check if password & confirm password are identical
-    else if (_passwordController.text != _confirmPasswordController.text) {
-      _signupScaffoldKey.currentState
-          .showSnackBar(_passwordConfirmPasswordSnackBar);
-    } else if (handleDuplicated) {
-      _signupScaffoldKey.currentState.showSnackBar(_duplicateHandleSnackBar);
-    } else if (_profileImage != null &&
-        validate() &&
-        _myHandleController.text.isNotEmpty &&
-        !handleDuplicated &&
-        _passwordController.text == _confirmPasswordController.text) {
-      try {
-        switch (authFormType) {
-          case AuthFormType.signIn:
-            print('trying to sign in');
+
+    switch (authFormType) {
+      case AuthFormType.signIn:
+        if (validate()) {
+          try {
             EasyLoading.show();
             await AuthService()
                 .signInWithEmailAndPassword(_email.trim(), _password.trim());
@@ -177,15 +166,52 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                 MaterialPageRoute(builder: (context) => HomeController()),
                 ModalRoute.withName('/'));
             EasyLoading.dismiss();
+          } catch (e) {
+            setState(() {
+              serverSideWarning = 'Wrong email address or password';
+            });
             break;
-          case AuthFormType.signUp:
+          }
+        }
+        break;
+      case AuthFormType.signUp:
+        if (_profileImage == null) {
+          scrollController.animateTo(0,
+              duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+          _cameraIconAnimationController.forward().then((value) {
+            _cameraColorAnimationController.forward();
+            _cameraIconAnimationController.reverse();
+          });
+        }
+        //leaving hashtag input field with a value within
+        else if (_myFavoriteHashtagsController.text.isNotEmpty) {
+          scrollController.animateTo(0,
+              duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+          _signupScaffoldKey.currentState
+              .showSnackBar(_myFavoriteHashtagsControllerNotEmpty);
+        } else if (_passwordController.text !=
+            _confirmPasswordController.text) {
+          _signupScaffoldKey.currentState
+              .showSnackBar(_passwordConfirmPasswordSnackBar);
+        }
+        //check if password & confirm password are identical
+        else if (_passwordController.text != _confirmPasswordController.text) {
+          _signupScaffoldKey.currentState
+              .showSnackBar(_passwordConfirmPasswordSnackBar);
+        } else if (handleDuplicated) {
+          _signupScaffoldKey.currentState
+              .showSnackBar(_duplicateHandleSnackBar);
+        } else if (_profileImage != null &&
+            validate() &&
+            _myHandleController.text.isNotEmpty &&
+            !handleDuplicated &&
+            _passwordController.text == _confirmPasswordController.text) {
+          print('shouldAddHashtag: $_shouldAddHashtag');
+          try {
             EasyLoading.show();
-
             location = PlacesAutocomplete.placesAutoCompleteController.text;
-
             // uploading a profile pic for the user signing up
             File profilePictureToUpload = File(_profileImage.path);
-
             await AuthService().createUserWithEmailAndPassword(
               _myFavoriteHashtags,
               _name.trim(),
@@ -205,52 +231,25 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                 MaterialPageRoute(builder: (context) => HomeController()),
                 ModalRoute.withName('/'));
             EasyLoading.dismiss();
-            break;
-
-          case AuthFormType.reset:
-            await AuthService().sendPasswordResetEmail(_email.trim());
-
-            setState(() {
-              serverSideWarning =
-                  'A password reset link has been sent to $_email';
-              authFormType = AuthFormType.signIn;
-            });
-            break;
-          // case AuthFormType.phone:
-          //   var result =
-          //       await AuthService().createUserWithPhone(_phone.trim(), context);
-          //   if (_phone == "" || result == "error") {
-          //     setState(() {
-          //       _warning = "Your phone number could not be validated";
-          //     });
-          //   }
-          //   break;
-        }
-      } catch (e) {
-        switch (authFormType) {
-          case AuthFormType.signUp:
+          } catch (e) {
             setState(() {
               serverSideWarning = 'This email address is already taken';
             });
-            break;
-          case AuthFormType.signIn:
-            setState(() {
-              serverSideWarning = 'Wrong email address or password';
-            });
-            break;
-            // case AuthFormType.phone:
-            break;
-          case AuthFormType.reset:
-            setState(() {
-              serverSideWarning = 'Wrong email address';
-            });
-            break;
+          }
         }
-        print(e);
-        // setState(() {
-        //   _warning = e.message;
-        // });
-      }
+        break;
+
+      case AuthFormType.reset:
+        try {
+          await AuthService().sendPasswordResetEmail(_email.trim());
+        } catch (e) {
+          setState(() {
+            serverSideWarning =
+                'A password reset link has been sent to $_email';
+            authFormType = AuthFormType.signIn;
+          });
+        }
+        break;
     }
   }
 
@@ -342,27 +341,32 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           child: Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: SingleChildScrollView(
-                controller: scrollController,
-                child: Column(
-                  children: <Widget>[
-                    serverSideAlert(),
-                    clientSideAlert(),
-                    buildHeaderText(),
-                    SizedBox(height: _height * 0.05),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Form(
-                        key: signupFormKey,
-                        child: Column(
-                          children: buildInputs() + buildButtons(),
+            child: SingleChildScrollView(
+              controller: scrollController,
+              child: Column(
+                children: [
+                  serverSideAlert(),
+                  clientSideAlert(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 20),
+                    child: Column(
+                      children: <Widget>[
+                        buildHeaderText(),
+                        SizedBox(height: _height * 0.05),
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Form(
+                            key: signupFormKey,
+                            child: Column(
+                              children: buildInputs() + buildButtons(),
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -431,7 +435,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       return Container(
         color: FyreworkrColors.fyreworkBlack,
         width: double.infinity,
-        padding: EdgeInsets.all(8.0),
+        padding: EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
           children: <Widget>[
             Padding(
@@ -611,12 +615,10 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                     // onSaved: (value) => _myHashtag = value,
                     textFieldConfiguration: TextFieldConfiguration(
                       controller: _myFavoriteHashtagsController,
-                      // style: TextStyle(fontSize: 16),
                       inputFormatters: [
                         new LengthLimitingTextInputFormatter(20),
                         FilteringTextInputFormatter.allow(RegExp("[a-z0-9_]")),
                       ],
-
                       decoration:
                           buildSignUpInputDecoration('Favorite #Hashtags'),
                     ),
