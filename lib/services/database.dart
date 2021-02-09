@@ -71,12 +71,7 @@ class DatabaseService {
   }
 
   // fetch users in search by query(username)
-  Stream<QuerySnapshot> fetchUsersInSearchByHandle() {
-    return _usersCollection.snapshots();
-  }
-
-  // fetch users in search by query(FavoriteHashtags)
-  Stream<QuerySnapshot> fetchUsersInSearchByFavoriteHashtags() {
+  Stream<QuerySnapshot> fetchUsersInSearch() {
     return _usersCollection.snapshots();
   }
 
