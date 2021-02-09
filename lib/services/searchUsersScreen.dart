@@ -80,17 +80,22 @@ class SearchUsers extends SearchDelegate<OtherUser> {
                   )));
     }
 
+    bool searchWithHashtag = query.startsWith('#');
     return StreamBuilder<QuerySnapshot>(
-        stream: DatabaseService().fetchUsersInSearch(),
+
+        // stream: DatabaseService().fetchUsersInSearch(),
+        // stream: query.startsWith('#')
+        stream: searchWithHashtag
+            ? DatabaseService().fetchUsersInSearchByFavoriteHashtags(query)
+            : DatabaseService().fetchUsersInSearch(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          final hashtagsResults = snapshot.data.documents
-              .where((u) => u['favoriteHashtags'].contains(query));
+          final hashtagsResults = snapshot.data.documents;
 
           final handlesResults = snapshot.data.documents
               .where((u) => u['username'].contains(query));
 
           var searchCriteria =
-              query.startsWith('#') ? hashtagsResults : handlesResults;
+              searchWithHashtag ? hashtagsResults : handlesResults;
 
           if (!snapshot.hasData) {
             return Container(
@@ -165,8 +170,9 @@ class SearchUsers extends SearchDelegate<OtherUser> {
                                       ),
                                       searchCriteria == hashtagsResults
                                           ? Text(
-                                              u['lengthOfOngoingGigsByGigId' +
-                                                  ' gigs'],
+                                              u['lengthOfOngoingGigsByGigId']
+                                                      .toString() +
+                                                  ' gigs',
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 color: Colors.grey[500],
