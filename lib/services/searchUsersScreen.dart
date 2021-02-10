@@ -80,7 +80,8 @@ class SearchUsers extends SearchDelegate<OtherUser> {
                   )));
     }
 
-    bool searchWithHashtag = query.startsWith('#');
+    // bool searchWithHashtag = query.startsWith('#');
+    bool searchWithHashtag = query.startsWith(RegExp('#[a-zA-Z0-9]'));
     return StreamBuilder<QuerySnapshot>(
 
         // stream: DatabaseService().fetchUsersInSearch(),
