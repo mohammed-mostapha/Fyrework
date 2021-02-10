@@ -40,7 +40,7 @@ class _UserProfileViewState extends State<UserProfileView> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Scaffold(
-                backgroundColor: FyreworkrColors.fyreworkBlack,
+                backgroundColor: Theme.of(context).primaryColor,
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
                   title: Container(
@@ -174,34 +174,33 @@ class _UserProfileViewState extends State<UserProfileView> {
                                 leading: Container(),
                                 title: Container(),
                                 bottom: TabBar(
-                                  indicatorColor: FyreworkrColors.fyreworkBlack,
+                                  indicatorColor:
+                                      Theme.of(context).primaryColor,
                                   tabs: [
                                     Tab(
                                         child: FaIcon(
-                                      FontAwesomeIcons.borderAll,
-                                      size: 16,
-                                      color: FyreworkrColors.fyreworkBlack,
-                                    )),
+                                            FontAwesomeIcons.borderAll,
+                                            size: 16,
+                                            color: Theme.of(context)
+                                                .primaryColor)),
                                     Tab(
                                       child: FaIcon(
-                                        FontAwesomeIcons.checkCircle,
-                                        size: 16,
-                                        color: FyreworkrColors.fyreworkBlack,
-                                      ),
+                                          FontAwesomeIcons.checkCircle,
+                                          size: 16,
+                                          color:
+                                              Theme.of(context).primaryColor),
                                     ),
                                     Tab(
-                                      child: FaIcon(
-                                        FontAwesomeIcons.thumbsUp,
-                                        size: 16,
-                                        color: FyreworkrColors.fyreworkBlack,
-                                      ),
+                                      child: FaIcon(FontAwesomeIcons.thumbsUp,
+                                          size: 16,
+                                          color:
+                                              Theme.of(context).primaryColor),
                                     ),
                                     Tab(
-                                      child: FaIcon(
-                                        FontAwesomeIcons.star,
-                                        size: 16,
-                                        color: FyreworkrColors.fyreworkBlack,
-                                      ),
+                                      child: FaIcon(FontAwesomeIcons.star,
+                                          size: 16,
+                                          color:
+                                              Theme.of(context).primaryColor),
                                     ),
                                   ],
                                 ),

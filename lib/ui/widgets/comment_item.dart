@@ -149,8 +149,8 @@ class _CommentItemState extends State<CommentItem> {
                               fontSize: 16,
                               fontWeight: FontWeight.w900,
                               color: myComment
-                                  ? Colors.white
-                                  : FyreworkrColors.fyreworkBlack,
+                                  ? Theme.of(context).accentColor
+                                  : Theme.of(context).primaryColor,
                             ),
                           ),
                         ),
@@ -290,8 +290,8 @@ class _CommentItemState extends State<CommentItem> {
                                                 width: 1,
                                                 color: myComment
                                                     ? Colors.white
-                                                    : FyreworkrColors
-                                                        .fyreworkBlack,
+                                                    : Theme.of(context)
+                                                        .primaryColor,
                                               ),
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(2))),
@@ -528,8 +528,8 @@ class _CommentItemState extends State<CommentItem> {
                   style: TextStyle(
                     fontSize: 12,
                     color: myComment
-                        ? Colors.white
-                        : FyreworkrColors.fyreworkBlack,
+                        ? Theme.of(context).accentColor
+                        : Theme.of(context).primaryColor,
                   ),
                 ),
               ],
@@ -546,7 +546,9 @@ class _CommentItemState extends State<CommentItem> {
       child: Center(
         child: Text('Private comment',
             style: TextStyle(
-              color: myComment ? Colors.white : FyreworkrColors.fyreworkBlack,
+              color: myComment
+                  ? Theme.of(context).accentColor
+                  : Theme.of(context).primaryColor,
             )),
       ),
     );
@@ -606,10 +608,16 @@ class _CommentItemState extends State<CommentItem> {
           border: Border(
             top: myComment
                 ? BorderSide(width: 0.3, color: Colors.grey[50])
-                : BorderSide(width: 0.3, color: FyreworkrColors.fyreworkBlack),
+                : BorderSide(
+                    width: 0.3,
+                    color: Theme.of(context).primaryColor,
+                  ),
             bottom: myComment
                 ? BorderSide(width: 0.3, color: Colors.grey[50])
-                : BorderSide(width: 0.3, color: FyreworkrColors.fyreworkBlack),
+                : BorderSide(
+                    width: 0.3,
+                    color: Theme.of(context).primaryColor,
+                  ),
           ),
         ),
         child: myGig || myComment

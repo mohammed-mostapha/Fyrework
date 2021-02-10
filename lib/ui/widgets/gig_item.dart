@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myApp/screens/add_gig/assets_picker/src/constants/constants.dart';
 import 'package:myApp/services/firestore_service.dart';
+import 'package:myApp/services/searchUsersScreen.dart';
 import 'package:myApp/ui/views/add_comments_view.dart';
 import 'package:myApp/ui/widgets/gig_item_media_previewer.dart';
 import 'package:myApp/ui/widgets/user_profile.dart';
@@ -213,7 +214,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                                 ),
                                 Flexible(
                                   child: Text(
-                                    "${widget.gigOwnerUsername}",
+                                    "${widget.gigOwnerUsername}".capitalize(),
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                         fontSize: 16,
@@ -302,7 +303,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                       ),
                     ),
                     Container(
-                      width: MediaQuery.of(context).size.width / 2,
+                      width: MediaQuery.of(context).size.width / 2.5,
                       child: Row(
                         children: [
                           SizedBox(
@@ -317,9 +318,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                           Flexible(
                             child: Text('${widget.gigLocation}',
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Theme.of(context).primaryColor)),
+                                style: Theme.of(context).textTheme.bodyText2),
                           )
                         ],
                       ),
@@ -350,7 +349,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "${widget.gigPost}",
+                    "${widget.gigPost}".capitalize(),
                     style: TextStyle(
                       fontSize: 16,
                     ),
@@ -359,19 +358,25 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                 SizedBox(height: 5),
                 Container(
                   width: double.infinity,
-                  child: Wrap(
-                    children: widget.gigHashtags
-                        .map<Widget>((e) => Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(0, 0, 2.5, 2.5),
-                              child: Text(
-                                '$e',
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Theme.of(context).primaryColor),
-                              ),
-                            ))
-                        .toList(),
+                  child: GestureDetector(
+                    child: Wrap(
+                      children: widget.gigHashtags
+                          .map<Widget>((e) => Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 0, 2.5, 2.5),
+                                child: Text(
+                                  '$e',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: Theme.of(context).primaryColor),
+                                ),
+                              ))
+                          .toList(),
+                    ),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => SearchUsersScreen()));
+                    },
                   ),
                 ),
                 SizedBox(height: 10),

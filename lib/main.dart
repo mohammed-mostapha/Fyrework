@@ -126,32 +126,6 @@ class _HomeControllerState extends State<HomeController> {
     super.initState();
   }
 
-  // Function checkAuthenticity() {
-  // FirebaseAuth.instance.currentUser().then((user) => user != null
-  //     ? setState(() {
-  //         print('user: $user');
-  //         isAuthenticated = true;
-  //       })
-  //     : setState(() {
-  //         print('user null: $user');
-  //         isAuthenticated = false;
-  //       }));
-  //   FirebaseAuth.instance.onAuthStateChanged.listen((user) {
-  //     if (user != null) {
-  //       print('user: $user');
-  //       setState(() {
-  //         isAuthenticated = true;
-  //       });
-  //     } else {
-  //       print('user null: $user');
-
-  //       setState(() {
-  //         isAuthenticated = false;
-  //       });
-  //     }
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     // FirebaseAuth.instance.onAuthStateChanged.listen((user) {
@@ -180,10 +154,11 @@ class _HomeControllerState extends State<HomeController> {
             ),
         '/addGig': (BuildContext context) => Home(passedSelectedIndex: 1),
       },
-      theme: ThemeData(
-        primaryColor: FyreworkrColors.fyreworkBlack,
-        accentColor: Colors.white,
-      ),
+      // theme: ThemeData(
+      //   primaryColor: FyreworkrColors.fyreworkBlack,
+      //   accentColor: Colors.white,
+      // ),
+      theme: fyreworkTheme(),
       builder: EasyLoading.init(),
       supportedLocales: [
         Locale('en', 'US'),
@@ -213,192 +188,5 @@ class _HomeControllerState extends State<HomeController> {
       },
       home: isAuthenticated ? Home(passedSelectedIndex: 0) : StartPage(),
     );
-    // return Container(
-    //   color: Colors.white,
-    //   child: Center(
-    //     child: !isAuthenticated
-    //         ? CircularProgressIndicator(
-    //             valueColor: new AlwaysStoppedAnimation<Color>(Colors.black),
-    //           )
-    //         : Home(passedSelectedIndex: 0),
-    //   ),
-    // );
-    //         return FutureBuilder(
-    //           future: UserController().getCurrentUser(),
-    //           builder: (BuildContext context, AsyncSnapshot snapshot) {
-    //             if (snapshot.hasData) {
-    //               return MaterialApp(
-    //                 routes: <String, WidgetBuilder>{
-    //                   '/home': (BuildContext context) => HomeController(),
-    //                   '/signUp': (BuildContext context) => SignUpView(
-    //                         authFormType: AuthFormType.signUp,
-    //                       ),
-    //                   '/signIn': (BuildContext context) => SignUpView(
-    //                         authFormType: AuthFormType.signIn,
-    //                       ),
-    //                   '/addGig': (BuildContext context) =>
-    //                       Home(passedSelectedIndex: 1),
-    //                 },
-    //                 theme: ThemeData(
-    //                   primaryColor: FyreworkrColors.fyreworkBlack,
-    //                   accentColor: FyreworkrColors.fyreworkBlack,
-    //                 ),
-    //                 supportedLocales: [
-    //                   Locale('en', 'US'),
-    //                   Locale('fr', 'FR'),
-    //                   Locale('de', 'DE'),
-    //                   Locale('is', 'IS'),
-    //                 ],
-    //                 // these delegates make sure that the localiztion data for the proper language is loaded
-    //                 localizationsDelegates: [
-    //                   // A class which loads the translation from JSON files
-    //                   AppLocalizations.delegate,
-    //                   //Built-in localization of basic text for Material widgets
-    //                   GlobalMaterialLocalizations.delegate,
-    //                   // Built-in localization for text direction LTR/RTL
-    //                   GlobalWidgetsLocalizations.delegate,
-    //                 ],
-    //                 // Returns a locale which will be used by the app
-    //                 localeResolutionCallback: (locale, supportedLocales) {
-    //                   for (var supportedLocale in supportedLocales) {
-    //                     if (supportedLocale.languageCode ==
-    //                             locale?.languageCode ||
-    //                         supportedLocale.countryCode ==
-    //                             locale?.countryCode) {
-    //                       return supportedLocale;
-    //                     }
-    //                   }
-    //                   // I the locale of the device is not supported, use the first one from the list (English, in this case).
-    //                   return supportedLocales.first;
-    //                 },
-    //                 home: signedIn ? Home(passedSelectedIndex: 0) : StartPage(),
-    //               );
-    //             }
-    //             return Container(
-    //               color: Colors.white,
-    //               child: Center(
-    //                 child: CircularProgressIndicator(
-    //                   valueColor:
-    //                       new AlwaysStoppedAnimation<Color>(Colors.black),
-    //                 ),
-    //               ),
-    //             );
-    //           },
-    //         );
-
-    // final AuthService auth = Provider.of(context).auth;
-    // return StreamBuilder<String>(
-    //     stream: auth.onAuthStateChanged,
-    //     builder: (context, AsyncSnapshot<String> snapshot) {
-    //       // if (snapshot.connectionState == ConnectionState.active) {
-    //       if (snapshot.hasData) {
-    //         // print('Stream ${snapshot.data}');
-    //         bool signedIn = snapshot.hasData;
-    //         return FutureBuilder(
-    //           future: UserController().getCurrentUser(),
-    //           builder: (BuildContext context, AsyncSnapshot snapshot) {
-    //             if (snapshot.hasData) {
-    //               return MaterialApp(
-    //                 routes: <String, WidgetBuilder>{
-    //                   '/home': (BuildContext context) => HomeController(),
-    //                   '/signUp': (BuildContext context) => SignUpView(
-    //                         authFormType: AuthFormType.signUp,
-    //                       ),
-    //                   '/signIn': (BuildContext context) => SignUpView(
-    //                         authFormType: AuthFormType.signIn,
-    //                       ),
-    //                   '/addGig': (BuildContext context) =>
-    //                       Home(passedSelectedIndex: 1),
-    //                 },
-    //                 theme: ThemeData(
-    //                   primaryColor: FyreworkrColors.fyreworkBlack,
-    //                   accentColor: FyreworkrColors.fyreworkBlack,
-    //                 ),
-    //                 supportedLocales: [
-    //                   Locale('en', 'US'),
-    //                   Locale('fr', 'FR'),
-    //                   Locale('de', 'DE'),
-    //                   Locale('is', 'IS'),
-    //                 ],
-    //                 // these delegates make sure that the localiztion data for the proper language is loaded
-    //                 localizationsDelegates: [
-    //                   // A class which loads the translation from JSON files
-    //                   AppLocalizations.delegate,
-    //                   //Built-in localization of basic text for Material widgets
-    //                   GlobalMaterialLocalizations.delegate,
-    //                   // Built-in localization for text direction LTR/RTL
-    //                   GlobalWidgetsLocalizations.delegate,
-    //                 ],
-    //                 // Returns a locale which will be used by the app
-    //                 localeResolutionCallback: (locale, supportedLocales) {
-    //                   for (var supportedLocale in supportedLocales) {
-    //                     if (supportedLocale.languageCode ==
-    //                             locale?.languageCode ||
-    //                         supportedLocale.countryCode ==
-    //                             locale?.countryCode) {
-    //                       return supportedLocale;
-    //                     }
-    //                   }
-    //                   // I the locale of the device is not supported, use the first one from the list (English, in this case).
-    //                   return supportedLocales.first;
-    //                 },
-    //                 home: signedIn ? Home(passedSelectedIndex: 0) : StartPage(),
-    //               );
-    //             }
-    //             return Container(
-    //               color: Colors.white,
-    //               child: Center(
-    //                 child: CircularProgressIndicator(
-    //                   valueColor:
-    //                       new AlwaysStoppedAnimation<Color>(Colors.black),
-    //                 ),
-    //               ),
-    //             );
-    //           },
-    //         );
-
-    //         // return signedIn ? Home(passedSelectedIndex: 0) : StartPage();
-
-    //       }
-    //       return MaterialApp(
-    //         routes: <String, WidgetBuilder>{
-    //           '/home': (BuildContext context) => HomeController(),
-    //           '/signUp': (BuildContext context) => SignUpView(
-    //                 authFormType: AuthFormType.signUp,
-    //               ),
-    //           '/signIn': (BuildContext context) => SignUpView(
-    //                 authFormType: AuthFormType.signIn,
-    //               ),
-    //           '/addGig': (BuildContext context) => Home(passedSelectedIndex: 1),
-    //         },
-    //         supportedLocales: [
-    //           Locale('en', 'US'),
-    //           Locale('fr', 'FR'),
-    //           Locale('de', 'DE'),
-    //           Locale('is', 'IS'),
-    //         ],
-    //         // these delegates make sure that the localiztion data for the proper language is loaded
-    //         localizationsDelegates: [
-    //           // A class which loads the translation from JSON files
-    //           AppLocalizations.delegate,
-    //           //Built-in localization of basic text for Material widgets
-    //           GlobalMaterialLocalizations.delegate,
-    //           // Built-in localization for text direction LTR/RTL
-    //           GlobalWidgetsLocalizations.delegate,
-    //         ],
-    //         // Returns a locale which will be used by the app
-    //         localeResolutionCallback: (locale, supportedLocales) {
-    //           for (var supportedLocale in supportedLocales) {
-    //             if (supportedLocale.languageCode == locale?.languageCode ||
-    //                 supportedLocale.countryCode == locale?.countryCode) {
-    //               return supportedLocale;
-    //             }
-    //           }
-    //           // I the locale of the device is not supported, use the first one from the list (English, in this case).
-    //           return supportedLocales.first;
-    //         },
-    //         home: StartPage(),
-    //       );
-    //     });
   }
 }

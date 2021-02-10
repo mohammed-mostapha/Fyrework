@@ -528,7 +528,8 @@ class AssetPicker extends StatelessWidget {
                   : Constants.textDelegate.confirm,
               style: TextStyle(
                 color: provider.isSelectedNotEmpty
-                    ? FyreworkrColors.fyreworkBlack
+                    // ? FyreworkrColors.fyreworkBlack
+                    ? Theme.of(context).primaryColor
                     //  theme.textTheme.bodyText1.color
                     : theme.textTheme.caption.color,
                 fontSize: 17.0,
@@ -754,13 +755,14 @@ class AssetPicker extends StatelessWidget {
                           ? Icon(
                               Icons.check,
                               size: 18.0,
-                              color: FyreworkrColors.fyreworkBlack,
+                              // color: FyreworkrColors.fyreworkBlack,
+                              color: Color(0xFF000000),
                             )
                           : Text(
                               '${selectedAssets.indexOf(asset) + 1}',
                               style: TextStyle(
                                 color: selected
-                                    ? FyreworkrColors.fyreworkBlack
+                                    ? Color(0xFF000000)
                                     // theme.textTheme.bodyText1.color
                                     : null,
                                 fontSize: isAppleOS ? 16.0 : 14.0,

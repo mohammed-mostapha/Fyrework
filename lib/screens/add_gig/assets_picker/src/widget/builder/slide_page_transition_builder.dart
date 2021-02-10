@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:myApp/screens/add_gig/camera/src/widget/camera_picker.dart';
-import 'package:myApp/ui/shared/FyreworkTheme.dart';
 
 /// Built a slide page transition for the picker.
 /// 为选择器构造一个上下进出的页面过渡动画
@@ -80,24 +79,23 @@ class SlidePageTransitionBuilder<T> extends PageRoute<T> {
         child: Scaffold(
           bottomNavigationBar: BottomAppBar(
             child: TabBar(
-              indicatorColor: FyreworkrColors.white,
+              indicatorColor: Theme.of(context).accentColor,
               tabs: [
                 Tab(
                   child: Text('Gallery',
-                      style: TextStyle(color: FyreworkrColors.white)),
+                      style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                      )),
                 ),
                 Tab(
                   child: Text('Camera',
-                      style: TextStyle(color: FyreworkrColors.white)),
+                      style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                      )),
                 ),
-                // Tab(
-                //   child: Text('Video',
-                //       style: TextStyle(color: FyreworkrColors.white)),
-                // ),
               ],
             ),
-            // backgroundColor: FyreworkrColors.white,
-            color: FyreworkrColors.fyreworkBlack,
+            color: Theme.of(context).primaryColor,
           ),
           body: TabBarView(
             children: [

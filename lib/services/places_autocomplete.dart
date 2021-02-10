@@ -41,8 +41,8 @@ class _PlacesAutocompleteState extends State<PlacesAutocomplete> {
               : profileEditingInputDecoration('Location'),
           style: TextStyle(
               color: widget.signUpDecoraiton
-                  ? FyreworkrColors.fyreworkBlack
-                  : Colors.white,
+                  ? Theme.of(context).primaryColor
+                  : Theme.of(context).accentColor,
               fontSize: 16),
           controller: PlacesAutocomplete.placesAutoCompleteController,
           validator: (val) => val.isEmpty ? '' : null,

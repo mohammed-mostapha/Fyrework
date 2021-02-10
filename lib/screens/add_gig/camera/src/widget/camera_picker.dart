@@ -657,7 +657,8 @@ class CameraPickerState extends State<CameraPicker> {
         Navigator.of(context).pop();
       },
       child: Material(
-        color: FyreworkrColors.fyreworkBlack,
+        // color: FyreworkrColors.fyreworkBlack,
+        color: Theme.of(context).primaryColor,
         child: Stack(
           children: <Widget>[
             if (isInitialized)

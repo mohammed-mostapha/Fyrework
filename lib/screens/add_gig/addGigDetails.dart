@@ -162,7 +162,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
             appBar: AppBar(
               backgroundColor: Colors.grey[50],
               iconTheme: IconThemeData(
-                  color: FyreworkrColors.fyreworkBlack //change your color here
+                  color: Theme.of(context).primaryColor //change your color here
                   ),
               actions: <Widget>[
                 Padding(
@@ -179,42 +179,14 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                     },
                   ),
                 ),
-                // Container(
-                //   decoration: BoxDecoration(
-                //       border: Border.all(
-                //         width: 1,
-                //         color: Theme.of(context).primaryColor,
-                //       ),
-                //       borderRadius: BorderRadius.all(Radius.circular(2))),
-                //   child: FlatButton(
-                //     child: Text(
-                //       'Next',
-                //       style: TextStyle(
-                //         fontSize: 20,
-                //       ),
-                //     ),
-                //     onPressed: () async {
-                //       await saveFormValuesAndPickMediaFiles();
-                //     },
-                //   ),
-                // ),
-                // FlatButton(
-                //   child: Text(
-                //     'Next',
-                //     style: TextStyle(
-                //       fontSize: 20,
-                //     ),
-                //   ),
-                //   onPressed: () async {
-                //     await saveFormValuesAndPickMediaFiles();
-                //   },
-                // ),
               ],
               title: Padding(
                 padding: const EdgeInsets.all(0),
                 child: Text(
                   'Create Gig',
-                  style: TextStyle(color: FyreworkrColors.fyreworkBlack),
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
               ),
             ),
@@ -397,7 +369,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                     signUpDecoraiton: true,
                                   ),
                                   IconButton(
-                                    color: FyreworkrColors.fyreworkBlack,
+                                    color: Theme.of(context).primaryColor,
                                     onPressed: () {
                                       getUserLocation();
                                     },
@@ -486,8 +458,9 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                                           child: Text(
                                                             value,
                                                             style: TextStyle(
-                                                              color: FyreworkrColors
-                                                                  .fyreworkBlack,
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .primaryColor,
                                                             ),
                                                           ),
                                                         ),
@@ -566,8 +539,8 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                         });
                                       },
                                       activeColor:
-                                          FyreworkrColors.fyreworkBlack,
-                                      checkColor: FyreworkrColors.white,
+                                          Theme.of(context).primaryColor,
+                                      checkColor: Theme.of(context).accentColor,
                                     ),
                                   ),
                                   SizedBox(
@@ -603,7 +576,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
       scrollController.animateTo(0,
           duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       return Container(
-        color: FyreworkrColors.fyreworkBlack,
+        color: Theme.of(context).primaryColor,
         width: double.infinity,
         padding: EdgeInsets.all(8.0),
         child: Row(

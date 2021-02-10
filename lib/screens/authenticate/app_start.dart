@@ -26,7 +26,7 @@ class _StartPageState extends State<StartPage> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: FyreworkrColors.fyreworkBlack,
+        backgroundColor: Theme.of(context).primaryColor,
         // body: ListView(
         //   children: [
         //     Container(

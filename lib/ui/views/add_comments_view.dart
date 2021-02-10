@@ -397,7 +397,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                                     .shrinkWrap,
                                             splashColor: Colors.green,
                                             color:
-                                                FyreworkrColors.fyreworkBlack,
+                                                Theme.of(context).primaryColor,
                                             child: Text(
                                               widget.passedGigValue ==
                                                       'Gigs I can do'
@@ -558,7 +558,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                 ),
                 bottom: PreferredSize(
                     child: Container(
-                      color: FyreworkrColors.fyreworkBlack,
+                      color: Theme.of(context).primaryColor,
                       height: 0.5,
                     ),
                     preferredSize: Size.fromHeight(4.0)),
@@ -581,7 +581,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               CustomSwitch(
-                                activeColor: FyreworkrColors.fyreworkBlack,
+                                activeColor: Theme.of(context).primaryColor,
                                 value: isPrivateComment,
                                 onChanged: (value) {
                                   setState(() {
@@ -631,7 +631,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                               IconButton(
                                 icon: Icon(
                                   Icons.send,
-                                  color: FyreworkrColors.fyreworkBlack,
+                                  color: Theme.of(context).primaryColor,
                                 ),
                                 onPressed: () {
                                   addComment(false);

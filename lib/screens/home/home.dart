@@ -70,7 +70,7 @@ class _HomeState extends State<Home> {
           physics: NeverScrollableScrollPhysics(),
         ),
         bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: FyreworkrColors.fyreworkBlack,
+          backgroundColor: Theme.of(context).primaryColor,
           showSelectedLabels: false,
           showUnselectedLabels: false,
           type: BottomNavigationBarType.fixed,

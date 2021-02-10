@@ -145,9 +145,10 @@ class SearchUsers extends SearchDelegate<OtherUser> {
                                       )
                                     : CircleAvatar(
                                         backgroundColor:
-                                            Theme.of(context).primaryColor,
-                                        backgroundImage:
-                                            NetworkImage(u['userAvatarUrl']),
+                                            Theme.of(context).hintColor,
+                                        backgroundImage: NetworkImage(
+                                          u['userAvatarUrl'],
+                                        ),
                                         radius: 20,
                                       ),
                                 title: Container(
@@ -157,10 +158,12 @@ class SearchUsers extends SearchDelegate<OtherUser> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(u['username'],
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Theme.of(context)
-                                                  .accentColor),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              .copyWith(
+                                                  color: Theme.of(context)
+                                                      .accentColor),
                                           overflow: TextOverflow.ellipsis),
                                       SizedBox(
                                         height: 5,
@@ -170,16 +173,25 @@ class SearchUsers extends SearchDelegate<OtherUser> {
                                               u['lengthOfOngoingGigsByGigId']
                                                       .toString() +
                                                   ' gigs',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.grey[500],
-                                              ),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText2
+                                                  .copyWith(
+                                                      color: Theme.of(context)
+                                                          .hintColor),
                                               overflow: TextOverflow.ellipsis)
                                           : Text(u['name'],
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.grey[500],
-                                              ),
+                                              // style: TextStyle(
+                                              //   fontSize: 12,
+                                              //   color:
+                                              //       Theme.of(context).hintColor,
+                                              // ),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText2
+                                                  .copyWith(
+                                                      color: Theme.of(context)
+                                                          .hintColor),
                                               overflow: TextOverflow.ellipsis),
                                     ],
                                   ),
@@ -202,20 +214,26 @@ class SearchUsers extends SearchDelegate<OtherUser> {
                                             final hashtagItem =
                                                 u['favoriteHashtags'][index] +
                                                     ' ';
-                                            return Text('$hashtagItem',
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: Theme.of(context)
-                                                        .accentColor));
+                                            return Text(
+                                              '$hashtagItem',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1
+                                                  .copyWith(
+                                                      color: Theme.of(context)
+                                                          .accentColor),
+                                            );
                                           },
                                         ),
                                       ),
                                       Text(
                                         u['location'],
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.grey[500],
-                                        ),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText2
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .hintColor),
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ],

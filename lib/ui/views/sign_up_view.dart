@@ -433,7 +433,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       scrollController.animateTo(0,
           duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       return Container(
-        color: FyreworkrColors.fyreworkBlack,
+        color: Theme.of(context).primaryColor,
         width: double.infinity,
         padding: EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
@@ -481,7 +481,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       scrollController.animateTo(0,
           duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       return Container(
-        color: FyreworkrColors.fyreworkBlack,
+        color: Theme.of(context).primaryColor,
         width: double.infinity,
         padding: EdgeInsets.all(8.0),
         child: Row(
@@ -540,7 +540,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       _headerText,
       maxLines: 1,
       textAlign: TextAlign.center,
-      style: TextStyle(color: FyreworkrColors.black, fontSize: 25),
+      style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 25),
     );
   }
 
@@ -824,7 +824,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                   signUpDecoraiton: true,
                 ),
                 IconButton(
-                  color: FyreworkrColors.fyreworkBlack,
+                  color: Theme.of(context).primaryColor,
                   onPressed: () {
                     getUserLocation();
                   },
@@ -853,8 +853,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                         print(_isMinor);
                       });
                     },
-                    activeColor: FyreworkrColors.fyreworkBlack,
-                    checkColor: FyreworkrColors.white,
+                    activeColor: Theme.of(context).primaryColor,
+                    checkColor: Theme.of(context).accentColor,
                   ),
                 ],
               ),
@@ -877,16 +877,12 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           validator: EmailValidator.validate,
           style: TextStyle(fontSize: 16.0),
           decoration: buildSignUpInputDecoration('Email'),
-          // onChanged: (val) {
-          //   setState(() => _email = val);
-          // },
           onSaved: (val) => _email = val,
         ),
       );
       textFields.add(SizedBox(height: 20));
     }
-    // if (authFormType != AuthFormType.reset &&
-    //     authFormType != AuthFormType.phone) {
+
     if (authFormType != AuthFormType.reset) {
       String _submitButtonText;
       if (authFormType == AuthFormType.signUp) {
@@ -942,7 +938,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                     ),
                     child: FlatButton(
                       color: Theme.of(context).primaryColor,
-                      textColor: FyreworkrColors.white,
+                      textColor: Theme.of(context).accentColor,
                       child: Text(
                         _submitButtonText,
                         style: TextStyle(
@@ -1008,7 +1004,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                 ),
                 child: FlatButton(
                   color: Theme.of(context).primaryColor,
-                  textColor: FyreworkrColors.white,
+                  textColor: Theme.of(context).accentColor,
                   child: Text(
                     _submitButtonText,
                     style: TextStyle(
@@ -1031,53 +1027,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       );
     }
 
-    // Phone authentication
-    // if (authFormType == AuthFormType.phone) {
-    //   textFields.add(
-    //     // TextFormField(
-    //     //   style: TextStyle(fontSize: 22.0),
-    //     //   decoration: buildSignUpInputDecoration('Enter Phone'),
-    //     //   onChanged: (val) {
-    //     //     setState(() => _phone = val);
-    //     //   },
-    //     //   onSaved: (val) => _password = val,
-    //     // ),
-    //     Container(
-    //       width: MediaQuery.of(context).size.width * 0.7,
-    //       // child: InternationalPhoneInput(
-    //       //   decoration: buildSignUpInputDecoration('Enter Phone Number'),
-    //       //   onPhoneNumberChange: onPhoneNumberChange,
-    //       //   initialPhoneNumber: _phone,
-    //       //   initialSelection: 'US',
-    //       //   showCountryCodes: true,
-    //       //   showCountryFlags: true,
-    //       // ),
-    //       child: InternationalPhoneNumberInput(
-    //         onInputChanged: (PhoneNumber number) {
-    //           print(number.phoneNumber);
-    //           setState(() {
-    //             _phone = number.toString();
-    //           });
-    //         },
-    //         onInputValidated: (bool value) {
-    //           print(value);
-    //         },
-    //         ignoreBlank: false,
-    //         autoValidate: false,
-    //         selectorTextStyle: TextStyle(color: Colors.black),
-    //         textFieldController: phoneNumberController,
-    //         inputBorder: OutlineInputBorder(),
-    //         selectorType: PhoneInputSelectorType.DIALOG,
-    //       ),
-    //     ),
-    //   );
-    //   textFields.add(
-    //     SizedBox(
-    //       height: 20,
-    //     ),
-    //   );
-    // }
-
     return textFields;
   }
 
@@ -1097,14 +1046,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       _switchButtonText = 'cancel';
       _newformState = 'signIn';
       _showSocial = false;
-    }
-    //  else if (authFormType == AuthFormType.phone) {
-    //   _submitButtonText = 'Continue';
-    //   _switchButtonText = 'Cancel';
-    //   _newformState = 'SignIn';
-    //   _showSocial = false;
-    // }
-    else {
+    } else {
       _submitButtonText = 'Sign Up';
       _switchButtonText = 'Have an account? Sign In';
       _newformState = 'signIn';
@@ -1117,8 +1059,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               // width: MediaQuery.of(context).size.width * 0.8,
               width: double.infinity,
               child: RaisedButton(
-                color: FyreworkrColors.fyreworkBlack,
-                textColor: FyreworkrColors.white,
+                color: Theme.of(context).primaryColor,
+                textColor: Theme.of(context).accentColor,
                 child: Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
@@ -1134,23 +1076,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           : SizedBox(
               height: 0,
             ),
-      // showForgotPassword(_showForgotPassword),
-      // Center(
-      //   child: FlatButton(
-      //     child: Flexible(
-      //       child: Text(
-      //         _switchButtonText,
-      //         style:
-      //             TextStyle(color: FyreworkrColors.fyreworkGrey, fontSize: 18),
-      //         // maxLines: 1,
-      //       ),
-      //     ),
-      //     onPressed: () {
-      //       switchFormState(_newformState);
-      //     },
-      //   ),
-      // ),
-      // SizedBox(height: 50),
       authFormType == AuthFormType.signIn
           ? SizedBox(height: 50)
           : SizedBox(
@@ -1164,8 +1089,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           GestureDetector(
             child: Text(
               _switchButtonText,
-              style:
-                  TextStyle(color: FyreworkrColors.fyreworkBlack, fontSize: 16),
+              style: TextStyle(
+                  color: Theme.of(context).primaryColor, fontSize: 16),
               // maxLines: 1,
             ),
             onTap: () {
@@ -1176,38 +1101,14 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         ],
       ),
       buildSocialIcons(_showSocial),
-
-      // splitting authFormType.convert from all other authFormTypes
-
-      // (authFormType == AuthFormType.convert)
-      //     ? SizedBox(
-      //         height: 0,
-      //       )
-      //     : SizedBox(
-      //         height: 0,
-      //       )
     ];
   }
 
   Widget showForgotPassword(bool visible) {
-    // return FlatButton(
-    //   padding: EdgeInsets.zero,
-    //   child: AutoSizeText(
-    //     // 'Forgotten Password?',
-    //     'Forgotten?',
-    //     style: TextStyle(color: FyreworkrColors.fyreworkBlack, fontSize: 16),
-    //     maxLines: 1,
-    //   ),
-    //   onPressed: () {
-    //     setState(() {
-    //       authFormType = AuthFormType.reset;
-    //     });
-    //   },
-    // );
     return GestureDetector(
         child: Text(
           'Forgotten?',
-          style: TextStyle(color: FyreworkrColors.fyreworkBlack, fontSize: 16),
+          style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16),
           maxLines: 1,
         ),
         onTap: () {
@@ -1218,7 +1119,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   }
 
   Widget buildSocialIcons(bool visible) {
-    // final _auth = Provider.of(context).auth;
     return Visibility(
       child: Column(
         children: <Widget>[

@@ -65,7 +65,7 @@ class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
               return Builder(
                 builder: (BuildContext context) {
                   return Container(
-                    color: FyreworkrColors.fyreworkBlack,
+                    color: Theme.of(context).primaryColor,
                     child: Image.asset(
                       url,
                       fit: BoxFit.fill,
@@ -87,11 +87,10 @@ class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
                       margin:
                           EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
                       decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: _current == index
-                            ? FyreworkrColors.fyreworkBlack
-                            : FyreworkrColors.fyreworkGrey,
-                      ),
+                          shape: BoxShape.circle,
+                          color: _current == index
+                              ? Theme.of(context).primaryColor
+                              : Theme.of(context).hintColor),
                     );
                   }),
                 )

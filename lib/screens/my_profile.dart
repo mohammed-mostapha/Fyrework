@@ -91,7 +91,7 @@ class _MyProfileViewState extends State<MyProfileView> {
   }
 
   navigateToSelectProfilePicture() async {
-    ((BuildContext context, int index) async {
+    (BuildContext context, int index) async {
       final PickMethodModel model = pickMethods[index];
 
       final List<AssetEntity> retrievedAssets =
@@ -111,7 +111,7 @@ class _MyProfileViewState extends State<MyProfileView> {
           }
         }();
       }
-    }(context, 0));
+    }(context, 0);
   }
 
   List<PickMethodModel> get pickMethods => <PickMethodModel>[
@@ -201,140 +201,12 @@ class _MyProfileViewState extends State<MyProfileView> {
             MyProfileView.myPhoneNumber = phone;
             MyUser.phoneNumber = phone;
           });
-
-          // showDialog(
-          //     context: context,
-          //     builder: (context) => Container(
-          //           child: Center(
-          //             child: AlertDialog(
-          //               title: Text('Verification completed'),
-          //               content: FlatButton(
-          //                 color: Theme.of(context).primaryColor,
-          //                 onPressed: () {
-          //                   print(
-          //                       'verification completed - MyUser.phoneNumber: ${MyUser.phoneNumber}');
-          //                   Navigator.of(context, rootNavigator: true).pop();
-          //                 },
-          //                 child: Text(
-          //                   'Dismiss',
-          //                   style: TextStyle(
-          //                     fontSize: 16,
-          //                     color: Colors.white,
-          //                   ),
-          //                 ),
-          //               ),
-          //             ),
-          //           ),
-          //         ));
-          // _firebaseAuth
-          //     .signInWithCredential(authCredential)
-          //     .then((AuthResult result) {
-          //   Navigator.of(context).pushReplacementNamed('/home');
-          // }).catchError((e) {
-          //   return "error";
-          // });
         },
         verificationFailed: (AuthException exception) {
           // return "error";
-          showDialog(
-              context: context,
-              builder: (context) => Container(
-                    // height: 200,
-                    child: Center(
-                      child: AlertDialog(
-                        title: Text('Verification failed'),
-                        content: FlatButton(
-                          color: Theme.of(context).primaryColor,
-                          onPressed: () {
-                            Navigator.of(context, rootNavigator: true).pop();
-                          },
-                          child: Text(
-                            'Dismiss',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ));
         },
         codeSent: (String verificationId, [int forceResendingToken]) {
           return;
-          // showDialog(
-          //     context: context,
-          //     barrierDismissible: true,
-          //     builder: (context) => Container(
-          //           child: Center(
-          //             child: AlertDialog(
-          //               title: Text('Enter code from sms'),
-          //               content: Column(
-          //                 mainAxisSize: MainAxisSize.min,
-          //                 children: <Widget>[
-          //                   TextField(
-          //                     controller: _codeController,
-          //                   )
-          //                 ],
-          //               ),
-          //               actions: <Widget>[
-          //                 FlatButton(
-          //                   child: Text("submit"),
-          //                   textColor: FyreworkrColors.white,
-          //                   color: Theme.of(context).primaryColor,
-          //                   onPressed: () async {
-          //                     // try {
-          //                     //   await _firebaseAuth
-          //                     //       .signInWithCredential(
-          //                     //           PhoneAuthProvider.getCredential(
-          //                     //               verificationId: verificationId,
-          //                     //               smsCode:
-          //                     //                   _codeController.text.trim()))
-          //                     //       .then((value) async {
-          //                     //     if (value.user != null) {
-          //                     //       MyUser.phoneNumber = phone;
-          //                     //       MyProfileView.myPhoneNumber = phone;
-          //                     //     }
-          //                     //     print('print: all good');
-          //                     //     Navigator.of(context).pop();
-          //                     //   });
-
-          //                     //   // }).catchError((e) {
-          //                     //   //   return "error";
-          //                     //   // });
-          //                     // } catch (e) {
-          //                     //   FocusScope.of(context).unfocus();
-          //                     //   showDialog(
-          //                     //       context: context,
-          //                     //       builder: (context) => Container(
-          //                     //             child: Center(
-          //                     //               child: AlertDialog(
-          //                     //                 title:
-          //                     //                     Text('Verification failed'),
-          //                     //                 content: FlatButton(
-          //                     //                   color: Theme.of(context)
-          //                     //                       .primaryColor,
-          //                     //                   onPressed: () {
-          //                     //                     Navigator.of(context).pop();
-          //                     //                   },
-          //                     //                   child: Text(
-          //                     //                     'Dismiss',
-          //                     //                     style: TextStyle(
-          //                     //                       fontSize: 16,
-          //                     //                       color: Colors.white,
-          //                     //                     ),
-          //                     //                   ),
-          //                     //                 ),
-          //                     //               ),
-          //                     //             ),
-          //                     //           ));
-          //                     // }
-          //                   },
-          //                 )
-          //               ],
-          //             ),
-          //           ),
-          //         ));
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           verificationId = verificationId;
@@ -383,7 +255,7 @@ class _MyProfileViewState extends State<MyProfileView> {
             ),
           ),
           endDrawer: myProfileDrawer(),
-          backgroundColor: FyreworkrColors.fyreworkBlack,
+          backgroundColor: Theme.of(context).primaryColor,
           body: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Column(
@@ -517,7 +389,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                             leading: Container(),
                             title: Container(),
                             bottom: TabBar(
-                              indicatorColor: FyreworkrColors.fyreworkBlack,
+                              indicatorColor: Theme.of(context).primaryColor,
                               tabs: [
                                 Tab(
                                     child: SizedBox(
@@ -526,28 +398,28 @@ class _MyProfileViewState extends State<MyProfileView> {
                                   child: SvgPicture.asset(
                                     grid,
                                     semanticsLabel: 'grid',
-                                    color: FyreworkrColors.fyreworkBlack,
+                                    color: Theme.of(context).primaryColor,
                                   ),
                                 )),
                                 Tab(
                                   child: FaIcon(
                                     FontAwesomeIcons.checkCircle,
                                     size: 16,
-                                    color: FyreworkrColors.fyreworkBlack,
+                                    color: Theme.of(context).primaryColor,
                                   ),
                                 ),
                                 Tab(
                                   child: FaIcon(
                                     FontAwesomeIcons.thumbsUp,
                                     size: 16,
-                                    color: FyreworkrColors.fyreworkBlack,
+                                    color: Theme.of(context).primaryColor,
                                   ),
                                 ),
                                 Tab(
                                   child: FaIcon(
                                     FontAwesomeIcons.star,
                                     size: 16,
-                                    color: FyreworkrColors.fyreworkBlack,
+                                    color: Theme.of(context).primaryColor,
                                   ),
                                 ),
                               ],
@@ -586,7 +458,7 @@ class _MyProfileViewState extends State<MyProfileView> {
       scrollController.animateTo(0,
           duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       return Container(
-        color: FyreworkrColors.fyreworkBlack,
+        color: Theme.of(context).primaryColor,
         width: double.infinity,
         padding: EdgeInsets.all(8.0),
         child: Row(
@@ -633,7 +505,7 @@ class _MyProfileViewState extends State<MyProfileView> {
       scrollController.animateTo(0,
           duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       return Container(
-        color: FyreworkrColors.fyreworkBlack,
+        color: Theme.of(context).primaryColor,
         width: double.infinity,
         padding: EdgeInsets.all(8.0),
         child: Row(
@@ -674,32 +546,13 @@ class _MyProfileViewState extends State<MyProfileView> {
       height: 0,
     );
   }
-  // Widget displayUserMetadata(context) {
-  //   return Container(
-  //     width: MediaQuery.of(context).size.width,
-  //     child: Column(
-  //       children: <Widget>[
-  //         Padding(
-  //           padding: const EdgeInsets.all(8.0),
-  //           child: Flexible(
-  //             child: Text(
-  //               MyUser.email,
-  //               style: TextStyle(fontSize: 18),
-  //             ),
-  //           ),
-  //         ),
-  //         // showSignOut(context)
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Widget myProfileDrawer() {
     var platform = Theme.of(context).platform;
 
     return Container(
       decoration: BoxDecoration(
-          color: FyreworkrColors.fyreworkBlack,
+          color: Theme.of(context).primaryColor,
           border: Border(
             left: BorderSide(color: Colors.grey[50], width: 0.5),
           )),

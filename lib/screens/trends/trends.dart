@@ -63,30 +63,34 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
             ],
           ),
           bottom: TabBar(
-            indicatorColor: FyreworkrColors.fyreworkBlack,
+            indicatorColor: Theme.of(context).primaryColor,
             tabs: [
               Tab(
                 child: Text('All',
-                    style: TextStyle(color: FyreworkrColors.fyreworkBlack),
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                    ),
                     maxLines: 1),
               ),
               Tab(
                 child: Text(
                   'Gigs',
                   style: TextStyle(
-                    color: FyreworkrColors.fyreworkBlack,
+                    color: Theme.of(context).primaryColor,
                   ),
                   maxLines: 1,
                 ),
               ),
               Tab(
                 child: Text('Providers',
-                    style: TextStyle(color: FyreworkrColors.fyreworkBlack),
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                    ),
                     maxLines: 1),
               ),
             ],
           ),
-          backgroundColor: FyreworkrColors.white,
+          backgroundColor: Theme.of(context).accentColor,
         ),
         body: TabBarView(
           children: [
