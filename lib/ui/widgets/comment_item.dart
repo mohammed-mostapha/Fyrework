@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:myApp/models/myUser.dart';
 import 'package:myApp/services/firestore_service.dart';
-import 'package:myApp/ui/shared/theme.dart';
+import 'package:myApp/ui/shared/fyreworkTheme.dart';
 import 'package:myApp/ui/widgets/user_profile.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:expandable_text/expandable_text.dart';

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:myApp/ui/shared/theme.dart';
+import 'package:myApp/ui/shared/fyreworkTheme.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:provider/provider.dart';
 import '../wechat_assets_picker.dart';
@@ -34,8 +34,9 @@ class AssetPicker extends StatelessWidget {
           'Theme and theme color cannot be set at the same time.',
         ),
         gridCount = gridCount ?? 4,
-        themeColor =
-            pickerTheme?.colorScheme?.secondary ?? themeColor ?? C.themeColor,
+        themeColor = pickerTheme?.colorScheme?.secondary ??
+            themeColor ??
+            Color(0xFFFFFFFF),
         super(key: key) {
     Constants.textDelegate = textDelegate ?? DefaultTextDelegate();
   }

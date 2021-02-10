@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:myApp/ui/shared/theme.dart';
+import 'package:myApp/ui/shared/fyreworkTheme.dart';
 import 'package:video_player/video_player.dart';
 
 import '../constants/constants.dart';

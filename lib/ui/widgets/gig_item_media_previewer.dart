@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:myApp/ui/shared/theme.dart';
+import 'package:myApp/ui/shared/fyreworkTheme.dart';
 import 'package:better_player/better_player.dart';
 
 class GigItemMediaPreviewer extends StatefulWidget {

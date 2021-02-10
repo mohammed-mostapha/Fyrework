@@ -1,14 +1,10 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:myApp/screens/my_profile.dart';
 import 'package:myApp/services/database.dart';
 import 'package:myApp/models/myUser.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:myApp/services/storage_repo.dart';
-import 'package:myApp/ui/shared/theme.dart';
 import 'package:myApp/view_controllers/myUser_controller.dart';
 
 import '../locator.dart';
@@ -104,21 +100,6 @@ class AuthService {
   Future sendPasswordResetEmail(String email) async {
     return _firebaseAuth.sendPasswordResetEmail(email: email);
   }
-
-  // Create Anonymous User
-  // Future signInAnonymously() {
-  //   return _firebaseAuth.signInAnonymously();
-  // }
-
-  //Convert an anonymous user to a user with credentials
-  // Future convertUserWithEmail(
-  //     String email, String password, String name, String location) async {
-  //   final currentUser = await _firebaseAuth.currentUser();
-  //   final credential =
-  //       EmailAuthProvider.getCredential(email: email, password: password);
-  //   await currentUser.linkWithCredential(credential);
-  //   await updateUserName(name, currentUser);
-  // }
 
   // Converting an anonymous user to user with gmail
   Future convertWithGoogle() async {

@@ -80,17 +80,13 @@ class SearchUsers extends SearchDelegate<OtherUser> {
                   )));
     }
 
-    // bool searchWithHashtag = query.startsWith('#');
-    bool searchWithHashtag = query.startsWith(RegExp('#[a-zA-Z0-9]'));
+    // bool searchWithHashtag = query.startsWith(RegExp('#[a-zA-Z0-9]'));
+    bool searchWithHashtag = query.startsWith(RegExp('#'));
     return StreamBuilder<QuerySnapshot>(
-
-        // stream: DatabaseService().fetchUsersInSearch(),
-        // stream: query.startsWith('#')
-        stream: searchWithHashtag
-            ? DatabaseService().fetchUsersInSearchByFavoriteHashtags(query)
-            : DatabaseService().fetchUsersInSearch(),
+        stream: DatabaseService().fetchUsersInSearch(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          final hashtagsResults = snapshot.data.documents;
+          final hashtagsResults = snapshot.data.documents
+              .where((u) => u['favoriteHashtags'].contains(query));
 
           final handlesResults = snapshot.data.documents
               .where((u) => u['username'].contains(query));

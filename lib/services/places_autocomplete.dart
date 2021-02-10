@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myApp/models/myUser.dart';
-import 'package:myApp/ui/shared/theme.dart';
+import 'package:myApp/ui/shared/fyreworkTheme.dart';
 import 'package:uuid/uuid.dart';
-import '../ui/views/sign_up_view.dart';
 import 'address_search.dart';
 import 'place_service.dart';
 import '../ui/shared/constants.dart';

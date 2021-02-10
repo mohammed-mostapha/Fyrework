@@ -1,12 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myApp/app_localizations.dart';
 import 'package:myApp/screens/authenticate/app_start.dart';
 import 'package:myApp/screens/home/home.dart';
 import 'package:myApp/services/auth_service.dart';
-import 'package:myApp/ui/shared/theme.dart';
+import 'package:myApp/ui/shared/fyreworkTheme.dart';
 import 'package:myApp/ui/views/sign_up_view.dart';
-// import 'package:myApp/ui/widgets/provider_widget.dart';
 import 'package:myApp/view_controllers/myUser_controller.dart';
 import 'locator.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

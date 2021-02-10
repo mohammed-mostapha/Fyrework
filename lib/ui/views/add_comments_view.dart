@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:myApp/models/myUser.dart';
 import 'package:myApp/ui/shared/constants.dart';
-import 'package:myApp/ui/shared/theme.dart';
+import 'package:myApp/ui/shared/fyreworkTheme.dart';
 import 'package:myApp/ui/views/comments_view.dart';
 import 'package:myApp/viewmodels/add_comments_view_model.dart';
 import 'package:provider_architecture/provider_architecture.dart';

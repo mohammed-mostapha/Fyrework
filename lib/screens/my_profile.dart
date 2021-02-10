@@ -18,7 +18,7 @@ import 'package:myApp/services/places_autocomplete.dart';
 import 'package:myApp/services/storage_repo.dart';
 import 'package:myApp/ui/shared/constants.dart';
 import 'package:myApp/ui/views/sign_up_view.dart';
-import 'package:myApp/ui/shared/theme.dart';
+import 'package:myApp/ui/shared/fyreworkTheme.dart';
 import 'package:myApp/services/auth_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:myApp/ui/widgets/userRelated_gigItem.dart';

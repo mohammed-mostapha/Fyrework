@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myApp/app_localizations.dart';
-import 'package:myApp/ui/shared/theme.dart';
+import 'package:myApp/ui/shared/fyreworkTheme.dart';
 
 class StartPage extends StatefulWidget {
   @override

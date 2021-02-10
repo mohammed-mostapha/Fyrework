@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myApp/locator.dart';
 import 'package:myApp/services/database.dart';
-import 'package:myApp/ui/shared/theme.dart';
+import 'package:myApp/ui/shared/fyreworkTheme.dart';
 import 'package:myApp/ui/views/sign_up_view.dart';
 import 'package:myApp/services/auth_service.dart';
 import 'package:myApp/services/storage_repo.dart';
@@ -80,40 +80,6 @@ class _UserProfileViewState extends State<UserProfileView> {
                                     ),
                                   ),
                                 ),
-                                // StreamBuilder(
-                                //   stream: DatabaseService()
-                                //       .fetchUserData(widget.passedUserUid),
-                                //   builder: (context, snapshot) {
-                                //     if (!snapshot.hasData) {
-                                //       return Container(
-                                //         width: 0,
-                                //         height: 0,
-                                //       );
-                                //     } else if ((snapshot.hasData &&
-                                //         snapshot.data.ongoingGigsByGigId ==
-                                //             null)) {
-                                //       return Expanded(
-                                //         child: Center(
-                                //           child: Text(
-                                //             '0',
-                                //             style: TextStyle(
-                                //                 fontSize: 16,
-                                //                 color: Colors.white),
-                                //           ),
-                                //         ),
-                                //       );
-                                //     } else {
-                                //       return Expanded(
-                                //           child: Center(
-                                //         child: Text(
-                                //           '${snapshot.data.ongoingGigsByGigId.length}',
-                                //           style: TextStyle(
-                                //               fontSize: 16, color: Colors.white),
-                                //         ),
-                                //       ));
-                                //     }
-                                //   },
-                                // ),
                                 Expanded(
                                   child: Center(
                                     child: Text(

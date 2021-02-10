@@ -1,16 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:myApp/models/myUser.dart';
-import 'package:myApp/models/otherUser.dart';
 import 'package:myApp/screens/add_gig/addGigDetails.dart';
-import 'package:myApp/screens/myJobs.dart';
 import 'package:myApp/screens/my_profile.dart';
 import 'package:myApp/screens/trends/trends.dart';
-import 'package:myApp/services/database.dart';
-import 'package:myApp/ui/shared/theme.dart';
+import 'package:myApp/ui/shared/fyreworkTheme.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:myApp/ui/widgets/user_profile.dart';
 import 'package:myApp/services/searchUsersScreen.dart';
 
 class Home extends StatefulWidget {

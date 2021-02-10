@@ -75,13 +75,6 @@ class DatabaseService {
     return _usersCollection.snapshots();
   }
 
-  //fetch users by favoriteHashtags
-  Stream<QuerySnapshot> fetchUsersInSearchByFavoriteHashtags(query) {
-    return _usersCollection
-        .where('favoriteHashtags', arrayContains: query)
-        .snapshots();
-  }
-
   // listening to all gigs
   Stream<QuerySnapshot> listenToAllGigs() {
     return _gigsCollection.snapshots();

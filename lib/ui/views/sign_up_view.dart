@@ -10,7 +10,7 @@ import 'package:myApp/screens/add_gig/assets_picker/src/widget/asset_picker.dart
 import 'package:myApp/services/auth_service.dart';
 import 'package:myApp/services/popularHashtags.dart';
 import 'package:myApp/services/takenHandles.dart';
-import 'package:myApp/ui/shared/theme.dart';
+import 'package:myApp/ui/shared/fyreworkTheme.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:myApp/services/places_autocomplete.dart';
