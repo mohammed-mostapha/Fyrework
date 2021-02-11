@@ -8,6 +8,8 @@ import 'package:myApp/ui/widgets/user_profile.dart';
 import 'database.dart';
 
 class SearchUsersScreen extends StatefulWidget {
+  String query;
+  SearchUsersScreen({this.query});
   @override
   _SearchUsersScreenState createState() => _SearchUsersScreenState();
 }
@@ -16,10 +18,10 @@ class _SearchUsersScreenState extends State<SearchUsersScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => showSearch(
+          query: widget.query,
           context: context,
-          delegate: SearchUsers(
-            DatabaseService().fetchUsersInSearch(),
-          ),
+          delegate:
+              SearchUsers(otherUser: DatabaseService().fetchUsersInSearch()),
         ));
   }
 
@@ -36,7 +38,8 @@ class SearchUsers extends SearchDelegate<OtherUser> {
   final Stream<QuerySnapshot> otherUser;
   final String hashtagSymbol = 'assets/svgs/flaticon/hashtag_symbol.svg';
 
-  SearchUsers(this.otherUser);
+  SearchUsers({this.otherUser});
+
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -62,7 +65,6 @@ class SearchUsers extends SearchDelegate<OtherUser> {
     return Container(
       width: 0,
       height: 0,
-      color: Theme.of(context).primaryColor,
     );
   }
 
@@ -74,7 +76,6 @@ class SearchUsers extends SearchDelegate<OtherUser> {
           MaterialPageRoute(
               builder: (context) => UserProfileView(
                     passedUserUid: userId,
-                    // passedUsername: widget.gigOwnerUsername,
                     fromComment: false,
                     fromGig: true,
                   )));
@@ -82,6 +83,7 @@ class SearchUsers extends SearchDelegate<OtherUser> {
 
     // bool searchWithHashtag = query.startsWith(RegExp('#[a-zA-Z0-9]'));
     bool searchWithHashtag = query.startsWith(RegExp('#'));
+
     return StreamBuilder<QuerySnapshot>(
         stream: DatabaseService().fetchUsersInSearch(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -254,7 +256,7 @@ class SearchUsers extends SearchDelegate<OtherUser> {
               color: Theme.of(context).primaryColor,
               child: Center(
                 child: Text(
-                  'No results found',
+                  'No users found under this creiteria',
                   style: TextStyle(
                     fontSize: 16,
                     color: Theme.of(context).accentColor,

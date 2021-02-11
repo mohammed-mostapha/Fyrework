@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:core';
+import 'dart:math';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -358,25 +359,29 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                 SizedBox(height: 5),
                 Container(
                   width: double.infinity,
-                  child: GestureDetector(
-                    child: Wrap(
-                      children: widget.gigHashtags
-                          .map<Widget>((e) => Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(0, 0, 2.5, 2.5),
+                  child: Wrap(
+                    children: widget.gigHashtags
+                        .map<Widget>((e) => Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 5, 2.5),
+                              child: GestureDetector(
                                 child: Text(
                                   '$e',
                                   style: TextStyle(
                                       fontSize: 12,
                                       color: Theme.of(context).primaryColor),
                                 ),
-                              ))
-                          .toList(),
-                    ),
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => SearchUsersScreen()));
-                    },
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              SearchUsersScreen(
+                                                query: e,
+                                              )));
+                                },
+                              ),
+                            ))
+                        .toList(),
                   ),
                 ),
                 SizedBox(height: 10),
