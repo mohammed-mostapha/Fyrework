@@ -4,9 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:myApp/models/myUser.dart';
 import 'package:myApp/ui/shared/constants.dart';
-import 'package:myApp/ui/shared/fyreworkTheme.dart';
 import 'package:myApp/ui/views/comments_view.dart';
-import 'package:myApp/viewmodels/add_comments_view_model.dart';
+import 'package:myApp/viewmodels/add_comment_view_model.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:custom_switch/custom_switch.dart';
 
@@ -70,7 +69,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
   addComment(bool persistentPrivateComment) {
     if (_addCommentsController.text.isNotEmpty) {
       print('_addCommentsController: ${_addCommentsController.text}');
-      AddCommentsViewModel().addComment(
+      AddCommentViewModel().addComment(
         gigIdHoldingComment: widget.passedGigId,
         gigOwnerId: widget.passedGigOwnerId,
         commentOwnerUsername: username,
@@ -108,7 +107,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
     if (_proposalFormKey.currentState.validate()) {
       // isPrivateComment = true;
       proposal = true;
-      await AddCommentsViewModel().addComment(
+      await AddCommentViewModel().addComment(
           gigIdHoldingComment: widget.passedGigId,
           gigOwnerId: widget.passedGigOwnerId,
           commentOwnerUsername: username,
@@ -462,9 +461,9 @@ class _AddCommentsViewState extends State<AddCommentsView> {
         appointedUser = appointedUserId == MyUser.uid ? true : false;
 
         return Container(
-          child: ViewModelProvider<AddCommentsViewModel>.withConsumer(
+          child: ViewModelProvider<AddCommentViewModel>.withConsumer(
             viewModelBuilder: () {
-              return AddCommentsViewModel();
+              return AddCommentViewModel();
             },
             builder: (context, model, child) => Scaffold(
               appBar: new AppBar(
@@ -602,7 +601,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                   onFieldSubmitted:
                                       (String submittedString) async {
                                     if (submittedString.isNotEmpty) {
-                                      await AddCommentsViewModel().addComment(
+                                      await AddCommentViewModel().addComment(
                                         gigIdHoldingComment: widget.passedGigId,
                                         gigOwnerId: widget.passedGigOwnerId,
                                         commentOwnerUsername: username,
@@ -684,7 +683,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                         onFieldSubmitted:
                                             (String submittedString) async {
                                           if (submittedString.isNotEmpty) {
-                                            await AddCommentsViewModel()
+                                            await AddCommentViewModel()
                                                 .addComment(
                                               gigIdHoldingComment:
                                                   widget.passedGigId,

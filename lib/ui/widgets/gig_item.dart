@@ -9,6 +9,7 @@ import 'package:myApp/services/searchUsersScreen.dart';
 import 'package:myApp/ui/views/add_comments_view.dart';
 import 'package:myApp/ui/widgets/gig_item_media_previewer.dart';
 import 'package:myApp/ui/widgets/user_profile.dart';
+import 'package:timeago/timeago.dart' as timeAgo;
 
 class GigItem extends StatefulWidget {
   final appointed;
@@ -19,6 +20,7 @@ class GigItem extends StatefulWidget {
   final gigOwnerEmail;
   final gigOwnerAvatarUrl;
   final gigOwnerUsername;
+  final gigTime;
   final gigOwnerLocation;
   final gigLocation;
   final gigHashtags;
@@ -43,6 +45,7 @@ class GigItem extends StatefulWidget {
     this.gigOwnerEmail,
     this.gigOwnerAvatarUrl,
     this.gigOwnerUsername,
+    this.gigTime,
     this.gigOwnerLocation,
     this.gigLocation,
     this.gigHashtags,
@@ -154,6 +157,53 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    timeAgo.setLocaleMessages('de', timeAgo.DeMessages());
+    timeAgo.setLocaleMessages('dv', timeAgo.DvMessages());
+    timeAgo.setLocaleMessages('dv_short', timeAgo.DvShortMessages());
+    timeAgo.setLocaleMessages('fr', timeAgo.FrMessages());
+    timeAgo.setLocaleMessages('fr_short', timeAgo.FrShortMessages());
+    timeAgo.setLocaleMessages('gr', timeAgo.GrMessages());
+    timeAgo.setLocaleMessages('gr_short', timeAgo.GrShortMessages());
+    timeAgo.setLocaleMessages('ca', timeAgo.CaMessages());
+    timeAgo.setLocaleMessages('ca_short', timeAgo.CaShortMessages());
+    timeAgo.setLocaleMessages('cs', timeAgo.CsMessages());
+    timeAgo.setLocaleMessages('cs_short', timeAgo.CsShortMessages());
+    timeAgo.setLocaleMessages('ja', timeAgo.JaMessages());
+    timeAgo.setLocaleMessages('km', timeAgo.KmMessages());
+    timeAgo.setLocaleMessages('km_short', timeAgo.KmShortMessages());
+    timeAgo.setLocaleMessages('ko', timeAgo.KoMessages());
+    timeAgo.setLocaleMessages('id', timeAgo.IdMessages());
+    timeAgo.setLocaleMessages('pt_BR', timeAgo.PtBrMessages());
+    timeAgo.setLocaleMessages('pt_BR_short', timeAgo.PtBrShortMessages());
+    timeAgo.setLocaleMessages('zh_CN', timeAgo.ZhCnMessages());
+    timeAgo.setLocaleMessages('zh', timeAgo.ZhMessages());
+    timeAgo.setLocaleMessages('it', timeAgo.ItMessages());
+    timeAgo.setLocaleMessages('it_short', timeAgo.ItShortMessages());
+    timeAgo.setLocaleMessages('fa', timeAgo.FaMessages());
+    timeAgo.setLocaleMessages('ru', timeAgo.RuMessages());
+    timeAgo.setLocaleMessages('tr', timeAgo.TrMessages());
+    timeAgo.setLocaleMessages('pl', timeAgo.PlMessages());
+    timeAgo.setLocaleMessages('th', timeAgo.ThMessages());
+    timeAgo.setLocaleMessages('th_short', timeAgo.ThShortMessages());
+    timeAgo.setLocaleMessages('nb_NO', timeAgo.NbNoMessages());
+    timeAgo.setLocaleMessages('nb_NO_short', timeAgo.NbNoShortMessages());
+    timeAgo.setLocaleMessages('nn_NO', timeAgo.NnNoMessages());
+    timeAgo.setLocaleMessages('nn_NO_short', timeAgo.NnNoShortMessages());
+    timeAgo.setLocaleMessages('ku', timeAgo.KuMessages());
+    timeAgo.setLocaleMessages('ku_short', timeAgo.KuShortMessages());
+    timeAgo.setLocaleMessages('ar', timeAgo.ArMessages());
+    timeAgo.setLocaleMessages('ar_short', timeAgo.ArShortMessages());
+    timeAgo.setLocaleMessages('ko', timeAgo.KoMessages());
+    timeAgo.setLocaleMessages('vi', timeAgo.ViMessages());
+    timeAgo.setLocaleMessages('vi_short', timeAgo.ViShortMessages());
+    timeAgo.setLocaleMessages('tr', timeAgo.TrMessages());
+    timeAgo.setLocaleMessages('ta', timeAgo.TaMessages());
+    timeAgo.setLocaleMessages('ro', timeAgo.RoMessages());
+    timeAgo.setLocaleMessages('ro_short', timeAgo.RoShortMessages());
+    timeAgo.setLocaleMessages('sv', timeAgo.SvMessages());
+    timeAgo.setLocaleMessages('sv_short', timeAgo.SvShortMessages());
+    var locale = 'en';
+
     ScaleTransition likeButton = ScaleTransition(
       scale: _likeAnimationController,
       child: GestureDetector(
@@ -451,6 +501,20 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                           ),
                         ),
                       ],
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      timeAgo.format(widget.gigTime.toDate()),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).primaryColor,
+                      ),
                     ),
                   ],
                 ),

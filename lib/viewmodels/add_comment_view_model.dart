@@ -5,7 +5,7 @@ import 'package:myApp/services/navigation_service.dart';
 import 'package:myApp/viewmodels/base_model.dart';
 import 'package:myApp/services/firestore_service.dart';
 
-class AddCommentsViewModel extends BaseModel {
+class AddCommentViewModel extends BaseModel {
   final FirestoreService _firestoreService = locator<FirestoreService>();
   final NavigationService _navigationService = locator<NavigationService>();
 
@@ -53,10 +53,6 @@ class AddCommentsViewModel extends BaseModel {
             preferredPaymentMethod: preferredPaymentMethod,
           ),
           gigIdHoldingComment);
-
-      // if (result is String) {
-      //   // _navigationService.previewAllGigs();
-      // } else {}
     } else {
       result = await _firestoreService.updateComment(
         Comment(
@@ -67,7 +63,7 @@ class AddCommentsViewModel extends BaseModel {
           commentOwnerAvatarUrl: commentOwnerAvatarUrl,
           commentOwnerUsername: commentOwnerUsername,
           commentBody: commentBody,
-          commentTime: commentTime,
+          // commentTime: commentTime,
           isPrivateComment: isPrivateComment,
           persistentPrivateComment: persistentPrivateComment,
           proposal: proposal,
