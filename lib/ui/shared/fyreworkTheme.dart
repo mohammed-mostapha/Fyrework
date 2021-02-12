@@ -31,11 +31,13 @@ ThemeData fyreworkTheme() {
         // fontFamily: 'Montserrat-Light',
         fontSize: 16.0,
         color: Color(0xFF000000),
+        fontWeight: FontWeight.normal,
       ),
       bodyText2: base.headline6.copyWith(
         // fontFamily: 'Montserrat-Light',
         fontSize: 12.0,
         color: Color(0xFF000000),
+        fontWeight: FontWeight.normal,
       ),
       // headline6: base.headline5.copyWith(
       //   // fontFamily: 'Montserrat-Light',

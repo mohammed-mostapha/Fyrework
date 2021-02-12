@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myApp/models/myUser.dart';
 import 'package:myApp/models/otherUser.dart';
+import 'package:myApp/ui/views/individual_gig_item.dart';
 import 'package:myApp/ui/widgets/user_profile.dart';
 import 'database.dart';
 import 'package:rxdart/rxdart.dart';
@@ -100,22 +101,29 @@ class SearchUsers extends SearchDelegate<OtherUser> {
           return StreamBuilder<QuerySnapshot>(
             stream: DatabaseService().fetchUsersInSearch(),
             builder: (context, AsyncSnapshot<QuerySnapshot> usersSnapshot) {
-              final gigLocationResults = gigsSnapshot.data.documents.where(
-                // (g) => g['gigLocation'].contains(query),
-                (g) => "${g['gigLocation']}".toLowerCase().contains(query),
-              );
-              final hashtagsResults = gigsSnapshot.data.documents
-                  .where((g) => g['gigHashtags'].contains(query));
-              final handlesResults = usersSnapshot.data.documents.where((u) =>
-                  "${u['username']}"
-                      .toLowerCase()
-                      .contains(query.substring(1)));
+              Iterable<DocumentSnapshot> gigLocationResults;
+              Iterable<DocumentSnapshot> hashtagsResults;
+              Iterable<DocumentSnapshot> handleResults;
+
+              if (gigsSnapshot.hasData && gigsSnapshot.data != null) {
+                gigLocationResults = gigsSnapshot.data.documents.where(
+                  (g) => "${g['gigLocation']}".toLowerCase().contains(query),
+                );
+                hashtagsResults = gigsSnapshot.data.documents
+                    .where((g) => g['gigHashtags'].contains(query));
+              }
+              if (usersSnapshot.hasData && usersSnapshot.data != null) {
+                handleResults = usersSnapshot.data.documents.where((u) =>
+                    "${u['username']}"
+                        .toLowerCase()
+                        .contains(query.substring(1)));
+              }
 
               var searchCriteria = query == ''
                   ? gigLocationResults
                   : searchWithHashtag
                       ? hashtagsResults
-                      : searchWithHandle ? handlesResults : gigLocationResults;
+                      : searchWithHandle ? handleResults : gigLocationResults;
 
               if (searchCriteria == gigLocationResults ||
                   searchCriteria == hashtagsResults) {
@@ -440,7 +448,14 @@ class SearchUsers extends SearchDelegate<OtherUser> {
                                   ),
                                 ),
                                 onTap: () {
-                                  showUserProfile(g['id']);
+                                  // showUserProfile(g['id']);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              IndividualGigItem(
+                                                gigId: "${g['gigId']}",
+                                              )));
                                 },
                               ))
                           .toList(),
@@ -463,7 +478,7 @@ class SearchUsers extends SearchDelegate<OtherUser> {
               }
               // search difference
 
-              else if (searchCriteria == handlesResults) {
+              else if (searchCriteria == handleResults) {
                 if (!usersSnapshot.hasData) {
                   return Container(
                     color: Theme.of(context).primaryColor,

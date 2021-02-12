@@ -94,6 +94,12 @@ class DatabaseService {
         .snapshots();
   }
 
+  //fetch an individual gig
+  Stream<DocumentSnapshot> listenToAnIndividualGig(gigId) {
+    // return _gigsCollection.where('gigId', isEqualTo: gigId).snapshots();
+    return _gigsCollection.document(gigId).snapshots();
+  }
+
   Stream<QuerySnapshot> userOngoingGigsByGigOwnerId(String userId) {
     return _gigsCollection.where('gigOwnerId', isEqualTo: userId).snapshots();
   }
