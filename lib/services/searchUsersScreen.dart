@@ -95,539 +95,564 @@ class SearchUsers extends SearchDelegate<OtherUser> {
 
     return StreamBuilder<QuerySnapshot>(
         // stream: DatabaseService().fetchUsersInSearch(),
-        stream: !searchWithHandle
-            ? DatabaseService().listenToAllGigs()
-            : DatabaseService().fetchUsersInSearch(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          final gigLocationResults = snapshot.data.documents
-              .where((g) => g['gigLocation'].contains(query));
-          final hashtagsResults = snapshot.data.documents
-              .where((g) => g['gigHashtags'].contains(query));
-          final handlesResults = snapshot.data.documents
-              .where((u) => u['username'].contains(query.substring(1)));
-
-          var searchCriteria = query == ''
-              ? gigLocationResults
-              : searchWithHashtag
-                  ? hashtagsResults
-                  : searchWithHandle ? handlesResults : gigLocationResults;
-
-          if (searchCriteria == gigLocationResults ||
-              searchCriteria == hashtagsResults) {
-            if (!snapshot.hasData) {
-              return Container(
-                color: Theme.of(context).primaryColor,
-                child: Center(
-                  child: Text(
-                    '',
-                    style: TextStyle(
-                        fontSize: 16, color: Theme.of(context).primaryColor),
-                  ),
-                ),
+        stream: DatabaseService().listenToAllGigs(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> gigsSnapshot) {
+          return StreamBuilder<QuerySnapshot>(
+            stream: DatabaseService().fetchUsersInSearch(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> usersSnapshot) {
+              final gigLocationResults = gigsSnapshot.data.documents.where(
+                // (g) => g['gigLocation'].contains(query),
+                (g) => "${g['gigLocation']}".toLowerCase().contains(query),
               );
-            }
+              final hashtagsResults = gigsSnapshot.data.documents
+                  .where((g) => g['gigHashtags'].contains(query));
+              final handlesResults = usersSnapshot.data.documents.where((u) =>
+                  "${u['username']}"
+                      .toLowerCase()
+                      .contains(query.substring(1)));
 
-            if (searchCriteria.length > 0) {
-              return Container(
-                color: Theme.of(context).primaryColor,
-                child: ListView(
-                  children: searchCriteria
-                      .map<Widget>((g) => GestureDetector(
-                            child: Padding(
-                              padding: const EdgeInsets.all(5),
-                              child: Container(
-                                child: GestureDetector(
+              var searchCriteria = query == ''
+                  ? gigLocationResults
+                  : searchWithHashtag
+                      ? hashtagsResults
+                      : searchWithHandle ? handlesResults : gigLocationResults;
+
+              if (searchCriteria == gigLocationResults ||
+                  searchCriteria == hashtagsResults) {
+                if (!gigsSnapshot.hasData) {
+                  return Container(
+                    color: Theme.of(context).primaryColor,
+                    child: Center(
+                      child: Text(
+                        '',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Theme.of(context).primaryColor),
+                      ),
+                    ),
+                  );
+                }
+
+                if (searchCriteria.length > 0) {
+                  return Container(
+                    color: Theme.of(context).primaryColor,
+                    child: ListView(
+                      children: searchCriteria
+                          .map<Widget>((g) => GestureDetector(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5),
                                   child: Container(
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          child: Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                8, 8, 8, 8),
-                                            child: Column(
-                                              children: <Widget>[
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                    child: GestureDetector(
+                                      child: Container(
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        8, 8, 8, 8),
+                                                child: Column(
                                                   children: <Widget>[
-                                                    GestureDetector(
-                                                      child: Flexible(
-                                                        child: Container(
-                                                          width: 200,
-                                                          child: Row(
-                                                            children: [
-                                                              CircleAvatar(
-                                                                maxRadius: 20,
-                                                                backgroundColor:
-                                                                    Theme.of(
-                                                                            context)
-                                                                        .primaryColor,
-                                                                backgroundImage:
-                                                                    NetworkImage(
-                                                                  g['gigOwnerAvatarUrl'],
-                                                                ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: <Widget>[
+                                                        GestureDetector(
+                                                          child: Flexible(
+                                                            child: Container(
+                                                              width: 200,
+                                                              child: Row(
+                                                                children: [
+                                                                  CircleAvatar(
+                                                                    maxRadius:
+                                                                        20,
+                                                                    backgroundColor:
+                                                                        Theme.of(context)
+                                                                            .primaryColor,
+                                                                    backgroundImage:
+                                                                        NetworkImage(
+                                                                      g['gigOwnerAvatarUrl'],
+                                                                    ),
+                                                                  ),
+                                                                  Container(
+                                                                    width: 10,
+                                                                    height: 0,
+                                                                  ),
+                                                                  Flexible(
+                                                                    child: Text(
+                                                                      "${g['gigOwnerUsername']}"
+                                                                          .capitalize(),
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                               ),
-                                                              Container(
-                                                                width: 10,
-                                                                height: 0,
-                                                              ),
-                                                              Flexible(
-                                                                child: Text(
-                                                                  "${g['gigOwnerUsername']}"
-                                                                      .capitalize(),
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          16,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                ),
-                                                              ),
-                                                            ],
+                                                            ),
                                                           ),
+                                                          // onTap: showUserProfile,
                                                         ),
-                                                      ),
-                                                      // onTap: showUserProfile,
+                                                      ],
                                                     ),
                                                   ],
                                                 ),
-                                                // SizedBox(height: 10),
-                                              ],
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              8, 0, 8, 16.0),
-                                          child: Column(
-                                            children: <Widget>[
-                                              Container(
-                                                alignment: Alignment.centerLeft,
-                                                child: Text(
-                                                  "${g['gigPost']}"
-                                                      .capitalize(),
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(height: 5),
-                                              Container(
-                                                width: double.infinity,
-                                                child: Wrap(
-                                                  children: g['gigHashtags']
-                                                      .map<Widget>((h) =>
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .fromLTRB(
-                                                                    0,
-                                                                    0,
-                                                                    5,
-                                                                    2.5),
-                                                            child: Text(
-                                                              '$h',
-                                                              style: TextStyle(
-                                                                  fontSize: 12,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .primaryColor),
-                                                            ),
-                                                          ))
-                                                      .toList(),
-                                                ),
-                                              ),
-                                              SizedBox(height: 5),
-                                              Row(
-                                                children: [
-                                                  Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            2.5,
-                                                    child: Row(
-                                                      children: [
-                                                        SizedBox(
-                                                          width: 16,
-                                                          height: 16,
-                                                          child:
-                                                              SvgPicture.asset(
-                                                            mapMarkerAlt,
-                                                            semanticsLabel:
-                                                                'location',
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .primaryColor,
-                                                          ),
-                                                        ),
-                                                        Flexible(
-                                                          child: Text(
-                                                            g['gigLocation'],
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .bodyText2,
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      8, 0, 8, 16.0),
+                                              child: Column(
                                                 children: <Widget>[
-                                                  Row(
-                                                    children: <Widget>[
-                                                      SizedBox(
-                                                        width: 16,
-                                                        height: 16,
-                                                        child: SvgPicture.asset(
-                                                          hourglassStart,
-                                                          semanticsLabel:
-                                                              'hourglass-start',
-                                                          // color: Theme.of(context).primaryColor,
-                                                          // color: Theme.of(context).primaryColor,
-                                                        ),
+                                                  Container(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "${g['gigPost']}"
+                                                          .capitalize(),
+                                                      style: TextStyle(
+                                                        fontSize: 16,
                                                       ),
-                                                      Container(
-                                                        width: 5.0,
-                                                        height: 0,
-                                                      ),
-                                                      Container(
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                        child: FittedBox(
-                                                          fit: BoxFit.scaleDown,
-                                                          child: Text(
-                                                            // "${widget.gigDeadline.gigDeadline}",
-                                                            g['gigDeadlineInUnixMilliseconds'] !=
-                                                                    null
-                                                                // ? "${widget.gigDeadline.gigDeadline}"
-                                                                ? DateFormat(
-                                                                        'yyyy-MM-dd')
-                                                                    .format(DateTime
-                                                                        .fromMillisecondsSinceEpoch(
-                                                                            g['gigDeadlineInUnixMilliseconds']))
-                                                                : "Book Gig",
-                                                            style: TextStyle(
-                                                              fontSize: 16,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 5),
+                                                  Container(
+                                                    width: double.infinity,
+                                                    child: Wrap(
+                                                      children: g['gigHashtags']
+                                                          .map<Widget>(
+                                                              (h) => Padding(
+                                                                    padding:
+                                                                        const EdgeInsets.fromLTRB(
+                                                                            0,
+                                                                            0,
+                                                                            5,
+                                                                            2.5),
+                                                                    child: Text(
+                                                                      '$h',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              12,
+                                                                          color:
+                                                                              Theme.of(context).primaryColor),
+                                                                    ),
+                                                                  ))
+                                                          .toList(),
+                                                    ),
                                                   ),
                                                   SizedBox(height: 5),
                                                   Row(
-                                                    children: <Widget>[
+                                                    children: [
                                                       Container(
-                                                        child: FittedBox(
-                                                          fit: BoxFit.scaleDown,
-                                                          child: Text(
-                                                            g['gigCurrency'],
-                                                            style: TextStyle(
-                                                              fontSize: 16,
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width /
+                                                            2.5,
+                                                        child: Row(
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 16,
+                                                              height: 16,
+                                                              child: SvgPicture
+                                                                  .asset(
+                                                                mapMarkerAlt,
+                                                                semanticsLabel:
+                                                                    'location',
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .primaryColor,
+                                                              ),
                                                             ),
-                                                          ),
+                                                            Flexible(
+                                                              child: Text(
+                                                                g['gigLocation'],
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .bodyText2,
+                                                              ),
+                                                            )
+                                                          ],
                                                         ),
-                                                      ),
-                                                      Container(
-                                                        width: 2.5,
-                                                        height: 0,
-                                                      ),
-                                                      Container(
-                                                        child: FittedBox(
-                                                          fit: BoxFit.scaleDown,
-                                                          child: Text(
-                                                            g['gigBudget'],
-                                                            style: TextStyle(
-                                                              fontSize: 16,
+                                                      )
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: <Widget>[
+                                                      Row(
+                                                        children: <Widget>[
+                                                          SizedBox(
+                                                            width: 16,
+                                                            height: 16,
+                                                            child: SvgPicture
+                                                                .asset(
+                                                              hourglassStart,
+                                                              semanticsLabel:
+                                                                  'hourglass-start',
                                                             ),
                                                           ),
+                                                          Container(
+                                                            width: 5.0,
+                                                            height: 0,
+                                                          ),
+                                                          Container(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: FittedBox(
+                                                              fit: BoxFit
+                                                                  .scaleDown,
+                                                              child: Text(
+                                                                g['gigDeadlineInUnixMilliseconds'] !=
+                                                                        null
+                                                                    ? DateFormat(
+                                                                            'yyyy-MM-dd')
+                                                                        .format(
+                                                                            DateTime.fromMillisecondsSinceEpoch(g['gigDeadlineInUnixMilliseconds']))
+                                                                    : "Book Gig",
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 5),
+                                                      Row(
+                                                        children: <Widget>[
+                                                          Container(
+                                                            child: FittedBox(
+                                                              fit: BoxFit
+                                                                  .scaleDown,
+                                                              child: Text(
+                                                                g['gigCurrency'],
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            width: 2.5,
+                                                            height: 0,
+                                                          ),
+                                                          Container(
+                                                            child: FittedBox(
+                                                              fit: BoxFit
+                                                                  .scaleDown,
+                                                              child: Text(
+                                                                g['gigBudget'],
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(height: 5.0),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        timeAgo.format(
+                                                            g['gigTime']
+                                                                .toDate()),
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .primaryColor,
                                                         ),
                                                       ),
                                                     ],
                                                   ),
-                                                ],
-                                              ),
-                                              SizedBox(height: 5.0),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    timeAgo.format(
-                                                        g['gigTime'].toDate()),
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Theme.of(context)
-                                                          .primaryColor,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              g['adultContentBool']
-                                                  ? Container(
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      child: Column(
-                                                        children: [
-                                                          SizedBox(height: 5),
-                                                          Row(
+                                                  g['adultContentBool']
+                                                      ? Container(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Column(
                                                             children: [
-                                                              FaIcon(
-                                                                FontAwesomeIcons
-                                                                    .asterisk,
-                                                                size: 12,
-                                                              ),
-                                                              Container(
-                                                                width: 5.0,
-                                                              ),
-                                                              Expanded(
-                                                                child: Text(
-                                                                  g['adultContentText'],
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        12,
+                                                              SizedBox(
+                                                                  height: 5),
+                                                              Row(
+                                                                children: [
+                                                                  FaIcon(
+                                                                    FontAwesomeIcons
+                                                                        .asterisk,
+                                                                    size: 12,
                                                                   ),
-                                                                ),
+                                                                  Container(
+                                                                    width: 5.0,
+                                                                  ),
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                      g['adultContentText'],
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontSize:
+                                                                            12,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                               ),
                                                             ],
                                                           ),
-                                                        ],
-                                                      ),
-                                                    )
-                                                  : Container(
-                                                      width: 0,
-                                                      height: 0,
-                                                    ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(5),
-                                        boxShadow: []),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            onTap: () {
-                              showUserProfile(g['id']);
-                            },
-                          ))
-                      .toList(),
-                ),
-              );
-            } else {
-              return Container(
-                color: Theme.of(context).primaryColor,
-                child: Center(
-                  child: Text(
-                    'No gigs found under this criteria',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Theme.of(context).accentColor,
-                    ),
-                  ),
-                ),
-              );
-            }
-          }
-          // search difference
-
-          else if (searchCriteria == handlesResults) {
-            if (!snapshot.hasData) {
-              return Container(
-                color: Theme.of(context).primaryColor,
-                child: Center(
-                  child: Text(
-                    '',
-                    style: TextStyle(
-                        fontSize: 16, color: Theme.of(context).primaryColor),
-                  ),
-                ),
-              );
-            }
-            if (searchCriteria.length > 0) {
-              return Container(
-                color: Theme.of(context).primaryColor,
-                child: ListView(
-                  children: searchCriteria
-                      .map<Widget>((u) => GestureDetector(
-                            child: Padding(
-                              padding: const EdgeInsets.all(0.1),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(vertical: 5),
-                                decoration: BoxDecoration(
-                                    color: Theme.of(context).primaryColor,
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            width: 0.3,
-                                            color: Colors.grey[50]))),
-                                child: ListTile(
-                                  leading: searchCriteria == hashtagsResults
-                                      ? CircleAvatar(
-                                          radius: 20,
-                                          backgroundColor:
-                                              Theme.of(context).accentColor,
-                                          child: CircleAvatar(
-                                            backgroundColor:
-                                                Theme.of(context).primaryColor,
-                                            radius: 18,
-                                            child: SizedBox(
-                                              width: 16,
-                                              height: 16,
-                                              child: SvgPicture.asset(
-                                                hashtagSymbol,
-                                                semanticsLabel:
-                                                    'hashtag_symbol',
-                                                color: Theme.of(context)
-                                                    .accentColor,
+                                                        )
+                                                      : Container(
+                                                          width: 0,
+                                                          height: 0,
+                                                        ),
+                                                ],
                                               ),
                                             ),
-                                          ),
-                                        )
-                                      : CircleAvatar(
-                                          backgroundColor:
-                                              Theme.of(context).hintColor,
-                                          backgroundImage: NetworkImage(
-                                            u['userAvatarUrl'],
-                                          ),
-                                          radius: 20,
+                                          ],
                                         ),
-                                  title: Container(
-                                    padding: EdgeInsets.only(left: 10),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(u['username'],
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1
-                                                .copyWith(
-                                                    color: Theme.of(context)
-                                                        .accentColor),
-                                            overflow: TextOverflow.ellipsis),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        searchCriteria == hashtagsResults
-                                            ? Text(
-                                                u['lengthOfOngoingGigsByGigId']
-                                                        .toString() +
-                                                    ' gigs',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText2
-                                                    .copyWith(
-                                                        color: Theme.of(context)
-                                                            .hintColor),
-                                                overflow: TextOverflow.ellipsis)
-                                            : Text(u['name'],
-                                                // style: TextStyle(
-                                                //   fontSize: 12,
-                                                //   color:
-                                                //       Theme.of(context).hintColor,
-                                                // ),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText2
-                                                    .copyWith(
-                                                        color: Theme.of(context)
-                                                            .hintColor),
-                                                overflow:
-                                                    TextOverflow.ellipsis),
-                                      ],
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            boxShadow: []),
+                                      ),
                                     ),
                                   ),
-                                  trailing: Container(
-                                    padding: EdgeInsets.only(left: 10),
-                                    height: 43.0,
-                                    width:
-                                        MediaQuery.of(context).size.width / 2,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                          child: ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount:
-                                                u['favoriteHashtags'].length,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              final hashtagItem =
-                                                  u['favoriteHashtags'][index] +
-                                                      ' ';
-                                              return Text(
-                                                '$hashtagItem',
+                                ),
+                                onTap: () {
+                                  showUserProfile(g['id']);
+                                },
+                              ))
+                          .toList(),
+                    ),
+                  );
+                } else {
+                  return Container(
+                    color: Theme.of(context).primaryColor,
+                    child: Center(
+                      child: Text(
+                        'No gigs found under this criteria',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).accentColor,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+              }
+              // search difference
+
+              else if (searchCriteria == handlesResults) {
+                if (!usersSnapshot.hasData) {
+                  return Container(
+                    color: Theme.of(context).primaryColor,
+                    child: Center(
+                      child: Text(
+                        '',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Theme.of(context).primaryColor),
+                      ),
+                    ),
+                  );
+                }
+                if (searchCriteria.length > 0) {
+                  return Container(
+                    color: Theme.of(context).primaryColor,
+                    child: ListView(
+                      children: searchCriteria
+                          .map<Widget>((u) => GestureDetector(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(0.1),
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(vertical: 5),
+                                    decoration: BoxDecoration(
+                                        color: Theme.of(context).primaryColor,
+                                        border: Border(
+                                            bottom: BorderSide(
+                                                width: 0.3,
+                                                color: Colors.grey[50]))),
+                                    child: ListTile(
+                                      leading: searchCriteria == hashtagsResults
+                                          ? CircleAvatar(
+                                              radius: 20,
+                                              backgroundColor:
+                                                  Theme.of(context).accentColor,
+                                              child: CircleAvatar(
+                                                backgroundColor:
+                                                    Theme.of(context)
+                                                        .primaryColor,
+                                                radius: 18,
+                                                child: SizedBox(
+                                                  width: 16,
+                                                  height: 16,
+                                                  child: SvgPicture.asset(
+                                                    hashtagSymbol,
+                                                    semanticsLabel:
+                                                        'hashtag_symbol',
+                                                    color: Theme.of(context)
+                                                        .accentColor,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : CircleAvatar(
+                                              backgroundColor:
+                                                  Theme.of(context).hintColor,
+                                              backgroundImage: NetworkImage(
+                                                u['userAvatarUrl'],
+                                              ),
+                                              radius: 20,
+                                            ),
+                                      title: Container(
+                                        padding: EdgeInsets.only(left: 10),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(u['username'],
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodyText1
                                                     .copyWith(
                                                         color: Theme.of(context)
                                                             .accentColor),
-                                              );
-                                            },
-                                          ),
+                                                overflow:
+                                                    TextOverflow.ellipsis),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            searchCriteria == hashtagsResults
+                                                ? Text(
+                                                    u['lengthOfOngoingGigsByGigId']
+                                                            .toString() +
+                                                        ' gigs',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyText2
+                                                        .copyWith(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .hintColor),
+                                                    overflow:
+                                                        TextOverflow.ellipsis)
+                                                : Text(u['name'],
+                                                    // style: TextStyle(
+                                                    //   fontSize: 12,
+                                                    //   color:
+                                                    //       Theme.of(context).hintColor,
+                                                    // ),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyText2
+                                                        .copyWith(
+                                                            color:
+                                                                Theme.of(context)
+                                                                    .hintColor),
+                                                    overflow:
+                                                        TextOverflow.ellipsis),
+                                          ],
                                         ),
-                                        Text(
-                                          u['location'],
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText2
-                                              .copyWith(
-                                                  color: Theme.of(context)
-                                                      .hintColor),
-                                          overflow: TextOverflow.ellipsis,
+                                      ),
+                                      trailing: Container(
+                                        padding: EdgeInsets.only(left: 10),
+                                        height: 43.0,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: ListView.builder(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount: u['favoriteHashtags']
+                                                    .length,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  final hashtagItem =
+                                                      u['favoriteHashtags']
+                                                              [index] +
+                                                          ' ';
+                                                  return Text(
+                                                    '$hashtagItem',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyText1
+                                                        .copyWith(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .accentColor),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            Text(
+                                              u['location'],
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText2
+                                                  .copyWith(
+                                                      color: Theme.of(context)
+                                                          .hintColor),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            onTap: () {
-                              showUserProfile(u['id']);
-                            },
-                          ))
-                      .toList(),
-                ),
-              );
-            } else {
-              return Container(
-                color: Theme.of(context).primaryColor,
-                child: Center(
-                  child: Text(
-                    'No users found under this criteria',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Theme.of(context).accentColor,
+                                onTap: () {
+                                  showUserProfile(u['id']);
+                                },
+                              ))
+                          .toList(),
                     ),
-                  ),
-                ),
-              );
-            }
-          } else {
-            return Container();
-          }
+                  );
+                } else {
+                  return Container(
+                    color: Theme.of(context).primaryColor,
+                    child: Center(
+                      child: Text(
+                        'No users found under this criteria',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).accentColor,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+              } else {
+                return Container();
+              }
+            },
+          );
         });
   }
 }
