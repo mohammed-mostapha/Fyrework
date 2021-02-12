@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:core';
-import 'dart:math';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -361,11 +360,11 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                   width: double.infinity,
                   child: Wrap(
                     children: widget.gigHashtags
-                        .map<Widget>((e) => Padding(
+                        .map<Widget>((h) => Padding(
                               padding: const EdgeInsets.fromLTRB(0, 0, 5, 2.5),
                               child: GestureDetector(
                                 child: Text(
-                                  '$e',
+                                  '$h',
                                   style: TextStyle(
                                       fontSize: 12,
                                       color: Theme.of(context).primaryColor),
@@ -376,7 +375,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               SearchUsersScreen(
-                                                query: e,
+                                                query: h,
                                               )));
                                 },
                               ),
@@ -409,9 +408,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              // "${widget.gigDeadline.gigDeadline}",
                               widget.gigDeadline != null
-                                  // ? "${widget.gigDeadline.gigDeadline}"
                                   ? DateFormat('yyyy-MM-dd').format(
                                       DateTime.fromMillisecondsSinceEpoch(
                                           widget.gigDeadline))
