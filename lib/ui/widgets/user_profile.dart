@@ -38,207 +38,221 @@ class _UserProfileViewState extends State<UserProfileView> {
       child: StreamBuilder(
           stream: DatabaseService().fetchUserData(widget.passedUserUid),
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Scaffold(
-                backgroundColor: Theme.of(context).primaryColor,
-                appBar: AppBar(
-                  automaticallyImplyLeading: false,
-                  title: Container(
-                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container(
+                child: Center(
                     child: Text(
-                      snapshot.data.username,
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                          fontWeight: FontWeight.normal),
+                  'Loading profile...',
+                  style: Theme.of(context).textTheme.bodyText1,
+                )),
+              );
+            }
+            return snapshot.data != null
+                ? Scaffold(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    appBar: AppBar(
+                      automaticallyImplyLeading: false,
+                      title: Container(
+                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        child: Text(
+                          snapshot.data.username,
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.normal),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                body: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    body: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(snapshot.data.userAvatarUrl),
-                            radius: 50,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage(snapshot.data.userAvatarUrl),
+                                radius: 50,
+                              ),
+                              SizedBox(
+                                height: 50,
+                                child: Column(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          "Ongoing",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          snapshot.data.ongoingGigsByGigId !=
+                                                  null
+                                              ? '${snapshot.data.ongoingGigsByGigId.length}'
+                                              : '0',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 50,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          "Completed",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          "5",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                           SizedBox(
-                            height: 50,
+                            height: 10,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Expanded(
-                                  child: Center(
-                                    child: Text(
-                                      "Ongoing",
+                                Row(
+                                  children: [
+                                    Text(
+                                      // widget.passedUserFullName,
+                                      snapshot.data.name,
                                       style: TextStyle(
                                           fontSize: 16, color: Colors.white),
                                     ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Center(
-                                    child: Text(
-                                      snapshot.data.ongoingGigsByGigId != null
-                                          ? '${snapshot.data.ongoingGigsByGigId.length}'
-                                          : '0',
-                                      style: TextStyle(
-                                          fontSize: 16, color: Colors.white),
+                                    SizedBox(
+                                      width: 5,
                                     ),
-                                  ),
+                                    Container(
+                                      child: Row(
+                                        children: <Widget>[
+                                          Text('no.',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.white)),
+                                          FaIcon(
+                                            FontAwesomeIcons.solidStar,
+                                            size: 16,
+                                            color: Colors.yellow,
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
                                 ),
+                                Text(snapshot.data.location,
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white)),
                               ],
                             ),
                           ),
-                          SizedBox(
-                            height: 50,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Expanded(
-                                  child: Center(
-                                    child: Text(
-                                      "Completed",
-                                      style: TextStyle(
-                                          fontSize: 16, color: Colors.white),
+                          Expanded(
+                            child: DefaultTabController(
+                              length: 4,
+                              child: Scaffold(
+                                appBar: AppBar(
+                                    toolbarHeight: 50,
+                                    primary: false,
+                                    leading: Container(),
+                                    title: Container(),
+                                    bottom: TabBar(
+                                      indicatorColor:
+                                          Theme.of(context).primaryColor,
+                                      tabs: [
+                                        Tab(
+                                            child: FaIcon(
+                                                FontAwesomeIcons.borderAll,
+                                                size: 16,
+                                                color: Theme.of(context)
+                                                    .primaryColor)),
+                                        Tab(
+                                          child: FaIcon(
+                                              FontAwesomeIcons.checkCircle,
+                                              size: 16,
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                        ),
+                                        Tab(
+                                          child: FaIcon(
+                                              FontAwesomeIcons.thumbsUp,
+                                              size: 16,
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                        ),
+                                        Tab(
+                                          child: FaIcon(FontAwesomeIcons.star,
+                                              size: 16,
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Center(
-                                    child: Text(
-                                      "5",
-                                      style: TextStyle(
-                                          fontSize: 16, color: Colors.white),
+                                    elevation: 0,
+                                    backgroundColor: Color(0xFFfafafa)),
+                                // backgroundColor: FyreworkrColors.fyreworkBlack),
+                                body: TabBarView(
+                                  children: [
+                                    userOngoingGigs(),
+                                    Container(
+                                      child:
+                                          Center(child: Text('Done goes here')),
                                     ),
-                                  ),
+                                    Container(
+                                      child: Center(
+                                          child: Text('Liked gigs gies here')),
+                                    ),
+                                    Container(
+                                      child: Center(
+                                          child: Text('Rating goes here')),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 0, 0, 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              children: [
-                                Text(
-                                  // widget.passedUserFullName,
-                                  snapshot.data.name,
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.white),
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Container(
-                                  child: Row(
-                                    children: <Widget>[
-                                      Text('no.',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white)),
-                                      FaIcon(
-                                        FontAwesomeIcons.solidStar,
-                                        size: 16,
-                                        color: Colors.yellow,
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                            Text(snapshot.data.location,
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.white)),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: DefaultTabController(
-                          length: 4,
-                          child: Scaffold(
-                            appBar: AppBar(
-                                toolbarHeight: 50,
-                                primary: false,
-                                leading: Container(),
-                                title: Container(),
-                                bottom: TabBar(
-                                  indicatorColor:
-                                      Theme.of(context).primaryColor,
-                                  tabs: [
-                                    Tab(
-                                        child: FaIcon(
-                                            FontAwesomeIcons.borderAll,
-                                            size: 16,
-                                            color: Theme.of(context)
-                                                .primaryColor)),
-                                    Tab(
-                                      child: FaIcon(
-                                          FontAwesomeIcons.checkCircle,
-                                          size: 16,
-                                          color:
-                                              Theme.of(context).primaryColor),
-                                    ),
-                                    Tab(
-                                      child: FaIcon(FontAwesomeIcons.thumbsUp,
-                                          size: 16,
-                                          color:
-                                              Theme.of(context).primaryColor),
-                                    ),
-                                    Tab(
-                                      child: FaIcon(FontAwesomeIcons.star,
-                                          size: 16,
-                                          color:
-                                              Theme.of(context).primaryColor),
-                                    ),
-                                  ],
-                                ),
-                                elevation: 0,
-                                backgroundColor: Color(0xFFfafafa)),
-                            // backgroundColor: FyreworkrColors.fyreworkBlack),
-                            body: TabBarView(
-                              children: [
-                                userOngoingGigs(),
-                                Container(
-                                  child: Center(child: Text('Done goes here')),
-                                ),
-                                Container(
-                                  child: Center(
-                                      child: Text('Liked gigs gies here')),
-                                ),
-                                Container(
-                                  child:
-                                      Center(child: Text('Rating goes here')),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            } else {
-              return Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            }
+                    ),
+                  )
+                : Container(
+                    child: Center(
+                        child: Text(
+                      'Profile no longer exists',
+                      style: Theme.of(context).textTheme.bodyText1,
+                    )),
+                  );
           }),
     );
   }

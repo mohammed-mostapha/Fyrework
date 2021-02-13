@@ -14,51 +14,15 @@ class IndividualGigItem extends StatelessWidget {
       child: StreamBuilder(
         stream: DatabaseService().listenToAnIndividualGig(gigId),
         builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          //   if (!snapshot.hasData) {
-          //     return Container(
-          //       child: Center(
-          //           child: Text(
-          //         'Loading gig...',
-          //         style: Theme.of(context).textTheme.bodyText1,
-          //       )),
-          //     );
-          //   }
-          //   // : snapshot.data.documents.length > 0
-          //   else if (snapshot.hasData && snapshot.data != null) {
-          //     return GigItem(
-          //       appointed: snapshot.data['appointed'],
-          //       appointedUserFullName: snapshot.data['appointedUserFullName'],
-          //       gigId: snapshot.data['gigId'],
-          //       currentUserId: MyUser.uid,
-          //       gigOwnerId: snapshot.data['gigOwnerId'],
-          //       gigOwnerAvatarUrl: snapshot.data['gigOwnerAvatarUrl'],
-          //       gigOwnerUsername: snapshot.data['gigOwnerUsername'],
-          //       gigTime: snapshot.data['gigTime'],
-          //       gigOwnerLocation: snapshot.data['gigOwnerLocation'],
-          //       gigLocation: snapshot.data['gigLocation'],
-          //       gigHashtags: snapshot.data['gigHashtags'],
-          //       gigMediaFilesDownloadUrls:
-          //           snapshot.data['gigMediaFilesDownloadUrls'],
-          //       gigPost: snapshot.data['gigPost'],
-          //       gigDeadline: snapshot.data['gigDeadline'],
-          //       gigCurrency: snapshot.data['gigCurrency'],
-          //       gigBudget: snapshot.data['gigBudget'],
-          //       gigValue: snapshot.data['gigValue'],
-          //       gigLikes: snapshot.data['gigLikes'],
-          //       adultContentText: snapshot.data['adultContentText'],
-          //       adultContentBool: snapshot.data['adultContentBool'],
-          //       appointedUserId: snapshot.data['appointedUserId'],
-          //       // onDeleteItem: () => model.deleteGig(index),
-          //     );
-          //   } else {
-          //     return Container(
-          //       child: Center(
-          //           child: Text(
-          //         'Gig no longer exists',
-          //         style: Theme.of(context).textTheme.bodyText1,
-          //       )),
-          //     );
-          //   }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container(
+              child: Center(
+                  child: Text(
+                'Loading gig...',
+                style: Theme.of(context).textTheme.bodyText1,
+              )),
+            );
+          }
           return !snapshot.hasData
               ? Container(
                   child: Center(
