@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:myApp/screens/add_gig/assets_picker/src/constants/constants.dart';
 import 'package:myApp/services/firestore_service.dart';
-import 'package:myApp/services/searchUsersScreen.dart';
+import 'package:myApp/services/searchScreen.dart';
+
 import 'package:myApp/ui/views/add_comments_view.dart';
 import 'package:myApp/ui/widgets/gig_item_media_previewer.dart';
 import 'package:myApp/ui/widgets/user_profile.dart';
@@ -423,8 +424,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              SearchUsersScreen(
+                                          builder: (context) => SearchScreen(
                                                 query: h,
                                               )));
                                 },

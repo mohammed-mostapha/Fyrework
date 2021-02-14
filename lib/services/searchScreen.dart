@@ -13,21 +13,21 @@ import 'package:rxdart/rxdart.dart';
 
 import 'package:timeago/timeago.dart' as timeAgo;
 
-class SearchUsersScreen extends StatefulWidget {
+class SearchScreen extends StatefulWidget {
   String query;
-  SearchUsersScreen({this.query});
+  SearchScreen({this.query});
   @override
-  _SearchUsersScreenState createState() => _SearchUsersScreenState();
+  _SearchScreenState createState() => _SearchScreenState();
 }
 
-class _SearchUsersScreenState extends State<SearchUsersScreen> {
+class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => showSearch(
           query: widget.query,
           context: context,
           delegate:
-              SearchUsers(otherUser: DatabaseService().fetchUsersInSearch()),
+              SearchWidget(otherUser: DatabaseService().fetchUsersInSearch()),
         ));
   }
 
@@ -40,14 +40,14 @@ class _SearchUsersScreenState extends State<SearchUsersScreen> {
 }
 
 //Search delegate
-class SearchUsers extends SearchDelegate<OtherUser> {
+class SearchWidget extends SearchDelegate<OtherUser> {
   String currentUserId = MyUser.uid;
   final String hourglassStart = 'assets/svgs/light/hourglass-start.svg';
   final String mapMarkerAlt = 'assets/svgs/light/map-marker-alt.svg';
   final Stream<QuerySnapshot> otherUser;
   final String hashtagSymbol = 'assets/svgs/flaticon/hashtag_symbol.svg';
 
-  SearchUsers({this.otherUser});
+  SearchWidget({this.otherUser});
 
   @override
   List<Widget> buildActions(BuildContext context) {

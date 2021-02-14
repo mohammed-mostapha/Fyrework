@@ -36,12 +36,12 @@ dependencies:
   shared_preferences:
   uuid:
   flutter_router:
-  font_awesome_flutter: 
+  font_awesome_flutter:
   firebase_auth: 0.16.1
   google_sign_in:
   firebase_storage: 3.1.6
   cloud_firestore: 
-  provider:
+  provider: ^4.3.2+1
   intl: 
   geolocator: 5.3.2+2
   chewie: 

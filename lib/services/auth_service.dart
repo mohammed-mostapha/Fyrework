@@ -18,6 +18,9 @@ class AuthService {
       );
 
   // GET UID
+  // Future<String> getCurrentUID() async {
+  //   return (await _firebaseAuth.currentUser()).uid;
+  // }
   Future<String> getCurrentUID() async {
     return (await _firebaseAuth.currentUser()).uid;
   }
@@ -93,7 +96,9 @@ class AuthService {
 
   // Sign Out
   signOut() {
-    return _firebaseAuth.signOut();
+    // return _firebaseAuth.signOut();
+    _firebaseAuth.signOut();
+    MyUser.clearData();
   }
 
   // Reset Password

@@ -1,26 +1,3 @@
-// class UserData {
-//   final String uid;
-//   final String name;
-//   final String email;
-//   final String location;
-//   final String avatarUrl;
-//   final bool isMinor;
-//   final dynamic ongoingGigsByGigId;
-//   final int lengthOfOngoingGigsByGigId;
-
-//   UserData(
-//       {this.uid,
-//       this.name,
-//       this.email,
-//       this.location,
-//       this.avatarUrl,
-//       this.isMinor,
-//       this.ongoingGigsByGigId,
-//       this.lengthOfOngoingGigsByGigId});
-// }
-
-/////////////////////////////////
-
 class MyUser {
   static String uid;
   static List favoriteHashtags;
@@ -36,17 +13,6 @@ class MyUser {
   static dynamic ongoingGigsByGigId;
   static int lengthOfOngoingGigsByGigId;
 
-  // User({
-  //   this.uid,
-  //   this.name,
-  //   this.email,
-  //   this.password,
-  //   this.userAvatarUrl,
-  //   this.userLocation,
-  //   this.isMinor,
-  //   this.lengthOfOngoingGigsByGigId,
-  //   this.ongoingGigsByGigId,
-  // });
   MyUser();
   MyUser.fromData(Map<String, dynamic> data)
 
@@ -67,6 +33,22 @@ class MyUser {
     ongoingGigsByGigId = data['ongoingGigsByGigId'];
     lengthOfOngoingGigsByGigId = data['lengthOfOngoingGigsByGigId'];
     print('fromData uid: $uid');
+  }
+
+  MyUser.clearData() {
+    uid = null;
+    favoriteHashtags = null;
+    name = null;
+    username = null;
+    email = null;
+    password = null;
+    userAvatarUrl = null;
+    userLocation = null;
+    isMinor = null;
+    location = null;
+    phoneNumber = null;
+    ongoingGigsByGigId = null;
+    lengthOfOngoingGigsByGigId = null;
   }
 
   // Map<String, dynamic> toJson() {

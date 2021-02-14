@@ -6,7 +6,7 @@ import 'package:myApp/screens/my_profile.dart';
 import 'package:myApp/screens/trends/trends.dart';
 import 'package:myApp/ui/shared/fyreworkTheme.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:myApp/services/searchUsersScreen.dart';
+import 'package:myApp/services/searchScreen.dart';
 
 class Home extends StatefulWidget {
   final int passedSelectedIndex;
@@ -31,7 +31,7 @@ class _HomeState extends State<Home> {
   List<Widget> _screens = [
     Trends(),
     AddGigDetails(),
-    SearchUsersScreen(),
+    SearchScreen(),
     MyProfileView(),
   ];
 

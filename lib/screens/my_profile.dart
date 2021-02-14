@@ -1377,10 +1377,15 @@ class _MyProfileViewState extends State<MyProfileView> {
                 try {
                   // await Provider.of(context).auth.signOut();
                   await AuthService().signOut();
-                  Navigator.pushReplacement(
+                  //  Navigator.pushReplacement(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (BuildContext context) => StartPage()));
+                  Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (BuildContext context) => StartPage()));
+                          builder: (BuildContext context) => StartPage()),
+                      (Route<dynamic> route) => false);
                 } catch (e) {
                   print(e);
                 }
