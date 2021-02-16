@@ -23,7 +23,7 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
     super.build(context);
 
     return DefaultTabController(
-      length: 4,
+      length: 3,
       child: Scaffold(
         // appBar: AppBar(
         //   title: Row(
@@ -105,6 +105,8 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
 
         appBar: AppBarTextField(
           // title: Text("Contacts"),
+          searchContainerColor: Theme.of(context).accentColor,
+          iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
           title: Row(
             children: [
               Container(
@@ -167,17 +169,17 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
                     ),
                     maxLines: 1),
               ),
-              Tab(
-                child: SizedBox(
-                  width: 20,
-                  height: 40,
-                  child: SvgPicture.asset(
-                    search_thick,
-                    semanticsLabel: 'search',
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
-              ),
+              // Tab(
+              //   child: SizedBox(
+              //     width: 20,
+              //     height: 40,
+              //     child: SvgPicture.asset(
+              //       search_thick,
+              //       semanticsLabel: 'search',
+              //       color: Theme.of(context).primaryColor,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           backgroundColor: Theme.of(context).accentColor,
@@ -190,7 +192,7 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
             AllGigsView(),
             ClientGigsView(),
             ProvierGigsView(),
-            SearchScreen(),
+            // SearchScreen(),
           ],
         ),
       ),
