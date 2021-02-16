@@ -80,6 +80,13 @@ class DatabaseService {
     return _gigsCollection.snapshots();
   }
 
+  // filter all gigs
+  Stream<QuerySnapshot> filterAllGigs(String query) {
+    return _gigsCollection
+        .where('gigHashtags', arrayContains: query)
+        .snapshots();
+  }
+
   // listening to client gigs
   Stream<QuerySnapshot> listenToCilentGigs() {
     return _gigsCollection

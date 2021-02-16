@@ -15,6 +15,8 @@ class AppBarTextField extends StatefulWidget implements PreferredSizeWidget {
   final List<Widget> trailingActionButtons;
   // Widgets to place before the search icon
   final List<Widget> leadingActionButtons;
+  //When search icon button is pressed
+  final VoidCallback onOpenSearchPressed;
   //When back icon button is pressed
   final VoidCallback onBackPressed;
   //When clear icon button is pressed
@@ -660,6 +662,7 @@ class AppBarTextField extends StatefulWidget implements PreferredSizeWidget {
     this.searchContainerColor = Colors.lightBlueAccent,
     this.clearBtnIcon = const Icon(Icons.close),
     this.backBtnIcon = const Icon(Icons.arrow_back),
+    this.onOpenSearchPressed,
     this.onBackPressed,
     this.onClearPressed,
   })  : preferredSize = Size.fromHeight(toolbarHeight ??
@@ -768,6 +771,7 @@ class _AppBarTextFieldState extends State<AppBarTextField>
         key: _searchIconBtnKey,
         icon: widget.searchButtonIcon,
         onPressed: () {
+          widget.onOpenSearchPressed();
           _onSearchPressed();
         });
   }
@@ -809,6 +813,8 @@ class _AppBarTextFieldState extends State<AppBarTextField>
   Widget _buildSearchTitle() {
     return SafeArea(
       child: CircularRevealAnimation(
+        // child: Scaffold(
+        //   appBar: AppBar(
         child: Container(
           color: widget.searchContainerColor,
           child: Row(
@@ -820,10 +826,12 @@ class _AppBarTextFieldState extends State<AppBarTextField>
                 onPressed: () {
                   _onBackPressed();
                 },
+                color: Theme.of(context).primaryColor,
               ),
               Expanded(
                 child: TextField(
-                  controller: _textController,
+                  // controller: _textController,
+                  controller: widget.controller,
                   focusNode: widget.focusNode,
                   decoration: widget.decoration ??
                       InputDecoration(
@@ -882,6 +890,9 @@ class _AppBarTextFieldState extends State<AppBarTextField>
             ],
           ),
         ),
+        // backgroundColor: Theme.of(context).accentColor,
+        //   ),
+        // ),
         animation: _revealAnimation,
         centerOffset: _searchBtnPosition,
       ),
