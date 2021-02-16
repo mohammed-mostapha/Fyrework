@@ -23,12 +23,14 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => showSearch(
-          query: widget.query,
-          context: context,
-          delegate:
-              SearchWidget(otherUser: DatabaseService().fetchUsersInSearch()),
-        ));
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => showSearch(
+        query: widget.query,
+        context: context,
+        delegate:
+            SearchWidget(otherUser: DatabaseService().fetchUsersInSearch()),
+      ),
+    );
   }
 
   @override
