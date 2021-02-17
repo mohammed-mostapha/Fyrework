@@ -12,7 +12,7 @@ import 'package:provider_architecture/provider_architecture.dart';
 class ProvierGigsView extends StatelessWidget {
   ProvierGigsView({Key key}) : super(key: key);
   // String currentUserId = UserController.currentUserId;
-  String currentUserId = MyUser.uid;
+  final String currentUserId = MyUser.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +40,7 @@ class ProvierGigsView extends StatelessWidget {
                             gigOwnerId: getDocData['gigOwnerId'],
                             gigOwnerAvatarUrl: getDocData['gigOwnerAvatarUrl'],
                             gigOwnerUsername: getDocData['gigOwnerUsername'],
+                            gigTime: getDocData['gigTime'],
                             gigOwnerLocation: getDocData['gigOwnerLocation'],
                             gigLocation: getDocData['gigLocation'],
                             gigHashtags: getDocData['gigHashtags'],

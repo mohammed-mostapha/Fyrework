@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:Fyrework/screens/add_gig/assets_picker/src/constants/constants.dart';
 import 'package:Fyrework/services/firestore_service.dart';
-import 'package:Fyrework/services/searchScreen.dart';
 import 'package:Fyrework/ui/views/add_comments_view.dart';
 import 'package:Fyrework/ui/widgets/gig_item_media_previewer.dart';
 import 'package:Fyrework/ui/widgets/user_profile.dart';
@@ -415,12 +414,12 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                                       color: Theme.of(context).primaryColor),
                                 ),
                                 onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => SearchScreen(
-                                                query: h,
-                                              )));
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) => SearchScreen(
+                                  //               query: h,
+                                  //             )));
                                 },
                               ),
                             ))

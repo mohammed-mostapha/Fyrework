@@ -5,7 +5,8 @@ import 'package:Fyrework/screens/add_gig/addGigDetails.dart';
 import 'package:Fyrework/screens/my_profile.dart';
 import 'package:Fyrework/screens/trends/trends.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:Fyrework/services/searchScreen.dart';
+import 'package:provider/provider.dart';
+import 'package:Fyrework/screens/trends/queryStringProvider.dart';
 
 class Home extends StatefulWidget {
   final int passedSelectedIndex;
@@ -28,9 +29,12 @@ class _HomeState extends State<Home> {
   PageController _pageController = PageController();
 
   List<Widget> _screens = [
-    Trends(),
+    ChangeNotifierProvider(
+      create: (context) => QueryStringProvider(),
+      child: Trends(),
+    ),
     AddGigDetails(),
-    SearchScreen(),
+    AddGigDetails(),
     MyProfileView(),
   ];
 

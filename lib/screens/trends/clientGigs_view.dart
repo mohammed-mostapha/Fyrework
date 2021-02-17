@@ -3,16 +3,13 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:Fyrework/main.dart';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/services/database.dart';
-import 'package:Fyrework/view_controllers/myUser_controller.dart';
 import 'package:Fyrework/ui/widgets/gig_item.dart';
-// import 'package:myApp/viewmodels/AllGigs_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider_architecture/provider_architecture.dart';
 
 class ClientGigsView extends StatelessWidget {
   ClientGigsView({Key key}) : super(key: key);
   // String currentUserId = UserController.currentUserId;
-  String currentUserId = MyUser.uid;
+  final String currentUserId = MyUser.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +37,7 @@ class ClientGigsView extends StatelessWidget {
                             gigOwnerId: getDocData['gigOwnerId'],
                             gigOwnerAvatarUrl: getDocData['gigOwnerAvatarUrl'],
                             gigOwnerUsername: getDocData['gigOwnerUsername'],
+                            gigTime: getDocData['gigTime'],
                             gigOwnerLocation: getDocData['gigOwnerLocation'],
                             gigLocation: getDocData['gigLocation'],
                             gigHashtags: getDocData['gigHashtags'],

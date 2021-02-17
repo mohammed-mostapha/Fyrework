@@ -760,7 +760,11 @@ class _AppBarTextFieldState extends State<AppBarTextField>
             ...widget.trailingActionButtons ?? [Container()],
           ],
         ),
-        Positioned.fill(child: _buildSearchTitle())
+        // Positioned.fill(child: _buildSearchTitle())
+        Container(
+          height: 50,
+          child: _buildSearchTitle(),
+        ),
       ],
     );
   }
@@ -812,8 +816,6 @@ class _AppBarTextFieldState extends State<AppBarTextField>
   Widget _buildSearchTitle() {
     return SafeArea(
       child: CircularRevealAnimation(
-        // child: Scaffold(
-        //   appBar: AppBar(
         child: Container(
           color: widget.searchContainerColor,
           child: Row(
@@ -889,9 +891,6 @@ class _AppBarTextFieldState extends State<AppBarTextField>
             ],
           ),
         ),
-        // backgroundColor: Theme.of(context).accentColor,
-        //   ),
-        // ),
         animation: _revealAnimation,
         centerOffset: _searchBtnPosition,
       ),
