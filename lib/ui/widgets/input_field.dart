@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:myApp/ui/shared/shared_styles.dart';
-import 'package:myApp/ui/shared/ui_helpers.dart';
+import 'package:Fyrework/ui/shared/shared_styles.dart';
+import 'package:Fyrework/ui/shared/ui_helpers.dart';
 
 import 'note_text.dart';
 

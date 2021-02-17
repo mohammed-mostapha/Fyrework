@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
-import 'package:myApp/screens/add_gig/assets_picker/pages/multi_assets_picker.dart';
-import 'package:myApp/ui/shared/fyreworkTheme.dart';
+import 'package:Fyrework/screens/add_gig/assets_picker/pages/multi_assets_picker.dart';
+import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../constants/constants.dart';

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:myApp/models/otherUser.dart';
+import 'package:Fyrework/models/otherUser.dart';
 
 class DatabaseService {
   final String uid;

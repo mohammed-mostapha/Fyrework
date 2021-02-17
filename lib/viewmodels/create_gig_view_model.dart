@@ -1,9 +1,9 @@
-import 'package:myApp/locator.dart';
-import 'package:myApp/models/gig.dart';
-import 'package:myApp/services/database.dart';
-import 'package:myApp/services/navigation_service.dart';
-import 'package:myApp/viewmodels/base_model.dart';
-import 'package:myApp/services/firestore_service.dart';
+import 'package:Fyrework/locator.dart';
+import 'package:Fyrework/models/gig.dart';
+import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/services/navigation_service.dart';
+import 'package:Fyrework/viewmodels/base_model.dart';
+import 'package:Fyrework/services/firestore_service.dart';
 import 'package:flutter/material.dart';
 
 class CreateGigViewModel extends BaseModel {

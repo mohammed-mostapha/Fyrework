@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:myApp/models/myUser.dart';
-import 'package:myApp/services/database.dart';
-import 'package:myApp/ui/widgets/comment_item.dart';
+import 'package:Fyrework/models/myUser.dart';
+import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/ui/widgets/comment_item.dart';
 
 class CommentsView extends StatelessWidget {
   final bool isGigAppointed;

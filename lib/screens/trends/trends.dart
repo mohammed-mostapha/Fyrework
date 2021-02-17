@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:myApp/screens/trends/providerGigs_view.dart';
-import 'package:myApp/services/searchScreen.dart';
-import 'package:myApp/screens/trends/AllGigs_view.dart';
+import 'package:Fyrework/screens/trends/appbar_textfield.dart';
+import 'package:Fyrework/screens/trends/providerGigs_view.dart';
+// import 'package:myApp/services/searchScreen.dart';
+import 'package:Fyrework/screens/trends/AllGigs_view.dart';
 import 'clientGigs_view.dart';
-import 'package:myApp/ui/widgets/appbar_textfield.dart';
 // import 'package:circular_reveal_animation/circular_reveal_animation.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:myApp/ui/widgets/badgeIcon.dart';
-import 'package:myApp/screens/search/usersByHandle.dart';
-import 'package:provider/provider.dart';
-import 'package:myApp/screens/trends/queryStringProvider.dart';
+import 'package:Fyrework/ui/widgets/badgeIcon.dart';
+// import 'package:myApp/screens/search/usersByHandle.dart';
+// import 'package:provider/provider.dart';
+// import 'package:myApp/screens/trends/queryStringProvider.dart';
 
 class Trends extends StatefulWidget {
   @override
@@ -25,12 +25,12 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
   String queryString;
   var queryStringProvider;
 
-  @override
-  void initState() {
-    super.initState();
-    queryStringProvider =
-        Provider.of<QueryStringProvider>(context, listen: false);
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   queryStringProvider =
+  //       Provider.of<QueryStringProvider>(context, listen: false);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +43,13 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
           // title: Text("Contacts"),
           searchContainerColor: Theme.of(context).accentColor,
           iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-          title: Row(
-            children: [
-              Container(
+          title: Container(
+            width: MediaQuery.of(context).size.width / 1,
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              // mainAxisAlignment: MainAxisAlignment.center,
+              // children: [
+              leading: Container(
                 width: 50,
                 child: StreamBuilder(
                     // stream: 'notifications stream',
@@ -70,15 +74,13 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
                           onTap: () {},
                         )),
               ),
-              Expanded(
-                child: Center(
-                  child: Image.asset(
-                    'assets/images/fyrework_logo.png',
-                    width: 150,
-                  ),
-                ),
+              title: Image.asset(
+                'assets/images/fyrework_logo.png',
+                width: 150,
+                height: 40,
               ),
-            ],
+              // ],
+            ),
           ),
           bottom: TabBar(
             indicatorColor: Theme.of(context).primaryColor,
@@ -117,28 +119,29 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
           controller: searchController,
           // onChanged: updateQueryString(searchController.text),
           onChanged: (query) {
-            setState(() {
-              // queryString = query;
-              queryStringProvider.updateQueryString(query);
-            });
+            // setState(() {
+            //   // queryString = query;
+            //   queryStringProvider.updateQueryString(query);
+            // });
           },
           onOpenSearchPressed: () {
-            setState(() {
-              isSearchOpen = true;
-            });
+            //   setState(() {
+            //     isSearchOpen = true;
+            //   });
           },
           onBackPressed: () {
-            setState(() {
-              isSearchOpen = false;
-            });
+            //   setState(() {
+            //     isSearchOpen = false;
+            //   });
           },
         ),
         body: TabBarView(
           children: [
-            ChangeNotifierProvider(
-              create: (context) => QueryStringProvider(),
-              child: AllGigsView(),
-            ),
+            // ChangeNotifierProvider(
+            //   create: (context) => QueryStringProvider(),
+            //   child: AllGigsView(),
+            // ),
+            AllGigsView(),
             ClientGigsView(),
             ProvierGigsView(),
           ],

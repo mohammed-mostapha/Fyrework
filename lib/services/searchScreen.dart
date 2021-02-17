@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:myApp/screens/add_gig/assets_picker/src/constants/constants.dart';
+import 'package:Fyrework/screens/add_gig/assets_picker/src/constants/constants.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:myApp/models/myUser.dart';
-import 'package:myApp/models/otherUser.dart';
-import 'package:myApp/ui/views/individual_gig_item.dart';
-import 'package:myApp/ui/widgets/user_profile.dart';
+import 'package:Fyrework/models/myUser.dart';
+import 'package:Fyrework/models/otherUser.dart';
+import 'package:Fyrework/ui/views/individual_gig_item.dart';
+import 'package:Fyrework/ui/widgets/user_profile.dart';
 import 'database.dart';
 import 'package:rxdart/rxdart.dart';
 

@@ -760,8 +760,7 @@ class _AppBarTextFieldState extends State<AppBarTextField>
             ...widget.trailingActionButtons ?? [Container()],
           ],
         ),
-        Container(
-            height: 50, child: Positioned.fill(child: _buildSearchTitle()))
+        Positioned.fill(child: _buildSearchTitle())
       ],
     );
   }

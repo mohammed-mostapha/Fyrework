@@ -3,12 +3,12 @@ import 'dart:core';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:myApp/screens/add_gig/assets_picker/src/constants/constants.dart';
-import 'package:myApp/services/firestore_service.dart';
-import 'package:myApp/services/searchScreen.dart';
-import 'package:myApp/ui/views/add_comments_view.dart';
-import 'package:myApp/ui/widgets/gig_item_media_previewer.dart';
-import 'package:myApp/ui/widgets/user_profile.dart';
+import 'package:Fyrework/screens/add_gig/assets_picker/src/constants/constants.dart';
+import 'package:Fyrework/services/firestore_service.dart';
+import 'package:Fyrework/services/searchScreen.dart';
+import 'package:Fyrework/ui/views/add_comments_view.dart';
+import 'package:Fyrework/ui/widgets/gig_item_media_previewer.dart';
+import 'package:Fyrework/ui/widgets/user_profile.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 class GigItem extends StatefulWidget {
@@ -246,33 +246,30 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       GestureDetector(
-                        child: Flexible(
-                          child: Container(
-                            width: 200,
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  maxRadius: 20,
-                                  backgroundColor:
-                                      Theme.of(context).primaryColor,
-                                  backgroundImage: NetworkImage(
-                                      "${widget.gigOwnerAvatarUrl}"),
+                        child: Container(
+                          width: 200,
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                maxRadius: 20,
+                                backgroundColor: Theme.of(context).primaryColor,
+                                backgroundImage:
+                                    NetworkImage("${widget.gigOwnerAvatarUrl}"),
+                              ),
+                              Container(
+                                width: 10,
+                                height: 0,
+                              ),
+                              Flexible(
+                                child: Text(
+                                  "${widget.gigOwnerUsername}".capitalize(),
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                                Container(
-                                  width: 10,
-                                  height: 0,
-                                ),
-                                Flexible(
-                                  child: Text(
-                                    "${widget.gigOwnerUsername}".capitalize(),
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                         onTap: showUserProfile,
@@ -284,28 +281,26 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                               color: Theme.of(context).primaryColor,
                             ),
                             borderRadius: BorderRadius.all(Radius.circular(2))),
-                        child: Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              child: Text(
-                                widget.gigOwnerId == widget.currentUserId
-                                    ? 'Edit Your gig'
-                                    : widget.gigValue == 'Gigs I can do'
-                                        ? 'Hire me'
-                                        : 'Apply',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Theme.of(context).primaryColor),
-                              ),
-                              onTap: widget.gigOwnerId == widget.currentUserId
-                                  ? () {
-                                      print('edit you gig');
-                                    }
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            child: Text(
+                              widget.gigOwnerId == widget.currentUserId
+                                  ? 'Edit Your gig'
                                   : widget.gigValue == 'Gigs I can do'
-                                      ? () {}
-                                      : () {},
+                                      ? 'Hire me'
+                                      : 'Apply',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Theme.of(context).primaryColor),
                             ),
+                            onTap: widget.gigOwnerId == widget.currentUserId
+                                ? () {
+                                    print('edit you gig');
+                                  }
+                                : widget.gigValue == 'Gigs I can do'
+                                    ? () {}
+                                    : () {},
                           ),
                         ),
                       )

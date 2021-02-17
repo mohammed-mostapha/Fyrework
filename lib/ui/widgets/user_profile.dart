@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:myApp/locator.dart';
-import 'package:myApp/services/database.dart';
-import 'package:myApp/ui/shared/fyreworkTheme.dart';
-import 'package:myApp/ui/views/sign_up_view.dart';
-import 'package:myApp/services/auth_service.dart';
-import 'package:myApp/services/storage_repo.dart';
-import 'package:myApp/ui/widgets/userRelated_gigItem.dart';
+import 'package:Fyrework/locator.dart';
+import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
+import 'package:Fyrework/ui/views/sign_up_view.dart';
+import 'package:Fyrework/services/auth_service.dart';
+import 'package:Fyrework/services/storage_repo.dart';
+import 'package:Fyrework/ui/widgets/userRelated_gigItem.dart';
 
 import 'gig_item.dart';
 

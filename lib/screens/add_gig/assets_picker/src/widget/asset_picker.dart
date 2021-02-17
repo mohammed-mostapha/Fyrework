@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:myApp/ui/shared/fyreworkTheme.dart';
+import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:provider/provider.dart';
 import '../wechat_assets_picker.dart';

@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:myApp/services/database.dart';
-import 'package:myApp/models/myUser.dart';
+import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/models/myUser.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:myApp/services/storage_repo.dart';
-import 'package:myApp/view_controllers/myUser_controller.dart';
+import 'package:Fyrework/services/storage_repo.dart';
+import 'package:Fyrework/view_controllers/myUser_controller.dart';
 
 import '../locator.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myApp/models/myUser.dart';
-import 'package:myApp/ui/shared/fyreworkTheme.dart';
+import 'package:Fyrework/models/myUser.dart';
+import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
 import 'package:uuid/uuid.dart';
 import 'address_search.dart';
 import 'place_service.dart';

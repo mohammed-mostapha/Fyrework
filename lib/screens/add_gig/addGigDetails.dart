@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:myApp/models/myUser.dart';
-import 'package:myApp/screens/add_gig/assets_picker/pages/multi_assets_picker.dart';
-import 'package:myApp/screens/add_gig/sizeConfig.dart';
-import 'package:myApp/services/places_autocomplete.dart';
-import 'package:myApp/ui/shared/constants.dart';
-import 'package:myApp/ui/shared/fyreworkTheme.dart';
+import 'package:Fyrework/models/myUser.dart';
+import 'package:Fyrework/screens/add_gig/assets_picker/pages/multi_assets_picker.dart';
+import 'package:Fyrework/screens/add_gig/sizeConfig.dart';
+import 'package:Fyrework/services/places_autocomplete.dart';
+import 'package:Fyrework/ui/shared/constants.dart';
+import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:myApp/models/gig.dart';
-import 'package:myApp/viewmodels/create_gig_view_model.dart';
+import 'package:Fyrework/models/gig.dart';
+import 'package:Fyrework/viewmodels/create_gig_view_model.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sliding_card/sliding_card.dart';
-import 'package:myApp/services/popularHashtags.dart';
+import 'package:Fyrework/services/popularHashtags.dart';
 
 class AddGigDetails extends StatefulWidget {
   // final gigHashtagsController = TextEditingController();

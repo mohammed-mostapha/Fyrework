@@ -3,10 +3,10 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:myApp/models/myUser.dart';
-import 'package:myApp/services/firestore_service.dart';
-import 'package:myApp/ui/shared/fyreworkTheme.dart';
-import 'package:myApp/ui/widgets/user_profile.dart';
+import 'package:Fyrework/models/myUser.dart';
+import 'package:Fyrework/services/firestore_service.dart';
+import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
+import 'package:Fyrework/ui/widgets/user_profile.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:expandable_text/expandable_text.dart';
 

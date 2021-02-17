@@ -1,12 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:myApp/models/myUser.dart';
-import 'package:myApp/screens/add_gig/addGigDetails.dart';
-import 'package:myApp/screens/my_profile.dart';
-import 'package:myApp/screens/trends/trends.dart';
-import 'package:myApp/ui/shared/fyreworkTheme.dart';
+import 'package:Fyrework/models/myUser.dart';
+import 'package:Fyrework/screens/add_gig/addGigDetails.dart';
+import 'package:Fyrework/screens/my_profile.dart';
+import 'package:Fyrework/screens/trends/trends.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:myApp/services/searchScreen.dart';
+import 'package:Fyrework/services/searchScreen.dart';
 
 class Home extends StatefulWidget {
   final int passedSelectedIndex;
@@ -37,20 +36,22 @@ class _HomeState extends State<Home> {
 
   int _selectedIndex = 0;
 
-  void initState() {
-    super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback(() {
-    //   _selectedIndex = passedSelectedIndex;
-    //   Future.delayed(Duration(seconds: 0), () {
-    //     _pageController.jumpToPage(_selectedIndex);
-    //   });
-    // }());
-  }
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance.addPostFrameCallback(() {
+  //     _selectedIndex = passedSelectedIndex;
+  //     Future.delayed(Duration(seconds: 0), () {
+  //       _pageController.jumpToPage(_selectedIndex);
+  //     });
+  //   }());
+  // }
 
   void _onPageChanged(int currentIndex) {
-    setState(() {
-      _selectedIndex = currentIndex;
-    });
+    if (this.mounted) {
+      setState(() {
+        _selectedIndex = currentIndex;
+      });
+    }
   }
 
   void _onItemTapped(int selectedIndex) {
@@ -135,5 +136,10 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

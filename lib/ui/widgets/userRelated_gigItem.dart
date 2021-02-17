@@ -3,11 +3,11 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:myApp/services/firestore_service.dart';
+import 'package:Fyrework/services/firestore_service.dart';
 import 'package:flutter_common_exports/src/extensions/build_context_extension.dart';
-import 'package:myApp/ui/views/add_comments_view.dart';
-import 'package:myApp/ui/widgets/gig_item_media_previewer.dart';
-import 'package:myApp/ui/widgets/user_profile.dart';
+import 'package:Fyrework/ui/views/add_comments_view.dart';
+import 'package:Fyrework/ui/widgets/gig_item_media_previewer.dart';
+import 'package:Fyrework/ui/widgets/user_profile.dart';
 
 class UserRelatedGigItem extends StatefulWidget {
   final gigId;

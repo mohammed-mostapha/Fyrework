@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:myApp/main.dart';
-import 'package:myApp/models/myUser.dart';
-import 'package:myApp/services/database.dart';
-import 'package:myApp/view_controllers/myUser_controller.dart';
-import 'package:myApp/ui/widgets/gig_item.dart';
+import 'package:Fyrework/main.dart';
+import 'package:Fyrework/models/myUser.dart';
+import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/view_controllers/myUser_controller.dart';
+import 'package:Fyrework/ui/widgets/gig_item.dart';
 // import 'package:myApp/viewmodels/AllGigs_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider_architecture/provider_architecture.dart';
@@ -16,7 +16,7 @@ class ClientGigsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Container(
       child: StreamBuilder<QuerySnapshot>(
         stream: DatabaseService().listenToCilentGigs(),
         builder: (context, snapshot) {

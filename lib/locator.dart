@@ -1,11 +1,11 @@
-import 'package:myApp/models/myUser.dart';
-import 'package:myApp/services/auth_service.dart';
-import 'package:myApp/services/storage_repo.dart';
-import 'package:myApp/services/firestore_service.dart';
+import 'package:Fyrework/models/myUser.dart';
+import 'package:Fyrework/services/auth_service.dart';
+import 'package:Fyrework/services/storage_repo.dart';
+import 'package:Fyrework/services/firestore_service.dart';
 import 'package:get_it/get_it.dart';
-import 'package:myApp/services/navigation_service.dart';
-import 'package:myApp/services/dialog_service.dart';
-import 'package:myApp/view_controllers/myUser_controller.dart';
+import 'package:Fyrework/services/navigation_service.dart';
+import 'package:Fyrework/services/dialog_service.dart';
+import 'package:Fyrework/view_controllers/myUser_controller.dart';
 
 import 'models/otherUser.dart';
 

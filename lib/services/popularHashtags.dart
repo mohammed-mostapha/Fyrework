@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:myApp/services/database.dart';
+import 'package:Fyrework/services/database.dart';
 
 class PopularHashtagsService {
   static Future<List> fetchPopularHashtags(String query) async {

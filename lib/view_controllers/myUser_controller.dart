@@ -1,8 +1,8 @@
-import 'package:myApp/locator.dart';
-import 'package:myApp/models/myUser.dart';
-import 'package:myApp/services/auth_service.dart';
-import 'package:myApp/services/firestore_service.dart';
-import 'package:myApp/services/storage_repo.dart';
+import 'package:Fyrework/locator.dart';
+import 'package:Fyrework/models/myUser.dart';
+import 'package:Fyrework/services/auth_service.dart';
+import 'package:Fyrework/services/firestore_service.dart';
+import 'package:Fyrework/services/storage_repo.dart';
 
 class MyUserController {
   MyUser currentUser;

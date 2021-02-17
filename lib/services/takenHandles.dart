@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:myApp/services/database.dart';
+import 'package:Fyrework/services/database.dart';
 
 class TakenHandlesService {
   static Future<List> fetchTakenHandles(String query) async {

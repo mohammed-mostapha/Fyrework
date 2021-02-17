@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myApp/screens/add_gig/camera/src/widget/camera_picker.dart';
+import 'package:Fyrework/screens/add_gig/camera/src/widget/camera_picker.dart';
 
 /// Built a slide page transition for the picker.
 /// 为选择器构造一个上下进出的页面过渡动画

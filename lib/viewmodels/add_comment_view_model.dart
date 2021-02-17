@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:myApp/locator.dart';
-import 'package:myApp/models/comment.dart';
-import 'package:myApp/services/navigation_service.dart';
-import 'package:myApp/viewmodels/base_model.dart';
-import 'package:myApp/services/firestore_service.dart';
+import 'package:Fyrework/locator.dart';
+import 'package:Fyrework/models/comment.dart';
+import 'package:Fyrework/services/navigation_service.dart';
+import 'package:Fyrework/viewmodels/base_model.dart';
+import 'package:Fyrework/services/firestore_service.dart';
 
 class AddCommentViewModel extends BaseModel {
   final FirestoreService _firestoreService = locator<FirestoreService>();

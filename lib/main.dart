@@ -1,11 +1,12 @@
+import 'package:Fyrework/screens/add_gig/addGigDetails.dart';
 import 'package:flutter/material.dart';
-import 'package:myApp/app_localizations.dart';
-import 'package:myApp/screens/authenticate/app_start.dart';
-import 'package:myApp/screens/home/home.dart';
-import 'package:myApp/services/auth_service.dart';
-import 'package:myApp/ui/shared/fyreworkTheme.dart';
-import 'package:myApp/ui/views/sign_up_view.dart';
-import 'package:myApp/view_controllers/myUser_controller.dart';
+import 'package:Fyrework/app_localizations.dart';
+import 'package:Fyrework/screens/authenticate/app_start.dart';
+import 'package:Fyrework/screens/home/home.dart';
+import 'package:Fyrework/services/auth_service.dart';
+import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
+import 'package:Fyrework/ui/views/sign_up_view.dart';
+import 'package:Fyrework/view_controllers/myUser_controller.dart';
 import 'locator.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -36,32 +37,17 @@ void main() async {
 
   setupLocator();
   //
-  // runApp(MyApp());
-  runApp(HomeController());
+  runApp(MyApp());
+  // runApp(HomeController());
   configLoading();
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // return Provider(
-    //   auth: AuthService(),
-    //   child:
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: HomeController(),
-      routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => HomeController(),
-        '/signUp': (BuildContext context) => SignUpView(
-              authFormType: AuthFormType.signUp,
-            ),
-        '/signIn': (BuildContext context) => SignUpView(
-              authFormType: AuthFormType.signIn,
-            ),
-        '/addGig': (BuildContext context) => Home(passedSelectedIndex: 1),
-      },
-      // ),
     );
   }
 }
@@ -94,54 +80,30 @@ class _HomeControllerState extends State<HomeController> {
   AuthService authService = locator.get<AuthService>();
   @override
   void initState() {
-    //
-    // FirebaseAuth.instance.currentUser().then((user) => user != null
-    // FirebaseAuth.instance.currentUser().then((user) => user != null
-    // authService.getCurrentUser().then((user) => user != null
-    //     ? MyUserController()
-    //         .getCurrentUserFromFirebase()
-    //         .then((value) => setState(() {
-    //               isAuthenticated = true;
-    //             }))
-    //     : setState(() {
-    //         print('print from main => user null: $user');
-    //         isAuthenticated = false;
-    //       }));
+    super.initState();
+    checkAuthenticity();
+  }
+
+  Future checkAuthenticity() async {
     authService.getCurrentUser().then((user) async {
       if (user != null) {
         String myUid = await authService.getCurrentUID();
-        print('your uid is: $myUid');
-        MyUserController()
-            .getCurrentUserFromFirebase(myUid)
-            .then((value) => setState(() {
-                  isAuthenticated = true;
-                }));
+        await MyUserController().getCurrentUserFromFirebase(myUid);
+        if (mounted)
+          setState(() {
+            isAuthenticated = true;
+          });
       } else {
-        setState(() {
-          print('print from main => user null: $user');
-          isAuthenticated = false;
-        });
+        if (mounted)
+          setState(() {
+            isAuthenticated = false;
+          });
       }
     });
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // FirebaseAuth.instance.onAuthStateChanged.listen((user) {
-    //   if (user != null) {
-    //     print('user: $user');
-    //     setState(() {
-    //       isAuthenticated = true;
-    //     });
-    //   } else {
-    //     print('user null: $user');
-
-    //     setState(() {
-    //       isAuthenticated = false;
-    //     });
-    //   }
-    // });
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
@@ -154,10 +116,6 @@ class _HomeControllerState extends State<HomeController> {
             ),
         '/addGig': (BuildContext context) => Home(passedSelectedIndex: 1),
       },
-      // theme: ThemeData(
-      //   primaryColor: FyreworkrColors.fyreworkBlack,
-      //   accentColor: Colors.white,
-      // ),
       theme: fyreworkTheme(),
       builder: EasyLoading.init(),
       supportedLocales: [
@@ -183,10 +141,16 @@ class _HomeControllerState extends State<HomeController> {
             return supportedLocale;
           }
         }
-        // I the locale of the device is not supported, use the first one from the list (English, in this case).
+        // If the locale of the device is not supported, use the first one from the list (English, in this case).
         return supportedLocales.first;
       },
+      // home: isAuthenticated ? Home(passedSelectedIndex: 0) : StartPage(),
       home: isAuthenticated ? Home(passedSelectedIndex: 0) : StartPage(),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

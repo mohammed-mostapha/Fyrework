@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myApp/screens/home/home.dart';
+import 'package:Fyrework/screens/home/home.dart';
 
 class NavigationService {
   GlobalKey<NavigatorState> _navigationKey = GlobalKey<NavigatorState>();

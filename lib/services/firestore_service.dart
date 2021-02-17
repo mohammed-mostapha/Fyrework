@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:myApp/models/gig.dart';
-import 'package:myApp/models/comment.dart';
-import 'package:myApp/models/myUser.dart';
+import 'package:Fyrework/models/gig.dart';
+import 'package:Fyrework/models/comment.dart';
+import 'package:Fyrework/models/myUser.dart';
 import 'package:flutter/services.dart';
 
 import 'database.dart';

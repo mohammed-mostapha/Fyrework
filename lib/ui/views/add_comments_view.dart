@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:myApp/models/myUser.dart';
-import 'package:myApp/ui/shared/constants.dart';
-import 'package:myApp/ui/views/comments_view.dart';
-import 'package:myApp/viewmodels/add_comment_view_model.dart';
+import 'package:Fyrework/models/myUser.dart';
+import 'package:Fyrework/ui/shared/constants.dart';
+import 'package:Fyrework/ui/views/comments_view.dart';
+import 'package:Fyrework/viewmodels/add_comment_view_model.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:custom_switch/custom_switch.dart';
 

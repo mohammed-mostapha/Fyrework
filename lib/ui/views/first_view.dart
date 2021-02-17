@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myApp/ui/widgets/custom_dialog.dart';
+import 'package:Fyrework/ui/widgets/custom_dialog.dart';
 
 class FirstView extends StatelessWidget {
   @override
