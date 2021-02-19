@@ -712,7 +712,10 @@ class _CommentItemState extends State<CommentItem> {
 
   @override
   void dispose() {
-    _timer.cancel();
+    if (_timer != null) {
+      _timer.cancel();
+      _timer = null;
+    }
     super.dispose();
   }
 }
