@@ -12,7 +12,6 @@ class CommentsView extends StatelessWidget {
   const CommentsView(
       {Key key,
       @required this.gigIdCommentsIdentifier,
-      // @required this.passedCurrentUserId,
       @required this.isGigAppointed,
       this.gigOwnerId})
       : super(key: key);
@@ -63,6 +62,7 @@ class CommentsView extends StatelessWidget {
                 : Center(
                     child: Text(
                     'No comments yet...',
+                    style: Theme.of(context).textTheme.bodyText1,
                   ));
       },
     );

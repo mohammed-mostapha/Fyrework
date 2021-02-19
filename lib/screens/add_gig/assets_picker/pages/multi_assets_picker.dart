@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_common_exports/flutter_common_exports.dart';
@@ -422,9 +423,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           'Back',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(context).primaryColor),
+                          style: Theme.of(context).textTheme.bodyText1,
                         ),
                       ),
                     ),
@@ -444,16 +443,14 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           'Publish',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(context).primaryColor),
+                          style: Theme.of(context).textTheme.bodyText1,
                         ),
                       ),
                     ),
                     onTap: () async {
                       EasyLoading.show();
                       await prepareGigMediaFilesAndPublish();
-                      print('should dismiss');
+
                       EasyLoading.dismiss();
                     },
                   ),
@@ -472,8 +469,10 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                             backgroundColor: Theme.of(context).primaryColor,
                             label: Text(
                               '$e',
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .copyWith(color: fyreworkTheme().accentColor),
                             ),
                             onDeleted: () {
                               setState(() {
@@ -489,7 +488,8 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
               ),
               selectedAssetsWidget,
               SizedBox(height: 10.0),
-              Text('${widget.gigPost}', style: TextStyle(fontSize: 16)),
+              Text('${widget.gigPost}',
+                  style: Theme.of(context).textTheme.bodyText1),
               SizedBox(
                 height: 10.0,
               ),
@@ -507,8 +507,6 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                               child: SvgPicture.asset(
                                 hourglassStart,
                                 semanticsLabel: 'hourglass-start',
-                                // color: Theme.of(context).primaryColor,
-                                // color: Theme.of(context).primaryColor,
                               ),
                             ),
                             Container(
@@ -516,12 +514,8 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                               height: 0,
                             ),
                             Container(
-                              child: Text(
-                                '$formattedGigDeadline',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
+                              child: Text('$formattedGigDeadline',
+                                  style: Theme.of(context).textTheme.bodyText1),
                             ),
                           ],
                         )
@@ -535,9 +529,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                       Container(
                         child: Text(
                           '${widget.gigCurrency}',
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
+                          style: Theme.of(context).textTheme.bodyText1,
                         ),
                       ),
                       Container(
@@ -547,9 +539,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                       Container(
                         child: Text(
                           '${widget.gigBudget}',
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
+                          style: Theme.of(context).textTheme.bodyText1,
                         ),
                       ),
                     ],

@@ -207,8 +207,8 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
       scale: _likeAnimationController,
       child: GestureDetector(
         child: SizedBox(
-          width: 20,
-          height: 20,
+          width: 16,
+          height: 16,
           child: SvgPicture.asset(
             liked ? heartSolid : heart,
             semanticsLabel: 'Like',
@@ -221,8 +221,8 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
 
     GestureDetector commentButton = GestureDetector(
       child: SizedBox(
-        width: 20,
-        height: 20,
+        width: 16,
+        height: 16,
         child: SvgPicture.asset(
           comment,
           semanticsLabel: 'Comment',
@@ -347,8 +347,8 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                       child: Row(
                         children: [
                           SizedBox(
-                            width: 20,
-                            height: 20,
+                            width: 16,
+                            height: 16,
                             child: SvgPicture.asset(
                               mapMarkerAlt,
                               semanticsLabel: 'Comment',

@@ -138,21 +138,20 @@ class _CommentItemState extends State<CommentItem> {
                           backgroundImage:
                               NetworkImage("${widget.commentOwnerAvatarUrl}"),
                         ),
-                        Container(
+                        SizedBox(
                           width: 10,
                           height: 0,
                         ),
                         Flexible(
-                          child: Text(
-                            '${widget.commentOwnerUsername}',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w900,
-                              color: myComment
-                                  ? Theme.of(context).accentColor
-                                  : Theme.of(context).primaryColor,
-                            ),
-                          ),
+                          child: Text('${widget.commentOwnerUsername}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: myComment
+                                          ? Theme.of(context).accentColor
+                                          : Theme.of(context).primaryColor)),
                         ),
                       ],
                     ),
@@ -212,13 +211,14 @@ class _CommentItemState extends State<CommentItem> {
                     linkColor: myComment
                         ? Theme.of(context).accentColor
                         : Theme.of(context).primaryColor,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: myComment ? Colors.white : Colors.grey[700],
-                    ),
+                    style: Theme.of(context).textTheme.bodyText1.copyWith(
+                          color: myComment
+                              ? Theme.of(context).accentColor
+                              : Theme.of(context).primaryColor,
+                        ),
                   ),
                 ),
-                Container(height: 10),
+                Container(height: 5),
                 (myGig &&
                         !myComment &&
                         widget.proposal &&
@@ -235,24 +235,30 @@ class _CommentItemState extends State<CommentItem> {
                                   children: <Widget>[
                                     Text(
                                       '${widget.gigCurrency}',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: myComment
-                                            ? Theme.of(context).accentColor
-                                            : Theme.of(context).primaryColor,
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1
+                                          .copyWith(
+                                            color: myComment
+                                                ? Theme.of(context).accentColor
+                                                : Theme.of(context)
+                                                    .primaryColor,
+                                          ),
                                     ),
                                     SizedBox(
                                       width: 5,
                                     ),
                                     Text(
                                       '${widget.offeredBudget}',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: myComment
-                                            ? Theme.of(context).accentColor
-                                            : Theme.of(context).primaryColor,
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1
+                                          .copyWith(
+                                            color: myComment
+                                                ? Theme.of(context).accentColor
+                                                : Theme.of(context)
+                                                    .primaryColor,
+                                          ),
                                     ),
                                     SizedBox(
                                       width: 5,
@@ -295,20 +301,20 @@ class _CommentItemState extends State<CommentItem> {
                                               ),
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(2))),
-                                          // color: myComment
-                                          //     ? Colors.white
-                                          //     : FyreworkrColors.fyreworkBlack,
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Text(
                                               'Approve',
-                                              style: TextStyle(
-                                                color: myComment
-                                                    ? Theme.of(context)
-                                                        .accentColor
-                                                    : Theme.of(context)
-                                                        .primaryColor,
-                                              ),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1
+                                                  .copyWith(
+                                                    color: myComment
+                                                        ? Theme.of(context)
+                                                            .accentColor
+                                                        : Theme.of(context)
+                                                            .primaryColor,
+                                                  ),
                                             ),
                                           ),
                                         ),
@@ -334,19 +340,20 @@ class _CommentItemState extends State<CommentItem> {
                                             ),
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(2))),
-                                        // color: myComment
-                                        //     ? Colors.white
-                                        //     : FyreworkrColors.fyreworkBlack,
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
                                             'Reject',
-                                            style: TextStyle(
-                                                color: myComment
-                                                    ? Theme.of(context)
-                                                        .accentColor
-                                                    : Theme.of(context)
-                                                        .primaryColor),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1
+                                                .copyWith(
+                                                  color: myComment
+                                                      ? Theme.of(context)
+                                                          .accentColor
+                                                      : Theme.of(context)
+                                                          .primaryColor,
+                                                ),
                                           ),
                                         ),
                                       ),
@@ -374,12 +381,32 @@ class _CommentItemState extends State<CommentItem> {
                                   direction: Axis.horizontal,
                                   alignment: WrapAlignment.start,
                                   children: [
-                                    Text('You rejected '),
+                                    Text(
+                                      'You rejected ',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1
+                                          .copyWith(
+                                              color: myComment
+                                                  ? Theme.of(context)
+                                                      .accentColor
+                                                  : Theme.of(context)
+                                                      .primaryColor,
+                                              fontWeight: FontWeight.bold),
+                                    ),
                                     GestureDetector(
                                       child: Text(
                                         '${widget.commentOwnerUsername}\'s proposal',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .copyWith(
+                                                color: myComment
+                                                    ? Theme.of(context)
+                                                        .accentColor
+                                                    : Theme.of(context)
+                                                        .primaryColor,
+                                                fontWeight: FontWeight.bold),
                                       ),
                                       onTap: () {
                                         showUserProfile();
@@ -405,12 +432,33 @@ class _CommentItemState extends State<CommentItem> {
                                       direction: Axis.horizontal,
                                       alignment: WrapAlignment.start,
                                       children: [
-                                        Text('You appointed this gig to '),
+                                        Text(
+                                          'You appointed this gig to ',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              .copyWith(
+                                                  color: myComment
+                                                      ? Theme.of(context)
+                                                          .accentColor
+                                                      : Theme.of(context)
+                                                          .primaryColor,
+                                                  fontWeight: FontWeight.bold),
+                                        ),
                                         GestureDetector(
                                           child: Text(
                                             '${widget.commentOwnerUsername}',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w900),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1
+                                                .copyWith(
+                                                    color: myComment
+                                                        ? Theme.of(context)
+                                                            .accentColor
+                                                        : Theme.of(context)
+                                                            .primaryColor,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                           ),
                                           onTap: () {
                                             showUserProfile();
@@ -436,20 +484,30 @@ class _CommentItemState extends State<CommentItem> {
                                             children: <Widget>[
                                               Text(
                                                 '${widget.gigCurrency}',
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: Theme.of(context)
-                                                        .accentColor),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText1
+                                                    .copyWith(
+                                                        color: myComment
+                                                            ? Theme.of(context)
+                                                                .accentColor
+                                                            : Theme.of(context)
+                                                                .primaryColor),
                                               ),
-                                              Container(
-                                                width: 5,
+                                              SizedBox(
+                                                width: 10,
                                               ),
                                               Text(
                                                 '${widget.offeredBudget}',
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: Theme.of(context)
-                                                        .accentColor),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText1
+                                                    .copyWith(
+                                                        color: myComment
+                                                            ? Theme.of(context)
+                                                                .accentColor
+                                                            : Theme.of(context)
+                                                                .primaryColor),
                                               ),
                                               SizedBox(
                                                 width: 10,
@@ -460,17 +518,18 @@ class _CommentItemState extends State<CommentItem> {
                                                       width: 20,
                                                       height: 20,
                                                       child: SvgPicture.asset(
-                                                        widget.preferredPaymentMethod ==
-                                                                'paypal'
-                                                            ? paypalIcon
-                                                            : widget.preferredPaymentMethod ==
-                                                                    'cash'
-                                                                ? cash
-                                                                : alternatePayment,
-                                                        semanticsLabel:
-                                                            'paypal',
-                                                        color: Colors.white,
-                                                      ),
+                                                          widget.preferredPaymentMethod ==
+                                                                  'paypal'
+                                                              ? paypalIcon
+                                                              : widget.preferredPaymentMethod ==
+                                                                      'cash'
+                                                                  ? cash
+                                                                  : alternatePayment,
+                                                          semanticsLabel:
+                                                              'paypal',
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .accentColor),
                                                     )
                                                   : SizedBox(
                                                       width: 0,
@@ -479,7 +538,7 @@ class _CommentItemState extends State<CommentItem> {
                                             ],
                                           ),
                                           SizedBox(
-                                            height: 20,
+                                            height: 10,
                                           ),
                                           Container(
                                             decoration: BoxDecoration(
@@ -487,7 +546,8 @@ class _CommentItemState extends State<CommentItem> {
                                                   width: 2,
                                                   color: !widget.approved
                                                       ? !widget.rejected
-                                                          ? Colors.white
+                                                          ? Theme.of(context)
+                                                              .accentColor
                                                           : Colors.red
                                                       : Colors.green,
                                                 ),
@@ -502,20 +562,25 @@ class _CommentItemState extends State<CommentItem> {
                                                         ? 'Pending approval'
                                                         : 'Rejected'
                                                     : 'Approved',
-                                                style: TextStyle(
-                                                  color: !widget.approved
-                                                      ? !widget.rejected
-                                                          ? Colors.white
-                                                          : Colors.red
-                                                      : Colors.green,
-                                                ),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText1
+                                                    .copyWith(
+                                                      color: !widget.approved
+                                                          ? !widget.rejected
+                                                              ? Theme.of(
+                                                                      context)
+                                                                  .accentColor
+                                                              : Colors.red
+                                                          : Colors.green,
+                                                    ),
                                               ),
                                             ),
                                           ),
                                         ],
                                       ),
                                       Container(
-                                        height: 10,
+                                        height: 5,
                                       ),
                                     ],
                                   )
@@ -525,12 +590,11 @@ class _CommentItemState extends State<CommentItem> {
                                   ),
                 Text(
                   timeAgo.format(widget.commentTime.toDate()),
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: myComment
-                        ? Theme.of(context).accentColor
-                        : Theme.of(context).primaryColor,
-                  ),
+                  style: Theme.of(context).textTheme.bodyText2.copyWith(
+                        color: myComment
+                            ? Theme.of(context).accentColor
+                            : Theme.of(context).primaryColor,
+                      ),
                 ),
               ],
             ),
@@ -545,11 +609,11 @@ class _CommentItemState extends State<CommentItem> {
       height: 70,
       child: Center(
         child: Text('Private comment',
-            style: TextStyle(
-              color: myComment
-                  ? Theme.of(context).accentColor
-                  : Theme.of(context).primaryColor,
-            )),
+            style: Theme.of(context).textTheme.bodyText1.copyWith(
+                  color: myComment
+                      ? Theme.of(context).accentColor
+                      : Theme.of(context).primaryColor,
+                )),
       ),
     );
 
@@ -604,7 +668,9 @@ class _CommentItemState extends State<CommentItem> {
       padding: const EdgeInsets.all(0.1),
       child: Container(
         decoration: BoxDecoration(
-          color: myComment ? Theme.of(context).primaryColor : Colors.white,
+          color: myComment
+              ? Theme.of(context).primaryColor
+              : Theme.of(context).accentColor,
           border: Border(
             top: myComment
                 ? BorderSide(width: 0.3, color: Colors.grey[50])
@@ -670,7 +736,10 @@ class ApprovedLabel extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             'Approved',
-            style: TextStyle(color: Colors.green),
+            style: Theme.of(context)
+                .textTheme
+                .bodyText1
+                .copyWith(color: Colors.green),
           ),
         ),
       ),
@@ -697,7 +766,10 @@ class RejectedLabel extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             'Rejected',
-            style: TextStyle(color: Colors.red),
+            style: Theme.of(context)
+                .textTheme
+                .bodyText1
+                .copyWith(color: Colors.red),
           ),
         ),
       ),

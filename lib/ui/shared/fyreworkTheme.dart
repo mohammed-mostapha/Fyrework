@@ -11,7 +11,7 @@ ThemeData fyreworkTheme() {
       ),
       bodyText1: base.headline6.copyWith(
         // fontFamily: 'Montserrat-Light',
-        fontSize: 16.0,
+        fontSize: 14.0,
         color: Color(0xFF000000),
         fontWeight: FontWeight.normal,
       ),
@@ -47,6 +47,7 @@ ThemeData fyreworkTheme() {
     textTheme: _basicTextTheme(base.textTheme),
     primaryColor: Color(0xFF000000),
     accentColor: Color(0XFFFFFFFF),
+    bottomAppBarColor: Color(0XFF212121),
     hintColor: Colors.grey[500],
   );
 }

@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'package:Fyrework/screens/add_gig/assets_picker/src/wechat_assets_picker.dart';
+import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:Fyrework/screens/add_gig/camera/src/widget/camera_picker.dart';
 
@@ -9,6 +12,8 @@ class SlidePageTransitionBuilder<T> extends PageRoute<T> {
     this.transitionCurve = Curves.easeIn,
     this.transitionDuration = const Duration(milliseconds: 500),
   });
+
+  bool get isAppleOS => Platform.isIOS || Platform.isMacOS;
 
   final Widget builder;
 
@@ -48,30 +53,8 @@ class SlidePageTransitionBuilder<T> extends PageRoute<T> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    // return Scaffold(
-    //   body: PageView(
-    //     controller: _pageController,
-    //     children: [
-    //       SlideTransition(
-    //         position: Tween<Offset>(
-    //           begin: const Offset(0, 1),
-    //           end: Offset.zero,
-    //           // end: const Offset(0, 0.2),
-    //         ).animate(CurvedAnimation(
-    //           curve: transitionCurve,
-    //           parent: animation,
-    //         )),
-    //         child: child,
-    //       ),
-    //       Image_picker(),
-    //       Video_picker(),
-    //     ],
-    //   ),
-    // );
-
     return WillPopScope(
       onWillPop: () {
-        // Navigator.pushNamedAndRemoveUntil(context, "/addGig", (r) => false);
         Navigator.of(context).pop();
       },
       child: DefaultTabController(
@@ -79,23 +62,30 @@ class SlidePageTransitionBuilder<T> extends PageRoute<T> {
         child: Scaffold(
           bottomNavigationBar: BottomAppBar(
             child: TabBar(
-              indicatorColor: Theme.of(context).accentColor,
+              indicatorColor: fyreworkTheme().accentColor,
               tabs: [
                 Tab(
-                  child: Text('Gallery',
-                      style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                      )),
+                  child: Text(
+                    'Gallery',
+                    style: fyreworkTheme().textTheme.bodyText1.copyWith(
+                          // color: theme.textTheme.caption.color,
+                          color: fyreworkTheme().textTheme.caption.color,
+                        ),
+                  ),
                 ),
                 Tab(
-                  child: Text('Camera',
-                      style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                      )),
+                  child: Text(
+                    'Camera',
+                    style: fyreworkTheme().textTheme.bodyText1.copyWith(
+                          color: fyreworkTheme().textTheme.caption.color,
+                        ),
+                  ),
                 ),
               ],
             ),
-            color: Theme.of(context).primaryColor,
+            color: fyreworkTheme()
+                .bottomAppBarColor
+                .withOpacity(isAppleOS ? 0.90 : 1.0),
           ),
           body: TabBarView(
             children: [

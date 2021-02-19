@@ -1,3 +1,4 @@
+import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -472,17 +473,21 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
-                      'Comments',
-                      style: TextStyle(fontSize: 16),
-                    ),
+                    Text('Comments',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline1
+                            .copyWith(color: fyreworkTheme().accentColor)),
                     Container(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
                           Text(
                             '${widget.passedGigCurrency} ${widget.passedGigBudget}',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .copyWith(color: fyreworkTheme().accentColor),
                           ),
                           SizedBox(
                             width: 10,
@@ -519,9 +524,12 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                                       ? 'Hire'
                                                       : 'Apply'
                                                   : 'Request sent',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              .copyWith(
+                                                  color: fyreworkTheme()
+                                                      .accentColor),
                                         )),
                                   ),
                                 )
@@ -595,10 +603,8 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                               Expanded(
                                 child: TextFormField(
                                   controller: _addCommentsController,
-                                  decoration: InputDecoration(
-                                    hintText: "Add comment...",
-                                    border: InputBorder.none,
-                                  ),
+                                  decoration: buildSignUpInputDecoration(
+                                      context, 'Add comment...'),
                                   onFieldSubmitted:
                                       (String submittedString) async {
                                     if (submittedString.isNotEmpty) {

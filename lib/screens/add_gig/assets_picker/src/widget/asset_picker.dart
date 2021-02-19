@@ -3,11 +3,11 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:provider/provider.dart';
 import '../wechat_assets_picker.dart';
@@ -272,10 +272,10 @@ class AssetPicker extends StatelessWidget {
                       Flexible(
                         child: Text(
                           provider.currentPathEntity.name ?? '',
-                          style: const TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.normal,
-                          ),
+                          style: fyreworkTheme()
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: fyreworkTheme().accentColor),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -368,7 +368,10 @@ class AssetPicker extends StatelessWidget {
                           padding: const EdgeInsets.only(right: 10.0),
                           child: Text(
                             pathEntity.name ?? '',
-                            style: const TextStyle(fontSize: 18.0),
+                            style: fyreworkTheme()
+                                .textTheme
+                                .bodyText1
+                                .copyWith(color: fyreworkTheme().accentColor),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -376,10 +379,8 @@ class AssetPicker extends StatelessWidget {
                       ),
                       Text(
                         '(${pathEntity.assetCount})',
-                        style: TextStyle(
-                          color: theme.textTheme.caption.color,
-                          fontSize: 18.0,
-                        ),
+                        style: fyreworkTheme().textTheme.bodyText1.copyWith(
+                            color: fyreworkTheme().textTheme.caption.color),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -526,15 +527,11 @@ class AssetPicker extends StatelessWidget {
                   ? '${Constants.textDelegate.confirm}'
                       '(${provider.selectedAssets.length}/${provider.maxAssets})'
                   : Constants.textDelegate.confirm,
-              style: TextStyle(
-                color: provider.isSelectedNotEmpty
-                    // ? FyreworkrColors.fyreworkBlack
-                    ? Theme.of(context).primaryColor
-                    //  theme.textTheme.bodyText1.color
-                    : theme.textTheme.caption.color,
-                fontSize: 17.0,
-                fontWeight: FontWeight.normal,
-              ),
+              style: fyreworkTheme().textTheme.bodyText1.copyWith(
+                    color: provider.isSelectedNotEmpty
+                        ? fyreworkTheme().primaryColor
+                        : fyreworkTheme().textTheme.caption.color,
+                  ),
             ),
             onPressed: () async {
               if (provider.isSelectedNotEmpty) {
@@ -752,19 +749,13 @@ class AssetPicker extends StatelessWidget {
                   reverseDuration: switchingPathDuration,
                   child: selected
                       ? isSingleAssetMode
-                          ? Icon(
-                              Icons.check,
+                          ? Icon(Icons.check,
                               size: 18.0,
-                              // color: FyreworkrColors.fyreworkBlack,
-                              color: Color(0xFF000000),
-                            )
+                              color: fyreworkTheme().textTheme.bodyText2.color)
                           : Text(
                               '${selectedAssets.indexOf(asset) + 1}',
                               style: TextStyle(
-                                color: selected
-                                    ? Color(0xFF000000)
-                                    // theme.textTheme.bodyText1.color
-                                    : null,
+                                color: selected ? Color(0xFF000000) : null,
                                 fontSize: isAppleOS ? 16.0 : 14.0,
                                 fontWeight: isAppleOS
                                     ? FontWeight.w600
@@ -988,17 +979,15 @@ class AssetPicker extends StatelessWidget {
                 Widget __,
               ) {
                 return Text(
-                  isSelectedNotEmpty
-                      ? '${Constants.textDelegate.preview}'
-                          '(${provider.selectedAssets.length})'
-                      : Constants.textDelegate.preview,
-                  style: TextStyle(
-                    color: isSelectedNotEmpty
-                        ? null
-                        : theme.textTheme.caption.color,
-                    fontSize: 18.0,
-                  ),
-                );
+                    isSelectedNotEmpty
+                        ? '${Constants.textDelegate.preview}'
+                            '(${provider.selectedAssets.length})'
+                        : Constants.textDelegate.preview,
+                    style: fyreworkTheme().textTheme.bodyText1.copyWith(
+                          color: isSelectedNotEmpty
+                              ? fyreworkTheme().accentColor
+                              : fyreworkTheme().textTheme.caption.color,
+                        ));
               },
             ),
           ),
@@ -1061,12 +1050,8 @@ class AssetPicker extends StatelessWidget {
                 ),
               )
             : IconButton(
-                // onPressed: Navigator.of(context).maybePop,
                 onPressed: () {
                   Navigator.of(context).pop();
-                  // Navigator.pop(context);
-                  // Navigator.pushNamedAndRemoveUntil(
-                  //     context, "/addGig", (r) => false);
                 },
                 icon: const Icon(Icons.close),
               ),
