@@ -80,26 +80,19 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
             tabs: [
               Tab(
                 child: Text('All',
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    maxLines: 1),
+                    style: Theme.of(context).textTheme.bodyText1, maxLines: 1),
               ),
               Tab(
                 child: Text(
                   'Gigs',
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                  ),
+                  style: Theme.of(context).textTheme.bodyText1,
                   maxLines: 1,
                 ),
               ),
               Tab(
                 child: Text(
                   'Providers',
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                  ),
+                  style: Theme.of(context).textTheme.bodyText1,
                   maxLines: 1,
                 ),
               ),
@@ -125,6 +118,9 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
             //   setState(() {
             //     isSearchOpen = false;
             //   });
+            setState(() {
+              queryStringProvider.updateQueryString('');
+            });
           },
         ),
         body: TabBarView(

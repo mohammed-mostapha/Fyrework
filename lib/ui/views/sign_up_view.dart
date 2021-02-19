@@ -555,7 +555,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           child: TextFormField(
             validator: EmailValidator.validate,
             style: TextStyle(fontSize: 16.0),
-            decoration: buildSignUpInputDecoration('Email'),
+            decoration: buildSignUpInputDecoration(context, 'Email'),
             onChanged: (val) {
               setState(() => _email = val);
             },
@@ -619,8 +619,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                         new LengthLimitingTextInputFormatter(20),
                         FilteringTextInputFormatter.allow(RegExp("[a-z0-9_]")),
                       ],
-                      decoration:
-                          buildSignUpInputDecoration('Favorite #Hashtags'),
+                      decoration: buildSignUpInputDecoration(
+                          context, 'Favorite #Hashtags'),
                     ),
                     suggestionsCallback: (pattern) async {
                       return await PopularHashtagsService.fetchPopularHashtags(
@@ -711,7 +711,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               style: TextStyle(
                 fontSize: 16.0,
               ),
-              decoration: buildSignUpInputDecoration('Name'),
+              decoration: buildSignUpInputDecoration(context, 'Name'),
               // onChanged: (val) {
               //   setState(() => _name = val);
               // },
@@ -734,7 +734,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                         new LengthLimitingTextInputFormatter(20),
                         FilteringTextInputFormatter.allow(RegExp("[a-z0-9_]")),
                       ],
-                      decoration: buildSignUpInputDecoration('@handle'),
+                      decoration:
+                          buildSignUpInputDecoration(context, '@handle'),
                       focusNode: handleFocus,
                     ),
                     suggestionsCallback: (pattern) async {
@@ -876,7 +877,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         TextFormField(
           validator: EmailValidator.validate,
           style: TextStyle(fontSize: 16.0),
-          decoration: buildSignUpInputDecoration('Email'),
+          decoration: buildSignUpInputDecoration(context, 'Email'),
           onSaved: (val) => _email = val,
         ),
       );
@@ -903,7 +904,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                     controller: _passwordController,
                     validator: PasswordValidator.validate,
                     style: TextStyle(fontSize: 16.0),
-                    decoration: buildSignUpInputDecoration('Password'),
+                    decoration: buildSignUpInputDecoration(context, 'Password'),
                     obscureText: !_showPassword,
                     onSaved: (val) => _password = val,
                   ),
@@ -970,8 +971,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                       controller: _confirmPasswordController,
                       validator: PasswordValidator.validate,
                       style: TextStyle(fontSize: 16.0),
-                      decoration:
-                          buildSignUpInputDecoration('Confirm Password'),
+                      decoration: buildSignUpInputDecoration(
+                          context, 'Confirm Password'),
                       obscureText: !_showConfirmPassword,
                       // onSaved: (val) => _password = val,
                     ),

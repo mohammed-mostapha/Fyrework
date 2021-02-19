@@ -11,10 +11,10 @@ const textInputDecoration = InputDecoration(
   ),
 );
 
-InputDecoration buildSignUpInputDecoration(String hint) {
+InputDecoration buildSignUpInputDecoration(BuildContext context, String hint) {
   return InputDecoration(
     contentPadding: EdgeInsets.all(0),
-    hintStyle: TextStyle(fontSize: 16, color: Colors.black45),
+    hintStyle: Theme.of(context).textTheme.caption,
     hintText: hint,
     errorStyle: TextStyle(height: 0),
     // filled: true,
@@ -28,10 +28,11 @@ InputDecoration buildSignUpInputDecoration(String hint) {
   );
 }
 
-InputDecoration profileEditingInputDecoration(String hint) {
+InputDecoration profileEditingInputDecoration(
+    BuildContext context, String hint) {
   return InputDecoration(
     contentPadding: EdgeInsets.all(0),
-    hintStyle: TextStyle(fontSize: 16, color: Colors.grey),
+    hintStyle: Theme.of(context).textTheme.caption,
     hintText: hint,
     errorStyle: TextStyle(height: 0),
     // filled: true,

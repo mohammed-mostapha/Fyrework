@@ -961,8 +961,8 @@ class _MyProfileViewState extends State<MyProfileView> {
                       style: DefaultTextStyle.of(context)
                           .style
                           .copyWith(fontSize: 16, color: Colors.white),
-                      decoration:
-                          profileEditingInputDecoration('Favorite #Hashtags'),
+                      decoration: profileEditingInputDecoration(
+                          context, 'Favorite #Hashtags'),
                     ),
                     suggestionsCallback: (pattern) async {
                       return await PopularHashtagsService.fetchPopularHashtags(
@@ -996,16 +996,6 @@ class _MyProfileViewState extends State<MyProfileView> {
             ),
             onTap: () {},
           ),
-          // TextFormField(
-          //         initialValue: 'this is initial',
-          //         validator: HashtagValidator.validate,
-          //         style: TextStyle(fontSize: 16.0, color: Colors.white),
-          //         decoration: profileEditingInputDecoration('#Hashtag'),
-          //         // onChanged: (val) {
-          //         //   setState(() => _myNewHashtag.text = val);
-          //         // },
-          //         onSaved: (val) => _myNewHashtag.text = val,
-          //       ),
 
           GestureDetector(
             child: ListTile(
@@ -1026,7 +1016,8 @@ class _MyProfileViewState extends State<MyProfileView> {
                       controller: _myNewUsername,
                       validator: UsernameValidator.validate,
                       style: TextStyle(fontSize: 16.0, color: Colors.white),
-                      decoration: profileEditingInputDecoration('Username'),
+                      decoration:
+                          profileEditingInputDecoration(context, 'Username'),
                       // onChanged: (val) {
                       //   setState(() => _myNewUsername.text = val);
                       // },
@@ -1056,7 +1047,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                     controller: _myNewName,
                     validator: NameValidator.validate,
                     style: TextStyle(fontSize: 16.0, color: Colors.white),
-                    decoration: profileEditingInputDecoration('Name'),
+                    decoration: profileEditingInputDecoration(context, 'Name'),
                     // onChanged: (val) {
                     //   setState(() => _myNewName.text = val);
                     // },
@@ -1085,7 +1076,8 @@ class _MyProfileViewState extends State<MyProfileView> {
                     controller: _myNewEmailaddress,
                     validator: EmailValidator.validate,
                     style: TextStyle(fontSize: 16.0, color: Colors.white),
-                    decoration: profileEditingInputDecoration('Email address'),
+                    decoration:
+                        profileEditingInputDecoration(context, 'Email address'),
                     // onChanged: (val) {
                     //   setState(() => _myNewEmailaddress.text = val);
                     // },

@@ -174,6 +174,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                   child: TextFormField(
                                     controller: _addProposalController,
                                     decoration: buildSignUpInputDecoration(
+                                        context,
                                         'Describe your proposal in brief'),
                                     inputFormatters: [
                                       new LengthLimitingTextInputFormatter(500),
@@ -373,7 +374,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                                   _offeredBudgetController,
                                               decoration:
                                                   buildSignUpInputDecoration(
-                                                      '0.00'),
+                                                      context, '0.00'),
                                               keyboardType:
                                                   TextInputType.number,
                                               validator: (value) =>

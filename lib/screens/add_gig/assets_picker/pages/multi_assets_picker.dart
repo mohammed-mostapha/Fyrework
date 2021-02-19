@@ -418,15 +418,13 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                             color: Theme.of(context).primaryColor,
                           ),
                           borderRadius: BorderRadius.all(Radius.circular(2))),
-                      child: Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Back',
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Theme.of(context).primaryColor),
-                          ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Back',
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context).primaryColor),
                         ),
                       ),
                     ),
@@ -442,15 +440,13 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                             color: Theme.of(context).primaryColor,
                           ),
                           borderRadius: BorderRadius.all(Radius.circular(2))),
-                      child: Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Publish',
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Theme.of(context).primaryColor),
-                          ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Publish',
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context).primaryColor),
                         ),
                       ),
                     ),

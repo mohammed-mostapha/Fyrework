@@ -6,12 +6,25 @@ ThemeData fyreworkTheme() {
       headline1: base.headline5.copyWith(
         // fontFamily: 'Montserrat-Light',
         fontSize: 20.0,
-        color: Colors.black,
+        fontWeight: FontWeight.normal,
+        color: Color(0xFF000000),
       ),
       bodyText1: base.headline6.copyWith(
         // fontFamily: 'Montserrat-Light',
         fontSize: 16.0,
         color: Color(0xFF000000),
+        fontWeight: FontWeight.normal,
+      ),
+      caption: base.headline6.copyWith(
+        // fontFamily: 'Montserrat-Light',
+        fontSize: 16.0,
+        color: Color(0xFFBDBDBD),
+        fontWeight: FontWeight.normal,
+      ),
+      headline6: base.headline6.copyWith(
+        // fontFamily: 'Montserrat-Light',
+        fontSize: 12.0,
+        color: Color(0xFFBDBDBD),
         fontWeight: FontWeight.normal,
       ),
       bodyText2: base.headline6.copyWith(

@@ -170,10 +170,8 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                   child: OutlineButton(
                     borderSide:
                         BorderSide(color: Theme.of(context).primaryColor),
-                    child: Text(
-                      'Next',
-                      style: TextStyle(fontSize: 16),
-                    ),
+                    child: Text('Next',
+                        style: Theme.of(context).textTheme.bodyText1),
                     onPressed: () async {
                       await saveFormValuesAndPickMediaFiles();
                     },
@@ -184,9 +182,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                 padding: const EdgeInsets.all(0),
                 child: Text(
                   'Create Gig',
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                  ),
+                  style: Theme.of(context).textTheme.headline1,
                 ),
               ),
             ),
@@ -220,9 +216,11 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                             backgroundColor: Colors.black,
                                             label: Text(
                                               '$e',
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.white),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1
+                                                  .copyWith(
+                                                      color: Colors.white),
                                             ),
                                             onDeleted: () {
                                               setState(() {
@@ -259,7 +257,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                       ],
 
                                       decoration: buildSignUpInputDecoration(
-                                          'Favorite #Hashtags'),
+                                          context, 'Favorite #Hashtags'),
                                     ),
                                     suggestionsCallback: (pattern) async {
                                       return await PopularHashtagsService
@@ -311,7 +309,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                                   .primaryColor,
                                               offset: Offset(0, -2.5))
                                         ],
-                                        fontSize: 16,
+                                        fontSize: 14,
                                         color: Colors.transparent,
                                         decoration: TextDecoration.underline,
                                         decorationThickness: 2,
@@ -382,7 +380,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                               padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
                               child: TextFormField(
                                 decoration: buildSignUpInputDecoration(
-                                    'Describe your gig...'),
+                                    context, 'Describe your gig...'),
                                 inputFormatters: [
                                   new LengthLimitingTextInputFormatter(500),
                                 ],
@@ -455,15 +453,17 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                                           color: Colors.white,
                                                         ),
                                                         child: Center(
-                                                          child: Text(
-                                                            value,
-                                                            style: TextStyle(
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .primaryColor,
-                                                            ),
-                                                          ),
-                                                        ),
+                                                            child:
+                                                                TextFormField(
+                                                          enabled: false,
+                                                          decoration: buildSignUpInputDecoration(
+                                                                  context,
+                                                                  value)
+                                                              .copyWith(
+                                                                  enabledBorder:
+                                                                      InputBorder
+                                                                          .none),
+                                                        )),
                                                       ),
                                                       value: value,
                                                     ))
@@ -475,10 +475,10 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                             },
                                             value: _gigCurrency,
                                             isExpanded: false,
-                                            hint: Text(
-                                              'Currency',
-                                              style: TextStyle(fontSize: 17),
-                                            ),
+                                            hint: Text('Currency',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .caption),
                                             validator: (value) =>
                                                 value == null ? '*' : null,
                                           ),
@@ -494,12 +494,11 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                       width:
                                           MediaQuery.of(context).size.width / 3,
                                       child: TextFormField(
-                                        decoration: InputDecoration(
-                                          hintText: 'Budget',
-                                          border: InputBorder.none,
-                                          contentPadding:
-                                              EdgeInsets.symmetric(vertical: 7),
-                                        ),
+                                        decoration: buildSignUpInputDecoration(
+                                                context, 'Budget')
+                                            .copyWith(
+                                                enabledBorder:
+                                                    InputBorder.none),
                                         // Only numbers can be entered
                                         keyboardType: TextInputType.number,
                                         inputFormatters: <TextInputFormatter>[
@@ -548,11 +547,10 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                   ),
                                   Flexible(
                                     child: Text(
-                                      "Adult content that should not be visible to minors.",
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                      ),
-                                    ),
+                                        "Adult content that should not be visible to minors.",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6),
                                   ),
                                 ],
                               ),
@@ -691,94 +689,84 @@ class _AppointmentCardState extends State<AppointmentCard> {
           ? EdgeInsets.only(bottom: 30)
           : EdgeInsets.zero,
       child: SlidingCard(
-        slimeCardElevation: 0.5,
+        slimeCardElevation: 0,
         // slidingAnimationReverseCurve: Curves.bounceInOut,
         cardsGap: SizeConfig.safeBlockVertical,
         controller: widget.slidingCardController,
         slidingCardWidth: SizeConfig.horizontalBloc * 90,
         visibleCardHeight: SizeConfig.safeBlockVertical * 17,
         hiddenCardHeight: SizeConfig.safeBlockVertical * 15,
-        frontCardWidget: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Container(
-              child: Row(
-                children: <Widget>[
-                  SizedBox(
-                    width: 20,
-                    child: Radio(
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      value: 'I need a provider',
-                      groupValue: AppointmentCard.gigValue,
-                      activeColor: Theme.of(context).primaryColor,
-                      onChanged: (T) {
-                        widget.onCardTapped();
-                        setState(() {
-                          AppointmentCard.gigValue = T;
-                          // AppointmentCard.gigDeadline = _formattedDate;
-                          AppointmentCard.gigDeadline =
-                              new DateTime.now().add(Duration(days: 30));
-
-                          print('deadline: ${AppointmentCard.gigDeadline}');
-                          // Gig().gigValue = gigValue;
-                        });
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    'I need a provider',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 17,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width / 3,
-              child: Row(
-                children: <Widget>[
-                  SizedBox(
-                    width: 20,
-                    child: Radio(
+        frontCardWidget: Container(
+          color: Colors.grey[50],
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Container(
+                child: Row(
+                  children: <Widget>[
+                    SizedBox(
+                      width: 20,
+                      child: Radio(
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        value: 'Gig I can do',
+                        value: 'I need a provider',
                         groupValue: AppointmentCard.gigValue,
                         activeColor: Theme.of(context).primaryColor,
                         onChanged: (T) {
-                          widget.slidingCardController.collapseCard();
+                          widget.onCardTapped();
                           setState(() {
                             AppointmentCard.gigValue = T;
-                            AppointmentCard.gigDeadline = null;
-                            print('deadline: ${AppointmentCard.gigDeadline}');
+                            // AppointmentCard.gigDeadline = _formattedDate;
+                            AppointmentCard.gigDeadline =
+                                new DateTime.now().add(Duration(days: 30));
+
                             // Gig().gigValue = gigValue;
                           });
-                        }),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    'Gig I can do',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 17,
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text('I need a provider',
+                        style: Theme.of(context).textTheme.caption),
+                  ],
+                ),
               ),
-            ),
-          ],
+              Container(
+                width: MediaQuery.of(context).size.width / 3,
+                child: Row(
+                  children: <Widget>[
+                    SizedBox(
+                      width: 20,
+                      child: Radio(
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          value: 'Gig I can do',
+                          groupValue: AppointmentCard.gigValue,
+                          activeColor: Theme.of(context).primaryColor,
+                          onChanged: (T) {
+                            widget.slidingCardController.collapseCard();
+                            setState(() {
+                              AppointmentCard.gigValue = T;
+                              AppointmentCard.gigDeadline = null;
+                              print('deadline: ${AppointmentCard.gigDeadline}');
+                              // Gig().gigValue = gigValue;
+                            });
+                          }),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text('Gig I can do',
+                        style: Theme.of(context).textTheme.caption),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
         backCardWidget: Container(
-          // height: 100,
-          // decoration: BoxDecoration(
-          //   border: Border(bottom: BorderSide()),
-          // ),
+          color: Colors.grey[50],
           child: Padding(
             padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
             child: Row(
@@ -792,30 +780,8 @@ class _AppointmentCardState extends State<AppointmentCard> {
                       onTap: () {
                         _selectedDate(context);
                       },
-                      child: Text(
-                        '${AppointmentCard.gigDeadline}',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      // child: TextFormField(
-                      //   style: TextStyle(color: Colors.grey, fontSize: 17),
-                      //   enabled: false,
-                      //   controller: _deadLineController,
-                      //   decoration: InputDecoration(
-                      //     border: InputBorder.none,
-                      //     focusedBorder: InputBorder.none,
-                      //     enabledBorder: InputBorder.none,
-                      //     errorBorder: InputBorder.none,
-                      //     disabledBorder: InputBorder.none,
-                      //   ),
-                      //   onChanged: (deadline) {
-                      //     setState(() {
-                      //       AppointmentCard.gigDeadline = deadline;
-                      //     });
-                      //   },
-                      //   onSaved: (value) => AppointmentCard.gigDeadline != null
-                      //       ? AppointmentCard.gigDeadline = value
-                      //       : AppointmentCard.gigDeadline = null,
-                      // ),
+                      child: Text('${AppointmentCard.gigDeadline}',
+                          style: Theme.of(context).textTheme.caption),
                     ),
                   ),
                 ),
@@ -825,7 +791,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
                       'Deadline',
-                      style: TextStyle(fontSize: 17, color: Colors.grey),
+                      style: Theme.of(context).textTheme.caption,
                     ),
                   ),
                 ),

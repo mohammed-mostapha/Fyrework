@@ -37,13 +37,13 @@ class _PlacesAutocompleteState extends State<PlacesAutocomplete> {
       child: Expanded(
         child: TextFormField(
           decoration: widget.signUpDecoraiton
-              ? buildSignUpInputDecoration('Location')
-              : profileEditingInputDecoration('Location'),
+              ? buildSignUpInputDecoration(context, 'Location')
+              : profileEditingInputDecoration(context, 'Location'),
           style: TextStyle(
               color: widget.signUpDecoraiton
                   ? Theme.of(context).primaryColor
                   : Theme.of(context).accentColor,
-              fontSize: 16),
+              fontSize: 14),
           controller: PlacesAutocomplete.placesAutoCompleteController,
           validator: (val) => val.isEmpty ? '' : null,
           onChanged: (val) {
