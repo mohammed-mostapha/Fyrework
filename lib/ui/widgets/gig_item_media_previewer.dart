@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
-import 'package:better_player/better_player.dart';
+import 'package:video_player/video_player.dart';
+import 'package:Fyrework/ui/widgets/chewie_list_item.dart';
 
 class GigItemMediaPreviewer extends StatefulWidget {
   final List<dynamic> receivedGigMediaFilesUrls;
@@ -15,6 +15,12 @@ class GigItemMediaPreviewer extends StatefulWidget {
 }
 
 class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  TabController gigMediaFilesController;
   List<dynamic> receivedGigMediaFilesUrls;
   _GigItemMediaPreviewerState(this.receivedGigMediaFilesUrls);
   int _current = 0;
@@ -46,7 +52,9 @@ class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
             },
             items: receivedGigMediaFilesUrls.map((url) {
               //condition to specify whether its an image or a video to show
-              if (url.contains("imageFile")) {
+              if (url.contains("jpeg") ||
+                  url.contains("jpg") ||
+                  url.contains("PNG")) {
                 return Container(
                   width: double.infinity,
                   child: Image.network(
@@ -54,25 +62,15 @@ class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
                     fit: BoxFit.fill,
                   ),
                 );
-              } else if (url.contains("videoFile")) {
+              } else if (url.contains("mp4")) {
                 return Container(
-                  child: BetterPlayer.network(url),
+                  child: ChewieListItem(
+                    videoPlayerController: VideoPlayerController.network(url),
+                  ),
                 );
               } else {
                 //
               }
-              //end codition
-              return Builder(
-                builder: (BuildContext context) {
-                  return Container(
-                    color: Theme.of(context).primaryColor,
-                    child: Image.asset(
-                      url,
-                      fit: BoxFit.fill,
-                    ),
-                  );
-                },
-              );
             }).toList(),
           ),
           SizedBox(height: 10),

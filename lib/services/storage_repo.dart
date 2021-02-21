@@ -46,8 +46,8 @@ class StorageRepo {
   //uploading gig media files
 
   Future<String> uploadMediaFile({
-    @required File mediaFileToUpload,
     @required String title,
+    @required File mediaFileToUpload,
   }) async {
     var imageFileName =
         title + DateTime.now().millisecondsSinceEpoch.toString();

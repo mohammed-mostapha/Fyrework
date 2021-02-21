@@ -17,6 +17,7 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
   final String bell = 'assets/svgs/light/bell.svg';
   final String search_thin = 'assets/svgs/flaticon/search_thin.svg';
   final String search_thick = 'assets/svgs/flaticon/search_thick.svg';
+  TabController trendsController;
   TextEditingController searchController = TextEditingController();
   // bool isSearchOpen = false;
   String queryString;
@@ -98,32 +99,25 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
               ),
             ],
           ),
+          autofocus: false,
+          defaultHintText: 'Search Fyrework',
           backgroundColor: Theme.of(context).accentColor,
-          // onBackPressed: _onRestoreAllData,
-          // onClearPressed: _onRestoreAllData,
-          // onChanged: _onSearchChanged,
           controller: searchController,
-          // onChanged: updateQueryString(searchController.text),
           onChanged: (query) {
             setState(() {
               queryStringProvider.updateQueryString(query);
             });
           },
-          onOpenSearchPressed: () {
-            //   setState(() {
-            //     isSearchOpen = true;
-            //   });
-          },
+          onOpenSearchPressed: () {},
           onBackPressed: () {
-            //   setState(() {
-            //     isSearchOpen = false;
-            //   });
             setState(() {
               queryStringProvider.updateQueryString('');
             });
           },
         ),
         body: TabBarView(
+          physics: NeverScrollableScrollPhysics(),
+          controller: trendsController,
           children: [
             AllGigsView(),
             ClientGigsView(),

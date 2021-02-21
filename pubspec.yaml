@@ -45,7 +45,7 @@ dependencies:
   provider: ^4.3.2+1
   intl: 
   geolocator: 5.3.2+2
-  chewie: 
+  chewie: 0.9.10
   flutter_absolute_path:
   flutter_spinkit:
   flutter_auth_buttons:
@@ -53,7 +53,6 @@ dependencies:
   intl_phone_number_input: 0.4.6+2
   carousel_slider: 1.4.1
   jiffy:
-  better_player: 0.0.25
   timeago: 2.0.27
   custom_switch:
   expandable_text: 1.1.0
@@ -64,6 +63,7 @@ dependencies:
   url_launcher: 5.7.6
   flutter_easyloading: 2.2.2
   flutter_local_notifications: 3.0.1+6
+  image_slider: ^1.0.2
   
 
   
@@ -76,7 +76,7 @@ dependencies:
   extended_image: 
   path_provider: 
   photo_manager: 
-  video_player: 0.11.1+2
+  video_player: ^0.10.12+5
   flutter_common_exports: 
   collection: 
   #for posting gigs

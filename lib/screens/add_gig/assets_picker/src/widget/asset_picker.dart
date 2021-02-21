@@ -537,12 +537,10 @@ class AssetPicker extends StatelessWidget {
               if (provider.isSelectedNotEmpty) {
                 //differentiating whether this is for profilePicturePicker or multiAssetsPicker
                 if (provider.selectedAssets.length == 1) {
-                  // File selectedProfilePicture =
-                  //     await provider.selectedAssets.first.originFile;
-                  // Navigator.of(context).pop(provider.selectedAssets);
                   Navigator.of(context).pop(provider.selectedAssets);
                   print('coming from asset_picker');
                 } else {
+                  print('selectedAssets are: ${provider.selectedAssets}');
                   Navigator.of(context).pop(provider.selectedAssets);
                 }
               }

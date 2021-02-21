@@ -17,8 +17,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // import 'dart:math' as math;
 import 'package:intl/intl.dart';
 
-enum UrlType { IMAGE, VIDEO, UNKNOWN }
-
 class MultiAssetsPicker extends StatefulWidget {
   final bool appointed;
   final String gigId;
@@ -333,22 +331,10 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
     String storageResult;
     if (gigMediaFiles != null) {
       for (var i = 0; i < gigMediaFiles.length; i++) {
-        final parsedItemUrl = getUrlType(gigMediaFiles[i].path);
-        if (parsedItemUrl == UrlType.IMAGE) {
-          //uploading as an image file
-          storageResult = await StorageRepo().uploadMediaFile(
-            mediaFileToUpload: gigMediaFiles[i],
-            title: fileName.basename(gigMediaFiles[i].path + "imageFile"),
-          );
-        } else if (parsedItemUrl == UrlType.VIDEO) {
-          //uploading as a video file
-          storageResult = await StorageRepo().uploadMediaFile(
-            mediaFileToUpload: gigMediaFiles[i],
-            title: fileName.basename(gigMediaFiles[i].path + "videoFile"),
-          );
-        } else {
-          // uploading and didn't specify an extension
-        }
+        storageResult = await StorageRepo().uploadMediaFile(
+          title: fileName.basename(gigMediaFiles[i].path),
+          mediaFileToUpload: gigMediaFiles[i],
+        );
 
         //adding each downloadUrl to downloadUrls list
         widget.gigMeidaFilesDownloadUrls.add(storageResult);
@@ -385,8 +371,6 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
 
   clearGigMediaFiles() {
     gigMediaFiles.clear();
-    print(gigMediaFiles);
-    // choosedAssets = false;
   }
 
   @override
@@ -584,19 +568,6 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
         ),
       ),
     );
-  }
-
-  // detecting the urlType from firebase links
-  UrlType getUrlType(String url) {
-    Uri uri = Uri.parse(url);
-    String typeString = uri.path.substring(uri.path.length - 3).toLowerCase();
-    if (typeString == "jpg" || typeString == "PNG" || typeString == "gif") {
-      return UrlType.IMAGE;
-    } else if (typeString == "mp4" || typeString == "avi") {
-      return UrlType.VIDEO;
-    } else {
-      return UrlType.UNKNOWN;
-    }
   }
 
   @override

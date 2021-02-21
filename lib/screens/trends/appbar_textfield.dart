@@ -823,7 +823,10 @@ class _AppBarTextFieldState extends State<AppBarTextField>
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               IconButton(
-                icon: widget.backBtnIcon,
+                icon: Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: widget.backBtnIcon,
+                ),
                 onPressed: () {
                   _onBackPressed();
                 },
