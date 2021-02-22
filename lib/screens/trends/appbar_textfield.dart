@@ -1,5 +1,8 @@
 library appbar_textfield;
 
+import 'package:Fyrework/screens/trends/AllGigs_view.dart';
+import 'package:Fyrework/screens/trends/clientGigs_view.dart';
+import 'package:Fyrework/screens/trends/providerGigs_view.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:circular_reveal_animation/circular_reveal_animation.dart';
@@ -661,7 +664,10 @@ class AppBarTextField extends StatefulWidget implements PreferredSizeWidget {
     this.searchButtonIcon = const Icon(Icons.search),
     this.searchContainerColor = Colors.lightBlueAccent,
     this.clearBtnIcon = const Icon(Icons.close),
-    this.backBtnIcon = const Icon(Icons.arrow_back),
+    this.backBtnIcon = const Icon(
+      Icons.arrow_back,
+      color: Colors.white,
+    ),
     this.onOpenSearchPressed,
     this.onBackPressed,
     this.onClearPressed,
@@ -676,6 +682,8 @@ class AppBarTextField extends StatefulWidget implements PreferredSizeWidget {
 class _AppBarTextFieldState extends State<AppBarTextField>
     with SingleTickerProviderStateMixin {
   SearchState _searchState = SearchState.title;
+
+  TabController _appBarTextfieldController;
 
   Animation<double> _revealAnimation;
   AnimationController _revealAnimationController;
@@ -760,11 +768,10 @@ class _AppBarTextFieldState extends State<AppBarTextField>
             ...widget.trailingActionButtons ?? [Container()],
           ],
         ),
-        // Positioned.fill(child: _buildSearchTitle())
-        Container(
-          height: 50,
-          child: _buildSearchTitle(),
-        ),
+        Positioned.fill(child: _buildSearchTitle())
+        // Container(
+        //   child: _buildSearchTitle(),
+        // ),
       ],
     );
   }
@@ -783,7 +790,7 @@ class _AppBarTextFieldState extends State<AppBarTextField>
     if (widget.onBackPressed != null) {
       widget.onBackPressed();
     }
-
+    FocusScope.of(context).unfocus();
     _onSearchPressed();
   }
 
@@ -816,83 +823,131 @@ class _AppBarTextFieldState extends State<AppBarTextField>
   Widget _buildSearchTitle() {
     return SafeArea(
       child: CircularRevealAnimation(
-        child: Container(
-          color: widget.searchContainerColor,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              IconButton(
-                icon: Padding(
-                  padding: EdgeInsets.only(top: 10),
-                  child: widget.backBtnIcon,
-                ),
-                onPressed: () {
-                  _onBackPressed();
-                },
-                color: Theme.of(context).primaryColor,
+        child: Column(
+          children: [
+            Container(
+              height: 50,
+              // color: widget.searchContainerColor,
+              color: Theme.of(context).primaryColor,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    icon: Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: widget.backBtnIcon,
+                    ),
+                    onPressed: () {
+                      _onBackPressed();
+                    },
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  Expanded(
+                    child: TextField(
+                      // controller: _textController,
+                      controller: widget.controller,
+                      focusNode: widget.focusNode,
+                      decoration: widget.decoration ??
+                          InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.only(
+                                top: kdefaultDecorationHeightOffset),
+                            hintText: widget.defaultHintText,
+                          ),
+                      keyboardType: widget.keyboardType,
+                      textInputAction: widget.textInputAction,
+                      textCapitalization: widget.textCapitalization,
+                      // style: widget.style,
+                      style: TextStyle(color: Theme.of(context).accentColor),
+                      strutStyle: widget.strutStyle,
+                      textAlign: widget.textAlign,
+                      textAlignVertical: widget.textAlignVertical,
+                      textDirection: widget.textDirection,
+                      readOnly: widget.readOnly,
+                      toolbarOptions: widget.toolbarOptions,
+                      showCursor: widget.showCursor,
+                      autofocus: widget.autofocus ?? true,
+                      // obscuringCharacter: widget.obscuringCharacter,
+                      obscureText: widget.obscureText,
+                      autocorrect: widget.autocorrect,
+                      smartDashesType: widget.smartDashesType,
+                      smartQuotesType: widget.smartQuotesType,
+                      enableSuggestions: widget.enableSuggestions,
+                      maxLines: widget.maxLines,
+                      minLines: widget.minLines,
+                      expands: widget.expands,
+                      maxLength: widget.maxLength,
+                      maxLengthEnforced: widget.maxLengthEnforced,
+                      onChanged: widget.onChanged,
+                      onEditingComplete: widget.onEditingComplete,
+                      onSubmitted: widget.onSubmitted,
+                      inputFormatters: widget.inputFormatters,
+                      enabled: widget.enabled,
+                      cursorWidth: widget.cursorWidth,
+                      // cursorHeight: widget.cursorHeight,
+                      cursorRadius: widget.cursorRadius,
+                      cursorColor: widget.cursorColor,
+                      selectionHeightStyle: widget.selectionHeightStyle,
+                      selectionWidthStyle: widget.selectionWidthStyle,
+                      keyboardAppearance: widget.keyboardAppearance,
+                      scrollPadding: widget.scrollPadding,
+                      dragStartBehavior: widget.dragStartBehavior,
+                      enableInteractiveSelection:
+                          widget.enableInteractiveSelection,
+                      onTap: widget.onTap,
+                      // mouseCursor: widget.mouseCursor,
+                      buildCounter: widget.buildCounter,
+                      scrollController: widget.scrollController,
+                      scrollPhysics: widget.scrollPhysics,
+                      // autofillHints: widget.autofillHints,
+                    ),
+                  ),
+                  _buildClearButton(),
+                ],
               ),
-              Expanded(
-                child: TextField(
-                  // controller: _textController,
-                  controller: widget.controller,
-                  focusNode: widget.focusNode,
-                  decoration: widget.decoration ??
-                      InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.only(
-                            top: kdefaultDecorationHeightOffset),
-                        hintText: widget.defaultHintText,
+            ),
+            Material(
+              color: Theme.of(context).primaryColor,
+              child: Container(
+                height: 50,
+                child: TabBar(
+                  indicatorColor: Theme.of(context).accentColor,
+                  indicatorWeight: 2,
+                  tabs: [
+                    Tab(
+                      child: Text('Hashtags',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: Theme.of(context).accentColor),
+                          maxLines: 1),
+                    ),
+                    Tab(
+                      child: Text(
+                        'Location',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: Theme.of(context).accentColor),
+                        maxLines: 1,
                       ),
-                  keyboardType: widget.keyboardType,
-                  textInputAction: widget.textInputAction,
-                  textCapitalization: widget.textCapitalization,
-                  style: widget.style,
-                  strutStyle: widget.strutStyle,
-                  textAlign: widget.textAlign,
-                  textAlignVertical: widget.textAlignVertical,
-                  textDirection: widget.textDirection,
-                  readOnly: widget.readOnly,
-                  toolbarOptions: widget.toolbarOptions,
-                  showCursor: widget.showCursor,
-                  autofocus: widget.autofocus ?? true,
-                  // obscuringCharacter: widget.obscuringCharacter,
-                  obscureText: widget.obscureText,
-                  autocorrect: widget.autocorrect,
-                  smartDashesType: widget.smartDashesType,
-                  smartQuotesType: widget.smartQuotesType,
-                  enableSuggestions: widget.enableSuggestions,
-                  maxLines: widget.maxLines,
-                  minLines: widget.minLines,
-                  expands: widget.expands,
-                  maxLength: widget.maxLength,
-                  maxLengthEnforced: widget.maxLengthEnforced,
-                  onChanged: widget.onChanged,
-                  onEditingComplete: widget.onEditingComplete,
-                  onSubmitted: widget.onSubmitted,
-                  inputFormatters: widget.inputFormatters,
-                  enabled: widget.enabled,
-                  cursorWidth: widget.cursorWidth,
-                  // cursorHeight: widget.cursorHeight,
-                  cursorRadius: widget.cursorRadius,
-                  cursorColor: widget.cursorColor,
-                  selectionHeightStyle: widget.selectionHeightStyle,
-                  selectionWidthStyle: widget.selectionWidthStyle,
-                  keyboardAppearance: widget.keyboardAppearance,
-                  scrollPadding: widget.scrollPadding,
-                  dragStartBehavior: widget.dragStartBehavior,
-                  enableInteractiveSelection: widget.enableInteractiveSelection,
-                  onTap: widget.onTap,
-                  // mouseCursor: widget.mouseCursor,
-                  buildCounter: widget.buildCounter,
-                  scrollController: widget.scrollController,
-                  scrollPhysics: widget.scrollPhysics,
-                  // autofillHints: widget.autofillHints,
+                    ),
+                    Tab(
+                      child: Text(
+                        'Users',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: Theme.of(context).accentColor),
+                        maxLines: 1,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              _buildClearButton(),
-            ],
-          ),
+            ),
+          ],
         ),
         animation: _revealAnimation,
         centerOffset: _searchBtnPosition,
