@@ -384,8 +384,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                 inputFormatters: [
                                   new LengthLimitingTextInputFormatter(500),
                                 ],
-                                validator: (value) =>
-                                    value.isEmpty ? '*' : null,
+                                validator: (value) => value.isEmpty ? '' : null,
                                 onSaved: (value) => _gigPost = value,
                                 maxLines: null,
                               ),
@@ -453,17 +452,18 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                                           color: Colors.white,
                                                         ),
                                                         child: Center(
-                                                            child:
-                                                                TextFormField(
-                                                          enabled: false,
-                                                          decoration: buildSignUpInputDecoration(
-                                                                  context,
-                                                                  value)
-                                                              .copyWith(
-                                                                  enabledBorder:
-                                                                      InputBorder
-                                                                          .none),
-                                                        )),
+                                                          // child: TextFormField(
+                                                          //   enabled: false,
+                                                          //   decoration: buildSignUpInputDecoration(
+                                                          //           context,
+                                                          //           value)
+                                                          //       .copyWith(
+                                                          //           enabledBorder:
+                                                          //               InputBorder
+                                                          //                   .none),
+                                                          // ),
+                                                          child: Text(value),
+                                                        ),
                                                       ),
                                                       value: value,
                                                     ))
@@ -475,10 +475,12 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                             },
                                             value: _gigCurrency,
                                             isExpanded: false,
-                                            hint: Text('Currency',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .caption),
+                                            hint: Text(
+                                              'Currency',
+                                              // style: Theme.of(context)
+                                              //     .textTheme
+                                              //     .caption,
+                                            ),
                                             validator: (value) =>
                                                 value == null ? '*' : null,
                                           ),
@@ -507,7 +509,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                         ],
                                         onSaved: (value) => _gigBudget = value,
                                         validator: (value) =>
-                                            value.isEmpty ? '*' : null,
+                                            value.isEmpty ? '' : null,
                                       ),
                                     ),
                                   ],

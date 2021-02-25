@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:core';
+import 'package:Fyrework/models/myUser.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,6 +10,7 @@ import 'package:Fyrework/ui/views/add_comments_view.dart';
 import 'package:Fyrework/ui/widgets/gig_item_media_previewer.dart';
 import 'package:Fyrework/ui/widgets/user_profile.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
+import 'package:Fyrework/ui/views/edit_your_gig.dart';
 
 class GigItem extends StatefulWidget {
   final appointed;
@@ -66,6 +68,7 @@ class GigItem extends StatefulWidget {
 }
 
 class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
+  bool myGig;
   final String heart = 'assets/svgs/light/heart.svg';
   final String heartSolid = 'assets/svgs/solid/heart.svg';
   final String comment = 'assets/svgs/light/comment.svg';
@@ -75,7 +78,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
   bool showLikeOverlay = false;
   AnimationController _likeAnimationController;
 
-  List<String> gigMediaFilesDownloadedUrls = List<String>();
+  // List<String> gigMediaFilesDownloadedUrls = List<String>();
 
   void initState() {
     super.initState();
@@ -156,6 +159,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    myGig = widget.gigOwnerId == MyUser.uid ? true : false;
     timeAgo.setLocaleMessages('de', timeAgo.DeMessages());
     timeAgo.setLocaleMessages('dv', timeAgo.DvMessages());
     timeAgo.setLocaleMessages('dv_short', timeAgo.DvShortMessages());
@@ -233,7 +237,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
     );
 
     return Container(
-      margin: const EdgeInsets.only(top: 20),
+      margin: const EdgeInsets.only(top: 10),
       child: Column(
         children: [
           Container(
@@ -271,31 +275,67 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                         ),
                         onTap: showUserProfile,
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 1,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(2))),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            child: Text(
-                              widget.gigOwnerId == widget.currentUserId
-                                  ? 'Edit Your gig'
-                                  : widget.gigValue == 'Gigs I can do'
-                                      ? 'Hire me'
-                                      : 'Apply',
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                            onTap: widget.gigOwnerId == widget.currentUserId
-                                ? () {
-                                    print('edit you gig');
-                                  }
+                      GestureDetector(
+                        onTap: (myGig && !widget.appointed)
+                            ? () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => EditYourGig(
+                                              gigId: widget.gigId,
+                                              currentUserId:
+                                                  widget.currentUserId,
+                                              gigOwnerId: widget.gigOwnerId,
+                                              gigOwnerEmail:
+                                                  widget.gigOwnerEmail,
+                                              gigOwnerAvatarUrl:
+                                                  widget.gigOwnerAvatarUrl,
+                                              gigOwnerUsername:
+                                                  widget.gigOwnerUsername,
+                                              gigTime: widget.gigTime,
+                                              gigOwnerLocation:
+                                                  widget.gigOwnerLocation,
+                                              gigLocation: widget.gigLocation,
+                                              gigHashtags: widget.gigHashtags,
+                                              gigMediaFilesDownloadUrls: widget
+                                                  .gigMediaFilesDownloadUrls,
+                                              gigPost: widget.gigPost,
+                                              gigDeadline: widget.gigDeadline,
+                                              gigCurrency: widget.gigCurrency,
+                                              gigBudget: widget.gigBudget,
+                                              gigValue: widget.gigValue,
+                                              adultContentText:
+                                                  widget.adultContentText,
+                                              adultContentBool:
+                                                  widget.adultContentBool,
+                                            )));
+                              }
+                            : (myGig && widget.appointed)
+                                ? () {}
                                 : widget.gigValue == 'Gigs I can do'
                                     ? () {}
                                     : () {},
+                        child: Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 1,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(2))),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              (myGig && !widget.appointed)
+                                  ? 'Edit Your gig'
+                                  : (myGig && widget.appointed)
+                                      ? 'Your gig \n Appointed'
+                                      : widget.gigValue == 'Gigs I can do'
+                                          ? 'Hire me'
+                                          : 'Apply',
+                              style: Theme.of(context).textTheme.bodyText1,
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                       )
@@ -342,29 +382,37 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                         ],
                       ),
                     ),
-                    Container(
-                      width: MediaQuery.of(context).size.width / 2.5,
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: SvgPicture.asset(
-                              mapMarkerAlt,
-                              semanticsLabel: 'Comment',
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                          Flexible(
-                            child: Text(
-                              '${widget.gigLocation}',
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.bodyText2,
+
+                    // width: MediaQuery.of(context).size.width / 2.5,
+                    widget.gigLocation != null
+                        ? Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: SvgPicture.asset(
+                                      mapMarkerAlt,
+                                      semanticsLabel: 'Location',
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      '${widget.gigLocation}',
+                                      overflow: TextOverflow.ellipsis,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText2,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           )
-                        ],
-                      ),
-                    )
+                        : Container(width: 0, height: 0),
                   ],
                 ),
                 SizedBox(
@@ -432,8 +480,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                           child: SvgPicture.asset(
                             hourglassStart,
                             semanticsLabel: 'hourglass-start',
-                            // color: Theme.of(context).primaryColor,
-                            // color: Theme.of(context).primaryColor,
                           ),
                         ),
                         Container(
@@ -457,32 +503,21 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                       ],
                     ),
                     SizedBox(height: 5),
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              "${widget.gigCurrency}",
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 2.5,
-                          height: 0,
-                        ),
-                        Container(
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              "${widget.gigBudget}",
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    Container(
+                      child: RichText(
+                        overflow: TextOverflow.ellipsis,
+                        text: TextSpan(
+                            style: Theme.of(context).textTheme.bodyText1,
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: "${widget.gigCurrency} ",
+                              ),
+                              TextSpan(
+                                text: "${widget.gigBudget}",
+                              ),
+                            ]),
+                      ),
+                    )
                   ],
                 ),
                 SizedBox(

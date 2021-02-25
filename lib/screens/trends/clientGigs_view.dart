@@ -44,7 +44,8 @@ class ClientGigsView extends StatelessWidget {
                             gigMediaFilesDownloadUrls:
                                 getDocData['gigMediaFilesDownloadUrls'],
                             gigPost: getDocData['gigPost'],
-                            gigDeadline: getDocData['gigDeadline'],
+                            gigDeadline:
+                                getDocData['gigDeadlineInUnixMilliseconds'],
                             gigCurrency: getDocData['gigCurrency'],
                             gigBudget: getDocData['gigBudget'],
                             gigValue: getDocData['gigValue'],

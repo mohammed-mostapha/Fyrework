@@ -16,6 +16,7 @@ class AllGigsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.grey,
       child: Consumer<QueryStringProvider>(
         builder: (context, data, _) {
           return StreamBuilder<QuerySnapshot>(
@@ -32,39 +33,33 @@ class AllGigsView extends StatelessWidget {
                                 snapshot.data.documents[index];
                             Map getDocData = data.data;
 
-                            return GestureDetector(
-                              // onTap: () => model.editGig(index),
-                              child: GigItem(
-                                appointed: getDocData['appointed'],
-                                appointedUserFullName:
-                                    getDocData['appointedUserFullName'],
-                                gigId: getDocData['gigId'],
-                                currentUserId: currentUserId,
-                                gigOwnerId: getDocData['gigOwnerId'],
-                                gigOwnerAvatarUrl:
-                                    getDocData['gigOwnerAvatarUrl'],
-                                gigOwnerUsername:
-                                    getDocData['gigOwnerUsername'],
-                                gigTime: getDocData['gigTime'],
-                                gigOwnerLocation:
-                                    getDocData['gigOwnerLocation'],
-                                gigLocation: getDocData['gigLocation'],
-                                gigHashtags: getDocData['gigHashtags'],
-                                gigMediaFilesDownloadUrls:
-                                    getDocData['gigMediaFilesDownloadUrls'],
-                                gigPost: getDocData['gigPost'],
-                                gigDeadline: getDocData['gigDeadline'],
-                                gigCurrency: getDocData['gigCurrency'],
-                                gigBudget: getDocData['gigBudget'],
-                                gigValue: getDocData['gigValue'],
-                                gigLikes: getDocData['gigLikes'],
-                                adultContentText:
-                                    getDocData['adultContentText'],
-                                adultContentBool:
-                                    getDocData['adultContentBool'],
-                                appointedUserId: getDocData['appointedUserId'],
-                                // onDeleteItem: () => model.deleteGig(index),
-                              ),
+                            return GigItem(
+                              appointed: getDocData['appointed'],
+                              appointedUserFullName:
+                                  getDocData['appointedUserFullName'],
+                              gigId: getDocData['gigId'],
+                              currentUserId: currentUserId,
+                              gigOwnerId: getDocData['gigOwnerId'],
+                              gigOwnerAvatarUrl:
+                                  getDocData['gigOwnerAvatarUrl'],
+                              gigOwnerUsername: getDocData['gigOwnerUsername'],
+                              gigTime: getDocData['gigTime'],
+                              gigOwnerLocation: getDocData['gigOwnerLocation'],
+                              gigLocation: getDocData['gigLocation'],
+                              gigHashtags: getDocData['gigHashtags'],
+                              gigMediaFilesDownloadUrls:
+                                  getDocData['gigMediaFilesDownloadUrls'],
+                              gigPost: getDocData['gigPost'],
+                              gigDeadline:
+                                  getDocData['gigDeadlineInUnixMilliseconds'],
+                              gigCurrency: getDocData['gigCurrency'],
+                              gigBudget: getDocData['gigBudget'],
+                              gigValue: getDocData['gigValue'],
+                              gigLikes: getDocData['gigLikes'],
+                              adultContentText: getDocData['adultContentText'],
+                              adultContentBool: getDocData['adultContentBool'],
+                              appointedUserId: getDocData['appointedUserId'],
+                              // onDeleteItem: () => model.deleteGig(index),
                             );
                           })
                       : Center(
