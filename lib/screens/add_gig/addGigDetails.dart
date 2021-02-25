@@ -95,12 +95,12 @@ class _AddGigDetailsState extends State<AddGigDetails> {
   );
 
   Future saveFormValuesAndPickMediaFiles() async {
-    _gigLocation = PlacesAutocomplete.placesAutoCompleteController.text;
     _userProfilePictureDownloadUrl = MyUser.userAvatarUrl;
     if (AppointmentCard.gigValue == null) {
       Scaffold.of(context).showSnackBar(_gigValueSnackBar);
     } else if (AppointmentCard.gigValue != null &&
         _createGigFormKey.currentState.validate()) {
+      _gigLocation = PlacesAutocomplete.placesAutoCompleteController.text;
       _createGigFormKey.currentState.save();
 
       var proceedToMultiAssetPicker = new MaterialPageRoute(

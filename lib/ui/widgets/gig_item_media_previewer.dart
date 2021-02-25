@@ -5,13 +5,15 @@ import 'package:Fyrework/ui/widgets/chewie_list_item.dart';
 
 class GigItemMediaPreviewer extends StatefulWidget {
   final List<dynamic> receivedGigMediaFilesUrls;
+  final double preferredHeight;
 
-  GigItemMediaPreviewer({Key key, @required this.receivedGigMediaFilesUrls})
+  GigItemMediaPreviewer(
+      {Key key, @required this.receivedGigMediaFilesUrls, this.preferredHeight})
       : super(key: key);
 
   @override
   _GigItemMediaPreviewerState createState() =>
-      _GigItemMediaPreviewerState(receivedGigMediaFilesUrls);
+      _GigItemMediaPreviewerState(receivedGigMediaFilesUrls, preferredHeight);
 }
 
 class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
@@ -22,7 +24,9 @@ class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
 
   TabController gigMediaFilesController;
   List<dynamic> receivedGigMediaFilesUrls;
-  _GigItemMediaPreviewerState(this.receivedGigMediaFilesUrls);
+  double preferredHeight;
+  _GigItemMediaPreviewerState(
+      this.receivedGigMediaFilesUrls, this.preferredHeight);
   int _current = 0;
 
   List<T> map<T>(List list, Function handler) {
@@ -41,7 +45,9 @@ class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           CarouselSlider(
-            height: MediaQuery.of(context).size.height / 2,
+            height: preferredHeight != null
+                ? preferredHeight
+                : MediaQuery.of(context).size.height / 2,
             initialPage: 0,
             enableInfiniteScroll:
                 receivedGigMediaFilesUrls.length > 1 ? true : false,
@@ -59,7 +65,7 @@ class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
                   width: double.infinity,
                   child: Image.network(
                     url,
-                    fit: BoxFit.fill,
+                    fit: BoxFit.cover,
                   ),
                 );
               } else if (url.contains("mp4")) {
@@ -73,7 +79,6 @@ class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
               }
             }).toList(),
           ),
-          SizedBox(height: 10),
           receivedGigMediaFilesUrls.length > 1
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -83,7 +88,7 @@ class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
                       width: 5.0,
                       height: 5.0,
                       margin:
-                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: _current == index
