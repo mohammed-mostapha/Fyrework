@@ -65,14 +65,16 @@ class EditYourGig extends StatefulWidget {
 
 class _EditYourGigState extends State<EditYourGig> {
   final _createGigFormKey = GlobalKey<FormState>();
-  TextEditingController _myFavoriteHashtagsController = TextEditingController();
   ScrollController scrollController = ScrollController();
   String clientSideWarning;
   List _myFavoriteHashtags = List();
+  TextEditingController _myFavoriteHashtagsController = TextEditingController();
   TextEditingController _gigPostController = TextEditingController();
+  TextEditingController _editedBudgetController = TextEditingController();
   bool myGig;
   String _gigPost;
   String _editedGigDeadline;
+  String _editedGigCurrency;
 
   String _gigCurrency;
   dynamic _gigBudget;
@@ -115,6 +117,8 @@ class _EditYourGigState extends State<EditYourGig> {
         ? DateFormat('yyyy-MM-dd')
             .format(DateTime.fromMillisecondsSinceEpoch(widget.gigDeadline))
         : null;
+
+    _editedGigCurrency = widget.gigCurrency;
   }
 
   getUserLocation() async {
@@ -164,6 +168,7 @@ class _EditYourGigState extends State<EditYourGig> {
     myGig = widget.gigOwnerId == MyUser.uid ? true : false;
     _myFavoriteHashtags = widget.gigHashtags;
     _gigPostController.text = widget.gigPost;
+    _editedBudgetController.text = widget.gigBudget;
 
     timeAgo.setLocaleMessages('de', timeAgo.DeMessages());
     timeAgo.setLocaleMessages('dv', timeAgo.DvMessages());
@@ -259,25 +264,60 @@ class _EditYourGigState extends State<EditYourGig> {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        SizedBox(
-                                          width: 16,
-                                          height: 16,
-                                          child: SvgPicture.asset(
-                                            mapMarkerAlt,
-                                            semanticsLabel: 'Location',
-                                            color:
-                                                Theme.of(context).primaryColor,
+                                        GestureDetector(
+                                          child: SizedBox(
+                                            width: 16,
+                                            height: 16,
+                                            child: SvgPicture.asset(
+                                              mapMarkerAlt,
+                                              semanticsLabel: 'Location',
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
                                           ),
+                                          onTap: () {
+                                            getUserLocation();
+                                          },
                                         ),
-                                        Flexible(
-                                          child: Text(
-                                            '${widget.gigLocation}',
-                                            overflow: TextOverflow.ellipsis,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText2,
-                                          ),
-                                        )
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        PlacesAutocomplete(
+                                          signUpDecoraiton: true,
+                                        ),
+                                        // Flexible(
+                                        //   child: Text(
+                                        //     '${widget.gigLocation}',
+                                        //     overflow: TextOverflow.ellipsis,
+                                        //     style: Theme.of(context)
+                                        //         .textTheme
+                                        //         .bodyText2,
+                                        //   ),
+                                        // )
+                                        // Flexible(
+                                        //   child: Padding(
+                                        //     padding: const EdgeInsets.fromLTRB(
+                                        //         0, 8.0, 0, 8.0),
+                                        //     child: Row(
+                                        //       mainAxisAlignment:
+                                        //           MainAxisAlignment
+                                        //               .spaceBetween,
+                                        //       children: <Widget>[
+                                        //         PlacesAutocomplete(
+                                        //           signUpDecoraiton: true,
+                                        //         ),
+                                        //         IconButton(
+                                        //           color: Theme.of(context)
+                                        //               .primaryColor,
+                                        //           onPressed: () {
+                                        //             getUserLocation();
+                                        //           },
+                                        //           icon: Icon(Icons.gps_fixed),
+                                        //         ),
+                                        //       ],
+                                        //     ),
+                                        //   ),
+                                        // ),
                                       ],
                                     ),
                                   ),
@@ -368,20 +408,115 @@ class _EditYourGigState extends State<EditYourGig> {
                         ),
                         SizedBox(height: 5),
                         Container(
-                          child: RichText(
-                            overflow: TextOverflow.ellipsis,
-                            text: TextSpan(
-                                style: Theme.of(context).textTheme.bodyText1,
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: "${widget.gigCurrency} ",
+                          // height: 100,
+                          decoration: BoxDecoration(
+                              border: Border(
+                                  bottom: BorderSide(
+                                      color: Colors.black26, width: 0.5))),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Container(
+                                  width: 100,
+                                  child: DropdownButtonHideUnderline(
+                                    child: Container(
+                                      child: DropdownButtonFormField(
+                                        // dropdownColor: Theme.of(context)
+                                        //     .primaryColor,
+                                        dropdownColor:
+                                            Theme.of(context).primaryColor,
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          focusedBorder: InputBorder.none,
+                                          enabledBorder: InputBorder.none,
+                                          errorBorder: InputBorder.none,
+                                          disabledBorder: InputBorder.none,
+                                        ),
+                                        items: _currencies
+                                            .map((value) => DropdownMenuItem(
+                                                  child: Container(
+                                                    width: 40,
+                                                    height: 40,
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: Colors.white,
+                                                    ),
+                                                    child: Center(
+                                                      // child: TextFormField(
+                                                      //   enabled: false,
+                                                      //   decoration: buildSignUpInputDecoration(
+                                                      //           context,
+                                                      //           value)
+                                                      //       .copyWith(
+                                                      //           enabledBorder:
+                                                      //               InputBorder
+                                                      //                   .none),
+                                                      // ),
+                                                      child: Text(value),
+                                                    ),
+                                                  ),
+                                                  value: value,
+                                                ))
+                                            .toList(),
+                                        onChanged: (selectedCurrency) {
+                                          setState(() {
+                                            _editedGigCurrency =
+                                                selectedCurrency;
+                                          });
+                                        },
+                                        value: _gigCurrency,
+                                        isExpanded: false,
+                                        hint: Text(
+                                          widget.gigCurrency,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                        ),
+                                        validator: (value) =>
+                                            value == null ? '*' : null,
+                                      ),
+                                    ),
                                   ),
-                                  TextSpan(
-                                    text: "${widget.gigBudget}",
+                                ),
+                                Container(
+                                  width: 70,
+                                  child: TextFormField(
+                                    controller: _editedBudgetController,
+                                    decoration: buildSignUpInputDecoration(
+                                            context, 'Budget')
+                                        .copyWith(
+                                            enabledBorder: InputBorder.none),
+                                    // Only numbers can be entered
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: <TextInputFormatter>[
+                                      WhitelistingTextInputFormatter.digitsOnly
+                                    ],
+                                    onSaved: (value) => _gigBudget = value,
+                                    validator: (value) =>
+                                        value.isEmpty ? '' : null,
                                   ),
-                                ]),
+                                ),
+                              ],
+                            ),
                           ),
-                        )
+                        ),
+                        // Container(
+                        //   child: RichText(
+                        //     overflow: TextOverflow.ellipsis,
+                        //     text: TextSpan(
+                        //         style: Theme.of(context).textTheme.bodyText1,
+                        //         children: <TextSpan>[
+                        //           TextSpan(
+                        //             text: "${widget.gigCurrency} ",
+                        //           ),
+                        //           TextSpan(
+                        //             text: "${widget.gigBudget}",
+                        //           ),
+                        //         ]),
+                        //   ),
+                        // )
                       ],
                     ),
                     SizedBox(
@@ -576,26 +711,6 @@ class _EditYourGigState extends State<EditYourGig> {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(
-                                        0, 8.0, 0, 8.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        PlacesAutocomplete(
-                                          signUpDecoraiton: true,
-                                        ),
-                                        IconButton(
-                                          color: Theme.of(context).primaryColor,
-                                          onPressed: () {
-                                            getUserLocation();
-                                          },
-                                          icon: Icon(Icons.gps_fixed),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
                                         0, 10, 10, 10),
                                     child: TextFormField(
                                       controller: _gigPostController,
@@ -609,133 +724,6 @@ class _EditYourGigState extends State<EditYourGig> {
                                           value.isEmpty ? '' : null,
                                       onSaved: (value) => _gigPost = value,
                                       maxLines: null,
-                                    ),
-                                  ),
-                                  Container(
-                                    // height: 100,
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                            bottom: BorderSide(
-                                                color: Colors.black26,
-                                                width: 0.5))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 10, 10, 10),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Container(
-                                            width: 100,
-                                            child: DropdownButtonHideUnderline(
-                                              child: Container(
-                                                child: DropdownButtonFormField(
-                                                  // dropdownColor: Theme.of(context)
-                                                  //     .primaryColor,
-                                                  dropdownColor:
-                                                      Theme.of(context)
-                                                          .primaryColor,
-                                                  decoration: InputDecoration(
-                                                    border: InputBorder.none,
-                                                    focusedBorder:
-                                                        InputBorder.none,
-                                                    enabledBorder:
-                                                        InputBorder.none,
-                                                    errorBorder:
-                                                        InputBorder.none,
-                                                    disabledBorder:
-                                                        InputBorder.none,
-                                                  ),
-                                                  items: _currencies
-                                                      .map((value) =>
-                                                          DropdownMenuItem(
-                                                            child: Container(
-                                                              width: 40,
-                                                              height: 40,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                                color: Colors
-                                                                    .white,
-                                                              ),
-                                                              child: Center(
-                                                                // child: TextFormField(
-                                                                //   enabled: false,
-                                                                //   decoration: buildSignUpInputDecoration(
-                                                                //           context,
-                                                                //           value)
-                                                                //       .copyWith(
-                                                                //           enabledBorder:
-                                                                //               InputBorder
-                                                                //                   .none),
-                                                                // ),
-                                                                child:
-                                                                    Text(value),
-                                                              ),
-                                                            ),
-                                                            value: value,
-                                                          ))
-                                                      .toList(),
-                                                  onChanged:
-                                                      (selectedCurrency) {
-                                                    setState(() {
-                                                      _gigCurrency =
-                                                          selectedCurrency;
-                                                    });
-                                                  },
-                                                  value: _gigCurrency,
-                                                  isExpanded: false,
-                                                  hint: Text(
-                                                    'Currency',
-                                                    // style: Theme.of(context)
-                                                    //     .textTheme
-                                                    //     .caption,
-                                                  ),
-                                                  validator: (value) =>
-                                                      value == null
-                                                          ? '*'
-                                                          : null,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            padding: EdgeInsets.fromLTRB(
-                                                0,
-                                                0,
-                                                MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    6,
-                                                0),
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                3,
-                                            child: TextFormField(
-                                              decoration:
-                                                  buildSignUpInputDecoration(
-                                                          context, 'Budget')
-                                                      .copyWith(
-                                                          enabledBorder:
-                                                              InputBorder.none),
-                                              // Only numbers can be entered
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              inputFormatters: <
-                                                  TextInputFormatter>[
-                                                WhitelistingTextInputFormatter
-                                                    .digitsOnly
-                                              ],
-                                              onSaved: (value) =>
-                                                  _gigBudget = value,
-                                              validator: (value) =>
-                                                  value.isEmpty ? '' : null,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
                                     ),
                                   ),
                                   Container(
