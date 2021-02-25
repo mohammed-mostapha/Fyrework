@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:Fyrework/models/otherUser.dart';
 
@@ -145,6 +146,35 @@ class DatabaseService {
     }
   }
   // end update profile picture only
+
+  //update my gig by gigId
+  Future updateMyGigByGigId({
+    @required String gigId,
+    String editedGigLocation,
+    DateTime editedGigDeadline,
+    String editedGigCurrency,
+    String editedGigBudget,
+    List editedFavoriteHashtags,
+    String editedGigPost,
+  }) async {
+    try {
+      return await _gigsCollection.document(gigId).updateData(<String, dynamic>{
+        'gigLocation': editedGigLocation,
+        'gigDeadlineInUnixMilliseconds':
+            editedGigDeadline.millisecondsSinceEpoch,
+        'gigCurrency': editedGigCurrency,
+        'gigBudget': editedGigBudget,
+        'gigHashtags': editedFavoriteHashtags,
+        'gigPost': editedGigPost,
+      });
+    } catch (e) {
+      if (e is PlatformException) {
+        print(e.message);
+        return e.message;
+      }
+    }
+  }
+  //end update my gig by gigId
 
   Future updateMyProfileData(
     String uid,

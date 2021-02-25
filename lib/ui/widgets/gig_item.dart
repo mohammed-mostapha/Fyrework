@@ -494,7 +494,9 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                               widget.gigDeadline != null
                                   ? DateFormat('yyyy-MM-dd').format(
                                       DateTime.fromMillisecondsSinceEpoch(
-                                          widget.gigDeadline))
+                                        widget.gigDeadline,
+                                      ),
+                                    )
                                   : "Book Gig",
                               style: Theme.of(context).textTheme.bodyText1,
                             ),

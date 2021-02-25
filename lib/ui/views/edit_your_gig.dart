@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:core';
+import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/services/places_autocomplete.dart';
 import 'package:Fyrework/services/popularHashtags.dart';
 import 'package:Fyrework/ui/shared/constants.dart';
@@ -27,7 +28,7 @@ class EditYourGig extends StatefulWidget {
   final gigHashtags;
   final gigMediaFilesDownloadUrls;
   final gigPost;
-  dynamic gigDeadline;
+  final gigDeadline;
   final gigCurrency;
   final gigBudget;
   final gigValue;
@@ -69,9 +70,9 @@ class _EditYourGigState extends State<EditYourGig> {
   TextEditingController _editedBudgetController = TextEditingController();
 
   String _editedGigLocation;
-  String _editedGigDeadline;
+  DateTime _editedGigDeadline;
   String _editedGigCurrency;
-  dynamic _editedGigBudget;
+  String _editedGigBudget;
   List _myEditedFavoriteHashtags = List();
   String _editedGigPost;
 
@@ -109,9 +110,12 @@ class _EditYourGigState extends State<EditYourGig> {
     super.initState();
 
     _editedGigDeadline = widget.gigDeadline != null
-        ? DateFormat('yyyy-MM-dd')
-            .format(DateTime.fromMillisecondsSinceEpoch(widget.gigDeadline))
+        ? DateTime.fromMillisecondsSinceEpoch(widget.gigDeadline)
         : null;
+    // widget.gigDeadline != null
+    //     ? DateFormat('yyyy-MM-dd')
+    //         .format(DateTime.fromMillisecondsSinceEpoch(widget.gigDeadline))
+    //     : null;
 
     _editedGigCurrency = widget.gigCurrency;
   }
@@ -153,17 +157,29 @@ class _EditYourGigState extends State<EditYourGig> {
     );
     if (_selectedDeadline != null) {
       setState(() {
-        _editedGigDeadline = DateFormat('yyyy-MM-dd').format(_selectedDeadline);
+        _editedGigDeadline = _selectedDeadline;
+        // DateFormat('yyyy-MM-dd').format(_selectedDeadline);
       });
     }
   }
 
   Future saveGigEdits() async {
     if (_editYourGigFormKey.currentState.validate()) {
+      EasyLoading.show();
       _editedGigLocation = PlacesAutocomplete.placesAutoCompleteController.text;
       _editYourGigFormKey.currentState.save();
 
-      // to do : implement cloud gig editing function
+      await DatabaseService().updateMyGigByGigId(
+        gigId: widget.gigId,
+        editedGigLocation: _editedGigLocation,
+        editedGigDeadline: _editedGigDeadline,
+        editedGigCurrency: _editedGigCurrency,
+        editedGigBudget: _editedGigBudget,
+        editedFavoriteHashtags: _myEditedFavoriteHashtags,
+        editedGigPost: _editedGigPost,
+      );
+
+      EasyLoading.showSuccess('');
     }
   }
 
@@ -275,10 +291,9 @@ class _EditYourGigState extends State<EditYourGig> {
                             ),
                           ),
                           onTap: () async {
-                            // EasyLoading.show();
                             await saveGigEdits();
 
-                            // EasyLoading.dismiss();
+                            EasyLoading.dismiss();
                           },
                         ),
                       ],
@@ -392,7 +407,9 @@ class _EditYourGigState extends State<EditYourGig> {
                                           fit: BoxFit.scaleDown,
                                           child: Text(
                                             _editedGigDeadline != null
-                                                ? _editedGigDeadline
+                                                ? DateFormat('yyyy-MM-dd')
+                                                    .format(_editedGigDeadline)
+                                                    .toString()
                                                 : "Book Gig",
                                             style: Theme.of(context)
                                                 .textTheme
