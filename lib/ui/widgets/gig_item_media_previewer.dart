@@ -68,7 +68,10 @@ class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
                     fit: BoxFit.cover,
                   ),
                 );
-              } else if (url.contains("mp4")) {
+              } else if (url.contains("mp4") ||
+                  url.contains("m4v") ||
+                  url.contains("mov") ||
+                  url.contains("avi")) {
                 return Container(
                   child: ChewieListItem(
                     videoPlayerController: VideoPlayerController.network(url),
