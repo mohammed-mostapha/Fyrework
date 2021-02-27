@@ -4,7 +4,7 @@ class Gig {
   final String gigOwnerId;
   final String gigOwnerAvatarUrl;
   final String gigOwnerUsername;
-  dynamic gigTime;
+  dynamic createdAt;
   final String gigOwnerLocation;
   final String gigLocation;
   final List gigHashtags;
@@ -26,7 +26,7 @@ class Gig {
     this.gigOwnerId,
     this.gigOwnerAvatarUrl,
     this.gigOwnerUsername,
-    this.gigTime,
+    this.createdAt,
     this.gigOwnerLocation,
     this.gigLocation,
     this.gigHashtags,
@@ -51,7 +51,7 @@ class Gig {
       'gigOwnerId': gigOwnerId,
       'gigOwnerAvatarUrl': gigOwnerAvatarUrl,
       'gigOwnerUsername': gigOwnerUsername,
-      'gigTime': gigTime,
+      'createdAt': createdAt,
       'gigOwnerLocation': gigOwnerLocation,
       'gigLocation': gigLocation,
       'gigHashtags': gigHashtags,
@@ -80,7 +80,7 @@ class Gig {
       gigOwnerId: map['gigOwnerId'],
       gigOwnerAvatarUrl: map['gigOwnerAvatarUrl'],
       gigOwnerUsername: map['gigOwnerUsername'],
-      gigTime: map['gigTime'],
+      createdAt: map['createdAt'],
       gigOwnerLocation: map['gigOwnerLocation'],
       gigLocation: map['gigLocation'],
       gigHashtags: map['gigHashtags'],

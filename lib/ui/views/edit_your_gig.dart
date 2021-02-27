@@ -22,7 +22,7 @@ class EditYourGig extends StatefulWidget {
   final gigOwnerEmail;
   final gigOwnerAvatarUrl;
   final gigOwnerUsername;
-  final gigTime;
+  final createdAt;
   final gigOwnerLocation;
   final gigLocation;
   final gigHashtags;
@@ -43,7 +43,7 @@ class EditYourGig extends StatefulWidget {
     @required this.gigOwnerEmail,
     @required this.gigOwnerAvatarUrl,
     @required this.gigOwnerUsername,
-    @required this.gigTime,
+    @required this.createdAt,
     @required this.gigOwnerLocation,
     @required this.gigLocation,
     @required this.gigHashtags,
@@ -239,6 +239,7 @@ class _EditYourGigState extends State<EditYourGig> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Theme.of(context).accentColor,
         resizeToAvoidBottomInset: true,
         body: Container(
           child: SingleChildScrollView(
@@ -386,50 +387,7 @@ class _EditYourGigState extends State<EditYourGig> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                GestureDetector(
-                                  child: Row(
-                                    children: <Widget>[
-                                      SizedBox(
-                                        width: 16,
-                                        height: 16,
-                                        child: SvgPicture.asset(
-                                          hourglassStart,
-                                          semanticsLabel: 'hourglass-start',
-                                        ),
-                                      ),
-                                      Container(
-                                        width: 5.0,
-                                        height: 0,
-                                      ),
-                                      Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: FittedBox(
-                                          fit: BoxFit.scaleDown,
-                                          child: Text(
-                                            _editedGigDeadline != null
-                                                ? DateFormat('yyyy-MM-dd')
-                                                    .format(_editedGigDeadline)
-                                                    .toString()
-                                                : "Book Gig",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  onTap: () {
-                                    _selectedDate(context);
-                                  },
-                                ),
-                                SizedBox(height: 5),
                                 Container(
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                          bottom: BorderSide(
-                                              color: Colors.black26,
-                                              width: 0.5))),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -513,6 +471,43 @@ class _EditYourGigState extends State<EditYourGig> {
                                       ),
                                     ],
                                   ),
+                                ),
+                                GestureDetector(
+                                  child: Row(
+                                    children: <Widget>[
+                                      SizedBox(
+                                        width: 16,
+                                        height: 16,
+                                        child: SvgPicture.asset(
+                                          hourglassStart,
+                                          semanticsLabel: 'hourglass-start',
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 5.0,
+                                        height: 0,
+                                      ),
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            _editedGigDeadline != null
+                                                ? DateFormat('yyyy-MM-dd')
+                                                    .format(_editedGigDeadline)
+                                                    .toString()
+                                                : "Book Gig",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  onTap: () {
+                                    _selectedDate(context);
+                                  },
                                 ),
                               ],
                             ),
@@ -628,8 +623,7 @@ class _EditYourGigState extends State<EditYourGig> {
                                       ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 5, 20, 0),
+                                      padding: const EdgeInsets.only(top: 5),
                                       child: GestureDetector(
                                         child: Text(
                                           'Add',
@@ -713,7 +707,7 @@ class _EditYourGigState extends State<EditYourGig> {
                                 Row(
                                   children: [
                                     Text(
-                                      timeAgo.format(widget.gigTime.toDate()),
+                                      timeAgo.format(widget.createdAt.toDate()),
                                       style:
                                           Theme.of(context).textTheme.bodyText2,
                                     ),
@@ -730,13 +724,6 @@ class _EditYourGigState extends State<EditYourGig> {
               ],
             ),
           ),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5),
-              boxShadow: [
-                BoxShadow(
-                    blurRadius: 8, color: Colors.grey[200], spreadRadius: 3)
-              ]),
         ),
       ),
     );

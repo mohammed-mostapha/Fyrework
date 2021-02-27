@@ -4,6 +4,7 @@ import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/services/navigation_service.dart';
 import 'package:Fyrework/viewmodels/base_model.dart';
 import 'package:Fyrework/services/firestore_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class CreateGigViewModel extends BaseModel {
@@ -20,7 +21,7 @@ class CreateGigViewModel extends BaseModel {
     @required String userId,
     @required String userProfilePictureDownloadUrl,
     @required String username,
-    dynamic gigTime,
+    // dynamic createdAt,
     @required List gigHashtags,
     @required String userLocation,
     @required String gigLocation,
@@ -33,8 +34,6 @@ class CreateGigViewModel extends BaseModel {
     String adultContentText,
     bool adultContentBool,
   }) async {
-    setBusy(true);
-
     var gigAdded;
     var updatedOngoingGigsByGigId;
 
@@ -47,7 +46,7 @@ class CreateGigViewModel extends BaseModel {
           gigOwnerId: userId,
           gigOwnerAvatarUrl: userProfilePictureDownloadUrl,
           gigOwnerUsername: username,
-          gigTime: new DateTime.now(),
+          createdAt: FieldValue.serverTimestamp(),
           gigHashtags: gigHashtags,
           gigOwnerLocation: userLocation,
           gigLocation: gigLocation,

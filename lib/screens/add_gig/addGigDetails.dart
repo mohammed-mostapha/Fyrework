@@ -115,7 +115,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
           gigPost: _gigPost,
           gigDeadLine: AppointmentCard.gigDeadline != null
               ? (AppointmentCard.gigDeadline.toUtc().millisecondsSinceEpoch)
-              : AppointmentCard.gigDeadline,
+              : null,
           gigCurrency: _gigCurrency,
           gigBudget: _gigBudget,
           adultContentText: _adultContentText,
@@ -140,8 +140,6 @@ class _AddGigDetailsState extends State<AddGigDetails> {
     setState(() {
       // locationController.text = formattedAddress;
       PlacesAutocomplete.placesAutoCompleteController.text = formattedAddress;
-      print(
-          'PlacesAutocomplete().placesAutoCompleteController.text: ${PlacesAutocomplete.placesAutoCompleteController.text}');
     });
   }
 
@@ -290,7 +288,6 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                         setState(() {
                                           _myFavoriteHashtags.add(suggestion);
                                           _myFavoriteHashtagsController.clear();
-                                          print(_myFavoriteHashtags);
                                         });
                                       }
                                     },
@@ -452,16 +449,6 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                                           color: Colors.white,
                                                         ),
                                                         child: Center(
-                                                          // child: TextFormField(
-                                                          //   enabled: false,
-                                                          //   decoration: buildSignUpInputDecoration(
-                                                          //           context,
-                                                          //           value)
-                                                          //       .copyWith(
-                                                          //           enabledBorder:
-                                                          //               InputBorder
-                                                          //                   .none),
-                                                          // ),
                                                           child: Text(value),
                                                         ),
                                                       ),
@@ -477,9 +464,6 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                             isExpanded: false,
                                             hint: Text(
                                               'Currency',
-                                              // style: Theme.of(context)
-                                              //     .textTheme
-                                              //     .caption,
                                             ),
                                             validator: (value) =>
                                                 value == null ? '*' : null,
@@ -639,8 +623,6 @@ class AppointmentCard extends StatefulWidget {
   final Function onCardTapped;
 
   static String gigValue;
-  // static dynamic gigDeadline = new DateFormat('yyyy-MM-dd')
-  //     .format(new DateTime.now().add(Duration(days: 30)));
   static DateTime gigDeadline = new DateTime.now().add(Duration(days: 30));
 
   @override
@@ -651,7 +633,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
   TextEditingController _deadLineController = new TextEditingController();
 
   DateTime _initialDeadline = new DateTime.now().add(Duration(days: 30));
-  // Specifying the deadline date
+
   Future<Null> _selectedDate(BuildContext context) async {
     final DateTime _selectedDeadline = await showDatePicker(
       context: context,
@@ -670,22 +652,13 @@ class _AppointmentCardState extends State<AppointmentCard> {
     );
     if (_selectedDeadline != null) {
       setState(() {
-        _initialDeadline = _selectedDeadline;
+        AppointmentCard.gigDeadline = _selectedDeadline;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    String _formattedDate = new DateFormat.yMMMd().format(_initialDeadline);
-
-    _deadLineController.value = new TextEditingValue(
-      text: _formattedDate,
-      selection: TextSelection.fromPosition(
-        TextPosition(offset: _formattedDate.length),
-      ),
-    );
-
     return Padding(
       padding: MediaQuery.of(context).orientation == Orientation.landscape
           ? EdgeInsets.only(bottom: 30)
@@ -751,7 +724,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
                             setState(() {
                               AppointmentCard.gigValue = T;
                               AppointmentCard.gigDeadline = null;
-                              print('deadline: ${AppointmentCard.gigDeadline}');
+
                               // Gig().gigValue = gigValue;
                             });
                           }),
@@ -778,13 +751,17 @@ class _AppointmentCardState extends State<AppointmentCard> {
                   width: MediaQuery.of(context).size.width * 0.40,
                   child: ButtonTheme(
                     padding: EdgeInsets.all(0),
-                    child: GestureDetector(
-                      onTap: () {
-                        _selectedDate(context);
-                      },
-                      child: Text('${AppointmentCard.gigDeadline}',
-                          style: Theme.of(context).textTheme.caption),
-                    ),
+                    child: AppointmentCard.gigDeadline != null
+                        ? GestureDetector(
+                            onTap: () {
+                              _selectedDate(context);
+                            },
+                            child: Text(
+                                DateFormat('yyyy-MM-dd')
+                                    .format(AppointmentCard.gigDeadline),
+                                style: Theme.of(context).textTheme.bodyText1),
+                          )
+                        : Container(),
                   ),
                 ),
                 Container(
@@ -810,7 +787,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
     // Additional disposal code
     AppointmentCard.gigValue = null;
     AppointmentCard.gigDeadline = null;
-    _deadLineController.dispose();
+
     super.dispose();
   }
 }

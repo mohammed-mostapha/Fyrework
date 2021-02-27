@@ -40,7 +40,7 @@ class ProvierGigsView extends StatelessWidget {
                             gigOwnerId: getDocData['gigOwnerId'],
                             gigOwnerAvatarUrl: getDocData['gigOwnerAvatarUrl'],
                             gigOwnerUsername: getDocData['gigOwnerUsername'],
-                            gigTime: getDocData['gigTime'],
+                            createdAt: getDocData['createdAt'],
                             gigOwnerLocation: getDocData['gigOwnerLocation'],
                             gigLocation: getDocData['gigLocation'],
                             gigHashtags: getDocData['gigHashtags'],

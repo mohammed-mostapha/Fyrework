@@ -16,7 +16,7 @@ class AllGigsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey,
+      color: Colors.grey[300],
       child: Consumer<QueryStringProvider>(
         builder: (context, data, _) {
           return StreamBuilder<QuerySnapshot>(
@@ -43,7 +43,7 @@ class AllGigsView extends StatelessWidget {
                               gigOwnerAvatarUrl:
                                   getDocData['gigOwnerAvatarUrl'],
                               gigOwnerUsername: getDocData['gigOwnerUsername'],
-                              gigTime: getDocData['gigTime'],
+                              createdAt: getDocData['createdAt'],
                               gigOwnerLocation: getDocData['gigOwnerLocation'],
                               gigLocation: getDocData['gigLocation'],
                               gigHashtags: getDocData['gigHashtags'],

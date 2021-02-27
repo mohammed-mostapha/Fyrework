@@ -21,7 +21,7 @@ class GigItem extends StatefulWidget {
   final gigOwnerEmail;
   final gigOwnerAvatarUrl;
   final gigOwnerUsername;
-  final gigTime;
+  final createdAt;
   final gigOwnerLocation;
   final gigLocation;
   final gigHashtags;
@@ -46,7 +46,7 @@ class GigItem extends StatefulWidget {
     this.gigOwnerEmail,
     this.gigOwnerAvatarUrl,
     this.gigOwnerUsername,
-    this.gigTime,
+    this.createdAt,
     this.gigOwnerLocation,
     this.gigLocation,
     this.gigHashtags,
@@ -237,6 +237,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
     );
 
     return Container(
+      color: Theme.of(context).accentColor,
       margin: const EdgeInsets.only(top: 10),
       child: Column(
         children: [
@@ -292,7 +293,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                                                   widget.gigOwnerAvatarUrl,
                                               gigOwnerUsername:
                                                   widget.gigOwnerUsername,
-                                              gigTime: widget.gigTime,
+                                              createdAt: widget.createdAt,
                                               gigOwnerLocation:
                                                   widget.gigOwnerLocation,
                                               gigLocation: widget.gigLocation,
@@ -368,6 +369,9 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
             padding: const EdgeInsets.fromLTRB(8, 0, 8, 16.0),
             child: Column(
               children: <Widget>[
+                SizedBox(
+                  height: 10,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -523,17 +527,16 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                   ],
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 Row(
                   children: [
                     Text(
-                      timeAgo.format(widget.gigTime.toDate()),
+                      timeAgo.format(widget.createdAt.toDate()),
                       style: Theme.of(context).textTheme.bodyText2,
                     ),
                   ],
                 ),
-                // SizedBox(height: 10.0),
                 widget.adultContentBool
                     ? Container(
                         alignment: Alignment.centerLeft,
@@ -572,12 +575,12 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
           ),
         ],
       ),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(5),
-          boxShadow: [
-            BoxShadow(blurRadius: 8, color: Colors.grey[200], spreadRadius: 3)
-          ]),
+      // decoration: BoxDecoration(
+      //     color: Colors.white,
+      //     borderRadius: BorderRadius.circular(5),
+      //     boxShadow: [
+      //       BoxShadow(blurRadius: 8, color: Colors.grey[200], spreadRadius: 3)
+      //     ]),
     );
   }
 
