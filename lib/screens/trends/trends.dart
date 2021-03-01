@@ -42,7 +42,7 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
           preferredSize: Size.fromHeight(100),
           child: AppBarTextField(
             leading: Container(
-              padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
+              padding: EdgeInsets.fromLTRB(15, 10, 0, 0),
               width: 50,
               child: StreamBuilder(
                   // stream: 'notifications stream',
