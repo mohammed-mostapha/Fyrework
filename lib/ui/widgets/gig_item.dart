@@ -9,10 +9,13 @@ import 'package:Fyrework/services/firestore_service.dart';
 import 'package:Fyrework/ui/views/add_comments_view.dart';
 import 'package:Fyrework/ui/widgets/gig_item_media_previewer.dart';
 import 'package:Fyrework/ui/widgets/user_profile.dart';
+import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:Fyrework/ui/views/edit_your_gig.dart';
+import 'package:Fyrework/screens/trends/gigIndexProvider.dart';
 
 class GigItem extends StatefulWidget {
+  final index;
   final appointed;
   final appointedUserFullName;
   final gigId;
@@ -38,6 +41,7 @@ class GigItem extends StatefulWidget {
   final Function onDeleteItem;
   GigItem({
     Key key,
+    this.index,
     this.appointed,
     this.appointedUserFullName,
     this.gigId,
@@ -159,6 +163,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    print('index from gig_item is: ${widget.index}');
     myGig = widget.gigOwnerId == MyUser.uid ? true : false;
     timeAgo.setLocaleMessages('de', timeAgo.DeMessages());
     timeAgo.setLocaleMessages('dv', timeAgo.DvMessages());
@@ -282,33 +287,39 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => EditYourGig(
-                                              gigId: widget.gigId,
-                                              currentUserId:
-                                                  widget.currentUserId,
-                                              gigOwnerId: widget.gigOwnerId,
-                                              gigOwnerEmail:
-                                                  widget.gigOwnerEmail,
-                                              gigOwnerAvatarUrl:
-                                                  widget.gigOwnerAvatarUrl,
-                                              gigOwnerUsername:
-                                                  widget.gigOwnerUsername,
-                                              createdAt: widget.createdAt,
-                                              gigOwnerLocation:
-                                                  widget.gigOwnerLocation,
-                                              gigLocation: widget.gigLocation,
-                                              gigHashtags: widget.gigHashtags,
-                                              gigMediaFilesDownloadUrls: widget
-                                                  .gigMediaFilesDownloadUrls,
-                                              gigPost: widget.gigPost,
-                                              gigDeadline: widget.gigDeadline,
-                                              gigCurrency: widget.gigCurrency,
-                                              gigBudget: widget.gigBudget,
-                                              gigValue: widget.gigValue,
-                                              adultContentText:
-                                                  widget.adultContentText,
-                                              adultContentBool:
-                                                  widget.adultContentBool,
+                                        builder: (context) =>
+                                            ChangeNotifierProvider(
+                                              create: (context) =>
+                                                  GigIndexProvider(),
+                                              child: EditYourGig(
+                                                gigIndex: widget.index,
+                                                gigId: widget.gigId,
+                                                currentUserId:
+                                                    widget.currentUserId,
+                                                gigOwnerId: widget.gigOwnerId,
+                                                gigOwnerEmail:
+                                                    widget.gigOwnerEmail,
+                                                gigOwnerAvatarUrl:
+                                                    widget.gigOwnerAvatarUrl,
+                                                gigOwnerUsername:
+                                                    widget.gigOwnerUsername,
+                                                createdAt: widget.createdAt,
+                                                gigOwnerLocation:
+                                                    widget.gigOwnerLocation,
+                                                gigLocation: widget.gigLocation,
+                                                gigHashtags: widget.gigHashtags,
+                                                gigMediaFilesDownloadUrls: widget
+                                                    .gigMediaFilesDownloadUrls,
+                                                gigPost: widget.gigPost,
+                                                gigDeadline: widget.gigDeadline,
+                                                gigCurrency: widget.gigCurrency,
+                                                gigBudget: widget.gigBudget,
+                                                gigValue: widget.gigValue,
+                                                adultContentText:
+                                                    widget.adultContentText,
+                                                adultContentBool:
+                                                    widget.adultContentBool,
+                                              ),
                                             )));
                               }
                             : (myGig && widget.appointed)

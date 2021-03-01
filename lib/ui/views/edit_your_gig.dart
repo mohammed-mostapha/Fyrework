@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:core';
+import 'package:Fyrework/screens/home/home.dart';
+import 'package:Fyrework/screens/trends/AllGigs_view.dart';
 import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/services/places_autocomplete.dart';
 import 'package:Fyrework/services/popularHashtags.dart';
@@ -10,12 +12,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:Fyrework/screens/add_gig/assets_picker/src/constants/constants.dart';
-import 'package:Fyrework/services/firestore_service.dart';
 import 'package:Fyrework/ui/widgets/gig_item_media_previewer.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
+import 'package:Fyrework/screens/trends/gigIndexProvider.dart';
 
 class EditYourGig extends StatefulWidget {
+  final gigIndex;
   final gigId;
   final currentUserId;
   final gigOwnerId;
@@ -37,6 +41,7 @@ class EditYourGig extends StatefulWidget {
 
   EditYourGig({
     Key key,
+    @required this.gigIndex,
     @required this.gigId,
     @required this.currentUserId,
     @required this.gigOwnerId,
@@ -105,6 +110,9 @@ class _EditYourGigState extends State<EditYourGig> {
   ];
   final String mapMarkerAlt = 'assets/svgs/light/map-marker-alt.svg';
   final String hourglassStart = 'assets/svgs/light/hourglass-start.svg';
+
+  var gigIndexProvider;
+
   @override
   void initState() {
     super.initState();
@@ -112,12 +120,10 @@ class _EditYourGigState extends State<EditYourGig> {
     _editedGigDeadline = widget.gigDeadline != null
         ? DateTime.fromMillisecondsSinceEpoch(widget.gigDeadline)
         : null;
-    // widget.gigDeadline != null
-    //     ? DateFormat('yyyy-MM-dd')
-    //         .format(DateTime.fromMillisecondsSinceEpoch(widget.gigDeadline))
-    //     : null;
 
     _editedGigCurrency = widget.gigCurrency;
+
+    gigIndexProvider = Provider.of<GigIndexProvider>(context, listen: false);
   }
 
   getUserLocation() async {
@@ -185,6 +191,7 @@ class _EditYourGigState extends State<EditYourGig> {
 
   @override
   Widget build(BuildContext context) {
+    print('index from edit your gig is: ${widget.gigIndex}');
     // myGig = widget.gigOwnerId == MyUser.uid ? true : false;
     _myEditedFavoriteHashtags = widget.gigHashtags;
     _editedGigPostController.text = widget.gigPost;
@@ -293,6 +300,19 @@ class _EditYourGigState extends State<EditYourGig> {
                           ),
                           onTap: () async {
                             await saveGigEdits();
+
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Home(
+                                        passedSelectedIndex: 0,
+                                      )),
+                            );
+
+                            gigIndexProvider.assignGigIndex(widget.gigIndex);
+
+                            // AllGigsView()
+                            //     .scrollToGigByIndex(gigIndex: widget.index);
 
                             EasyLoading.dismiss();
                           },

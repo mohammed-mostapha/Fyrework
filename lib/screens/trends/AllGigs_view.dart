@@ -7,26 +7,73 @@ import 'package:Fyrework/ui/widgets/gig_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:Fyrework/screens/trends/queryStringProvider.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:Fyrework/screens/trends/gigIndexProvider.dart';
 
-class AllGigsView extends StatelessWidget {
+class AllGigsView extends StatefulWidget {
   AllGigsView({Key key}) : super(key: key);
   // String currentUserId = UserController.currentUserId;
+
+  @override
+  _AllGigsViewState createState() => _AllGigsViewState();
+}
+
+class _AllGigsViewState extends State<AllGigsView> {
   final String currentUserId = MyUser.uid;
+  ItemScrollController gigScrollController;
+  ItemPositionsListener gigPositionsListener;
+  dynamic gigIndexProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    gigIndexProvider = Provider.of<GigIndexProvider>(context, listen: false);
+    gigScrollController = ItemScrollController();
+    gigPositionsListener = ItemPositionsListener.create();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => Future.delayed(Duration(milliseconds: 1000), () {
+        scrollToGigByIndex(
+          gigIndex: gigIndexProvider.getGigIndex(),
+        );
+        gigIndexProvider.assignGigIndex(0);
+      }),
+    );
+  }
+
+  void scrollToGigByIndex({int gigIndex}) {
+    print('should scroll to index: $gigIndex');
+    gigScrollController.scrollTo(
+        index: gigIndex,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeInOutCubic);
+  }
 
   @override
   Widget build(BuildContext context) {
+    // gigScrollController = ItemScrollController();
+    // gigPositionsListener = ItemPositionsListener.create();
+
+    // Future.delayed(Duration(milliseconds: 2000), () {
+    //   scrollToGigByIndex(
+    //     gigIndex: gigIndexProvider.getGigIndex(),
+    //   );
+    // });
+
     return Container(
       color: Colors.grey[300],
-      child: Consumer<QueryStringProvider>(
-        builder: (context, data, _) {
+      child: Consumer2<QueryStringProvider, GigIndexProvider>(
+        builder: (context, QueryStringProvider, GigIndexProvider, _) {
           return StreamBuilder<QuerySnapshot>(
-            // stream: DatabaseService().listenToAllGigs(),
-            stream: DatabaseService().filterAllGigs(data.getQueryString()),
+            // stream: DatabaseService().filterAllGigs(data.getQueryString()),
+            stream: DatabaseService()
+                .filterAllGigs(QueryStringProvider.getQueryString()),
             builder: (context, snapshot) {
               return !snapshot.hasData
                   ? Center(child: Text(''))
                   : snapshot.data.documents.length > 0
-                      ? ListView.builder(
+                      ? ScrollablePositionedList.builder(
+                          itemScrollController: gigScrollController,
+                          itemPositionsListener: gigPositionsListener,
                           itemCount: snapshot.data.documents.length,
                           itemBuilder: (context, index) {
                             DocumentSnapshot data =
@@ -34,6 +81,7 @@ class AllGigsView extends StatelessWidget {
                             Map getDocData = data.data;
 
                             return GigItem(
+                              index: index,
                               appointed: getDocData['appointed'],
                               appointedUserFullName:
                                   getDocData['appointedUserFullName'],

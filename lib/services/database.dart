@@ -163,8 +163,9 @@ class DatabaseService {
     try {
       return await _gigsCollection.document(gigId).updateData(<String, dynamic>{
         'gigLocation': editedGigLocation,
-        'gigDeadlineInUnixMilliseconds':
-            editedGigDeadline.millisecondsSinceEpoch,
+        'gigDeadlineInUnixMilliseconds': editedGigDeadline != null
+            ? editedGigDeadline.millisecondsSinceEpoch
+            : null,
         'gigCurrency': editedGigCurrency,
         'gigBudget': editedGigBudget,
         'gigHashtags': editedFavoriteHashtags,

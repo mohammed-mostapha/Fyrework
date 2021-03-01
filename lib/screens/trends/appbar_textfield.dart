@@ -777,13 +777,16 @@ class _AppBarTextFieldState extends State<AppBarTextField>
   }
 
   Widget _searchButton() {
-    return IconButton(
-        key: _searchIconBtnKey,
-        icon: widget.searchButtonIcon,
-        onPressed: () {
-          widget.onOpenSearchPressed();
-          _onSearchPressed();
-        });
+    return Padding(
+      padding: EdgeInsets.only(top: 10),
+      child: IconButton(
+          key: _searchIconBtnKey,
+          icon: widget.searchButtonIcon,
+          onPressed: () {
+            widget.onOpenSearchPressed();
+            _onSearchPressed();
+          }),
+    );
   }
 
   void _onBackPressed() {

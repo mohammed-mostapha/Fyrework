@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Fyrework/ui/widgets/badgeIcon.dart';
 import 'package:provider/provider.dart';
 import 'package:Fyrework/screens/trends/queryStringProvider.dart';
+import 'package:Fyrework/screens/trends/gigIndexProvider.dart';
 
 class Trends extends StatefulWidget {
   @override
@@ -40,44 +41,49 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(100),
           child: AppBarTextField(
-            // title: Text("Contacts"),
-            searchContainerColor: Theme.of(context).accentColor,
-            iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-            title: ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Container(
-                width: 50,
-                child: StreamBuilder(
-                    // stream: 'notifications stream',
-                    builder: (_, snapshot) => GestureDetector(
-                          child: BadgeIcon(
-                            icon: SizedBox(
-                              width: 20,
-                              height: 40,
-                              child: SvgPicture.asset(
-                                bell,
-                                semanticsLabel: 'bell_notifications',
-                              ),
-                            ),
-                            badgeCount: 999,
-                            badgeColor: Theme.of(context).primaryColor,
-                            badgeTextStyle: TextStyle(
-                              fontSize: 12,
-                              // color: Theme.of(context).primaryColor,
-                              color: Colors.white,
+            leading: Container(
+              padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
+              width: 50,
+              child: StreamBuilder(
+                  // stream: 'notifications stream',
+                  builder: (_, snapshot) => GestureDetector(
+                        child: BadgeIcon(
+                          icon: SizedBox(
+                            width: 20,
+                            height: 40,
+                            child: SvgPicture.asset(
+                              bell,
+                              semanticsLabel: 'bell_notifications',
                             ),
                           ),
-                          onTap: () {},
-                        )),
-              ),
-              title: Image.asset(
-                'assets/images/fyrework_logo.png',
-                width: 150,
-                height: 40,
-              ),
-              // ],
+                          badgeCount: 999,
+                          badgeColor: Theme.of(context).primaryColor,
+                          badgeTextStyle: TextStyle(
+                            fontSize: 12,
+                            // color: Theme.of(context).primaryColor,
+                            color: Colors.white,
+                          ),
+                        ),
+                        onTap: () {},
+                      )),
             ),
-
+            searchContainerColor: Theme.of(context).accentColor,
+            iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
+            title: Container(
+              padding: EdgeInsets.only(top: 10),
+              child: Row(
+                  // contentPadding: EdgeInsets.zero,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/fyrework_logo.png',
+                      width: 150,
+                      height: 40,
+                    ),
+                  ]
+                  // ],
+                  ),
+            ),
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(50),
               child: isSearchOpen
@@ -133,9 +139,12 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
         body: TabBarView(
           controller: trendsController,
           children: [
-            AllGigsView(),
+            ChangeNotifierProvider(
+              create: (context) => GigIndexProvider(),
+              child: AllGigsView(),
+            ),
             ClientGigsView(),
-            ProvierGigsView(),
+            ProviderGigsView(),
           ],
         ),
       ),

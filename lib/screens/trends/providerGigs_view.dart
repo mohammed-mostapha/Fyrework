@@ -9,8 +9,8 @@ import 'package:Fyrework/ui/widgets/gig_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 
-class ProvierGigsView extends StatelessWidget {
-  ProvierGigsView({Key key}) : super(key: key);
+class ProviderGigsView extends StatelessWidget {
+  ProviderGigsView({Key key}) : super(key: key);
   // String currentUserId = UserController.currentUserId;
   final String currentUserId = MyUser.uid;
 

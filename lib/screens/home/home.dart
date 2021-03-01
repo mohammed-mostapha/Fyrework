@@ -10,6 +10,7 @@ import 'package:Fyrework/screens/trends/queryStringProvider.dart';
 
 class Home extends StatefulWidget {
   final int passedSelectedIndex;
+
   Home({Key key, @required this.passedSelectedIndex}) : super(key: key);
   @override
   _HomeState createState() => _HomeState(passedSelectedIndex);
