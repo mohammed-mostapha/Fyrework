@@ -37,51 +37,29 @@ class CreateGigViewModel extends BaseModel {
     var gigAdded;
     var updatedOngoingGigsByGigId;
 
-    if (!_editting) {
-      gigAdded = await _firestoreService.addGig(
-        gigHashtags,
-        Gig(
-          appointed: appointed,
-          gigId: gigId,
-          gigOwnerId: userId,
-          gigOwnerAvatarUrl: userProfilePictureDownloadUrl,
-          gigOwnerUsername: username,
-          createdAt: FieldValue.serverTimestamp(),
-          gigHashtags: gigHashtags,
-          gigOwnerLocation: userLocation,
-          gigLocation: gigLocation,
-          gigMediaFilesDownloadUrls: gigMediaFilesDownloadUrls,
-          gigPost: gigPost,
-          gigDeadline: gigDeadLine,
-          gigCurrency: gigCurrency,
-          gigBudget: gigBudget,
-          gigValue: gigValue,
-          adultContentText: adultContentText,
-          adultContentBool: adultContentBool,
-        ),
-      );
-    } else {
-      gigAdded = await _firestoreService.updateGig(
-        Gig(
-          appointed: appointed,
-          gigId: gigId,
-          gigOwnerId: userId,
-          gigMediaFilesDownloadUrls: userProfilePictureDownloadUrl,
-          gigOwnerUsername: username,
-          gigHashtags: gigHashtags,
-          gigOwnerLocation: userLocation,
-          gigLocation: gigLocation,
-          gigPost: gigPost,
-          gigDeadline: gigDeadLine,
-          gigCurrency: gigCurrency,
-          gigBudget: gigBudget,
-          gigValue: gigValue,
-          adultContentText: adultContentText,
-          adultContentBool: adultContentBool,
-        ),
-      );
-    }
-    setBusy(false);
+    gigAdded = await _firestoreService.addGig(
+      gigHashtags,
+      Gig(
+        appointed: appointed,
+        gigId: gigId,
+        gigOwnerId: userId,
+        gigOwnerAvatarUrl: userProfilePictureDownloadUrl,
+        gigOwnerUsername: username,
+        createdAt: FieldValue.serverTimestamp(),
+        gigHashtags: gigHashtags,
+        gigOwnerLocation: userLocation,
+        gigLocation: gigLocation,
+        gigMediaFilesDownloadUrls: gigMediaFilesDownloadUrls,
+        gigPost: gigPost,
+        gigDeadline: gigDeadLine,
+        gigCurrency: gigCurrency,
+        gigBudget: gigBudget,
+        gigValue: gigValue,
+        adultContentText: adultContentText,
+        adultContentBool: adultContentBool,
+        hidden: false,
+      ),
+    );
 
     // if (gigAdded is String && updatedOngoingGigsByGigId is String) {
     if (gigAdded is String) {

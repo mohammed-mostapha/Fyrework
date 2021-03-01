@@ -20,6 +20,7 @@ class Gig {
   final String appointedUserId;
   final String appointedusername;
   final List appliersOrHirersByUserId;
+  final bool hidden;
   Gig({
     this.appointed = false,
     this.gigId,
@@ -42,6 +43,7 @@ class Gig {
     this.appointedUserId,
     this.appointedusername,
     this.appliersOrHirersByUserId,
+    this.hidden,
   });
 
   Map<String, dynamic> toMap() {
@@ -68,6 +70,7 @@ class Gig {
       'appointedusername': appointedusername,
       // 'appliersOrHirersByUserId': appliersOrHirersByUserId,
       'appliersOrHirersByUserId': [],
+      'hidden': hidden,
     };
   }
 
@@ -96,6 +99,7 @@ class Gig {
       appointedUserId: map['appointedUserId'],
       appointedusername: map['appointedusername'],
       appliersOrHirersByUserId: map['appliersOrHirersByUserId'],
+      hidden: map['hidden'],
     );
   }
 }

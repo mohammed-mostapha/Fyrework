@@ -79,8 +79,12 @@ class DatabaseService {
   // filter all gigs
   Stream<QuerySnapshot> filterAllGigs(String query) {
     return query.isEmpty
-        ? _gigsCollection.orderBy('createdAt', descending: true).snapshots()
+        ? _gigsCollection
+            // .where('hidden', isEqualTo: false)
+            .orderBy('createdAt', descending: true)
+            .snapshots()
         : _gigsCollection
+            .where('hidden', isEqualTo: false)
             .where('gigHashtags', arrayContains: query)
             .orderBy('createdAt', descending: true)
             .snapshots();
@@ -89,6 +93,7 @@ class DatabaseService {
   // listening to client gigs
   Stream<QuerySnapshot> listenToCilentGigs() {
     return _gigsCollection
+        .where('hidden', isEqualTo: false)
         .where('gigValue', isEqualTo: 'I need a provider')
         .orderBy('createdAt', descending: true)
         .snapshots();
@@ -97,6 +102,7 @@ class DatabaseService {
   // listening to provider gigs
   Stream<QuerySnapshot> listenToProviderGigs() {
     return _gigsCollection
+        .where('hidden', isEqualTo: false)
         .where('gigValue', isEqualTo: 'Gig I can do')
         .orderBy('createdAt', descending: true)
         .snapshots();

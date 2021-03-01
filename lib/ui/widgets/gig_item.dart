@@ -38,7 +38,8 @@ class GigItem extends StatefulWidget {
   final appointedUserId;
   final adultContentText;
   final adultContentBool;
-  final Function onDeleteItem;
+  final hidden;
+
   GigItem({
     Key key,
     this.index,
@@ -64,7 +65,7 @@ class GigItem extends StatefulWidget {
     this.appointedUserId,
     this.adultContentText,
     this.adultContentBool,
-    this.onDeleteItem,
+    this.hidden,
   }) : super(key: key);
 
   @override
@@ -241,6 +242,96 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
       onTap: () => _commentButtonPressed(),
     );
 
+    GestureDetector editYourGig = GestureDetector(
+      onTap: (myGig && !widget.appointed)
+          ? () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ChangeNotifierProvider(
+                            create: (context) => GigIndexProvider(),
+                            child: EditYourGig(
+                              gigIndex: widget.index,
+                              gigId: widget.gigId,
+                              currentUserId: widget.currentUserId,
+                              gigOwnerId: widget.gigOwnerId,
+                              gigOwnerEmail: widget.gigOwnerEmail,
+                              gigOwnerAvatarUrl: widget.gigOwnerAvatarUrl,
+                              gigOwnerUsername: widget.gigOwnerUsername,
+                              createdAt: widget.createdAt,
+                              gigOwnerLocation: widget.gigOwnerLocation,
+                              gigLocation: widget.gigLocation,
+                              gigHashtags: widget.gigHashtags,
+                              gigMediaFilesDownloadUrls:
+                                  widget.gigMediaFilesDownloadUrls,
+                              gigPost: widget.gigPost,
+                              gigDeadline: widget.gigDeadline,
+                              gigCurrency: widget.gigCurrency,
+                              gigBudget: widget.gigBudget,
+                              gigValue: widget.gigValue,
+                              adultContentText: widget.adultContentText,
+                              adultContentBool: widget.adultContentBool,
+                            ),
+                          )));
+            }
+          : (myGig && widget.appointed)
+              ? () {}
+              : widget.gigValue == 'Gigs I can do' ? () {} : () {},
+      child: Container(
+        child: Text(
+          'Edit Your gig',
+          style: Theme.of(context).textTheme.bodyText1,
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+
+    GestureDetector deleteYourGig = GestureDetector(
+      onTap: (myGig && !widget.appointed)
+          ? () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ChangeNotifierProvider(
+                            create: (context) => GigIndexProvider(),
+                            child: EditYourGig(
+                              gigIndex: widget.index,
+                              gigId: widget.gigId,
+                              currentUserId: widget.currentUserId,
+                              gigOwnerId: widget.gigOwnerId,
+                              gigOwnerEmail: widget.gigOwnerEmail,
+                              gigOwnerAvatarUrl: widget.gigOwnerAvatarUrl,
+                              gigOwnerUsername: widget.gigOwnerUsername,
+                              createdAt: widget.createdAt,
+                              gigOwnerLocation: widget.gigOwnerLocation,
+                              gigLocation: widget.gigLocation,
+                              gigHashtags: widget.gigHashtags,
+                              gigMediaFilesDownloadUrls:
+                                  widget.gigMediaFilesDownloadUrls,
+                              gigPost: widget.gigPost,
+                              gigDeadline: widget.gigDeadline,
+                              gigCurrency: widget.gigCurrency,
+                              gigBudget: widget.gigBudget,
+                              gigValue: widget.gigValue,
+                              adultContentText: widget.adultContentText,
+                              adultContentBool: widget.adultContentBool,
+                            ),
+                          )));
+            }
+          : (myGig && widget.appointed)
+              ? () {}
+              : widget.gigValue == 'Gigs I can do' ? () {} : () {},
+      child: Container(
+        child: Text(
+          'Delete Your gig',
+          style: Theme.of(context).textTheme.bodyText1,
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+
+    List<Widget> yourGigChoices = [editYourGig, deleteYourGig];
+
     return Container(
       color: Theme.of(context).accentColor,
       margin: const EdgeInsets.only(top: 10),
@@ -281,79 +372,18 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                         ),
                         onTap: showUserProfile,
                       ),
-                      GestureDetector(
-                        onTap: (myGig && !widget.appointed)
-                            ? () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            ChangeNotifierProvider(
-                                              create: (context) =>
-                                                  GigIndexProvider(),
-                                              child: EditYourGig(
-                                                gigIndex: widget.index,
-                                                gigId: widget.gigId,
-                                                currentUserId:
-                                                    widget.currentUserId,
-                                                gigOwnerId: widget.gigOwnerId,
-                                                gigOwnerEmail:
-                                                    widget.gigOwnerEmail,
-                                                gigOwnerAvatarUrl:
-                                                    widget.gigOwnerAvatarUrl,
-                                                gigOwnerUsername:
-                                                    widget.gigOwnerUsername,
-                                                createdAt: widget.createdAt,
-                                                gigOwnerLocation:
-                                                    widget.gigOwnerLocation,
-                                                gigLocation: widget.gigLocation,
-                                                gigHashtags: widget.gigHashtags,
-                                                gigMediaFilesDownloadUrls: widget
-                                                    .gigMediaFilesDownloadUrls,
-                                                gigPost: widget.gigPost,
-                                                gigDeadline: widget.gigDeadline,
-                                                gigCurrency: widget.gigCurrency,
-                                                gigBudget: widget.gigBudget,
-                                                gigValue: widget.gigValue,
-                                                adultContentText:
-                                                    widget.adultContentText,
-                                                adultContentBool:
-                                                    widget.adultContentBool,
-                                              ),
-                                            )));
-                              }
-                            : (myGig && widget.appointed)
-                                ? () {}
-                                : widget.gigValue == 'Gigs I can do'
-                                    ? () {}
-                                    : () {},
-                        child: Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 1,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(2))),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              (myGig && !widget.appointed)
-                                  ? 'Edit Your gig'
-                                  : (myGig && widget.appointed)
-                                      ? 'Your gig \n Appointed'
-                                      : widget.gigValue == 'Gigs I can do'
-                                          ? 'Hire me'
-                                          : 'Apply',
-                              style: Theme.of(context).textTheme.bodyText1,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
+                      PopupMenuButton(
+                        itemBuilder: (BuildContext context) {
+                          return yourGigChoices.map((Widget choice) {
+                            return PopupMenuItem<Widget>(
+                              value: choice,
+                              child: choice,
+                            );
+                          }).toList();
+                        },
                       )
                     ],
                   ),
-                  // SizedBox(height: 10),
                 ],
               ),
             ),
@@ -501,22 +531,22 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                           width: 5.0,
                           height: 0,
                         ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              widget.gigDeadline != null
-                                  ? DateFormat('yyyy-MM-dd').format(
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                        widget.gigDeadline,
-                                      ),
-                                    )
-                                  : "Book Gig",
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                          ),
-                        ),
+                        // Container(
+                        //   alignment: Alignment.centerLeft,
+                        //   child: FittedBox(
+                        //     fit: BoxFit.scaleDown,
+                        //     child: Text(
+                        //       widget.gigDeadline != null
+                        //           ? DateFormat('yyyy-MM-dd').format(
+                        //               DateTime.fromMillisecondsSinceEpoch(
+                        //                 widget.gigDeadline,
+                        //               ),
+                        //             )
+                        //           : "Book Gig",
+                        //       style: Theme.of(context).textTheme.bodyText1,
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                     SizedBox(height: 5),
@@ -540,14 +570,14 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                 SizedBox(
                   height: 20,
                 ),
-                Row(
-                  children: [
-                    Text(
-                      timeAgo.format(widget.createdAt.toDate()),
-                      style: Theme.of(context).textTheme.bodyText2,
-                    ),
-                  ],
-                ),
+                // Row(
+                //   children: [
+                //     Text(
+                //       timeAgo.format(widget.createdAt.toDate()),
+                //       style: Theme.of(context).textTheme.bodyText2,
+                //     ),
+                //   ],
+                // ),
                 widget.adultContentBool
                     ? Container(
                         alignment: Alignment.centerLeft,

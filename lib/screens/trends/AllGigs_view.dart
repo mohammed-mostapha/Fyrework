@@ -20,6 +20,7 @@ class AllGigsView extends StatefulWidget {
 
 class _AllGigsViewState extends State<AllGigsView> {
   final String currentUserId = MyUser.uid;
+  int gigsCount;
   ItemScrollController gigScrollController;
   ItemPositionsListener gigPositionsListener;
   dynamic gigIndexProvider;
@@ -30,14 +31,25 @@ class _AllGigsViewState extends State<AllGigsView> {
     gigIndexProvider = Provider.of<GigIndexProvider>(context, listen: false);
     gigScrollController = ItemScrollController();
     gigPositionsListener = ItemPositionsListener.create();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => Future.delayed(Duration(milliseconds: 1000), () {
-        scrollToGigByIndex(
-          gigIndex: gigIndexProvider.getGigIndex(),
-        );
-        gigIndexProvider.assignGigIndex(0);
-      }),
-    );
+    shouldScroll();
+  }
+
+  Future shouldScroll() async {
+    QuerySnapshot gigsDocuments =
+        await Firestore.instance.collection('gigs').getDocuments();
+    List<DocumentSnapshot> listOfGigsToCount = gigsDocuments.documents;
+    gigsCount = listOfGigsToCount.length;
+
+    if (gigsCount > 0) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Future.delayed(Duration(milliseconds: 2000), () {
+          scrollToGigByIndex(
+            gigIndex: gigIndexProvider.getGigIndex(),
+          );
+          gigIndexProvider.assignGigIndex(0);
+        });
+      });
+    }
   }
 
   void scrollToGigByIndex({int gigIndex}) {
@@ -50,71 +62,61 @@ class _AllGigsViewState extends State<AllGigsView> {
 
   @override
   Widget build(BuildContext context) {
-    // gigScrollController = ItemScrollController();
-    // gigPositionsListener = ItemPositionsListener.create();
-
-    // Future.delayed(Duration(milliseconds: 2000), () {
-    //   scrollToGigByIndex(
-    //     gigIndex: gigIndexProvider.getGigIndex(),
-    //   );
-    // });
-
     return Container(
       color: Colors.grey[300],
       child: Consumer2<QueryStringProvider, GigIndexProvider>(
         builder: (context, QueryStringProvider, GigIndexProvider, _) {
           return StreamBuilder<QuerySnapshot>(
-            // stream: DatabaseService().filterAllGigs(data.getQueryString()),
             stream: DatabaseService()
                 .filterAllGigs(QueryStringProvider.getQueryString()),
             builder: (context, snapshot) {
-              return !snapshot.hasData
-                  ? Center(child: Text(''))
-                  : snapshot.data.documents.length > 0
-                      ? ScrollablePositionedList.builder(
-                          itemScrollController: gigScrollController,
-                          itemPositionsListener: gigPositionsListener,
-                          itemCount: snapshot.data.documents.length,
-                          itemBuilder: (context, index) {
-                            DocumentSnapshot data =
-                                snapshot.data.documents[index];
-                            Map getDocData = data.data;
+              if (!snapshot.hasData) {
+                return Center(child: Text(''));
+              } else if (snapshot.data.documents.length > 0) {
+                return ScrollablePositionedList.builder(
+                    itemScrollController: gigScrollController,
+                    itemPositionsListener: gigPositionsListener,
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (context, index) {
+                      DocumentSnapshot data = snapshot.data.documents[index];
+                      Map getDocData = data.data;
 
-                            return GigItem(
-                              index: index,
-                              appointed: getDocData['appointed'],
-                              appointedUserFullName:
-                                  getDocData['appointedUserFullName'],
-                              gigId: getDocData['gigId'],
-                              currentUserId: currentUserId,
-                              gigOwnerId: getDocData['gigOwnerId'],
-                              gigOwnerAvatarUrl:
-                                  getDocData['gigOwnerAvatarUrl'],
-                              gigOwnerUsername: getDocData['gigOwnerUsername'],
-                              createdAt: getDocData['createdAt'],
-                              gigOwnerLocation: getDocData['gigOwnerLocation'],
-                              gigLocation: getDocData['gigLocation'],
-                              gigHashtags: getDocData['gigHashtags'],
-                              gigMediaFilesDownloadUrls:
-                                  getDocData['gigMediaFilesDownloadUrls'],
-                              gigPost: getDocData['gigPost'],
-                              gigDeadline:
-                                  getDocData['gigDeadlineInUnixMilliseconds'],
-                              gigCurrency: getDocData['gigCurrency'],
-                              gigBudget: getDocData['gigBudget'],
-                              gigValue: getDocData['gigValue'],
-                              gigLikes: getDocData['gigLikes'],
-                              adultContentText: getDocData['adultContentText'],
-                              adultContentBool: getDocData['adultContentBool'],
-                              appointedUserId: getDocData['appointedUserId'],
-                              // onDeleteItem: () => model.deleteGig(index),
-                            );
-                          })
-                      : Center(
-                          child: Text(
-                          'No gigs matching your criteria',
-                          style: TextStyle(fontSize: 16),
-                        ));
+                      return GigItem(
+                        index: index,
+                        appointed: getDocData['appointed'],
+                        appointedUserFullName:
+                            getDocData['appointedUserFullName'],
+                        gigId: getDocData['gigId'],
+                        currentUserId: currentUserId,
+                        gigOwnerId: getDocData['gigOwnerId'],
+                        gigOwnerAvatarUrl: getDocData['gigOwnerAvatarUrl'],
+                        gigOwnerUsername: getDocData['gigOwnerUsername'],
+                        createdAt: getDocData['createdAt'],
+                        gigOwnerLocation: getDocData['gigOwnerLocation'],
+                        gigLocation: getDocData['gigLocation'],
+                        gigHashtags: getDocData['gigHashtags'],
+                        gigMediaFilesDownloadUrls:
+                            getDocData['gigMediaFilesDownloadUrls'],
+                        gigPost: getDocData['gigPost'],
+                        gigDeadline:
+                            getDocData['gigDeadlineInUnixMilliseconds'],
+                        gigCurrency: getDocData['gigCurrency'],
+                        gigBudget: getDocData['gigBudget'],
+                        gigValue: getDocData['gigValue'],
+                        gigLikes: getDocData['gigLikes'],
+                        adultContentText: getDocData['adultContentText'],
+                        adultContentBool: getDocData['adultContentBool'],
+                        appointedUserId: getDocData['appointedUserId'],
+                        hidden: getDocData['hidden'],
+                      );
+                    });
+              } else {
+                return Center(
+                    child: Text(
+                  'No gigs matching your criteria',
+                  style: TextStyle(fontSize: 16),
+                ));
+              }
             },
           );
         },

@@ -53,6 +53,8 @@ class ClientGigsView extends StatelessWidget {
                             adultContentText: getDocData['adultContentText'],
                             adultContentBool: getDocData['adultContentBool'],
                             appointedUserId: getDocData['appointedUserId'],
+                            hidden: getDocData['hidden'],
+
                             // onDeleteItem: () => model.deleteGig(index),
                           ),
                         );
