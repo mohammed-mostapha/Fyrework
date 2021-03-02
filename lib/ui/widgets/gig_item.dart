@@ -339,7 +339,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
 
     return Container(
       color: Theme.of(context).accentColor,
-      margin: const EdgeInsets.only(top: 10),
       child: Column(
         children: [
           Container(
