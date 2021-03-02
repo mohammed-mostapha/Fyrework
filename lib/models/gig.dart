@@ -68,7 +68,6 @@ class Gig {
       'gigLikes': gigLikes,
       'appointedUserId': appointedUserId,
       'appointedusername': appointedusername,
-      // 'appliersOrHirersByUserId': appliersOrHirersByUserId,
       'appliersOrHirersByUserId': [],
       'hidden': hidden,
     };

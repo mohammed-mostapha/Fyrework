@@ -500,14 +500,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                                   '$h',
                                   style: Theme.of(context).textTheme.bodyText2,
                                 ),
-                                onTap: () {
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) => SearchScreen(
-                                  //               query: h,
-                                  //             )));
-                                },
+                                onTap: () {},
                               ),
                             ))
                         .toList(),
@@ -531,22 +524,22 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                           width: 5.0,
                           height: 0,
                         ),
-                        // Container(
-                        //   alignment: Alignment.centerLeft,
-                        //   child: FittedBox(
-                        //     fit: BoxFit.scaleDown,
-                        //     child: Text(
-                        //       widget.gigDeadline != null
-                        //           ? DateFormat('yyyy-MM-dd').format(
-                        //               DateTime.fromMillisecondsSinceEpoch(
-                        //                 widget.gigDeadline,
-                        //               ),
-                        //             )
-                        //           : "Book Gig",
-                        //       style: Theme.of(context).textTheme.bodyText1,
-                        //     ),
-                        //   ),
-                        // ),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              widget.gigDeadline != null
+                                  ? (DateFormat('yyyy-MM-dd').format(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                        widget.gigDeadline,
+                                      ),
+                                    ))
+                                  : "Book Gig",
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                     SizedBox(height: 5),
@@ -570,14 +563,19 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                 SizedBox(
                   height: 20,
                 ),
-                // Row(
-                //   children: [
-                //     Text(
-                //       timeAgo.format(widget.createdAt.toDate()),
-                //       style: Theme.of(context).textTheme.bodyText2,
-                //     ),
-                //   ],
-                // ),
+                widget.createdAt != null
+                    ? Row(
+                        children: [
+                          Text(
+                            timeAgo.format(widget.createdAt.toDate()),
+                            style: Theme.of(context).textTheme.bodyText2,
+                          ),
+                        ],
+                      )
+                    : Container(
+                        width: 0,
+                        height: 0,
+                      ),
                 widget.adultContentBool
                     ? Container(
                         alignment: Alignment.centerLeft,
