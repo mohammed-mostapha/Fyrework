@@ -79,10 +79,7 @@ class DatabaseService {
   // filter all gigs
   Stream<QuerySnapshot> filterAllGigs(String query) {
     return query.isEmpty
-        ? _gigsCollection
-            // .where('hidden', isEqualTo: false)
-            .orderBy('createdAt', descending: true)
-            .snapshots()
+        ? _gigsCollection.orderBy('createdAt', descending: true).snapshots()
         : _gigsCollection
             .where('hidden', isEqualTo: false)
             .where('gigHashtags', arrayContains: query)
@@ -93,7 +90,6 @@ class DatabaseService {
   // listening to client gigs
   Stream<QuerySnapshot> listenToCilentGigs() {
     return _gigsCollection
-        .where('hidden', isEqualTo: false)
         .where('gigValue', isEqualTo: 'I need a provider')
         .orderBy('createdAt', descending: true)
         .snapshots();
@@ -102,7 +98,6 @@ class DatabaseService {
   // listening to provider gigs
   Stream<QuerySnapshot> listenToProviderGigs() {
     return _gigsCollection
-        .where('hidden', isEqualTo: false)
         .where('gigValue', isEqualTo: 'Gig I can do')
         .orderBy('createdAt', descending: true)
         .snapshots();
@@ -184,7 +179,25 @@ class DatabaseService {
       }
     }
   }
+
   //end update my gig by gigId
+  Future deleteMyGigByGigId({
+    @required String gigId,
+  }) async {
+    try {
+      return await _gigsCollection.document(gigId).updateData(<String, dynamic>{
+        'hidden': true,
+      });
+    } catch (e) {
+      if (e is PlatformException) {
+        print(e.message);
+        return e.message;
+      }
+    }
+  }
+  //delete my gig by gigId
+
+  //end delete my gig by gigId
 
   Future updateMyProfileData(
     String uid,

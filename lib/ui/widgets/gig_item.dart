@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:core';
 import 'package:Fyrework/models/myUser.dart';
+import 'package:Fyrework/services/database.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -79,6 +80,8 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
   final String comment = 'assets/svgs/light/comment.svg';
   final String mapMarkerAlt = 'assets/svgs/light/map-marker-alt.svg';
   final String hourglassStart = 'assets/svgs/light/hourglass-start.svg';
+  final String editIcon = 'assets/svgs/flaticon/edit.svg';
+  final String deleteIcon = 'assets/svgs/flaticon/delete.svg';
   bool liked = false;
   bool showLikeOverlay = false;
   AnimationController _likeAnimationController;
@@ -242,95 +245,93 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
       onTap: () => _commentButtonPressed(),
     );
 
-    GestureDetector editYourGig = GestureDetector(
-      onTap: (myGig && !widget.appointed)
-          ? () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ChangeNotifierProvider(
-                            create: (context) => GigIndexProvider(),
-                            child: EditYourGig(
-                              gigIndex: widget.index,
-                              gigId: widget.gigId,
-                              currentUserId: widget.currentUserId,
-                              gigOwnerId: widget.gigOwnerId,
-                              gigOwnerEmail: widget.gigOwnerEmail,
-                              gigOwnerAvatarUrl: widget.gigOwnerAvatarUrl,
-                              gigOwnerUsername: widget.gigOwnerUsername,
-                              createdAt: widget.createdAt,
-                              gigOwnerLocation: widget.gigOwnerLocation,
-                              gigLocation: widget.gigLocation,
-                              gigHashtags: widget.gigHashtags,
-                              gigMediaFilesDownloadUrls:
-                                  widget.gigMediaFilesDownloadUrls,
-                              gigPost: widget.gigPost,
-                              gigDeadline: widget.gigDeadline,
-                              gigCurrency: widget.gigCurrency,
-                              gigBudget: widget.gigBudget,
-                              gigValue: widget.gigValue,
-                              adultContentText: widget.adultContentText,
-                              adultContentBool: widget.adultContentBool,
-                            ),
-                          )));
-            }
-          : (myGig && widget.appointed)
-              ? () {}
-              : widget.gigValue == 'Gigs I can do' ? () {} : () {},
-      child: Container(
-        child: Text(
-          'Edit Your gig',
-          style: Theme.of(context).textTheme.bodyText1,
-          textAlign: TextAlign.center,
+    void editYourGig() {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ChangeNotifierProvider(
+                    create: (context) => GigIndexProvider(),
+                    child: EditYourGig(
+                      gigIndex: widget.index,
+                      gigId: widget.gigId,
+                      currentUserId: widget.currentUserId,
+                      gigOwnerId: widget.gigOwnerId,
+                      gigOwnerEmail: widget.gigOwnerEmail,
+                      gigOwnerAvatarUrl: widget.gigOwnerAvatarUrl,
+                      gigOwnerUsername: widget.gigOwnerUsername,
+                      createdAt: widget.createdAt,
+                      gigOwnerLocation: widget.gigOwnerLocation,
+                      gigLocation: widget.gigLocation,
+                      gigHashtags: widget.gigHashtags,
+                      gigMediaFilesDownloadUrls:
+                          widget.gigMediaFilesDownloadUrls,
+                      gigPost: widget.gigPost,
+                      gigDeadline: widget.gigDeadline,
+                      gigCurrency: widget.gigCurrency,
+                      gigBudget: widget.gigBudget,
+                      gigValue: widget.gigValue,
+                      adultContentText: widget.adultContentText,
+                      adultContentBool: widget.adultContentBool,
+                    ),
+                  )));
+    }
+
+    Widget deleteYourGigAlert = AlertDialog(
+      backgroundColor: Theme.of(context).primaryColor,
+      content: Text('Are you sure you want to delete this gig?',
+          style: Theme.of(context)
+              .textTheme
+              .bodyText1
+              .copyWith(color: Theme.of(context).accentColor)),
+      actions: [
+        FlatButton(
+          child: Text(
+            'No',
+            style: Theme.of(context)
+                .textTheme
+                .bodyText1
+                .copyWith(color: Theme.of(context).accentColor),
+          ),
+          onPressed: () {
+            Navigator.of(context, rootNavigator: true).pop();
+          },
         ),
-      ),
+        FlatButton(
+          child: Text(
+            'Yes',
+            style: Theme.of(context)
+                .textTheme
+                .bodyText1
+                .copyWith(color: Theme.of(context).accentColor),
+          ),
+          onPressed: () async {
+            await DatabaseService().deleteMyGigByGigId(gigId: widget.gigId);
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+        )
+      ],
     );
 
-    GestureDetector deleteYourGig = GestureDetector(
-      onTap: (myGig && !widget.appointed)
-          ? () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ChangeNotifierProvider(
-                            create: (context) => GigIndexProvider(),
-                            child: EditYourGig(
-                              gigIndex: widget.index,
-                              gigId: widget.gigId,
-                              currentUserId: widget.currentUserId,
-                              gigOwnerId: widget.gigOwnerId,
-                              gigOwnerEmail: widget.gigOwnerEmail,
-                              gigOwnerAvatarUrl: widget.gigOwnerAvatarUrl,
-                              gigOwnerUsername: widget.gigOwnerUsername,
-                              createdAt: widget.createdAt,
-                              gigOwnerLocation: widget.gigOwnerLocation,
-                              gigLocation: widget.gigLocation,
-                              gigHashtags: widget.gigHashtags,
-                              gigMediaFilesDownloadUrls:
-                                  widget.gigMediaFilesDownloadUrls,
-                              gigPost: widget.gigPost,
-                              gigDeadline: widget.gigDeadline,
-                              gigCurrency: widget.gigCurrency,
-                              gigBudget: widget.gigBudget,
-                              gigValue: widget.gigValue,
-                              adultContentText: widget.adultContentText,
-                              adultContentBool: widget.adultContentBool,
-                            ),
-                          )));
-            }
-          : (myGig && widget.appointed)
-              ? () {}
-              : widget.gigValue == 'Gigs I can do' ? () {} : () {},
-      child: Container(
-        child: Text(
-          'Delete Your gig',
-          style: Theme.of(context).textTheme.bodyText1,
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
+    void deleteYourGig() {
+      showDialog(
+          context: context,
+          builder: ((_) => deleteYourGigAlert),
+          barrierDismissible: true);
+    }
 
-    List<Widget> yourGigChoices = [editYourGig, deleteYourGig];
+    final String editText = 'Edit Your Gig';
+    final String deleteText = 'Delete Your Gig';
+
+    List<String> notAppointedGigActionTexts = [editText, deleteText];
+    List<String> notAppointedGigActionIcons = [editIcon, deleteIcon];
+
+    void yourGigChoicesAction(String choice) {
+      if (choice == editText) {
+        return editYourGig();
+      } else if (choice == deleteText) {
+        return deleteYourGig();
+      }
+    }
 
     return Container(
       color: Theme.of(context).accentColor,
@@ -373,11 +374,32 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                         onTap: showUserProfile,
                       ),
                       PopupMenuButton(
+                        color: Theme.of(context).primaryColor,
+                        onSelected: yourGigChoicesAction,
                         itemBuilder: (BuildContext context) {
-                          return yourGigChoices.map((Widget choice) {
-                            return PopupMenuItem<Widget>(
+                          return notAppointedGigActionTexts
+                              .map((String choice) {
+                            return PopupMenuItem<String>(
                               value: choice,
-                              child: choice,
+                              child: ListTile(
+                                leading: SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: SvgPicture.asset(
+                                    choice == editText ? editIcon : deleteIcon,
+                                    semanticsLabel: 'edit',
+                                    color: Theme.of(context).accentColor,
+                                  ),
+                                ),
+                                title: Text(
+                                  choice,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .copyWith(
+                                          color: Theme.of(context).accentColor),
+                                ),
+                              ),
                             );
                           }).toList();
                         },

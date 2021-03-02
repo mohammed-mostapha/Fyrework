@@ -66,58 +66,80 @@ class _AllGigsViewState extends State<AllGigsView> {
       color: Colors.grey[300],
       child: Consumer2<QueryStringProvider, GigIndexProvider>(
         builder: (context, QueryStringProvider, GigIndexProvider, _) {
-          return StreamBuilder<QuerySnapshot>(
-            stream: DatabaseService()
-                .filterAllGigs(QueryStringProvider.getQueryString()),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Center(child: Text(''));
-              } else if (snapshot.data.documents.length > 0) {
-                return ScrollablePositionedList.builder(
-                    itemScrollController: gigScrollController,
-                    itemPositionsListener: gigPositionsListener,
-                    itemCount: snapshot.data.documents.length,
-                    itemBuilder: (context, index) {
-                      DocumentSnapshot data = snapshot.data.documents[index];
-                      Map getDocData = data.data;
-
-                      return GigItem(
-                        index: index,
-                        appointed: getDocData['appointed'],
-                        appointedUserFullName:
-                            getDocData['appointedUserFullName'],
-                        gigId: getDocData['gigId'],
-                        currentUserId: currentUserId,
-                        gigOwnerId: getDocData['gigOwnerId'],
-                        gigOwnerAvatarUrl: getDocData['gigOwnerAvatarUrl'],
-                        gigOwnerUsername: getDocData['gigOwnerUsername'],
-                        createdAt: getDocData['createdAt'],
-                        gigOwnerLocation: getDocData['gigOwnerLocation'],
-                        gigLocation: getDocData['gigLocation'],
-                        gigHashtags: getDocData['gigHashtags'],
-                        gigMediaFilesDownloadUrls:
-                            getDocData['gigMediaFilesDownloadUrls'],
-                        gigPost: getDocData['gigPost'],
-                        gigDeadline:
-                            getDocData['gigDeadlineInUnixMilliseconds'],
-                        gigCurrency: getDocData['gigCurrency'],
-                        gigBudget: getDocData['gigBudget'],
-                        gigValue: getDocData['gigValue'],
-                        gigLikes: getDocData['gigLikes'],
-                        adultContentText: getDocData['adultContentText'],
-                        adultContentBool: getDocData['adultContentBool'],
-                        appointedUserId: getDocData['appointedUserId'],
-                        hidden: getDocData['hidden'],
-                      );
-                    });
-              } else {
-                return Center(
-                    child: Text(
+          return Stack(
+            children: [
+              Center(
+                child: Text(
                   'No gigs matching your criteria',
-                  style: TextStyle(fontSize: 16),
-                ));
-              }
-            },
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+              ),
+              StreamBuilder<QuerySnapshot>(
+                stream: DatabaseService()
+                    .filterAllGigs(QueryStringProvider.getQueryString()),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: Text(''));
+                  } else if (snapshot.data.documents.length > 0) {
+                    return ScrollablePositionedList.builder(
+                        itemScrollController: gigScrollController,
+                        itemPositionsListener: gigPositionsListener,
+                        itemCount: snapshot.data.documents.length,
+                        itemBuilder: (context, index) {
+                          DocumentSnapshot data =
+                              snapshot.data.documents[index];
+                          Map getDocData = data.data;
+
+                          return getDocData['hidden'] != true
+                              ? GigItem(
+                                  index: index,
+                                  appointed: getDocData['appointed'],
+                                  appointedUserFullName:
+                                      getDocData['appointedUserFullName'],
+                                  gigId: getDocData['gigId'],
+                                  currentUserId: currentUserId,
+                                  gigOwnerId: getDocData['gigOwnerId'],
+                                  gigOwnerAvatarUrl:
+                                      getDocData['gigOwnerAvatarUrl'],
+                                  gigOwnerUsername:
+                                      getDocData['gigOwnerUsername'],
+                                  createdAt: getDocData['createdAt'],
+                                  gigOwnerLocation:
+                                      getDocData['gigOwnerLocation'],
+                                  gigLocation: getDocData['gigLocation'],
+                                  gigHashtags: getDocData['gigHashtags'],
+                                  gigMediaFilesDownloadUrls:
+                                      getDocData['gigMediaFilesDownloadUrls'],
+                                  gigPost: getDocData['gigPost'],
+                                  gigDeadline: getDocData[
+                                      'gigDeadlineInUnixMilliseconds'],
+                                  gigCurrency: getDocData['gigCurrency'],
+                                  gigBudget: getDocData['gigBudget'],
+                                  gigValue: getDocData['gigValue'],
+                                  gigLikes: getDocData['gigLikes'],
+                                  adultContentText:
+                                      getDocData['adultContentText'],
+                                  adultContentBool:
+                                      getDocData['adultContentBool'],
+                                  appointedUserId:
+                                      getDocData['appointedUserId'],
+                                  hidden: getDocData['hidden'],
+                                )
+                              : Container(
+                                  width: 0,
+                                  height: 0,
+                                );
+                        });
+                  } else {
+                    return Center(
+                        child: Text(
+                      'No gigs matching your criteria',
+                      style: TextStyle(fontSize: 16),
+                    ));
+                  }
+                },
+              ),
+            ],
           );
         },
       ),
