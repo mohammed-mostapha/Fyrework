@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:core';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/services/database.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -74,7 +75,6 @@ class GigItem extends StatefulWidget {
 }
 
 class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
-  bool myGig;
   final String heart = 'assets/svgs/light/heart.svg';
   final String heartSolid = 'assets/svgs/solid/heart.svg';
   final String comment = 'assets/svgs/light/comment.svg';
@@ -167,8 +167,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    print('index from gig_item is: ${widget.index}');
-    myGig = widget.gigOwnerId == MyUser.uid ? true : false;
     timeAgo.setLocaleMessages('de', timeAgo.DeMessages());
     timeAgo.setLocaleMessages('dv', timeAgo.DvMessages());
     timeAgo.setLocaleMessages('dv_short', timeAgo.DvShortMessages());
@@ -305,8 +303,13 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                 .copyWith(color: Theme.of(context).accentColor),
           ),
           onPressed: () async {
-            await DatabaseService().deleteMyGigByGigId(gigId: widget.gigId);
             Navigator.of(context, rootNavigator: true).pop();
+            EasyLoading.show();
+            await DatabaseService().deleteMyGigByGigId(gigId: widget.gigId);
+
+            EasyLoading.showSuccess('');
+
+            EasyLoading.dismiss();
           },
         )
       ],
@@ -314,9 +317,10 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
 
     void deleteYourGig() {
       showDialog(
-          context: context,
-          builder: ((_) => deleteYourGigAlert),
-          barrierDismissible: true);
+        context: context,
+        builder: ((_) => deleteYourGigAlert),
+        barrierDismissible: true,
+      );
     }
 
     final String editText = 'Edit Your Gig';
@@ -549,18 +553,18 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                         Container(
                           alignment: Alignment.centerLeft,
                           child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              widget.gigDeadline != null
-                                  ? (DateFormat('yyyy-MM-dd').format(
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                        widget.gigDeadline,
-                                      ),
-                                    ))
-                                  : "Book Gig",
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                          ),
+                              fit: BoxFit.scaleDown,
+                              child: widget.gigDeadline != null
+                                  ? Text(
+                                      widget.gigDeadline,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    )
+                                  : Text(
+                                      "Book Gig",
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    )),
                         ),
                       ],
                     ),

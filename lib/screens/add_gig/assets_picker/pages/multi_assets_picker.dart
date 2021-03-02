@@ -380,10 +380,10 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
   }
 
   Widget get gigPreview {
-    if (widget.gigDeadLine != null) {
-      formattedGigDeadline = DateFormat.yMMMd()
-          .format(DateTime.fromMillisecondsSinceEpoch(widget.gigDeadLine));
-    }
+    // if (widget.gigDeadLine != null) {
+    //   formattedGigDeadline = DateFormat.yMMMd()
+    //       .format(DateTime.fromMillisecondsSinceEpoch(widget.gigDeadLine));
+    // }
 
     return Container(
       child: Padding(
@@ -498,7 +498,8 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                               height: 0,
                             ),
                             Container(
-                              child: Text('$formattedGigDeadline',
+                              // child: Text('$formattedGigDeadline',
+                              child: Text(widget.gigDeadLine,
                                   style: Theme.of(context).textTheme.bodyText1),
                             ),
                           ],

@@ -114,7 +114,8 @@ class _AddGigDetailsState extends State<AddGigDetails> {
           gigHashtags: _myFavoriteHashtags,
           gigPost: _gigPost,
           gigDeadLine: AppointmentCard.gigDeadline != null
-              ? (AppointmentCard.gigDeadline.toUtc().millisecondsSinceEpoch)
+              // ? (AppointmentCard.gigDeadline.toUtc().millisecondsSinceEpoch)
+              ? DateFormat('yyy-MM-dd').format(AppointmentCard.gigDeadline)
               : null,
           gigCurrency: _gigCurrency,
           gigBudget: _gigBudget,
