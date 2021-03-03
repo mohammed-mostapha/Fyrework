@@ -38,11 +38,16 @@ class _AddCommentsViewState extends State<AddCommentsView> {
   String proposalBudget;
   String preferredPaymentMethod;
 
-  bool myGig;
-  bool appointed;
-  bool appointedUser;
-  String appointedUserId;
-  List appliersOrHirersByUserId;
+  bool myGig = false;
+  bool appointed = false;
+  bool appointedUser = false;
+  String appointedUserId = '';
+  List appliersOrHirersByUserId = [];
+  bool applier = false;
+  // bool hirer = false;
+  bool gigICanDo = false;
+  bool _keyboardVisible = false;
+
   final String paperClip = 'assets/svgs/solid/paperclip.svg';
   final String paperPlane = 'assets/svgs/solid/paper-plane.svg';
   final String checkCircle = 'assets/svgs/regular/check-circle.svg';
@@ -157,8 +162,8 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                         color: Theme.of(context).accentColor,
                         // color: Colors.red,
                         borderRadius: BorderRadius.only(
-                          topLeft: const Radius.circular(10),
-                          topRight: const Radius.circular(10),
+                          topLeft: const Radius.circular(20),
+                          topRight: const Radius.circular(20),
                         ),
                       ),
                       child: Padding(
@@ -434,9 +439,156 @@ class _AddCommentsViewState extends State<AddCommentsView> {
         });
   }
 
+  Widget _hirerActions() {
+    return Container(
+      color: Theme.of(context).primaryColor,
+      width: double.infinity,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Hirer Actions',
+                style: Theme.of(context)
+                    .textTheme
+                    .headline1
+                    .copyWith(color: Theme.of(context).accentColor),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 50,
+          ),
+          Wrap(
+            children: [
+              GestureDetector(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: SvgPicture.asset(checkCircle,
+                          semanticsLabel: 'check-circle', color: Colors.green),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Unsatisfied',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .copyWith(color: Theme.of(context).accentColor),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _applierActions() {
+    return Container(
+      color: Theme.of(context).primaryColor,
+      width: double.infinity,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Applier Actions',
+                style: Theme.of(context)
+                    .textTheme
+                    .headline1
+                    .copyWith(color: Theme.of(context).accentColor),
+              )
+            ],
+          ),
+          Wrap(
+            children: [
+              GestureDetector(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: SvgPicture.asset(checkCircle,
+                          semanticsLabel: 'check-circle', color: Colors.green),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Unsatisfied',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          .copyWith(color: Theme.of(context).accentColor),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  _showHirerOrApplierActions() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        enableDrag: true,
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            // decoration: BoxDecoration(
+            //   color: Color(0xFF737373),
+            //   borderRadius: BorderRadius.only(
+            //     topLeft: const Radius.circular(10),
+            //     topRight: const Radius.circular(10),
+            //   ),
+            // ),
+            height: MediaQuery.of(context).size.height / 2,
+            child: Scaffold(
+              backgroundColor: Color(0xFF737373),
+              body: StatefulBuilder(
+                  builder: (BuildContext context, StateSetter setModalState) {
+                return Container(
+                  padding: MediaQuery.of(context).viewInsets,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(20),
+                      topRight: const Radius.circular(20),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 10),
+                    // child: hirer ? _hirerActions() : _applierActions(),
+                    child: !applier ? _hirerActions() : _applierActions(),
+                  ),
+                );
+              }),
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     myGig = widget.passedGigOwnerId == MyUser.uid ? true : false;
+    gigICanDo = widget.passedGigValue == 'Gig I can do' ? true : false;
+    applier = (!myGig && !gigICanDo) ? true : false;
+    _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
+
+    // hirer = (myGig && !gigICanDo || !myGig && gigICanDo) ? true : false;
 
 //first check if this gig is appointed or not
     return StreamBuilder<DocumentSnapshot>(
@@ -668,8 +820,9 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(20))),
                                           child: ConstrainedBox(
-                                            constraints:
-                                                BoxConstraints(maxHeight: 100),
+                                            constraints: BoxConstraints(
+                                              maxHeight: 100,
+                                            ),
                                             child: TextFormField(
                                               style: TextStyle(
                                                   color: Theme.of(context)
@@ -788,25 +941,33 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                   ),
                                 ),
                                 GestureDetector(
-                                  child: Container(
-                                    height: 40,
-                                    color: Theme.of(context).primaryColor,
-                                    child: Center(
-                                      child: Text(
-                                        'Actions',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1
-                                            .copyWith(
-                                                color: Theme.of(context)
-                                                    .accentColor),
+                                    child: Container(
+                                      height: 40,
+                                      color: Theme.of(context).primaryColor,
+                                      child: Center(
+                                        child: Text(
+                                          'Actions',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              .copyWith(
+                                                  color: Theme.of(context)
+                                                      .accentColor),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  onTap: () {
-                                    print('actions tapped');
-                                  },
-                                )
+                                    onTap: _keyboardVisible
+                                        ? () {
+                                            FocusScope.of(context).unfocus();
+                                            Future.delayed(
+                                                Duration(milliseconds: 1000),
+                                                () {
+                                              _showHirerOrApplierActions();
+                                            });
+                                          }
+                                        : () {
+                                            _showHirerOrApplierActions();
+                                          })
                               ],
                             )
                           : Padding(
