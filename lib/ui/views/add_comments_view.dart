@@ -46,7 +46,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
   bool applier = false;
   // bool hirer = false;
   bool gigICanDo = false;
-  bool _keyboardVisible = false;
+  bool _keyboardVisible;
 
   final String paperClip = 'assets/svgs/solid/paperclip.svg';
   final String paperPlane = 'assets/svgs/solid/paper-plane.svg';
@@ -940,34 +940,30 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                     ],
                                   ),
                                 ),
-                                GestureDetector(
-                                    child: Container(
-                                      height: 40,
-                                      color: Theme.of(context).primaryColor,
-                                      child: Center(
-                                        child: Text(
-                                          'Actions',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1
-                                              .copyWith(
-                                                  color: Theme.of(context)
-                                                      .accentColor),
+                                _keyboardVisible
+                                    ? Container(
+                                        width: 0,
+                                        height: 0,
+                                      )
+                                    : GestureDetector(
+                                        child: Container(
+                                          height: 40,
+                                          color: Theme.of(context).primaryColor,
+                                          child: Center(
+                                            child: Text(
+                                              'Actions',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1
+                                                  .copyWith(
+                                                      color: Theme.of(context)
+                                                          .accentColor),
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                    onTap: _keyboardVisible
-                                        ? () {
-                                            FocusScope.of(context).unfocus();
-                                            Future.delayed(
-                                                Duration(milliseconds: 1000),
-                                                () {
-                                              _showHirerOrApplierActions();
-                                            });
-                                          }
-                                        : () {
-                                            _showHirerOrApplierActions();
-                                          })
+                                        onTap: () {
+                                          _showHirerOrApplierActions();
+                                        })
                               ],
                             )
                           : Padding(
