@@ -94,8 +94,10 @@ class _AllGigsViewState extends State<AllGigsView> {
                               ? GigItem(
                                   index: index,
                                   appointed: getDocData['appointed'],
-                                  appointedUserFullName:
+                                  appointedusername:
                                       getDocData['appointedUserFullName'],
+                                  appliersOrHirersByUserId:
+                                      getDocData['appliersOrHirersByUserId'],
                                   gigId: getDocData['gigId'],
                                   currentUserId: currentUserId,
                                   gigOwnerId: getDocData['gigOwnerId'],

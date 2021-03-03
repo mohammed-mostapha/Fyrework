@@ -30,7 +30,7 @@ class ClientGigsView extends StatelessWidget {
                           // onTap: () => model.editGig(index),
                           child: GigItem(
                             appointed: getDocData['appointed'],
-                            appointedUserFullName:
+                            appointedusername:
                                 getDocData['appointedUserFullName'],
                             gigId: getDocData['gigId'],
                             currentUserId: currentUserId,

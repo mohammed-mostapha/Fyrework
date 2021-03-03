@@ -29,7 +29,6 @@ class CommentItem extends StatefulWidget {
   final rejected;
   final offeredBudget;
   final preferredPaymentMethod;
-  final Function onDeleteItem;
   CommentItem({
     Key key,
     // this.passedCurrentUserId,
@@ -50,7 +49,6 @@ class CommentItem extends StatefulWidget {
     this.rejected,
     this.offeredBudget,
     this.preferredPaymentMethod,
-    this.onDeleteItem,
   }) : super(key: key);
 
   @override
@@ -438,12 +436,12 @@ class _CommentItemState extends State<CommentItem> {
                                               .textTheme
                                               .bodyText1
                                               .copyWith(
-                                                  color: myComment
-                                                      ? Theme.of(context)
-                                                          .accentColor
-                                                      : Theme.of(context)
-                                                          .primaryColor,
-                                                  fontWeight: FontWeight.bold),
+                                                color: myComment
+                                                    ? Theme.of(context)
+                                                        .accentColor
+                                                    : Theme.of(context)
+                                                        .primaryColor,
+                                              ),
                                         ),
                                         GestureDetector(
                                           child: Text(
@@ -734,16 +732,14 @@ class ApprovedLabel extends StatelessWidget {
             color: Colors.green,
           ),
           borderRadius: BorderRadius.all(Radius.circular(2))),
-      child: Expanded(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            'Approved',
-            style: Theme.of(context)
-                .textTheme
-                .bodyText1
-                .copyWith(color: Colors.green),
-          ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          'Approved',
+          style: Theme.of(context)
+              .textTheme
+              .bodyText1
+              .copyWith(color: Colors.green),
         ),
       ),
     );
@@ -764,16 +760,12 @@ class RejectedLabel extends StatelessWidget {
             color: Colors.red,
           ),
           borderRadius: BorderRadius.all(Radius.circular(2))),
-      child: Expanded(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            'Rejected',
-            style: Theme.of(context)
-                .textTheme
-                .bodyText1
-                .copyWith(color: Colors.red),
-          ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          'Rejected',
+          style:
+              Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.red),
         ),
       ),
     );
