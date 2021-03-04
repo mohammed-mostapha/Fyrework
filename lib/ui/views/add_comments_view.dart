@@ -31,7 +31,18 @@ class AddCommentsView extends StatefulWidget {
   _AddCommentsViewState createState() => _AddCommentsViewState();
 }
 
-class _AddCommentsViewState extends State<AddCommentsView> {
+class _AddCommentsViewState extends State<AddCommentsView>
+    with WidgetsBindingObserver {
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeMetrics() {
+    print('device rotated');
+  }
+
   double screenWidth = 0.0;
   double screenHeight = 0.0;
   bool isPortrait = true;
@@ -1133,6 +1144,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
     _addCommentsController.dispose();
     _addProposalController.dispose();
     _offeredBudgetController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 }
