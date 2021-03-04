@@ -43,8 +43,8 @@ class _AddCommentsViewState extends State<AddCommentsView> {
   bool appointedUser = false;
   String appointedUserId = '';
   List appliersOrHirersByUserId = [];
-  bool applier = false;
-  // bool hirer = false;
+  bool worker = false;
+  bool client = false;
   bool gigICanDo = false;
   bool _keyboardVisible;
 
@@ -187,7 +187,8 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                     ],
                                     validator: (value) =>
                                         value.isEmpty ? '' : null,
-                                    maxLines: null,
+                                    minLines: 1,
+                                    maxLines: 6,
                                   ),
                                 ),
                               ),
@@ -387,7 +388,8 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                                   value.isEmpty ? '' : null,
                                               // onSaved: (value) =>
                                               //     proposalBudget = value,
-                                              maxLines: null,
+                                              minLines: 1,
+                                              maxLines: 2,
                                             ),
                                           ),
                                         ],
@@ -439,7 +441,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
         });
   }
 
-  Widget _hirerActions() {
+  Widget _clientActions() {
     return Container(
       color: Theme.of(context).primaryColor,
       width: double.infinity,
@@ -449,7 +451,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Hirer Actions',
+                'Client Actions',
                 style: Theme.of(context)
                     .textTheme
                     .headline1
@@ -491,7 +493,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
     );
   }
 
-  Widget _applierActions() {
+  Widget _workerActions() {
     return Container(
       color: Theme.of(context).primaryColor,
       width: double.infinity,
@@ -501,7 +503,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Applier Actions',
+                'Worker Actions',
                 style: Theme.of(context)
                     .textTheme
                     .headline1
@@ -540,7 +542,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
     );
   }
 
-  _showHirerOrApplierActions() {
+  _showClientOrWorkerActions() {
     showModalBottomSheet(
         isScrollControlled: true,
         enableDrag: true,
@@ -569,11 +571,10 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                     ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 10),
-                    // child: hirer ? _hirerActions() : _applierActions(),
-                    child: !applier ? _hirerActions() : _applierActions(),
-                  ),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 10),
+                      // child: hirer ? _hirerActions() : _applierActions(),
+                      child: !client ? _workerActions() : _clientActions()),
                 );
               }),
             ),
@@ -585,7 +586,8 @@ class _AddCommentsViewState extends State<AddCommentsView> {
   Widget build(BuildContext context) {
     myGig = widget.passedGigOwnerId == MyUser.uid ? true : false;
     gigICanDo = widget.passedGigValue == 'Gig I can do' ? true : false;
-    applier = (!myGig && !gigICanDo) ? true : false;
+    worker = (!myGig && !gigICanDo || myGig && gigICanDo) ? true : false;
+    client = (myGig && !gigICanDo || !myGig && gigICanDo) ? true : false;
     _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
 
     // hirer = (myGig && !gigICanDo || !myGig && gigICanDo) ? true : false;
@@ -806,138 +808,148 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(5.0),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Expanded(
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 15),
-                                          // height: 40,
+                                  child: Container(
+                                    // height: 40,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 15),
+                                            // height: 40,
+                                            decoration: BoxDecoration(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(20))),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                Expanded(
+                                                  child: TextFormField(
+                                                    style: TextStyle(
+                                                        color: Theme.of(context)
+                                                            .accentColor),
+                                                    controller:
+                                                        _addCommentsController,
+                                                    decoration: InputDecoration(
+                                                      hintText:
+                                                          "Add private comment",
+                                                      hintStyle: TextStyle(
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .accentColor),
+                                                      border: InputBorder.none,
+                                                    ),
+                                                    onFieldSubmitted: (String
+                                                        submittedString) async {
+                                                      if (submittedString
+                                                          .isNotEmpty) {
+                                                        await AddCommentViewModel()
+                                                            .addComment(
+                                                          gigIdHoldingComment:
+                                                              widget
+                                                                  .passedGigId,
+                                                          gigOwnerId: widget
+                                                              .passedGigOwnerId,
+                                                          commentOwnerUsername:
+                                                              username,
+                                                          commentBody:
+                                                              submittedString,
+                                                          commentOwnerId:
+                                                              userId,
+                                                          commentOwnerAvatarUrl:
+                                                              userProfilePictureUrl,
+                                                          commentId: '',
+                                                          commentTime:
+                                                              new DateTime
+                                                                  .now(),
+                                                          isPrivateComment:
+                                                              isPrivateComment,
+                                                          persistentPrivateComment:
+                                                              true,
+                                                          proposal: proposal,
+                                                          approved: approved,
+                                                          rejected: rejected,
+                                                          gigCurrency: widget
+                                                              .passedGigCurrency,
+                                                          offeredBudget:
+                                                              offeredBudget,
+                                                        );
+                                                      }
+
+                                                      _addCommentsController
+                                                          .clear();
+                                                      _addProposalController
+                                                          .clear();
+                                                      _offeredBudgetController
+                                                          .clear();
+                                                    },
+                                                    minLines: 1,
+                                                    maxLines: 6,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 20,
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    // attach file
+                                                  },
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 10),
+                                                    child: SizedBox(
+                                                      width: 20,
+                                                      height: 20,
+                                                      child: SvgPicture.asset(
+                                                        paperClip,
+                                                        semanticsLabel:
+                                                            'paperclip',
+                                                        color: Theme.of(context)
+                                                            .accentColor,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Container(
+                                          width: 40,
+                                          height: 40,
                                           decoration: BoxDecoration(
                                               color: Theme.of(context)
                                                   .primaryColor,
                                               borderRadius: BorderRadius.all(
-                                                  Radius.circular(20))),
-                                          child: ConstrainedBox(
-                                            constraints: BoxConstraints(
-                                              maxHeight: 100,
-                                            ),
-                                            child: TextFormField(
-                                              style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .accentColor),
-                                              controller:
-                                                  _addCommentsController,
-                                              decoration: InputDecoration(
-                                                hintText: "Add private comment",
-                                                hintStyle: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .accentColor),
-                                                border: InputBorder.none,
-                                                suffixIconConstraints:
-                                                    BoxConstraints(),
-                                                suffixIcon: Padding(
-                                                  padding:
-                                                      const EdgeInsets.fromLTRB(
-                                                          20, 0, 0, 10),
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      GestureDetector(
-                                                        child: SizedBox(
-                                                          width: 20,
-                                                          height: 20,
-                                                          child:
-                                                              SvgPicture.asset(
-                                                            paperClip,
-                                                            semanticsLabel:
-                                                                'paperclip',
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .accentColor,
-                                                          ),
-                                                        ),
-                                                        onTap: () {},
-                                                      ),
-                                                    ],
-                                                  ),
+                                                  Radius.circular(50))),
+                                          child: GestureDetector(
+                                            child: Center(
+                                              child: SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child: SvgPicture.asset(
+                                                  paperPlane,
+                                                  semanticsLabel: 'paper-plane',
+                                                  color: Colors.white,
                                                 ),
                                               ),
-                                              onFieldSubmitted: (String
-                                                  submittedString) async {
-                                                if (submittedString
-                                                    .isNotEmpty) {
-                                                  await AddCommentViewModel()
-                                                      .addComment(
-                                                    gigIdHoldingComment:
-                                                        widget.passedGigId,
-                                                    gigOwnerId:
-                                                        widget.passedGigOwnerId,
-                                                    commentOwnerUsername:
-                                                        username,
-                                                    commentBody:
-                                                        submittedString,
-                                                    commentOwnerId: userId,
-                                                    commentOwnerAvatarUrl:
-                                                        userProfilePictureUrl,
-                                                    commentId: '',
-                                                    commentTime:
-                                                        new DateTime.now(),
-                                                    isPrivateComment:
-                                                        isPrivateComment,
-                                                    persistentPrivateComment:
-                                                        true,
-                                                    proposal: proposal,
-                                                    approved: approved,
-                                                    rejected: rejected,
-                                                    gigCurrency: widget
-                                                        .passedGigCurrency,
-                                                    offeredBudget:
-                                                        offeredBudget,
-                                                  );
-                                                }
-
-                                                _addCommentsController.clear();
-                                                _addProposalController.clear();
-                                                _offeredBudgetController
-                                                    .clear();
-                                              },
-                                              maxLines: null,
                                             ),
+                                            onTap: () {
+                                              addComment(true);
+                                            },
                                           ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Container(
-                                        width: 40,
-                                        height: 40,
-                                        decoration: BoxDecoration(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(50))),
-                                        child: GestureDetector(
-                                          child: Center(
-                                            child: SizedBox(
-                                              width: 20,
-                                              height: 20,
-                                              child: SvgPicture.asset(
-                                                paperPlane,
-                                                semanticsLabel: 'paper-plane',
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          onTap: () {
-                                            addComment(true);
-                                          },
-                                        ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 _keyboardVisible
@@ -962,7 +974,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                           ),
                                         ),
                                         onTap: () {
-                                          _showHirerOrApplierActions();
+                                          _showClientOrWorkerActions();
                                         })
                               ],
                             )
