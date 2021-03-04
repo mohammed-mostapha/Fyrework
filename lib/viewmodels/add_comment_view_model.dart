@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:Fyrework/locator.dart';
 import 'package:Fyrework/models/comment.dart';
 import 'package:Fyrework/services/navigation_service.dart';
-import 'package:Fyrework/viewmodels/base_model.dart';
 import 'package:Fyrework/services/firestore_service.dart';
 
-class AddCommentViewModel extends BaseModel {
+class AddCommentViewModel {
   final FirestoreService _firestoreService = locator<FirestoreService>();
   final NavigationService _navigationService = locator<NavigationService>();
 
@@ -75,9 +74,5 @@ class AddCommentViewModel extends BaseModel {
         ),
       );
     }
-  }
-
-  void setEdittingComment(Comment edittingComment) {
-    _edittingcomment = edittingComment;
   }
 }

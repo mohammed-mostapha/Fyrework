@@ -2,12 +2,11 @@ import 'package:Fyrework/locator.dart';
 import 'package:Fyrework/models/gig.dart';
 import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/services/navigation_service.dart';
-import 'package:Fyrework/viewmodels/base_model.dart';
 import 'package:Fyrework/services/firestore_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class CreateGigViewModel extends BaseModel {
+class CreateGigViewModel {
   final FirestoreService _firestoreService = locator<FirestoreService>();
   final NavigationService _navigationService = locator<NavigationService>();
 
@@ -67,9 +66,5 @@ class CreateGigViewModel extends BaseModel {
     } else {
       print('error');
     }
-  }
-
-  void setEdittingGig(Gig edittingGig) {
-    _edittingGig = edittingGig;
   }
 }

@@ -33,6 +33,9 @@ class AddCommentsView extends StatefulWidget {
 
 class _AddCommentsViewState extends State<AddCommentsView>
     with WidgetsBindingObserver {
+  PersistentBottomSheetController _actionsBottomSheetController;
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
@@ -43,6 +46,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
     print('device rotated');
   }
 
+  bool _isActionsOpened = false;
   double screenWidth = 0.0;
   double screenHeight = 0.0;
   bool isPortrait = true;
@@ -171,6 +175,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
           return Container(
             height: MediaQuery.of(context).size.height / 1.5,
             child: Scaffold(
+              key: _scaffoldKey,
               body: StatefulBuilder(
                   builder: (BuildContext context, StateSetter setModalState) {
                 return Container(
@@ -681,39 +686,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
     );
   }
 
-  _showClientOrWorkerActions() {
-    showModalBottomSheet(
-        isScrollControlled: true,
-        enableDrag: true,
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            height: isPortrait ? screenHeight - 200 : screenHeight - 50,
-            child: Scaffold(
-              backgroundColor: Color(0xFF737373),
-              body: StatefulBuilder(
-                  builder: (BuildContext context, StateSetter setModalState) {
-                return Container(
-                  padding: MediaQuery.of(context).viewInsets,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                    borderRadius: BorderRadius.only(
-                      topLeft: const Radius.circular(20),
-                      topRight: const Radius.circular(20),
-                    ),
-                  ),
-                  child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 10),
-                      // child: hirer ? _hirerActions() : _applierActions(),
-                      child: !client ? _workerActions() : _clientActions()),
-                );
-              }),
-            ),
-          );
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
@@ -754,386 +726,430 @@ class _AddCommentsViewState extends State<AddCommentsView>
         appliersOrHirersByUserId = snapshot.data['appliersOrHirersByUserId'];
         appointedUser = appointedUserId == MyUser.uid ? true : false;
 
-        return Container(
-          child: ViewModelProvider<AddCommentViewModel>.withConsumer(
-            viewModelBuilder: () {
-              return AddCommentViewModel();
-            },
-            builder: (context, model, child) => Scaffold(
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(60),
-                child: new AppBar(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text('Comments',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline1
-                              .copyWith(color: fyreworkTheme().accentColor)),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Text(
-                              '${widget.passedGigCurrency} ${widget.passedGigBudget}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1
-                                  .copyWith(color: fyreworkTheme().accentColor),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            !appointed
-                                ? GestureDetector(
-                                    onTap: myGig
-                                        ? () {}
-                                        : !appointed
-                                            ? !appliersOrHirersByUserId
-                                                    .contains(MyUser.uid)
-                                                ? () {
-                                                    _showApplyOrHireTemplate();
-                                                  }
-                                                : () {}
-                                            : () {},
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                            width: 1,
-                                            color: Colors.white,
-                                          ),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(2))),
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            myGig
-                                                ? 'Your gig'
-                                                : !appliersOrHirersByUserId
-                                                        .contains(MyUser.uid)
-                                                    ? widget.passedGigValue ==
-                                                            'Gig I can do'
-                                                        ? 'Hire'
-                                                        : 'Apply'
-                                                    : 'Request sent',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1
-                                                .copyWith(
-                                                    color: fyreworkTheme()
-                                                        .accentColor),
-                                          )),
-                                    ),
-                                  )
-                                : appointedUserId == MyUser.uid
-                                    ? SizedBox(
-                                        width: 20,
-                                        height: 20,
-                                        child: SvgPicture.asset(checkCircle,
-                                            semanticsLabel: 'check-circle',
-                                            color: Colors.green),
-                                      )
-                                    : Container(
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                              width: 1,
-                                              color: Colors.white,
-                                            ),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(2))),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            'Appointed',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white),
-                                          ),
-                                        ),
-                                      )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  bottom: PreferredSize(
-                      child: Container(
-                        color: Theme.of(context).primaryColor,
-                        height: 0.5,
-                      ),
-                      preferredSize: Size.fromHeight(4.0)),
-                ),
-              ),
-              body: Column(
+        return Scaffold(
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(60),
+            child: new AppBar(
+              backgroundColor: Theme.of(context).primaryColor,
+              title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Expanded(
-                    child: CommentsView(
-                      isGigAppointed: appointed,
-                      // passedCurrentUserId: userId,
-                      gigIdCommentsIdentifier: widget.passedGigId,
-                      gigOwnerId: widget.passedGigOwnerId,
+                  Text('Comments',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline1
+                          .copyWith(color: fyreworkTheme().accentColor)),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          '${widget.passedGigCurrency} ${widget.passedGigBudget}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: fyreworkTheme().accentColor),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        !appointed
+                            ? GestureDetector(
+                                onTap: myGig
+                                    ? () {}
+                                    : !appointed
+                                        ? !appliersOrHirersByUserId
+                                                .contains(MyUser.uid)
+                                            ? () {
+                                                _showApplyOrHireTemplate();
+                                              }
+                                            : () {}
+                                        : () {},
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                        width: 1,
+                                        color: Colors.white,
+                                      ),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(2))),
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        myGig
+                                            ? 'Your gig'
+                                            : !appliersOrHirersByUserId
+                                                    .contains(MyUser.uid)
+                                                ? widget.passedGigValue ==
+                                                        'Gig I can do'
+                                                    ? 'Hire'
+                                                    : 'Apply'
+                                                : 'Request sent',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .copyWith(
+                                                color: fyreworkTheme()
+                                                    .accentColor),
+                                      )),
+                                ),
+                              )
+                            : appointedUserId == MyUser.uid
+                                ? SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: SvgPicture.asset(checkCircle,
+                                        semanticsLabel: 'check-circle',
+                                        color: Colors.green),
+                                  )
+                                : Container(
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                          width: 1,
+                                          color: Colors.white,
+                                        ),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(2))),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'Appointed',
+                                        style: TextStyle(
+                                            fontSize: 16, color: Colors.white),
+                                      ),
+                                    ),
+                                  )
+                      ],
                     ),
                   ),
-                  !appointed
-                      ? Padding(
-                          padding: EdgeInsets.all(5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                ],
+              ),
+              bottom: PreferredSize(
+                  child: Container(
+                    color: Theme.of(context).primaryColor,
+                    height: 0.5,
+                  ),
+                  preferredSize: Size.fromHeight(4.0)),
+            ),
+          ),
+          body: Builder(builder: (BuildContext context) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Expanded(
+                  child: CommentsView(
+                    isGigAppointed: appointed,
+                    // passedCurrentUserId: userId,
+                    gigIdCommentsIdentifier: widget.passedGigId,
+                    gigOwnerId: widget.passedGigOwnerId,
+                  ),
+                ),
+                !appointed
+                    ? Padding(
+                        padding: EdgeInsets.all(5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            CustomSwitch(
+                              activeColor: Theme.of(context).primaryColor,
+                              value: isPrivateComment,
+                              onChanged: (value) {
+                                setState(() {
+                                  isPrivateComment = value;
+                                });
+                              },
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                controller: _addCommentsController,
+                                decoration: buildSignUpInputDecoration(
+                                    context, 'Add comment...'),
+                                onFieldSubmitted:
+                                    (String submittedString) async {
+                                  if (submittedString.isNotEmpty) {
+                                    await AddCommentViewModel().addComment(
+                                      gigIdHoldingComment: widget.passedGigId,
+                                      gigOwnerId: widget.passedGigOwnerId,
+                                      commentOwnerUsername: username,
+                                      commentBody: submittedString,
+                                      commentOwnerId: userId,
+                                      commentOwnerAvatarUrl:
+                                          userProfilePictureUrl,
+                                      commentId: '',
+                                      commentTime: new DateTime.now(),
+                                      isPrivateComment: isPrivateComment,
+                                      proposal: proposal,
+                                      approved: approved,
+                                      rejected: rejected,
+                                      gigCurrency: widget.passedGigCurrency,
+                                      offeredBudget: offeredBudget,
+                                    );
+                                  }
+
+                                  _addCommentsController.clear();
+                                  _addProposalController.clear();
+                                  _offeredBudgetController.clear();
+                                },
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.send,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              onPressed: () {
+                                addComment(false);
+                              },
+                            ),
+                          ],
+                        ),
+                      )
+                    : myGig || appointedUser
+                        ? Column(
                             children: [
-                              CustomSwitch(
-                                activeColor: Theme.of(context).primaryColor,
-                                value: isPrivateComment,
-                                onChanged: (value) {
-                                  setState(() {
-                                    isPrivateComment = value;
-                                  });
-                                },
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
-                                child: TextFormField(
-                                  controller: _addCommentsController,
-                                  decoration: buildSignUpInputDecoration(
-                                      context, 'Add comment...'),
-                                  onFieldSubmitted:
-                                      (String submittedString) async {
-                                    if (submittedString.isNotEmpty) {
-                                      await AddCommentViewModel().addComment(
-                                        gigIdHoldingComment: widget.passedGigId,
-                                        gigOwnerId: widget.passedGigOwnerId,
-                                        commentOwnerUsername: username,
-                                        commentBody: submittedString,
-                                        commentOwnerId: userId,
-                                        commentOwnerAvatarUrl:
-                                            userProfilePictureUrl,
-                                        commentId: '',
-                                        commentTime: new DateTime.now(),
-                                        isPrivateComment: isPrivateComment,
-                                        proposal: proposal,
-                                        approved: approved,
-                                        rejected: rejected,
-                                        gigCurrency: widget.passedGigCurrency,
-                                        offeredBudget: offeredBudget,
-                                      );
-                                    }
-
-                                    _addCommentsController.clear();
-                                    _addProposalController.clear();
-                                    _offeredBudgetController.clear();
-                                  },
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.send,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                                onPressed: () {
-                                  addComment(false);
-                                },
-                              ),
-                            ],
-                          ),
-                        )
-                      : myGig || appointedUser
-                          ? Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Container(
-                                    // height: 40,
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 15),
-                                            // height: 40,
-                                            decoration: BoxDecoration(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(20))),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: [
-                                                Expanded(
-                                                  child: TextFormField(
-                                                    style: TextStyle(
-                                                        color: Theme.of(context)
-                                                            .accentColor),
-                                                    controller:
-                                                        _addCommentsController,
-                                                    decoration: InputDecoration(
-                                                      hintText:
-                                                          "Add private comment",
-                                                      hintStyle: TextStyle(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .accentColor),
-                                                      border: InputBorder.none,
-                                                    ),
-                                                    onFieldSubmitted: (String
-                                                        submittedString) async {
-                                                      if (submittedString
-                                                          .isNotEmpty) {
-                                                        await AddCommentViewModel()
-                                                            .addComment(
-                                                          gigIdHoldingComment:
-                                                              widget
-                                                                  .passedGigId,
-                                                          gigOwnerId: widget
-                                                              .passedGigOwnerId,
-                                                          commentOwnerUsername:
-                                                              username,
-                                                          commentBody:
-                                                              submittedString,
-                                                          commentOwnerId:
-                                                              userId,
-                                                          commentOwnerAvatarUrl:
-                                                              userProfilePictureUrl,
-                                                          commentId: '',
-                                                          commentTime:
-                                                              new DateTime
-                                                                  .now(),
-                                                          isPrivateComment:
-                                                              isPrivateComment,
-                                                          persistentPrivateComment:
-                                                              true,
-                                                          proposal: proposal,
-                                                          approved: approved,
-                                                          rejected: rejected,
-                                                          gigCurrency: widget
-                                                              .passedGigCurrency,
-                                                          offeredBudget:
-                                                              offeredBudget,
-                                                        );
-                                                      }
-
-                                                      _addCommentsController
-                                                          .clear();
-                                                      _addProposalController
-                                                          .clear();
-                                                      _offeredBudgetController
-                                                          .clear();
-                                                    },
-                                                    minLines: 1,
-                                                    maxLines: 6,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 20,
-                                                ),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    // attach file
-                                                  },
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            bottom: 10),
-                                                    child: SizedBox(
-                                                      width: 20,
-                                                      height: 20,
-                                                      child: SvgPicture.asset(
-                                                        paperClip,
-                                                        semanticsLabel:
-                                                            'paperclip',
-                                                        color: Theme.of(context)
-                                                            .accentColor,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Container(
-                                          width: 48,
-                                          height: 48,
+                              Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Container(
+                                  // height: 40,
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 15),
+                                          // height: 40,
                                           decoration: BoxDecoration(
                                               color: Theme.of(context)
                                                   .primaryColor,
                                               borderRadius: BorderRadius.all(
-                                                  Radius.circular(50))),
-                                          child: GestureDetector(
-                                            child: Center(
-                                              child: SizedBox(
-                                                width: 20,
-                                                height: 20,
-                                                child: SvgPicture.asset(
-                                                  paperPlane,
-                                                  semanticsLabel: 'paper-plane',
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                            onTap: () {
-                                              addComment(true);
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                _keyboardVisible
-                                    ? Container(
-                                        width: 0,
-                                        height: 0,
-                                      )
-                                    : GestureDetector(
-                                        child: Container(
-                                          height: 48,
-                                          color: Theme.of(context).primaryColor,
-                                          child: Center(
-                                            child: Text(
-                                              'Actions',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText1
-                                                  .copyWith(
+                                                  Radius.circular(20))),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Expanded(
+                                                child: TextFormField(
+                                                  style: TextStyle(
                                                       color: Theme.of(context)
                                                           .accentColor),
-                                            ),
+                                                  controller:
+                                                      _addCommentsController,
+                                                  decoration: InputDecoration(
+                                                    hintText:
+                                                        "Add private comment",
+                                                    hintStyle: TextStyle(
+                                                        color: Theme.of(context)
+                                                            .accentColor),
+                                                    border: InputBorder.none,
+                                                  ),
+                                                  onFieldSubmitted: (String
+                                                      submittedString) async {
+                                                    if (submittedString
+                                                        .isNotEmpty) {
+                                                      await AddCommentViewModel()
+                                                          .addComment(
+                                                        gigIdHoldingComment:
+                                                            widget.passedGigId,
+                                                        gigOwnerId: widget
+                                                            .passedGigOwnerId,
+                                                        commentOwnerUsername:
+                                                            username,
+                                                        commentBody:
+                                                            submittedString,
+                                                        commentOwnerId: userId,
+                                                        commentOwnerAvatarUrl:
+                                                            userProfilePictureUrl,
+                                                        commentId: '',
+                                                        commentTime:
+                                                            new DateTime.now(),
+                                                        isPrivateComment:
+                                                            isPrivateComment,
+                                                        persistentPrivateComment:
+                                                            true,
+                                                        proposal: proposal,
+                                                        approved: approved,
+                                                        rejected: rejected,
+                                                        gigCurrency: widget
+                                                            .passedGigCurrency,
+                                                        offeredBudget:
+                                                            offeredBudget,
+                                                      );
+                                                    }
+
+                                                    _addCommentsController
+                                                        .clear();
+                                                    _addProposalController
+                                                        .clear();
+                                                    _offeredBudgetController
+                                                        .clear();
+                                                  },
+                                                  minLines: 1,
+                                                  maxLines: 6,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 20,
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  // attach file
+                                                },
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 10),
+                                                  child: SizedBox(
+                                                    width: 20,
+                                                    height: 20,
+                                                    child: SvgPicture.asset(
+                                                      paperClip,
+                                                      semanticsLabel:
+                                                          'paperclip',
+                                                      color: Theme.of(context)
+                                                          .accentColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        onTap: () {
-                                          _showClientOrWorkerActions();
-                                        })
-                              ],
-                            )
-                          : Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Container(
-                                height: 40,
-                                child: ListTile(
-                                  title: Center(
-                                    child: Text(
-                                      'Private work stream',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Container(
+                                        width: 48,
+                                        height: 48,
+                                        decoration: BoxDecoration(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(50))),
+                                        child: GestureDetector(
+                                          child: Center(
+                                            child: SizedBox(
+                                              width: 20,
+                                              height: 20,
+                                              child: SvgPicture.asset(
+                                                paperPlane,
+                                                semanticsLabel: 'paper-plane',
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            addComment(true);
+                                          },
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                            )
-                ],
-              ),
-            ),
-          ),
+                              _keyboardVisible
+                                  ? Container(
+                                      width: 0,
+                                      height: 0,
+                                    )
+                                  : GestureDetector(
+                                      child: Container(
+                                        height: 48,
+                                        color: Theme.of(context).primaryColor,
+                                        child: Center(
+                                          child: Text(
+                                            'Actions',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1
+                                                .copyWith(
+                                                    color: Theme.of(context)
+                                                        .accentColor),
+                                          ),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        if (!_isActionsOpened) {
+                                          _actionsBottomSheetController =
+                                              Scaffold.of(context)
+                                                  .showBottomSheet(
+                                                      (BuildContext context) {
+                                            return Builder(
+                                              builder: (BuildContext context) {
+                                                return Container(
+                                                  height: isPortrait
+                                                      ? screenHeight - 200
+                                                      : screenHeight - 50,
+                                                  child: Scaffold(
+                                                    backgroundColor:
+                                                        Color(0xFF737373),
+                                                    body: StatefulBuilder(
+                                                        builder: (BuildContext
+                                                                context,
+                                                            StateSetter
+                                                                setModalState) {
+                                                      return Container(
+                                                        padding: MediaQuery.of(
+                                                                context)
+                                                            .viewInsets,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .primaryColor,
+                                                          borderRadius:
+                                                              BorderRadius.only(
+                                                            topLeft: const Radius
+                                                                .circular(20),
+                                                            topRight: const Radius
+                                                                .circular(20),
+                                                          ),
+                                                        ),
+                                                        child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical:
+                                                                        20,
+                                                                    horizontal:
+                                                                        10),
+                                                            // child: hirer ? _hirerActions() : _applierActions(),
+                                                            child: !client
+                                                                ? _workerActions()
+                                                                : _clientActions()),
+                                                      );
+                                                    }),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          });
+                                        }
+                                      })
+                            ],
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Container(
+                              height: 40,
+                              child: ListTile(
+                                title: Center(
+                                  child: Text(
+                                    'Private work stream',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+              ],
+            );
+          }),
         );
       },
     );
