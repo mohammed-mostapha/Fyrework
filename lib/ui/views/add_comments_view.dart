@@ -9,6 +9,7 @@ import 'package:Fyrework/ui/views/comments_view.dart';
 import 'package:Fyrework/viewmodels/add_comment_view_model.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 import 'package:custom_switch/custom_switch.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class AddCommentsView extends StatefulWidget {
   final String passedGigId;
@@ -31,6 +32,9 @@ class AddCommentsView extends StatefulWidget {
 }
 
 class _AddCommentsViewState extends State<AddCommentsView> {
+  double screenWidth = 0.0;
+  double screenHeight = 0.0;
+  bool isPortrait = true;
   final _proposalFormKey = GlobalKey<FormState>();
   final String paypalIcon = 'assets/svgs/flaticon/paypal.svg';
   final String cash = 'assets/svgs/flaticon/cash.svg';
@@ -51,6 +55,12 @@ class _AddCommentsViewState extends State<AddCommentsView> {
   final String paperClip = 'assets/svgs/solid/paperclip.svg';
   final String paperPlane = 'assets/svgs/solid/paper-plane.svg';
   final String checkCircle = 'assets/svgs/regular/check-circle.svg';
+  final String unsatisfied = 'assets/svgs/flaticon/unsatisfied.svg';
+  final String leaveReviewIcon = 'assets/svgs/flaticon/leave_review.svg';
+  final String markAsCompletedIcon =
+      'assets/svgs/flaticon/mark_as_completed.svg';
+  final String releaseEscrowPaymentIcon =
+      'assets/svgs/flaticon/release_escrow_payment.svg';
 
   final _paymentMethodSnackBar = SnackBar(
     content: Text(
@@ -462,31 +472,149 @@ class _AddCommentsViewState extends State<AddCommentsView> {
           SizedBox(
             height: 50,
           ),
-          Wrap(
-            children: [
-              GestureDetector(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: SvgPicture.asset(checkCircle,
-                          semanticsLabel: 'check-circle', color: Colors.green),
+          Expanded(
+            child: StaggeredGridView.count(
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              // shrinkWrap: true,
+              crossAxisCount: 3,
+              staggeredTiles: [
+                StaggeredTile.count(1, isPortrait ? 1 : 0.5),
+                StaggeredTile.count(1, isPortrait ? 1 : 0.5),
+                StaggeredTile.count(1, isPortrait ? 1 : 0.5),
+                StaggeredTile.count(1, isPortrait ? 1 : 0.5),
+              ],
+              children: <Widget>[
+                Center(
+                  child: GestureDetector(
+                    child: FittedBox(
+                      fit: BoxFit.fill,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 40,
+                            height: 40,
+                            child: SvgPicture.asset(
+                              unsatisfied,
+                              semanticsLabel: 'check-circle',
+                              color: Theme.of(context).accentColor,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'Unsatisfied',
+                            textAlign: TextAlign.center,
+                            style:
+                                Theme.of(context).textTheme.bodyText1.copyWith(
+                                      color: Theme.of(context).accentColor,
+                                    ),
+                          )
+                        ],
+                      ),
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'Unsatisfied',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .copyWith(color: Theme.of(context).accentColor),
-                    )
-                  ],
+                  ),
                 ),
-              )
-            ],
+                Center(
+                  child: GestureDetector(
+                    child: FittedBox(
+                      fit: BoxFit.fill,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 40,
+                            height: 40,
+                            child: SvgPicture.asset(
+                              markAsCompletedIcon,
+                              semanticsLabel: 'completed',
+                              color: Theme.of(context).accentColor,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'Mark As Completed',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .copyWith(color: Theme.of(context).accentColor),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: GestureDetector(
+                    child: FittedBox(
+                      fit: BoxFit.fill,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 40,
+                            height: 40,
+                            child: SvgPicture.asset(
+                              releaseEscrowPaymentIcon,
+                              semanticsLabel: 'release_escrow_payment',
+                              color: Theme.of(context).accentColor,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'Release Payment',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .copyWith(color: Theme.of(context).accentColor),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: GestureDetector(
+                    child: FittedBox(
+                      fit: BoxFit.fill,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 40,
+                            height: 40,
+                            child: SvgPicture.asset(
+                              leaveReviewIcon,
+                              semanticsLabel: 'leave_review',
+                              color: Theme.of(context).accentColor,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'Leave Review',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .copyWith(color: Theme.of(context).accentColor),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -549,14 +677,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
         context: context,
         builder: (BuildContext context) {
           return Container(
-            // decoration: BoxDecoration(
-            //   color: Color(0xFF737373),
-            //   borderRadius: BorderRadius.only(
-            //     topLeft: const Radius.circular(10),
-            //     topRight: const Radius.circular(10),
-            //   ),
-            // ),
-            height: MediaQuery.of(context).size.height / 2,
+            height: isPortrait ? screenHeight - 200 : screenHeight - 50,
             child: Scaffold(
               backgroundColor: Color(0xFF737373),
               body: StatefulBuilder(
@@ -584,6 +705,12 @@ class _AddCommentsViewState extends State<AddCommentsView> {
 
   @override
   Widget build(BuildContext context) {
+    screenWidth = MediaQuery.of(context).size.width;
+    screenHeight = MediaQuery.of(context).size.height;
+    isPortrait = MediaQuery.of(context).orientation == Orientation.portrait
+        ? true
+        : false;
+
     myGig = widget.passedGigOwnerId == MyUser.uid ? true : false;
     gigICanDo = widget.passedGigValue == 'Gig I can do' ? true : false;
     worker = (!myGig && !gigICanDo || myGig && gigICanDo) ? true : false;
@@ -924,8 +1051,8 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                           width: 10,
                                         ),
                                         Container(
-                                          width: 40,
-                                          height: 40,
+                                          width: 48,
+                                          height: 48,
                                           decoration: BoxDecoration(
                                               color: Theme.of(context)
                                                   .primaryColor,
@@ -959,7 +1086,7 @@ class _AddCommentsViewState extends State<AddCommentsView> {
                                       )
                                     : GestureDetector(
                                         child: Container(
-                                          height: 40,
+                                          height: 48,
                                           color: Theme.of(context).primaryColor,
                                           child: Center(
                                             child: Text(
