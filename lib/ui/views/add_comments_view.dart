@@ -7,9 +7,9 @@ import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/ui/shared/constants.dart';
 import 'package:Fyrework/ui/views/comments_view.dart';
 import 'package:Fyrework/viewmodels/add_comment_view_model.dart';
-import 'package:provider_architecture/provider_architecture.dart';
 import 'package:custom_switch/custom_switch.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:Fyrework/ui/widgets/client_actions.dart';
+import 'package:Fyrework/ui/widgets/worker_actions.dart';
 
 class AddCommentsView extends StatefulWidget {
   final String passedGigId;
@@ -46,7 +46,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
     print('device rotated');
   }
 
-  bool _isActionsOpened = false;
   double screenWidth = 0.0;
   double screenHeight = 0.0;
   bool isPortrait = true;
@@ -70,12 +69,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
   final String paperClip = 'assets/svgs/solid/paperclip.svg';
   final String paperPlane = 'assets/svgs/solid/paper-plane.svg';
   final String checkCircle = 'assets/svgs/regular/check-circle.svg';
-  final String unsatisfied = 'assets/svgs/flaticon/unsatisfied.svg';
-  final String leaveReviewIcon = 'assets/svgs/flaticon/leave_review.svg';
-  final String markAsCompletedIcon =
-      'assets/svgs/flaticon/mark_as_completed.svg';
-  final String releaseEscrowPaymentIcon =
-      'assets/svgs/flaticon/release_escrow_payment.svg';
 
   final _paymentMethodSnackBar = SnackBar(
     content: Text(
@@ -467,225 +460,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
         });
   }
 
-  Widget _clientActions() {
-    return Container(
-      color: Theme.of(context).primaryColor,
-      width: double.infinity,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Client Actions',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline1
-                    .copyWith(color: Theme.of(context).accentColor),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 50,
-          ),
-          Expanded(
-            child: StaggeredGridView.count(
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
-              // shrinkWrap: true,
-              crossAxisCount: 3,
-              staggeredTiles: [
-                StaggeredTile.count(1, isPortrait ? 1 : 0.5),
-                StaggeredTile.count(1, isPortrait ? 1 : 0.5),
-                StaggeredTile.count(1, isPortrait ? 1 : 0.5),
-                StaggeredTile.count(1, isPortrait ? 1 : 0.5),
-              ],
-              children: <Widget>[
-                Center(
-                  child: GestureDetector(
-                    child: FittedBox(
-                      fit: BoxFit.fill,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 40,
-                            height: 40,
-                            child: SvgPicture.asset(
-                              unsatisfied,
-                              semanticsLabel: 'check-circle',
-                              color: Theme.of(context).accentColor,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'Unsatisfied',
-                            textAlign: TextAlign.center,
-                            style:
-                                Theme.of(context).textTheme.bodyText1.copyWith(
-                                      color: Theme.of(context).accentColor,
-                                    ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Center(
-                  child: GestureDetector(
-                    child: FittedBox(
-                      fit: BoxFit.fill,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 40,
-                            height: 40,
-                            child: SvgPicture.asset(
-                              markAsCompletedIcon,
-                              semanticsLabel: 'completed',
-                              color: Theme.of(context).accentColor,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'Mark As Completed',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1
-                                .copyWith(color: Theme.of(context).accentColor),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Center(
-                  child: GestureDetector(
-                    child: FittedBox(
-                      fit: BoxFit.fill,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 40,
-                            height: 40,
-                            child: SvgPicture.asset(
-                              releaseEscrowPaymentIcon,
-                              semanticsLabel: 'release_escrow_payment',
-                              color: Theme.of(context).accentColor,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'Release Payment',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1
-                                .copyWith(color: Theme.of(context).accentColor),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Center(
-                  child: GestureDetector(
-                    child: FittedBox(
-                      fit: BoxFit.fill,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 40,
-                            height: 40,
-                            child: SvgPicture.asset(
-                              leaveReviewIcon,
-                              semanticsLabel: 'leave_review',
-                              color: Theme.of(context).accentColor,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'Leave Review',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1
-                                .copyWith(color: Theme.of(context).accentColor),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _workerActions() {
-    return Container(
-      color: Theme.of(context).primaryColor,
-      width: double.infinity,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Worker Actions',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline1
-                    .copyWith(color: Theme.of(context).accentColor),
-              )
-            ],
-          ),
-          Wrap(
-            children: [
-              GestureDetector(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: SvgPicture.asset(checkCircle,
-                          semanticsLabel: 'check-circle', color: Colors.green),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'Unsatisfied',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .copyWith(color: Theme.of(context).accentColor),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
@@ -1074,62 +848,56 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                         ),
                                       ),
                                       onTap: () {
-                                        if (!_isActionsOpened) {
-                                          _actionsBottomSheetController =
-                                              Scaffold.of(context)
-                                                  .showBottomSheet(
-                                                      (BuildContext context) {
-                                            return Builder(
-                                              builder: (BuildContext context) {
-                                                return Container(
-                                                  height: isPortrait
-                                                      ? screenHeight - 200
-                                                      : screenHeight - 50,
-                                                  child: Scaffold(
-                                                    backgroundColor:
-                                                        Color(0xFF737373),
-                                                    body: StatefulBuilder(
-                                                        builder: (BuildContext
-                                                                context,
-                                                            StateSetter
-                                                                setModalState) {
-                                                      return Container(
-                                                        padding: MediaQuery.of(
-                                                                context)
-                                                            .viewInsets,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .primaryColor,
-                                                          borderRadius:
-                                                              BorderRadius.only(
-                                                            topLeft: const Radius
-                                                                .circular(20),
-                                                            topRight: const Radius
-                                                                .circular(20),
-                                                          ),
+                                        _actionsBottomSheetController =
+                                            Scaffold.of(context)
+                                                .showBottomSheet(
+                                                    (BuildContext context) {
+                                          return Builder(
+                                            builder: (BuildContext context) {
+                                              return Container(
+                                                height: isPortrait
+                                                    ? screenHeight - 200
+                                                    : screenHeight - 50,
+                                                child: Scaffold(
+                                                  backgroundColor:
+                                                      Color(0xFF737373),
+                                                  body: StatefulBuilder(builder:
+                                                      (BuildContext context,
+                                                          StateSetter
+                                                              setModalState) {
+                                                    return Container(
+                                                      padding:
+                                                          MediaQuery.of(context)
+                                                              .viewInsets,
+                                                      decoration: BoxDecoration(
+                                                        color: Theme.of(context)
+                                                            .primaryColor,
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                          topLeft: const Radius
+                                                              .circular(20),
+                                                          topRight: const Radius
+                                                              .circular(20),
                                                         ),
-                                                        child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .symmetric(
-                                                                    vertical:
-                                                                        20,
-                                                                    horizontal:
-                                                                        10),
-                                                            // child: hirer ? _hirerActions() : _applierActions(),
-                                                            child: !client
-                                                                ? _workerActions()
-                                                                : _clientActions()),
-                                                      );
-                                                    }),
-                                                  ),
-                                                );
-                                              },
-                                            );
-                                          });
-                                        }
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                vertical: 20,
+                                                                horizontal: 10),
+                                                        // child: hirer ? _hirerActions() : _applierActions(),
+                                                        child: !client
+                                                            ? WorkerActions()
+                                                            : ClientActions(),
+                                                      ),
+                                                    );
+                                                  }),
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        });
                                       })
                             ],
                           )
