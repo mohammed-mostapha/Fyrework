@@ -116,6 +116,7 @@ class _HomeControllerState extends State<HomeController> {
             ),
         '/addGig': (BuildContext context) => Home(passedSelectedIndex: 1),
       },
+
       theme: fyreworkTheme(),
       builder: EasyLoading.init(),
       supportedLocales: [

@@ -49,5 +49,7 @@ ThemeData fyreworkTheme() {
     accentColor: Color(0XFFFFFFFF),
     bottomAppBarColor: Color(0XFF212121),
     hintColor: Colors.grey[500],
+    bottomSheetTheme:
+        BottomSheetThemeData(backgroundColor: Colors.black.withOpacity(0)),
   );
 }

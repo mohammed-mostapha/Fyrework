@@ -579,42 +579,38 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                 height: isPortrait
                                                     ? screenHeight - 200
                                                     : screenHeight - 50,
-                                                child: Scaffold(
-                                                  // backgroundColor:
-                                                  //     Color(0xFF737373),
-                                                  body: StatefulBuilder(builder:
-                                                      (BuildContext context,
-                                                          StateSetter
-                                                              setModalState) {
-                                                    return Container(
-                                                      // padding:
-                                                      //     MediaQuery.of(context)
-                                                      //         .viewInsets,
-                                                      decoration: BoxDecoration(
-                                                        color: Theme.of(context)
-                                                            .primaryColor,
-                                                        borderRadius:
-                                                            BorderRadius.only(
-                                                          topLeft: const Radius
-                                                              .circular(20),
-                                                          topRight: const Radius
-                                                              .circular(20),
-                                                        ),
+                                                child: StatefulBuilder(builder:
+                                                    (BuildContext context,
+                                                        StateSetter
+                                                            setModalState) {
+                                                  return Container(
+                                                    // padding:
+                                                    //     MediaQuery.of(context)
+                                                    //         .viewInsets,
+                                                    decoration: BoxDecoration(
+                                                      color: Theme.of(context)
+                                                          .primaryColor
+                                                          .withOpacity(0.8),
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                        topLeft: const Radius
+                                                            .circular(20),
+                                                        topRight: const Radius
+                                                            .circular(20),
                                                       ),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                vertical: 20,
-                                                                horizontal: 10),
-                                                        // child: hirer ? _hirerActions() : _applierActions(),
-                                                        child: !client
-                                                            ? WorkerActions()
-                                                            : ClientActions(),
-                                                      ),
-                                                    );
-                                                  }),
-                                                ),
+                                                    ),
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          vertical: 10,
+                                                          horizontal: 10),
+                                                      // child: hirer ? _hirerActions() : _applierActions(),
+                                                      child: !client
+                                                          ? WorkerActions()
+                                                          : ClientActions(),
+                                                    ),
+                                                  );
+                                                }),
                                               );
                                             },
                                           );

@@ -19,7 +19,6 @@ class ClientActions extends StatelessWidget {
         : false;
 
     return Container(
-      color: Theme.of(context).primaryColor,
       width: double.infinity,
       child: Column(
         children: [
