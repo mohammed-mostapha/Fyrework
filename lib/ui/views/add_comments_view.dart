@@ -10,13 +10,16 @@ import 'package:Fyrework/viewmodels/add_comment_view_model.dart';
 import 'package:custom_switch/custom_switch.dart';
 import 'package:Fyrework/ui/widgets/client_actions.dart';
 import 'package:Fyrework/ui/widgets/worker_actions.dart';
+import 'package:Fyrework/ui/widgets/proposal_widget.dart';
 
 class AddCommentsView extends StatefulWidget {
   final String passedGigId;
   final String passedGigOwnerId;
   final String passedCurrentUserId;
-  final String passedGigValue;
   final String passedGigCurrency;
+
+  final String passedGigValue;
+  // final String passedGigCurrency;
   final String passedGigBudget;
   AddCommentsView({
     Key key,
@@ -25,6 +28,7 @@ class AddCommentsView extends StatefulWidget {
     @required this.passedCurrentUserId,
     @required this.passedGigValue,
     @required this.passedGigCurrency,
+    // @required this.passedGigCurrency,
     @required this.passedGigBudget,
   }) : super(key: key);
   @override
@@ -33,9 +37,6 @@ class AddCommentsView extends StatefulWidget {
 
 class _AddCommentsViewState extends State<AddCommentsView>
     with WidgetsBindingObserver {
-  PersistentBottomSheetController _actionsBottomSheetController;
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
@@ -50,11 +51,9 @@ class _AddCommentsViewState extends State<AddCommentsView>
   double screenHeight = 0.0;
   bool isPortrait = true;
   final _proposalFormKey = GlobalKey<FormState>();
-  final String paypalIcon = 'assets/svgs/flaticon/paypal.svg';
-  final String cash = 'assets/svgs/flaticon/cash.svg';
-  final String alternatePayment = 'assets/svgs/flaticon/alternate_payment.svg';
-  String proposalBudget;
-  String preferredPaymentMethod;
+  TextEditingController _addCommentsController = TextEditingController();
+  TextEditingController _addProposalController = TextEditingController();
+  TextEditingController _offeredBudgetController = TextEditingController();
 
   bool myGig = false;
   bool appointed = false;
@@ -70,13 +69,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
   final String paperPlane = 'assets/svgs/solid/paper-plane.svg';
   final String checkCircle = 'assets/svgs/regular/check-circle.svg';
 
-  final _paymentMethodSnackBar = SnackBar(
-    content: Text(
-      'Select a payment method',
-      style: TextStyle(fontSize: 16),
-    ),
-  );
-
   bool isPrivateComment = false;
   bool proposal = false;
   bool approved = false;
@@ -85,10 +77,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
   String userId = MyUser.uid;
   String username = MyUser.username;
   dynamic userProfilePictureUrl = MyUser.userAvatarUrl;
-
-  TextEditingController _addCommentsController = TextEditingController();
-  TextEditingController _addProposalController = TextEditingController();
-  TextEditingController _offeredBudgetController = TextEditingController();
 
   addComment(bool persistentPrivateComment) {
     if (_addCommentsController.text.isNotEmpty) {
@@ -118,347 +106,13 @@ class _AddCommentsViewState extends State<AddCommentsView>
     }
   }
 
-  addToGigAppliersOrHirersList() {
-    Firestore.instance
-        .collection('gigs')
-        .document(widget.passedGigId)
-        .updateData({
-      'appliersOrHirersByUserId': FieldValue.arrayUnion([MyUser.uid])
-    });
-  }
-
-  submitProposal() async {
-    if (_proposalFormKey.currentState.validate()) {
-      // isPrivateComment = true;
-      proposal = true;
-      await AddCommentViewModel().addComment(
-          gigIdHoldingComment: widget.passedGigId,
-          gigOwnerId: widget.passedGigOwnerId,
-          commentOwnerUsername: username,
-          commentBody: _addProposalController.text,
-          commentOwnerId: userId,
-          commentOwnerAvatarUrl: userProfilePictureUrl,
-          commentId: '',
-          commentTime: new DateTime.now(),
-          isPrivateComment: isPrivateComment,
-          persistentPrivateComment: true,
-          proposal: proposal,
-          approved: approved,
-          rejected: rejected,
-          gigCurrency: widget.passedGigCurrency,
-          offeredBudget: _offeredBudgetController.text,
-          preferredPaymentMethod: preferredPaymentMethod);
-      addToGigAppliersOrHirersList();
-      isPrivateComment = false;
-      proposal = false;
-      _addCommentsController.clear();
-      _addProposalController.clear();
-      _offeredBudgetController.clear();
-
-      Navigator.pop(context);
-    }
-  }
-
-  _showApplyOrHireTemplate() {
-    showModalBottomSheet(
-        isScrollControlled: true,
-        enableDrag: true,
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            height: MediaQuery.of(context).size.height / 1.5,
-            child: Scaffold(
-              key: _scaffoldKey,
-              body: StatefulBuilder(
-                  builder: (BuildContext context, StateSetter setModalState) {
-                return Container(
-                  color: Color(0xFF737373),
-                  child: Padding(
-                    padding: MediaQuery.of(context).viewInsets,
-                    child: Container(
-                      // height: MediaQuery.of(context).size.height / 2,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).accentColor,
-                        // color: Colors.red,
-                        borderRadius: BorderRadius.only(
-                          topLeft: const Radius.circular(20),
-                          topRight: const Radius.circular(20),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 20, horizontal: 10),
-                        child: Form(
-                          key: _proposalFormKey,
-                          child: ListView(
-                            children: <Widget>[
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                child: Container(
-                                  child: TextFormField(
-                                    controller: _addProposalController,
-                                    decoration: buildSignUpInputDecoration(
-                                        context,
-                                        'Describe your proposal in brief'),
-                                    inputFormatters: [
-                                      new LengthLimitingTextInputFormatter(500),
-                                    ],
-                                    validator: (value) =>
-                                        value.isEmpty ? '' : null,
-                                    minLines: 1,
-                                    maxLines: 6,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                              width: 30,
-                                              height: 30,
-                                              child: SvgPicture.asset(
-                                                paypalIcon,
-                                                semanticsLabel: 'paypal',
-                                                // color: Colors.white,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text(
-                                                'Request PayPal escrow deposit',
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: Theme.of(context)
-                                                        .primaryColor)),
-                                          ],
-                                        ),
-                                        Container(
-                                          child: SizedBox(
-                                            width: 20,
-                                            child: Radio(
-                                              materialTapTargetSize:
-                                                  MaterialTapTargetSize
-                                                      .shrinkWrap,
-                                              value: 'paypal',
-                                              groupValue:
-                                                  preferredPaymentMethod,
-                                              activeColor: Theme.of(context)
-                                                  .primaryColor,
-                                              onChanged: (T) {
-                                                setModalState(() {
-                                                  preferredPaymentMethod = T;
-                                                  proposalBudget = null;
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Divider(
-                                      thickness: 0.5,
-                                      color: Colors.black26,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                              width: 30,
-                                              height: 30,
-                                              child: SvgPicture.asset(
-                                                cash,
-                                                semanticsLabel: 'pay',
-                                                // color: Colors.white,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text('Get paid by cash',
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: Theme.of(context)
-                                                        .primaryColor)),
-                                          ],
-                                        ),
-                                        Container(
-                                          child: SizedBox(
-                                            width: 20,
-                                            child: Radio(
-                                                materialTapTargetSize:
-                                                    MaterialTapTargetSize
-                                                        .shrinkWrap,
-                                                value: 'cash',
-                                                groupValue:
-                                                    preferredPaymentMethod,
-                                                activeColor: Theme.of(context)
-                                                    .primaryColor,
-                                                onChanged: (T) {
-                                                  setModalState(() {
-                                                    preferredPaymentMethod = T;
-                                                  });
-                                                }),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Divider(
-                                      thickness: 0.5,
-                                      color: Colors.black26,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                              width: 30,
-                                              height: 30,
-                                              child: SvgPicture.asset(
-                                                alternatePayment,
-                                                semanticsLabel:
-                                                    'alternate payment',
-                                                // color: Colors.white,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Text(
-                                                'Agree alternate with the poster',
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: Theme.of(context)
-                                                        .primaryColor)),
-                                          ],
-                                        ),
-                                        Container(
-                                          child: SizedBox(
-                                            width: 20,
-                                            child: Radio(
-                                                materialTapTargetSize:
-                                                    MaterialTapTargetSize
-                                                        .shrinkWrap,
-                                                value: 'alternate_payment',
-                                                groupValue:
-                                                    preferredPaymentMethod,
-                                                activeColor: Theme.of(context)
-                                                    .primaryColor,
-                                                onChanged: (T) {
-                                                  setModalState(() {
-                                                    preferredPaymentMethod = T;
-                                                  });
-                                                }),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Divider(
-                                thickness: 0.5,
-                                color: Colors.black26,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            widget.passedGigCurrency,
-                                            // 'Currency',
-                                            style: TextStyle(fontSize: 16),
-                                          ),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Container(
-                                            width: 70,
-                                            child: TextFormField(
-                                              controller:
-                                                  _offeredBudgetController,
-                                              decoration:
-                                                  buildSignUpInputDecoration(
-                                                      context, '0.00'),
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              validator: (value) =>
-                                                  value.isEmpty ? '' : null,
-                                              // onSaved: (value) =>
-                                              //     proposalBudget = value,
-                                              minLines: 1,
-                                              maxLines: 2,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      Container(
-                                        width: 100.0,
-                                        child: RaisedButton(
-                                            materialTapTargetSize:
-                                                MaterialTapTargetSize
-                                                    .shrinkWrap,
-                                            splashColor: Colors.green,
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            child: Text(
-                                              widget.passedGigValue ==
-                                                      'Gigs I can do'
-                                                  ? 'Hire'
-                                                  : 'Apply',
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                            onPressed: () {
-                                              // Navigator.pop(context);
-
-                                              preferredPaymentMethod == null
-                                                  ? Scaffold.of(context)
-                                                      .showSnackBar(
-                                                          _paymentMethodSnackBar)
-                                                  : submitProposal();
-                                            }),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              }),
-            ),
-          );
-        });
-  }
+  // _showApplyOrHireTemplate() {
+  //   showModalBottomSheet(
+  //       isScrollControlled: true,
+  //       enableDrag: true,
+  //       context: context,
+  //       builder: (BuildContext context) {});
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -528,45 +182,114 @@ class _AddCommentsViewState extends State<AddCommentsView>
                           width: 10,
                         ),
                         !appointed
-                            ? GestureDetector(
-                                onTap: myGig
-                                    ? () {}
-                                    : !appointed
-                                        ? !appliersOrHirersByUserId
-                                                .contains(MyUser.uid)
-                                            ? () {
-                                                _showApplyOrHireTemplate();
-                                              }
-                                            : () {}
-                                        : () {},
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                        width: 1,
-                                        color: Colors.white,
-                                      ),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(2))),
-                                  child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        myGig
-                                            ? 'Your gig'
-                                            : !appliersOrHirersByUserId
+                            ? Builder(
+                                builder: (BuildContext context) {
+                                  return GestureDetector(
+                                    onTap: myGig
+                                        ? () {}
+                                        : !appointed
+                                            ? !appliersOrHirersByUserId
                                                     .contains(MyUser.uid)
-                                                ? widget.passedGigValue ==
-                                                        'Gig I can do'
-                                                    ? 'Hire'
-                                                    : 'Apply'
-                                                : 'Request sent',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1
-                                            .copyWith(
-                                                color: fyreworkTheme()
-                                                    .accentColor),
-                                      )),
-                                ),
+                                                ? () {
+                                                    showModalBottomSheet(
+                                                        isScrollControlled:
+                                                            true,
+                                                        context: context,
+                                                        builder: (BuildContext
+                                                            context) {
+                                                          return Builder(
+                                                              builder:
+                                                                  (BuildContext
+                                                                      context) {
+                                                            return Container(
+                                                              height: isPortrait
+                                                                  ? screenHeight -
+                                                                      100
+                                                                  : screenHeight,
+                                                              child: Scaffold(
+                                                                backgroundColor:
+                                                                    Color(
+                                                                        0xFF737373),
+                                                                body: Container(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .primaryColor,
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .only(
+                                                                      topLeft:
+                                                                          const Radius.circular(
+                                                                              20),
+                                                                      topRight:
+                                                                          const Radius.circular(
+                                                                              20),
+                                                                    ),
+                                                                  ),
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .symmetric(
+                                                                        vertical:
+                                                                            20,
+                                                                        horizontal:
+                                                                            10),
+                                                                    // child: hirer ? _hirerActions() : _applierActions(),
+                                                                    child:
+                                                                        ProposalWidget(
+                                                                      passedGigId:
+                                                                          widget
+                                                                              .passedGigId,
+                                                                      passedGigOwnerId:
+                                                                          widget
+                                                                              .passedGigOwnerId,
+                                                                      passedGigCurrency:
+                                                                          widget
+                                                                              .passedGigCurrency,
+                                                                      passedGigValue:
+                                                                          widget
+                                                                              .passedGigValue,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          });
+                                                        });
+                                                  }
+                                                : () {}
+                                            : () {},
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                            width: 1,
+                                            color: Colors.white,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(2))),
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            myGig
+                                                ? 'Your gig'
+                                                : !appliersOrHirersByUserId
+                                                        .contains(MyUser.uid)
+                                                    ? widget.passedGigValue ==
+                                                            'Gig I can do'
+                                                        ? 'Hire'
+                                                        : 'Apply'
+                                                    : 'Request sent',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1
+                                                .copyWith(
+                                                    color: fyreworkTheme()
+                                                        .accentColor),
+                                          )),
+                                    ),
+                                  );
+                                },
                               )
                             : appointedUserId == MyUser.uid
                                 ? SizedBox(
@@ -848,10 +571,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                         ),
                                       ),
                                       onTap: () {
-                                        _actionsBottomSheetController =
-                                            Scaffold.of(context)
-                                                .showBottomSheet(
-                                                    (BuildContext context) {
+                                        Scaffold.of(context).showBottomSheet(
+                                            (BuildContext context) {
                                           return Builder(
                                             builder: (BuildContext context) {
                                               return Container(
@@ -859,16 +580,16 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                     ? screenHeight - 200
                                                     : screenHeight - 50,
                                                 child: Scaffold(
-                                                  backgroundColor:
-                                                      Color(0xFF737373),
+                                                  // backgroundColor:
+                                                  //     Color(0xFF737373),
                                                   body: StatefulBuilder(builder:
                                                       (BuildContext context,
                                                           StateSetter
                                                               setModalState) {
                                                     return Container(
-                                                      padding:
-                                                          MediaQuery.of(context)
-                                                              .viewInsets,
+                                                      // padding:
+                                                      //     MediaQuery.of(context)
+                                                      //         .viewInsets,
                                                       decoration: BoxDecoration(
                                                         color: Theme.of(context)
                                                             .primaryColor,
