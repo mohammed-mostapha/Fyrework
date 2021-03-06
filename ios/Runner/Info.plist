@@ -45,6 +45,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+   		<string>fetch</string>
+   		<string>remote-notification</string>
+	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSAppTransportSecurity</key>
@@ -56,6 +61,8 @@
 	<string>Need to upload images</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Need to use Microphone</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>need to use music</string>
 	<key>UIStatusBarHidden</key>
 	<true/>
 

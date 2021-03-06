@@ -26,7 +26,7 @@ class ClientActions extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Client Actions',
+                'Actions',
                 style: Theme.of(context)
                     .textTheme
                     .headline1

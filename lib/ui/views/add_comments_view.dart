@@ -1,5 +1,9 @@
+import 'dart:io';
+import 'package:Fyrework/services/storage_repo.dart';
 import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
+import 'package:circular_reveal_animation/circular_reveal_animation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -10,17 +14,20 @@ import 'package:Fyrework/viewmodels/add_comment_view_model.dart';
 import 'package:custom_switch/custom_switch.dart';
 import 'package:Fyrework/ui/widgets/client_actions.dart';
 import 'package:Fyrework/ui/widgets/worker_actions.dart';
+import 'package:Fyrework/ui/widgets/workstream_circural_reveal_animation.dart';
 import 'package:Fyrework/ui/widgets/proposal_widget.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as fileName;
 
 class AddCommentsView extends StatefulWidget {
   final String passedGigId;
   final String passedGigOwnerId;
   final String passedCurrentUserId;
   final String passedGigCurrency;
-
   final String passedGigValue;
-  // final String passedGigCurrency;
   final String passedGigBudget;
+
   AddCommentsView({
     Key key,
     @required this.passedGigId,
@@ -36,10 +43,120 @@ class AddCommentsView extends StatefulWidget {
 }
 
 class _AddCommentsViewState extends State<AddCommentsView>
-    with WidgetsBindingObserver {
+    // with WidgetsBindingObserver {
+    with
+        SingleTickerProviderStateMixin {
+  AnimationController animationController;
+  Animation<double> animation;
+
+  File _filePath;
+  // Map<FilePickerResult> _paths;
+  // List<File> _multipleFilesPaths;
+  List<File> _multipleFilesPaths;
+
+  String _fileExtension;
+  List<String> _multipleFilesExtensions;
+  FileType _pickType;
+  bool _multiPick = false;
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  List<StorageUploadTask> _storageUploadTasks = <StorageUploadTask>[];
+
+  openFileExplorer() async {
+    try {
+      //multiple files pick
+      if (_multiPick) {
+        FilePickerResult result =
+            await FilePicker.platform.pickFiles(allowMultiple: true);
+
+        if (result != null) {
+          _multipleFilesPaths = result.paths.map((path) => File(path)).toList();
+        } else {
+          // User canceled the picker
+        }
+      } else {
+        ///////////////////////////////////////
+
+        //single file pick
+        FilePickerResult result = await FilePicker.platform.pickFiles();
+        if (result != null) {
+          _filePath = File(result.files.single.path);
+        } else {
+          // User canceled the picker
+        }
+      }
+    } on PlatformException catch (e) {
+      print('Unsupported Operation' + e.toString());
+    }
+    if (!mounted) {
+      return;
+    }
+  }
+
+  uploadWorkstreamFiles() async {
+    if (_multiPick) {
+      // _multipleFilesPaths.forEach((filename, filePath) => {
+      //   upload(filename, filePath);
+      // });
+      for (var i = 0; i < _multipleFilesPaths.length; i++) {
+        String storageResult;
+
+        storageResult = await StorageRepo().uploadWorkstreamfiles(
+          title: fileName.basename(_multipleFilesPaths[i].path),
+          mediaFileToUpload: _multipleFilesPaths[i],
+        );
+      }
+    }
+  }
+
+  // upload({@required String title,
+  //   @required File mediaFileToUpload,}) {
+
+  //   _fileExtension = filename.toString().split('.').last;
+  // }
+
+  dropDown() {
+    return DropdownButton(
+      hint: Text(
+        'Select',
+      ),
+      value: _pickType,
+      items: <DropdownMenuItem>[
+        DropdownMenuItem(
+          child: Text('Audio'),
+          value: FileType.audio,
+        ),
+        DropdownMenuItem(
+          child: Text('Image'),
+          value: FileType.image,
+        ),
+        DropdownMenuItem(
+          child: Text('Video'),
+          value: FileType.video,
+        ),
+        DropdownMenuItem(
+          child: Text('Any'),
+          value: FileType.any,
+        ),
+      ],
+      onChanged: (value) {
+        setState(() {
+          _pickType = value;
+        });
+      },
+    );
+  }
+
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    // WidgetsBinding.instance.addObserver(this);
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+    animation = CurvedAnimation(
+      parent: animationController,
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
@@ -155,6 +272,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
         appointedUser = appointedUserId == MyUser.uid ? true : false;
 
         return Scaffold(
+          key: _scaffoldKey,
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(60),
             child: new AppBar(
@@ -408,6 +526,21 @@ class _AddCommentsViewState extends State<AddCommentsView>
                     : myGig || appointedUser
                         ? Column(
                             children: [
+                              CircularRevealAnimation(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Theme.of(context).primaryColor,
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(20))),
+                                  width: double.infinity,
+                                  height: 200,
+                                ),
+                                animation: animation,
+                                centerAlignment: Alignment.bottomCenter,
+                                // centerOffset: Offset(130, 100),
+//                minRadius: 12,
+//                maxRadius: 200,
+                              ),
                               Padding(
                                 padding: const EdgeInsets.all(5.0),
                                 child: Container(
@@ -494,7 +627,22 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                               ),
                                               GestureDetector(
                                                 onTap: () {
-                                                  // attach file
+                                                  //open reveal animation
+                                                  print('paperclip tapped');
+                                                  if (animationController
+                                                              .status ==
+                                                          AnimationStatus
+                                                              .forward ||
+                                                      animationController
+                                                              .status ==
+                                                          AnimationStatus
+                                                              .completed) {
+                                                    animationController
+                                                        .reverse();
+                                                  } else {
+                                                    animationController
+                                                        .forward();
+                                                  }
                                                 },
                                                 child: Padding(
                                                   padding:
@@ -513,6 +661,28 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                   ),
                                                 ),
                                               ),
+                                              // dropDown(),
+                                              // SwitchListTile.adaptive(
+                                              //   value: _multiPick,
+                                              //   title: Text(
+                                              //     'Pick Multiple Files',
+                                              //     textAlign: TextAlign.left,
+                                              //   ),
+                                              //   onChanged: (bool value) {
+                                              //     setState(() {
+                                              //       _multiPick = value;
+                                              //     });
+                                              //   },
+                                              // ),
+                                              // OutlineButton(
+                                              //   child: Text(
+                                              //     'open Explorer',
+                                              //   ),
+                                              //   onPressed: () {
+                                              //     openFileExplorer();
+                                              //   },
+                                              // )
+                                              // WSRevealAnimation()
                                             ],
                                           ),
                                         ),
@@ -645,7 +815,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
     _addCommentsController.dispose();
     _addProposalController.dispose();
     _offeredBudgetController.dispose();
-    WidgetsBinding.instance.removeObserver(this);
+    // WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 }

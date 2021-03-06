@@ -25,7 +25,7 @@ class WorkerActions extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Worker Actions',
+                'Actions',
                 style: Theme.of(context)
                     .textTheme
                     .headline1
