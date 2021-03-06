@@ -14,7 +14,7 @@ import 'package:Fyrework/viewmodels/add_comment_view_model.dart';
 import 'package:custom_switch/custom_switch.dart';
 import 'package:Fyrework/ui/widgets/client_actions.dart';
 import 'package:Fyrework/ui/widgets/worker_actions.dart';
-import 'package:Fyrework/ui/widgets/workstream_circural_reveal_animation.dart';
+import 'package:Fyrework/ui/widgets/workstream_files.dart';
 import 'package:Fyrework/ui/widgets/proposal_widget.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
@@ -43,17 +43,16 @@ class AddCommentsView extends StatefulWidget {
 }
 
 class _AddCommentsViewState extends State<AddCommentsView>
-    // with WidgetsBindingObserver {
-    with
-        SingleTickerProviderStateMixin {
+    with WidgetsBindingObserver {
+  // with SingleTickerProviderStateMixin {
   AnimationController animationController;
   Animation<double> animation;
+  bool _animatedContainerOpened = false;
+  double _animatedContainerHeight = 0;
 
+  String _filename;
   File _filePath;
-  // Map<FilePickerResult> _paths;
-  // List<File> _multipleFilesPaths;
   List<File> _multipleFilesPaths;
-
   String _fileExtension;
   List<String> _multipleFilesExtensions;
   FileType _pickType;
@@ -79,7 +78,9 @@ class _AddCommentsViewState extends State<AddCommentsView>
         //single file pick
         FilePickerResult result = await FilePicker.platform.pickFiles();
         if (result != null) {
+          _filename = result.paths.single.split('.').last;
           _filePath = File(result.files.single.path);
+          uploadWorkstreamFiles(_filename, _filePath);
         } else {
           // User canceled the picker
         }
@@ -92,27 +93,17 @@ class _AddCommentsViewState extends State<AddCommentsView>
     }
   }
 
-  uploadWorkstreamFiles() async {
-    if (_multiPick) {
-      // _multipleFilesPaths.forEach((filename, filePath) => {
-      //   upload(filename, filePath);
-      // });
-      for (var i = 0; i < _multipleFilesPaths.length; i++) {
-        String storageResult;
-
-        storageResult = await StorageRepo().uploadWorkstreamfiles(
-          title: fileName.basename(_multipleFilesPaths[i].path),
-          mediaFileToUpload: _multipleFilesPaths[i],
-        );
-      }
-    }
+  uploadWorkstreamFiles(fileName, filePath) {
+    _fileExtension = fileName.toString().split('.').last;
+    StorageReference storageReference =
+        FirebaseStorage.instance.ref().child(fileName);
+    final StorageUploadTask uploadTask = storageReference.putFile(
+        File(filePath),
+        StorageMetadata(contentType: '$_pickType/$_fileExtension'));
+    setState(() {
+      _storageUploadTasks.add(uploadTask);
+    });
   }
-
-  // upload({@required String title,
-  //   @required File mediaFileToUpload,}) {
-
-  //   _fileExtension = filename.toString().split('.').last;
-  // }
 
   dropDown() {
     return DropdownButton(
@@ -148,15 +139,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
 
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addObserver(this);
-    animationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 300),
-    );
-    animation = CurvedAnimation(
-      parent: animationController,
-      curve: Curves.easeInOut,
-    );
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -526,20 +509,15 @@ class _AddCommentsViewState extends State<AddCommentsView>
                     : myGig || appointedUser
                         ? Column(
                             children: [
-                              CircularRevealAnimation(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Theme.of(context).primaryColor,
-                                      borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(20))),
-                                  width: double.infinity,
-                                  height: 200,
-                                ),
-                                animation: animation,
-                                centerAlignment: Alignment.bottomCenter,
-                                // centerOffset: Offset(130, 100),
-//                minRadius: 12,
-//                maxRadius: 200,
+                              AnimatedContainer(
+                                duration: Duration(milliseconds: 300),
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context).primaryColor,
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(10))),
+                                width: double.infinity,
+                                height: _animatedContainerHeight,
+                                child: WorkstreamFiles(),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(5.0),
@@ -627,22 +605,16 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                               ),
                                               GestureDetector(
                                                 onTap: () {
+                                                  setState(() {
+                                                    _animatedContainerHeight =
+                                                        !_animatedContainerOpened
+                                                            ? 100
+                                                            : 0;
+                                                    _animatedContainerOpened =
+                                                        !_animatedContainerOpened;
+                                                  });
                                                   //open reveal animation
                                                   print('paperclip tapped');
-                                                  if (animationController
-                                                              .status ==
-                                                          AnimationStatus
-                                                              .forward ||
-                                                      animationController
-                                                              .status ==
-                                                          AnimationStatus
-                                                              .completed) {
-                                                    animationController
-                                                        .reverse();
-                                                  } else {
-                                                    animationController
-                                                        .forward();
-                                                  }
                                                 },
                                                 child: Padding(
                                                   padding:

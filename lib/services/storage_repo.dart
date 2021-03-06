@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:Fyrework/locator.dart';
@@ -84,36 +85,5 @@ class StorageRepo {
     } catch (e) {
       return e.toString();
     }
-  }
-
-  // upload workstream files
-  Future<String> uploadWorkstreamfiles({
-    @required String title,
-    @required File mediaFileToUpload,
-  }) async {
-    var imageFileName =
-        title + DateTime.now().millisecondsSinceEpoch.toString();
-
-    // GET the reference to the file we want to create
-    final StorageReference gigMediaFilesStorageRef = FirebaseStorage.instance
-        .ref()
-        .child("gigs/workstreamFiles/$imageFileName");
-
-    StorageUploadTask uploadTask =
-        gigMediaFilesStorageRef.putFile(mediaFileToUpload);
-    StorageTaskSnapshot storageSnapshot = await uploadTask.onComplete;
-    print('one file has been uploaded');
-    //making a downloadable URL of the uploaded image
-    var downloadUrl = await storageSnapshot.ref.getDownloadURL();
-
-    if (uploadTask.isComplete) {
-      return downloadUrl;
-      // return CloudStorageResult(
-      //   imageUrl: url,
-      //   imageFileName: imageFileName,
-      // );
-    }
-
-    return null;
   }
 }
