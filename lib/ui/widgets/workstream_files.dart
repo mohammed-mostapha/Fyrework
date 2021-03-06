@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -19,9 +20,76 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  String _filename;
+  File _filePath;
+  List<File> _multipleFilesPaths;
+  String _fileExtension;
+  List<String> _multipleFilesExtensions;
+  FileType _pickType;
+  bool _multiPick = false;
+
+  List<StorageUploadTask> _storageUploadTasks = <StorageUploadTask>[];
+
   @override
   void initState() {
     super.initState();
+  }
+
+  openFileExplorer() async {
+    try {
+      //multiple files pick
+      if (_multiPick) {
+        FilePickerResult result =
+            await FilePicker.platform.pickFiles(allowMultiple: true);
+
+        if (result != null) {
+          _multipleFilesPaths = result.paths.map((path) => File(path)).toList();
+        } else {
+          // User canceled the picker
+        }
+      } else {
+        ///////////////////////////////////////
+
+        //single file pick
+        FilePickerResult result = await FilePicker.platform.pickFiles();
+        if (result != null) {
+          _filename = result.paths.single;
+          _filePath = File(result.files.single.path);
+          uploadWorkstreamFiles(_filename, _filePath.path);
+        } else {
+          // User canceled the picker
+        }
+      }
+      // uploadToFirebase();
+    } on PlatformException catch (e) {
+      print('Unsupported Operation' + e.toString());
+    }
+    if (!mounted) {
+      return;
+    }
+  }
+
+  // uploadToFirebase() {
+  //   if (_multiPick) {
+  //     // _multipleFilesPaths
+  //     //     .forEach((fileName, filePath) => {upload(fileName, filePath)});
+  //   } else {
+  //     String fileName = _filePath.path.split('/').last;
+  //     String filePath = _filePath.path;
+  //     uploadWorkstreamFiles(fileName, filePath);
+  //   }
+  // }
+
+  uploadWorkstreamFiles(String fileName, String filePath) {
+    _fileExtension = fileName.toString().split('.').last;
+    StorageReference storageReference =
+        FirebaseStorage.instance.ref().child(fileName);
+    final StorageUploadTask uploadTask = storageReference.putFile(
+        File(filePath),
+        StorageMetadata(contentType: '$_pickType/$_fileExtension'));
+    setState(() {
+      _storageUploadTasks.add(uploadTask);
+    });
   }
 
   @override
@@ -91,6 +159,12 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
                   ],
                 ),
               ),
+              onTap: () {
+                setState(() {
+                  _pickType = FileType.image;
+                });
+                openFileExplorer();
+              },
             ),
             GestureDetector(
               child: FittedBox(
@@ -121,6 +195,12 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
                   ],
                 ),
               ),
+              onTap: () {
+                setState(() {
+                  _pickType = FileType.video;
+                });
+                openFileExplorer();
+              },
             ),
             GestureDetector(
               child: FittedBox(
@@ -151,6 +231,12 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
                   ],
                 ),
               ),
+              onTap: () {
+                setState(() {
+                  _pickType = FileType.audio;
+                });
+                openFileExplorer();
+              },
             ),
           ],
         ));

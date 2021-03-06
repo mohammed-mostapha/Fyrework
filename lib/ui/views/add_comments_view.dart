@@ -45,97 +45,12 @@ class AddCommentsView extends StatefulWidget {
 class _AddCommentsViewState extends State<AddCommentsView>
     with WidgetsBindingObserver {
   // with SingleTickerProviderStateMixin {
+
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   AnimationController animationController;
   Animation<double> animation;
   bool _animatedContainerOpened = false;
   double _animatedContainerHeight = 0;
-
-  String _filename;
-  File _filePath;
-  List<File> _multipleFilesPaths;
-  String _fileExtension;
-  List<String> _multipleFilesExtensions;
-  FileType _pickType;
-  bool _multiPick = false;
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  List<StorageUploadTask> _storageUploadTasks = <StorageUploadTask>[];
-
-  openFileExplorer() async {
-    try {
-      //multiple files pick
-      if (_multiPick) {
-        FilePickerResult result =
-            await FilePicker.platform.pickFiles(allowMultiple: true);
-
-        if (result != null) {
-          _multipleFilesPaths = result.paths.map((path) => File(path)).toList();
-        } else {
-          // User canceled the picker
-        }
-      } else {
-        ///////////////////////////////////////
-
-        //single file pick
-        FilePickerResult result = await FilePicker.platform.pickFiles();
-        if (result != null) {
-          _filename = result.paths.single.split('.').last;
-          _filePath = File(result.files.single.path);
-          uploadWorkstreamFiles(_filename, _filePath);
-        } else {
-          // User canceled the picker
-        }
-      }
-    } on PlatformException catch (e) {
-      print('Unsupported Operation' + e.toString());
-    }
-    if (!mounted) {
-      return;
-    }
-  }
-
-  uploadWorkstreamFiles(fileName, filePath) {
-    _fileExtension = fileName.toString().split('.').last;
-    StorageReference storageReference =
-        FirebaseStorage.instance.ref().child(fileName);
-    final StorageUploadTask uploadTask = storageReference.putFile(
-        File(filePath),
-        StorageMetadata(contentType: '$_pickType/$_fileExtension'));
-    setState(() {
-      _storageUploadTasks.add(uploadTask);
-    });
-  }
-
-  dropDown() {
-    return DropdownButton(
-      hint: Text(
-        'Select',
-      ),
-      value: _pickType,
-      items: <DropdownMenuItem>[
-        DropdownMenuItem(
-          child: Text('Audio'),
-          value: FileType.audio,
-        ),
-        DropdownMenuItem(
-          child: Text('Image'),
-          value: FileType.image,
-        ),
-        DropdownMenuItem(
-          child: Text('Video'),
-          value: FileType.video,
-        ),
-        DropdownMenuItem(
-          child: Text('Any'),
-          value: FileType.any,
-        ),
-      ],
-      onChanged: (value) {
-        setState(() {
-          _pickType = value;
-        });
-      },
-    );
-  }
 
   void initState() {
     super.initState();
