@@ -1,11 +1,6 @@
-import 'dart:io';
-import 'package:Fyrework/services/storage_repo.dart';
 import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
-import 'package:circular_reveal_animation/circular_reveal_animation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/ui/shared/constants.dart';
@@ -16,9 +11,6 @@ import 'package:Fyrework/ui/widgets/client_actions.dart';
 import 'package:Fyrework/ui/widgets/worker_actions.dart';
 import 'package:Fyrework/ui/widgets/workstream_files.dart';
 import 'package:Fyrework/ui/widgets/proposal_widget.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as fileName;
 
 class AddCommentsView extends StatefulWidget {
   final String passedGigId;
@@ -43,8 +35,8 @@ class AddCommentsView extends StatefulWidget {
 }
 
 class _AddCommentsViewState extends State<AddCommentsView>
-    with WidgetsBindingObserver {
-  // with SingleTickerProviderStateMixin {
+    // with WidgetsBindingObserver {
+  with SingleTickerProviderStateMixin {
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   AnimationController animationController;
@@ -52,15 +44,21 @@ class _AddCommentsViewState extends State<AddCommentsView>
   bool _animatedContainerOpened = false;
   double _animatedContainerHeight = 0;
 
+  AnimationController _pickFilecontroller;
+
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    // WidgetsBinding.instance.addObserver(this);
+    _pickFilecontroller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 200),
+    );
   }
 
   @override
-  void didChangeMetrics() {
-    print('device rotated');
-  }
+  // void didChangeMetrics() {
+  //   print('device rotated');
+  // }
 
   double screenWidth = 0.0;
   double screenHeight = 0.0;
@@ -424,14 +422,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
                     : myGig || appointedUser
                         ? Column(
                             children: [
-                              AnimatedContainer(
-                                duration: Duration(milliseconds: 300),
-                                decoration: BoxDecoration(
-                                    color: Theme.of(context).primaryColor,
-                                    borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(10))),
-                                width: double.infinity,
-                                height: _animatedContainerHeight,
+                              SizeTransition(
+                                sizeFactor: _pickFilecontroller,                                // duration: Duration(milliseconds: 300),
                                 child: WorkstreamFiles(),
                               ),
                               Padding(
@@ -521,12 +513,14 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                               GestureDetector(
                                                 onTap: () {
                                                   setState(() {
-                                                    _animatedContainerHeight =
-                                                        !_animatedContainerOpened
-                                                            ? 100
-                                                            : 0;
+                                                    if(!_animatedContainerOpened) {
+                                                      _pickFilecontroller.forward();
+                                                    }else {
+                                                      _pickFilecontroller.reverse();
+                                                    }
                                                     _animatedContainerOpened =
                                                         !_animatedContainerOpened;
+
                                                   });
                                                   //open reveal animation
                                                   print('paperclip tapped');
@@ -548,28 +542,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                   ),
                                                 ),
                                               ),
-                                              // dropDown(),
-                                              // SwitchListTile.adaptive(
-                                              //   value: _multiPick,
-                                              //   title: Text(
-                                              //     'Pick Multiple Files',
-                                              //     textAlign: TextAlign.left,
-                                              //   ),
-                                              //   onChanged: (bool value) {
-                                              //     setState(() {
-                                              //       _multiPick = value;
-                                              //     });
-                                              //   },
-                                              // ),
-                                              // OutlineButton(
-                                              //   child: Text(
-                                              //     'open Explorer',
-                                              //   ),
-                                              //   onPressed: () {
-                                              //     openFileExplorer();
-                                              //   },
-                                              // )
-                                              // WSRevealAnimation()
                                             ],
                                           ),
                                         ),

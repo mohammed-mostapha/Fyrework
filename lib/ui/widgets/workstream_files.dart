@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:path/path.dart' as extractedFileName;
 
 class WorkstreamFiles extends StatefulWidget {
   @override
@@ -53,7 +54,8 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
         //single file pick
         FilePickerResult result = await FilePicker.platform.pickFiles();
         if (result != null) {
-          _filename = result.paths.single;
+          // _filename = result.paths.single;
+          _filename = extractedFileName.basename(result.paths.single);
           _filePath = File(result.files.single.path);
           uploadWorkstreamFiles(_filename, _filePath.path);
         } else {
@@ -69,21 +71,10 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
     }
   }
 
-  // uploadToFirebase() {
-  //   if (_multiPick) {
-  //     // _multipleFilesPaths
-  //     //     .forEach((fileName, filePath) => {upload(fileName, filePath)});
-  //   } else {
-  //     String fileName = _filePath.path.split('/').last;
-  //     String filePath = _filePath.path;
-  //     uploadWorkstreamFiles(fileName, filePath);
-  //   }
-  // }
-
   uploadWorkstreamFiles(String fileName, String filePath) {
     _fileExtension = fileName.toString().split('.').last;
     StorageReference storageReference =
-        FirebaseStorage.instance.ref().child(fileName);
+        FirebaseStorage.instance.ref().child('gigs/workstreamFiles/$fileName');
     final StorageUploadTask uploadTask = storageReference.putFile(
         File(filePath),
         StorageMetadata(contentType: '$_pickType/$_fileExtension'));
@@ -95,150 +86,188 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor,
+      ),
+
         width: double.infinity,
-        child: Wrap(
-          alignment: WrapAlignment.spaceEvenly,
-          spacing: 10,
-          runAlignment: WrapAlignment.center,
-          children: [
-            GestureDetector(
-              child: FittedBox(
-                fit: BoxFit.fill,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 30,
-                      height: 30,
-                      child: SvgPicture.asset(
-                        document,
-                        semanticsLabel: 'document',
-                        color: Theme.of(context).accentColor,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'document',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyText1.copyWith(
-                            color: Theme.of(context).accentColor,
+        // height: 100,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Wrap(
+                alignment: WrapAlignment.spaceEvenly,
+                spacing: 40,
+                runAlignment: WrapAlignment.center,
+                children: [
+                  GestureDetector(
+                    child: FittedBox(
+                      fit: BoxFit.fill,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 30,
+                            height: 30,
+                            child: SvgPicture.asset(
+                              document,
+                              semanticsLabel: 'document',
+                              color: Theme.of(context).accentColor,
+                            ),
                           ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            GestureDetector(
-              child: FittedBox(
-                fit: BoxFit.fill,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 30,
-                      height: 30,
-                      child: SvgPicture.asset(
-                        image,
-                        semanticsLabel: 'image',
-                        color: Theme.of(context).accentColor,
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'document',
+                            textAlign: TextAlign.center,
+                            style:
+                                Theme.of(context).textTheme.bodyText1.copyWith(
+                                      color: Theme.of(context).accentColor,
+                                    ),
+                          )
+                        ],
                       ),
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'image',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .copyWith(color: Theme.of(context).accentColor),
-                    )
-                  ],
-                ),
-              ),
-              onTap: () {
-                setState(() {
-                  _pickType = FileType.image;
-                });
-                openFileExplorer();
-              },
-            ),
-            GestureDetector(
-              child: FittedBox(
-                fit: BoxFit.fill,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 30,
-                      height: 30,
-                      child: SvgPicture.asset(
-                        video,
-                        semanticsLabel: 'video',
-                        color: Theme.of(context).accentColor,
+                  ),
+                  GestureDetector(
+                    child: FittedBox(
+                      fit: BoxFit.fill,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 30,
+                            height: 30,
+                            child: SvgPicture.asset(
+                              image,
+                              semanticsLabel: 'image',
+                              color: Theme.of(context).accentColor,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'image',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .copyWith(color: Theme.of(context).accentColor),
+                          )
+                        ],
                       ),
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'video',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .copyWith(color: Theme.of(context).accentColor),
-                    )
-                  ],
-                ),
-              ),
-              onTap: () {
-                setState(() {
-                  _pickType = FileType.video;
-                });
-                openFileExplorer();
-              },
-            ),
-            GestureDetector(
-              child: FittedBox(
-                fit: BoxFit.fill,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 30,
-                      height: 30,
-                      child: SvgPicture.asset(
-                        audio,
-                        semanticsLabel: 'audio',
-                        color: Theme.of(context).accentColor,
+                    onTap: () {
+                      setState(() {
+                        _pickType = FileType.image;
+                      });
+                      openFileExplorer();
+                    },
+                  ),
+                  GestureDetector(
+                    child: FittedBox(
+                      fit: BoxFit.fill,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 30,
+                            height: 30,
+                            child: SvgPicture.asset(
+                              video,
+                              semanticsLabel: 'video',
+                              color: Theme.of(context).accentColor,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'video',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .copyWith(color: Theme.of(context).accentColor),
+                          )
+                        ],
                       ),
                     ),
-                    SizedBox(
-                      height: 10,
+                    onTap: () {
+                      setState(() {
+                        _pickType = FileType.video;
+                      });
+                      openFileExplorer();
+                    },
+                  ),
+                  GestureDetector(
+                    child: FittedBox(
+                      fit: BoxFit.fill,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 30,
+                            height: 30,
+                            child: SvgPicture.asset(
+                              audio,
+                              semanticsLabel: 'audio',
+                              color: Theme.of(context).accentColor,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'audio',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .copyWith(color: Theme.of(context).accentColor),
+                          )
+                        ],
+                      ),
                     ),
-                    Text(
-                      'audio',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .copyWith(color: Theme.of(context).accentColor),
+                    onTap: () {
+                      setState(() {
+                        _pickType = FileType.audio;
+                      });
+                      openFileExplorer();
+                    },
+                  ),
+                ],
+              ),
+              Container(
+                width: 200,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: SwitchListTile.adaptive(
+                        title: Text(
+                          'Multiple Files',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: Theme.of(context).accentColor),
+                        ),
+                        onChanged: (bool value) {
+                          setState(() {
+                            _multiPick = value;
+                          });
+                        },
+                        value: _multiPick,
+                      ),
                     )
                   ],
                 ),
-              ),
-              onTap: () {
-                setState(() {
-                  _pickType = FileType.audio;
-                });
-                openFileExplorer();
-              },
-            ),
-          ],
+              )
+            ],
+          ),
         ));
   }
 }
