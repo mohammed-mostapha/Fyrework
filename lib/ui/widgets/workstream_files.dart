@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as extractedFileName;
+import 'package:http/http.dart' as http;
 
 class WorkstreamFiles extends StatefulWidget {
   @override
@@ -21,7 +21,7 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  String _filename;
+  String _fileName;
   File _filePath;
   List<File> _multipleFilesPaths;
   String _fileExtension;
@@ -40,11 +40,19 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
     try {
       //multiple files pick
       if (_multiPick) {
+        print('multiiiiiiiiiiii');
         FilePickerResult result =
             await FilePicker.platform.pickFiles(allowMultiple: true);
 
         if (result != null) {
           _multipleFilesPaths = result.paths.map((path) => File(path)).toList();
+          for (var i = 0; i < _multipleFilesPaths.length; i++)
+            {
+              _fileName = extractedFileName.basename(_multipleFilesPaths[i].path);
+              _filePath = File(_multipleFilesPaths[i].path);
+              uploadWorkstreamFiles(_fileName, _filePath.path);
+
+            }
         } else {
           // User canceled the picker
         }
@@ -55,9 +63,9 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
         FilePickerResult result = await FilePicker.platform.pickFiles();
         if (result != null) {
           // _filename = result.paths.single;
-          _filename = extractedFileName.basename(result.paths.single);
+          _fileName = extractedFileName.basename(result.paths.single);
           _filePath = File(result.files.single.path);
-          uploadWorkstreamFiles(_filename, _filePath.path);
+          uploadWorkstreamFiles(_fileName, _filePath.path);
         } else {
           // User canceled the picker
         }
@@ -83,8 +91,38 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
     });
   }
 
+  downloadWorkstreamFile(StorageReference ref) async{
+    final String workstreamFileUrl = await ref.getDownloadURL();
+    final http.Response downloadWorkstreamFile = await http.get(workstreamFileUrl);
+    final Directory systemTempDir = Directory.systemTemp;
+    final File tempFile = File('${systemTempDir.path}/tmp.jpg'); //adjust this
+    if(tempFile.existsSync()) {
+      await tempFile.delete();
+    }
+    await tempFile.create();
+    final StorageFileDownloadTask writeFileTask = ref.writeToFile(tempFile);
+    final int byteCount = (await writeFileTask.future).totalByteCount;
+    var bodyBytes = downloadWorkstreamFile.bodyBytes;
+    final String name = await ref.getName();
+    final String path = await ref.getPath();
+    print('Success\nDownloaded $name\nUrl: $workstreamFileUrl\nPath: $path\nBytes Count: $byteCount');
+    _scaffoldKey.currentState.showSnackBar(SnackBar(backgroundColor: Colors.white,content: Image.memory(bodyBytes, fit: BoxFit.fill,),));
+  }
+
   @override
   Widget build(BuildContext context) {
+    final List<Widget> workstreamFilesUpload = <Widget>[
+    ];
+    _storageUploadTasks.forEach((StorageUploadTask task) {
+      final Widget tile = UploadTaskListTile(task: task, onDismissed: () {
+        setState(() {
+          _storageUploadTasks.remove(task);
+        });
+      },onDownload: () {
+        downloadWorkstreamFile(task.lastSnapshot.ref);
+      },);
+      workstreamFilesUpload.add(tile);
+    });
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
@@ -265,9 +303,89 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
                     )
                   ],
                 ),
-              )
+              ),
+              SizedBox(height: 20,),
+              Container(color: Colors.white, width: double.infinity, height: 300, child: ListView(children: workstreamFilesUpload,),)
             ],
           ),
         ));
+  }
+}
+
+
+class UploadTaskListTile extends StatelessWidget {
+
+  const UploadTaskListTile({Key key, this.task, this.onDismissed, this.onDownload}) : super(key: key);
+
+  final StorageUploadTask task;
+  final VoidCallback onDismissed;
+  final VoidCallback onDownload;
+
+  String get uploadStatus {
+    String result;
+    if(task.isComplete) {
+      if(task.isSuccessful) {
+        return 'Complete';
+      }else if(task.isCanceled) {
+        result = 'Canceled';
+      }else {
+        result = 'Failed Error ${task.lastSnapshot.error}';
+      }
+    }else if(task.isInProgress) {
+      result = 'Uploading';
+    }else if(task.isPaused) {
+      result = 'Paused';
+    }
+    return result;
+  }
+
+  String bytesTransferred(StorageTaskSnapshot snapshot) {
+    return '${snapshot.bytesTransferred} / ${snapshot.bytesTransferred}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return StreamBuilder<StorageTaskEvent>(
+      stream: task.events,
+      builder: (BuildContext context, AsyncSnapshot<StorageTaskEvent> asyncSnapshot)
+    {
+        Widget subtitle;
+        if(asyncSnapshot.hasData) {
+          final StorageTaskEvent event = asyncSnapshot.data;
+          final StorageTaskSnapshot snapshot = event.snapshot;
+          subtitle = Text('$uploadStatus: ${bytesTransferred(snapshot)} bytes sent');
+        }else {
+          subtitle = const Text('Starting...');
+        }
+        return Dismissible(
+          key: Key(task.hashCode.toString()),
+          onDismissed: (_) => onDismissed(),
+          child: ListTile(
+            title: Text('Upload Task #${task.hashCode}'),
+            subtitle: subtitle,
+            trailing: Row(mainAxisSize: MainAxisSize.min,children: <Widget>[
+              Offstage(
+                offstage: !task.isInProgress,
+                child: IconButton(icon: const Icon(Icons.pause),onPressed: () => task.pause(),),
+              ),
+              Offstage(
+                offstage: !task.isPaused,
+                child: IconButton(icon: const Icon(Icons.file_upload),onPressed: () => task.resume(),),
+              ),
+              Offstage(
+                offstage: task.isComplete,
+                child: IconButton(icon: const Icon(Icons.cancel),onPressed: () => task.cancel(),),
+              ),
+              Offstage(
+                offstage: !(task.isComplete && task.isSuccessful),
+                child: IconButton(icon: const Icon(Icons.file_download),onPressed: () => onDownload(),),
+              ),
+            ],),
+          ),
+        );
+    }
+    );
+
   }
 }

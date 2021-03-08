@@ -1,4 +1,4 @@
-import 'package:Fyrework/screens/add_gig/addGigDetails.dart';
+
 import 'package:flutter/material.dart';
 import 'package:Fyrework/app_localizations.dart';
 import 'package:Fyrework/screens/authenticate/app_start.dart';
