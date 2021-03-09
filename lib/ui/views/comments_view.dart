@@ -54,6 +54,9 @@ class CommentsView extends StatelessWidget {
                           offeredBudget: getDocData['offeredBudget'],
                           preferredPaymentMethod:
                               getDocData['preferredPaymentMethod'],
+                          workstreamFileUrl: getDocData['workstreamFileUrl'],
+                          containMediaFile: getDocData['containMediaFile'],
+
                           // onDeleteItem: () =>
                           //     model.deleteComment(index),
                         ),

@@ -15,6 +15,8 @@ class Comment {
   final String gigCurrency;
   final String offeredBudget;
   final String preferredPaymentMethod;
+  final String workstreamFileUrl;
+  final bool containMediaFile;
 
   Comment({
     this.gigIdHoldingComment,
@@ -33,6 +35,8 @@ class Comment {
     this.gigCurrency,
     this.offeredBudget,
     this.preferredPaymentMethod,
+    this.workstreamFileUrl,
+    this.containMediaFile,
   });
 
   Map<String, dynamic> toMap() {
@@ -55,6 +59,8 @@ class Comment {
       'gigCurrency': gigCurrency,
       'offeredBudget': offeredBudget,
       'preferredPaymentMethod': preferredPaymentMethod,
+      'workstreamFileUrl': workstreamFileUrl,
+      'containMediaFile': containMediaFile,
     };
   }
 
@@ -78,6 +84,8 @@ class Comment {
       gigCurrency: map['gigCurrency'],
       offeredBudget: map['offeredBudget'],
       preferredPaymentMethod: map['preferredPaymentMethod'],
+      workstreamFileUrl: map['workstreamFileUrl'],
+      containMediaFile: map['containMediaFile'],
     );
   }
 }

@@ -9,6 +9,9 @@ import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
 import 'package:Fyrework/ui/widgets/user_profile.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:expandable_text/expandable_text.dart';
+import 'package:video_player/video_player.dart';
+
+import 'chewie_list_item.dart';
 
 class CommentItem extends StatefulWidget {
   // final passedCurrentUserId;
@@ -29,6 +32,8 @@ class CommentItem extends StatefulWidget {
   final rejected;
   final offeredBudget;
   final preferredPaymentMethod;
+  final workstreamFileUrl;
+  final containMediaFile;
   CommentItem({
     Key key,
     // this.passedCurrentUserId,
@@ -49,6 +54,8 @@ class CommentItem extends StatefulWidget {
     this.rejected,
     this.offeredBudget,
     this.preferredPaymentMethod,
+    this.workstreamFileUrl,
+    this.containMediaFile,
   }) : super(key: key);
 
   @override
@@ -56,11 +63,14 @@ class CommentItem extends StatefulWidget {
 }
 
 class _CommentItemState extends State<CommentItem> {
+  bool isPortrait;
   final String paypalIcon = 'assets/svgs/flaticon/paypal.svg';
   final String cash = 'assets/svgs/flaticon/cash.svg';
   final String alternatePayment = 'assets/svgs/flaticon/alternate_payment.svg';
   bool myGig;
   bool myComment;
+  bool imageMediaFile;
+  bool videoMediaFile;
   Timer _timer;
   int _commentViewIndex = 0;
   double _commentOpacity = 0.9;
@@ -114,8 +124,29 @@ class _CommentItemState extends State<CommentItem> {
 
   @override
   Widget build(BuildContext context) {
+    isPortrait = MediaQuery.of(context).orientation == Orientation.portrait
+        ? true
+        : false;
     myGig = widget.gigOwnerId == MyUser.uid ? true : false;
     myComment = widget.commentOwnerId == MyUser.uid ? true : false;
+
+    if (widget.containMediaFile == true) {
+      if (widget.commentBody.contains("jpeg") ||
+          widget.commentBody.contains("jpg") ||
+          widget.commentBody.contains("PNG") ||
+          widget.commentBody.contains("WBMP") ||
+          widget.commentBody.contains("SVG")) {
+        imageMediaFile = true;
+        videoMediaFile = false;
+      } else if (widget.commentBody.contains("mp4") ||
+          widget.commentBody.contains("m4v") ||
+          widget.commentBody.contains("mov") ||
+          widget.commentBody.contains("avi")) {
+        videoMediaFile = true;
+        imageMediaFile = false;
+      }
+    }
+
     // public comment view
     Widget publicCommentView = Container(
       child: Padding(
@@ -200,22 +231,40 @@ class _CommentItemState extends State<CommentItem> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  child: ExpandableText(
-                    '${widget.commentBody}',
-                    expandText: ' more',
-                    collapseText: ' less',
-                    maxLines: 3,
-                    linkColor: myComment
-                        ? Theme.of(context).accentColor
-                        : Theme.of(context).primaryColor,
-                    style: Theme.of(context).textTheme.bodyText1.copyWith(
-                          color: myComment
+                widget.containMediaFile != true
+                    ? Container(
+                        child: ExpandableText(
+                          '${widget.commentBody}',
+                          expandText: ' more',
+                          collapseText: ' less',
+                          maxLines: 3,
+                          linkColor: myComment
                               ? Theme.of(context).accentColor
                               : Theme.of(context).primaryColor,
+                          style: Theme.of(context).textTheme.bodyText1.copyWith(
+                                color: myComment
+                                    ? Theme.of(context).accentColor
+                                    : Theme.of(context).primaryColor,
+                              ),
                         ),
-                  ),
-                ),
+                      )
+                    : imageMediaFile
+                        ? Container(
+                            width: 300,
+                            height: 200,
+                            child: Image.network(
+                              widget.commentBody,
+                              fit: BoxFit.cover,
+                            ))
+                        : Container(
+                            width: !isPortrait ? 300 : double.infinity,
+                            height: 200,
+                            child: ChewieListItem(
+                              videoPlayerController:
+                                  VideoPlayerController.network(
+                                      widget.commentBody),
+                            ),
+                          ),
                 Container(height: 5),
                 (myGig &&
                         !myComment &&
@@ -480,33 +529,45 @@ class _CommentItemState extends State<CommentItem> {
                                         children: [
                                           Row(
                                             children: <Widget>[
-                                              Text(
-                                                '${widget.gigCurrency}',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1
-                                                    .copyWith(
-                                                        color: myComment
-                                                            ? Theme.of(context)
-                                                                .accentColor
-                                                            : Theme.of(context)
-                                                                .primaryColor),
-                                              ),
+                                              widget.gigCurrency != null
+                                                  ? Text(
+                                                      '${widget.gigCurrency}',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyText1
+                                                          .copyWith(
+                                                              color: myComment
+                                                                  ? Theme.of(
+                                                                          context)
+                                                                      .accentColor
+                                                                  : Theme.of(
+                                                                          context)
+                                                                      .primaryColor),
+                                                    )
+                                                  : Container(
+                                                      width: 0,
+                                                      height: 0,
+                                                    ),
                                               SizedBox(
                                                 width: 10,
                                               ),
-                                              Text(
-                                                '${widget.offeredBudget}',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1
-                                                    .copyWith(
-                                                        color: myComment
-                                                            ? Theme.of(context)
-                                                                .accentColor
-                                                            : Theme.of(context)
-                                                                .primaryColor),
-                                              ),
+                                              widget.offeredBudget != null
+                                                  ? Text(
+                                                      '${widget.offeredBudget}',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyText1
+                                                          .copyWith(
+                                                              color: myComment
+                                                                  ? Theme.of(
+                                                                          context)
+                                                                      .accentColor
+                                                                  : Theme.of(
+                                                                          context)
+                                                                      .primaryColor),
+                                                    )
+                                                  : Container(
+                                                      width: 0, height: 0),
                                               SizedBox(
                                                 width: 10,
                                               ),

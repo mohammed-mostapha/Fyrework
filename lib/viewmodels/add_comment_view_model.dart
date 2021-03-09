@@ -29,6 +29,7 @@ class AddCommentViewModel {
     @required String gigCurrency,
     @required String offeredBudget,
     String preferredPaymentMethod,
+    @required bool containMediaFile,
   }) async {
     var result;
     if (!_editting) {
@@ -50,6 +51,7 @@ class AddCommentViewModel {
             gigCurrency: gigCurrency,
             offeredBudget: offeredBudget,
             preferredPaymentMethod: preferredPaymentMethod,
+            containMediaFile: containMediaFile,
           ),
           gigIdHoldingComment);
     } else {
@@ -71,6 +73,7 @@ class AddCommentViewModel {
           gigCurrency: gigCurrency,
           offeredBudget: offeredBudget,
           preferredPaymentMethod: preferredPaymentMethod,
+          containMediaFile: containMediaFile,
         ),
       );
     }

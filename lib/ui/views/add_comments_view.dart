@@ -41,7 +41,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   AnimationController animationController;
   Animation<double> animation;
-  bool _animatedContainerOpened = false;
+  bool _filePickerOpened = false;
   double _animatedContainerHeight = 0;
 
   AnimationController _pickFilecontroller;
@@ -91,7 +91,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
   String username = MyUser.username;
   dynamic userProfilePictureUrl = MyUser.userAvatarUrl;
 
-  addComment(bool persistentPrivateComment) {
+  addComment({bool persistentPrivateComment}) {
     if (_addCommentsController.text.isNotEmpty) {
       print('_addCommentsController: ${_addCommentsController.text}');
       AddCommentViewModel().addComment(
@@ -413,7 +413,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                 color: Theme.of(context).primaryColor,
                               ),
                               onPressed: () {
-                                addComment(false);
+                                addComment(persistentPrivateComment: false);
                               },
                             ),
                           ],
@@ -424,7 +424,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                             children: [
                               SizeTransition(
                                 sizeFactor: _pickFilecontroller,                                // duration: Duration(milliseconds: 300),
-                                child: WorkstreamFiles(),
+                                child: WorkstreamFiles(passedGigId: widget.passedGigId, passedGigOwnerId: widget.passedGigOwnerId,),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(5.0),
@@ -513,13 +513,13 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                               GestureDetector(
                                                 onTap: () {
                                                   setState(() {
-                                                    if(!_animatedContainerOpened) {
+                                                    if(!_filePickerOpened) {
                                                       _pickFilecontroller.forward();
                                                     }else {
                                                       _pickFilecontroller.reverse();
                                                     }
-                                                    _animatedContainerOpened =
-                                                        !_animatedContainerOpened;
+                                                    _filePickerOpened =
+                                                        !_filePickerOpened;
 
                                                   });
                                                   //open reveal animation
@@ -570,7 +570,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                             ),
                                           ),
                                           onTap: () {
-                                            addComment(true);
+                                            addComment(persistentPrivateComment: true);
                                           },
                                         ),
                                       ),
