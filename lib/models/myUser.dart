@@ -1,3 +1,5 @@
+import 'package:Fyrework/ui/views/sign_up_view.dart';
+
 class MyUser {
   static String uid;
   static List favoriteHashtags;
@@ -51,18 +53,18 @@ class MyUser {
     lengthOfOngoingGigsByGigId = null;
   }
 
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     'uid': uid,
-  //     'name': name,
-  //     'email': email,
-  //     'password': password,
-  //     'userAvatarUrl': userAvatarUrl,
-  //     'userLocation': userLocation,
-  //     'isMinor': isMinor,
-  // 'location': location,
-  //     'ongoingGigsByGigId': ongoingGigsByGigId,
-  //     'lengthOfOngoingGigsByGigId': lengthOfOngoingGigsByGigId,
-  //   };
-  // }
+  bool checkUserDataNullability() {
+    print('checking user data');
+    return [
+      uid,
+      favoriteHashtags,
+      name,
+      username,
+      email,
+      password,
+      userAvatarUrl,
+      userLocation,
+      location,
+    ].contains(null);
+  }
 }

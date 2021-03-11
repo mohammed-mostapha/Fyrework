@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/services/connectivity_status.dart';
 import 'package:Fyrework/services/connectivity_service.dart';
 import 'package:flutter/material.dart';
@@ -154,7 +155,9 @@ class _HomeControllerState extends State<HomeController> {
             // If the locale of the device is not supported, use the first one from the list (English, in this case).
             return supportedLocales.first;
           },
+
           // home: isAuthenticated ? Home(passedSelectedIndex: 0) : StartPage(),
+          // home: (isAuthenticated && !MyUser().checkUserDataNullability())
           home: isAuthenticated ? Home(passedSelectedIndex: 0) : StartPage(),
         ),
       ),

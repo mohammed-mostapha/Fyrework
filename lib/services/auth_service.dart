@@ -104,14 +104,15 @@ class AuthService {
   Future<MyUser> signInWithEmailAndPassword(
       String email, String password) async {
     var authResult = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email, password: password);
+      email: email,
+      password: password,
+    );
     String myUid = authResult.user.uid;
     MyUserController().getCurrentUserFromFirebase(myUid);
   }
 
   // Sign Out
   signOut() {
-    // return _firebaseAuth.signOut();
     _firebaseAuth.signOut();
     MyUser.clearData();
   }

@@ -1369,12 +1369,7 @@ class _MyProfileViewState extends State<MyProfileView> {
               ),
               onTap: () async {
                 try {
-                  // await Provider.of(context).auth.signOut();
                   await AuthService().signOut();
-                  //  Navigator.pushReplacement(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (BuildContext context) => StartPage()));
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(

@@ -20,6 +20,7 @@ class ConnectivityService {
   ConnectivityStatus _getStatusFromResult(ConnectivityResult result) {
     switch (result) {
       case ConnectivityResult.mobile:
+        print('connection is: cellular');
         return ConnectivityStatus.Cellular;
       case ConnectivityResult.wifi:
         print('connection is: wifi');

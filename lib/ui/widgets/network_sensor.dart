@@ -12,35 +12,37 @@ class NetworkSensor extends StatelessWidget {
   Widget build(BuildContext context) {
     var connectivityStatus = Provider.of<ConnectivityStatus>(context);
 
-    if (connectivityStatus == ConnectivityStatus.WiFi) {
-      return child;
-    }
-
-    if (connectivityStatus == ConnectivityStatus.Cellular) {
-      return child;
-    }
+    var isWiFi = connectivityStatus == ConnectivityStatus.WiFi;
+    var isCellular = connectivityStatus == ConnectivityStatus.Cellular;
 
     return IgnorePointer(
-      ignoring: true,
-      child: Stack(children: [
-        Opacity(
-          opacity: opacity,
-          child: child,
-        ),
-        Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              color: fyreworkTheme().accentColor,
-              width: MediaQuery.of(context).size.width,
-              height: 40,
-              child: Center(
-                child: Text(
-                  'No Connection',
-                  style: Theme.of(context).textTheme.bodyText1,
+      ignoring: isWiFi || isCellular ? false : true,
+      child: Stack(
+        children: [
+          Opacity(
+            opacity: isWiFi || isCellular ? 1 : opacity,
+            child: child,
+          ),
+          !(isWiFi || isCellular)
+              ? Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    color: fyreworkTheme().accentColor,
+                    width: MediaQuery.of(context).size.width,
+                    height: 30,
+                    child: Center(
+                      child: Text(
+                        'No Connection',
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                    ),
+                  ))
+              : Container(
+                  width: 0,
+                  height: 0,
                 ),
-              ),
-            ))
-      ]),
+        ],
+      ),
     );
   }
 }

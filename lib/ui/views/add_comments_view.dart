@@ -36,8 +36,8 @@ class AddCommentsView extends StatefulWidget {
 
 class _AddCommentsViewState extends State<AddCommentsView>
     // with WidgetsBindingObserver {
-  with SingleTickerProviderStateMixin {
-
+    with
+        SingleTickerProviderStateMixin {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   AnimationController animationController;
   Animation<double> animation;
@@ -423,13 +423,17 @@ class _AddCommentsViewState extends State<AddCommentsView>
                         ? Column(
                             children: [
                               SizeTransition(
-                                sizeFactor: _pickFilecontroller,                                // duration: Duration(milliseconds: 300),
-                                child: WorkstreamFiles(passedGigId: widget.passedGigId, passedGigOwnerId: widget.passedGigOwnerId,),
+                                sizeFactor:
+                                    _pickFilecontroller, // duration: Duration(milliseconds: 300),
+                                child: WorkstreamFiles(
+                                  passedGigId: widget.passedGigId,
+                                  passedGigOwnerId: widget.passedGigOwnerId,
+                                ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.all(5.0),
+                                padding: const EdgeInsets.all(2.0),
                                 child: Container(
-                                  // height: 40,
+                                  height: 40,
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
@@ -513,14 +517,15 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                               GestureDetector(
                                                 onTap: () {
                                                   setState(() {
-                                                    if(!_filePickerOpened) {
-                                                      _pickFilecontroller.forward();
-                                                    }else {
-                                                      _pickFilecontroller.reverse();
+                                                    if (!_filePickerOpened) {
+                                                      _pickFilecontroller
+                                                          .forward();
+                                                    } else {
+                                                      _pickFilecontroller
+                                                          .reverse();
                                                     }
                                                     _filePickerOpened =
                                                         !_filePickerOpened;
-
                                                   });
                                                   //open reveal animation
                                                   print('paperclip tapped');
@@ -550,8 +555,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                         width: 10,
                                       ),
                                       Container(
-                                        width: 48,
-                                        height: 48,
+                                        width: 40,
+                                        height: 40,
                                         decoration: BoxDecoration(
                                             color:
                                                 Theme.of(context).primaryColor,
@@ -570,7 +575,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                             ),
                                           ),
                                           onTap: () {
-                                            addComment(persistentPrivateComment: true);
+                                            addComment(
+                                                persistentPrivateComment: true);
                                           },
                                         ),
                                       ),

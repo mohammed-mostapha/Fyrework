@@ -252,9 +252,12 @@ class _CommentItemState extends State<CommentItem> {
                         ? Container(
                             width: 300,
                             height: 200,
-                            child: Image.network(
-                              widget.commentBody,
-                              fit: BoxFit.cover,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                widget.commentBody,
+                                fit: BoxFit.cover,
+                              ),
                             ))
                         : Container(
                             width: !isPortrait ? 300 : double.infinity,
