@@ -273,17 +273,18 @@ class _CameraPickerViewerState extends State<CameraPickerViewer> {
       minWidth: 20.0,
       height: 32.0,
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      color: Theme.of(context).primaryColor,
+      color: fyreworkTheme().accentColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(3.0),
       ),
       child: Text(
         'Confirm',
-        style: TextStyle(
-          color: Theme.of(context).primaryColor,
-          fontSize: 17.0,
-          fontWeight: FontWeight.normal,
-        ),
+        // style: TextStyle(
+        //   color: Theme.of(context).primaryColor,
+        //   fontSize: 17.0,
+        //   fontWeight: FontWeight.normal,
+        // ),
+        style: fyreworkTheme().textTheme.bodyText1,
       ),
       onPressed: createAssetEntityAndPop,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

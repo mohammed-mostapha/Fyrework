@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -49,6 +50,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   AnimationController _cameraColorAnimationController;
   Animation _cameraIconColorAnimation;
 
+  List<String> checkifUserExists;
   List _myFavoriteHashtags = List();
   List _fetchedHandles = List();
   bool handleDuplicated = false;
@@ -152,7 +154,12 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     }
   }
 
-  void submit() async {
+  Future<List<String>> fetchSignInMethodsForEmail(String email) async {
+    checkifUserExists =
+        await FirebaseAuth.instance.fetchSignInMethodsForEmail(email: email);
+  }
+
+  void submitSignupSigninRestForm() async {
     // checking whether the user picked a profile pic or not
 
     switch (authFormType) {
@@ -206,36 +213,40 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             _myHandleController.text.isNotEmpty &&
             !handleDuplicated &&
             _passwordController.text == _confirmPasswordController.text) {
-          print('shouldAddHashtag: $_shouldAddHashtag');
-          try {
-            EasyLoading.show();
-            location = PlacesAutocomplete.placesAutoCompleteController.text;
-            // uploading a profile pic for the user signing up
-            File profilePictureToUpload = File(_profileImage.path);
-            await AuthService().createUserWithEmailAndPassword(
-              _myFavoriteHashtags,
-              _name.trim(),
-              _myHandleController.text,
-              _email.trim(),
-              _password.trim(),
-              _userAvatarUrl,
-              profilePictureToUpload,
-              location,
-              _isMinor,
-              _ongoingGigsByGigId,
-              _lengthOfOngoingGigsByGigId,
-            );
-            PlacesAutocomplete.placesAutoCompleteController.clear();
+          ////////////////
+          await fetchSignInMethodsForEmail(_email.trim()).then((value) {
+            if (checkifUserExists.length > 0) {
+              print('this user ia already registered');
+            } else {
+              try {
+                EasyLoading.show();
 
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => HomeController()),
-                ModalRoute.withName('/'));
-            EasyLoading.dismiss();
-          } catch (e) {
-            setState(() {
-              serverSideWarning = 'This email address is already taken';
-            });
-          }
+                location = PlacesAutocomplete.placesAutoCompleteController.text;
+                AuthService().createUserWithEmailAndPassword(
+                    email: _email.trim(), password: _password.trim());
+                PlacesAutocomplete.placesAutoCompleteController.clear();
+
+                // Navigator.of(context).pushAndRemoveUntil(
+                //     MaterialPageRoute(builder: (context) => HomeController()),
+                //     ModalRoute.withName('/'));
+
+                // File profilePictureToUpload = File(_profileImage.path);
+                EasyLoading.dismiss();
+              } catch (e) {
+                EasyLoading.dismiss();
+
+                print(
+                    'coming from signingUp user at Firebase authenticaiton $e');
+                setState(() {
+                  // if (e.toString().contains('ERROR_EMAIL_ALREADY_IN_USE')) {
+                  serverSideWarning = 'Something went wrong, please try again';
+                  // } else {
+                  // serverSideWarning = '$e';
+                  // }
+                });
+              }
+            }
+          });
         }
         break;
 
@@ -413,8 +424,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               scale: _cameraIconAnimationController,
               child: Icon(
                 Icons.camera_alt,
-                // color:
-                //     _profileImage == null ? Colors.grey : FyreworkrColors.white,
                 color: _profileImage == null
                     ? _cameraIconColorAnimation.value
                     : Colors.white,
@@ -947,7 +956,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                         ),
                         maxLines: 1,
                       ),
-                      onPressed: submit,
+                      onPressed: submitSignupSigninRestForm,
                     ),
                   )
                 : Container(
@@ -1013,7 +1022,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                     ),
                     maxLines: 1,
                   ),
-                  onPressed: submit,
+                  onPressed: submitSignupSigninRestForm,
                 ),
               )
             ],
@@ -1071,7 +1080,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
-                onPressed: submit,
+                onPressed: submitSignupSigninRestForm,
               ),
             )
           : SizedBox(

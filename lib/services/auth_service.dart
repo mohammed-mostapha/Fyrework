@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/models/myUser.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:Fyrework/services/storage_repo.dart';
 import 'package:Fyrework/view_controllers/myUser_controller.dart';
@@ -31,50 +32,64 @@ class AuthService {
   }
 
   // Email & Password Sign Up
-  Future createUserWithEmailAndPassword(
-    List myFavoriteHashtags,
-    String name,
-    String handle,
+  Future createUserWithEmailAndPassword({
+    // List myFavoriteHashtags,
+    // String name,
+    // String handle,
     String email,
     String password,
-    String userAvatarUrl,
-    File profilePictureToUpload,
-    String location,
-    bool isMinor,
-    dynamic ongoingGigsByGigId,
-    int lengthOfOngoingGigsByGigId,
-  ) async {
-    final authResult = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email, password: password);
+    // String userAvatarUrl,
+    // File profilePictureToUpload,
+    // String location,
+    // bool isMinor,
+    // dynamic ongoingGigsByGigId,
+    // int lengthOfOngoingGigsByGigId,
+  }) async {
+    try {
+      final authResult = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      FirebaseUser user = authResult.user;
 
-    FirebaseUser user = authResult.user;
+      // try {
+      //   await uploadMyAvatar(
+      //       profilePictureToUPload: profilePictureToUpload, userId: user.uid);
+      // } catch (e) {
+      //   print('coming from uploadMyAvatar function: $e');
+      // }
 
-    //upload userAvatar
-    userAvatarUrl = await locator
-        .get<StorageRepo>()
-        .uploadProfilePicture(profilePictureToUpload, user.uid);
+    } catch (e) {
+      print('coming from creatingUser function: $e');
+    }
 
     // create a new document for the user with the uid in users collection
-    await DatabaseService(uid: user.uid).setUserData(
-      user.uid,
-      myFavoriteHashtags,
-      name,
-      handle,
-      email,
-      password,
-      userAvatarUrl,
-      location,
-      isMinor,
-      ongoingGigsByGigId,
-      lengthOfOngoingGigsByGigId,
-    );
+    // await DatabaseService(uid: user.uid).setUserData(
+    //   user.uid,
+    //   myFavoriteHashtags,
+    //   name,
+    //   handle,
+    //   email,
+    //   password,
+    //   userAvatarUrl,
+    //   location,
+    //   isMinor,
+    //   ongoingGigsByGigId,
+    //   lengthOfOngoingGigsByGigId,
+    // );
 
-    await DatabaseService().addToPopularHashtags(myFavoriteHashtags);
-    await DatabaseService().addToTakenHandles(handle);
+    // await DatabaseService().addToPopularHashtags(myFavoriteHashtags);
+    // await DatabaseService().addToTakenHandles(handle);
 
-    // Update the displayName of the user in authData
-    await updateUserName(name, authResult.user);
-    return authResult.user.uid;
+    // // Update the displayName of the user in authData
+    // await updateUserName(name, authResult.user);
+    // return authResult.user.uid;
+  }
+
+  Future uploadMyAvatar(
+      {@required File profilePictureToUPload, @required String userId}) async {
+    await locator.get<StorageRepo>().uploadProfilePicture(
+        profilePictureToUpload: profilePictureToUPload, userId: userId);
   }
 
   Future updateUserName(String name, FirebaseUser currentUser) async {

@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:Fyrework/services/connectivity_status.dart';
+import 'package:Fyrework/services/connectivity_service.dart';
 import 'package:flutter/material.dart';
 import 'package:Fyrework/app_localizations.dart';
 import 'package:Fyrework/screens/authenticate/app_start.dart';
@@ -8,10 +10,12 @@ import 'package:Fyrework/services/auth_service.dart';
 import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
 import 'package:Fyrework/ui/views/sign_up_view.dart';
 import 'package:Fyrework/view_controllers/myUser_controller.dart';
+import 'package:provider/provider.dart';
 import 'locator.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:Fyrework/ui/widgets/network_sensor.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -41,13 +45,7 @@ void main() async {
   runApp(MyApp());
   // runApp(HomeController());
   configLoading();
-
-
-  }
-
-
-
-
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -111,49 +109,55 @@ class _HomeControllerState extends State<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => HomeController(),
-        '/signUp': (BuildContext context) => SignUpView(
-              authFormType: AuthFormType.signUp,
-            ),
-        '/signIn': (BuildContext context) => SignUpView(
-              authFormType: AuthFormType.signIn,
-            ),
-        '/addGig': (BuildContext context) => Home(passedSelectedIndex: 1),
-      },
+    return StreamProvider<ConnectivityStatus>(
+      create: (context) =>
+          ConnectivityService().connectionStatusController.stream,
+      child: NetworkSensor(
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          routes: <String, WidgetBuilder>{
+            '/home': (BuildContext context) => HomeController(),
+            '/signUp': (BuildContext context) => SignUpView(
+                  authFormType: AuthFormType.signUp,
+                ),
+            '/signIn': (BuildContext context) => SignUpView(
+                  authFormType: AuthFormType.signIn,
+                ),
+            '/addGig': (BuildContext context) => Home(passedSelectedIndex: 1),
+          },
 
-      theme: fyreworkTheme(),
-      builder: EasyLoading.init(),
-      supportedLocales: [
-        Locale('en', 'US'),
-        Locale('fr', 'FR'),
-        Locale('de', 'DE'),
-        Locale('is', 'IS'),
-      ],
-      // these delegates make sure that the localiztion data for the proper language is loaded
-      localizationsDelegates: [
-        // A class which loads the translation from JSON files
-        AppLocalizations.delegate,
-        //Built-in localization of basic text for Material widgets
-        GlobalMaterialLocalizations.delegate,
-        // Built-in localization for text direction LTR/RTL
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      // Returns a locale which will be used by the app
-      localeResolutionCallback: (locale, supportedLocales) {
-        for (var supportedLocale in supportedLocales) {
-          if (supportedLocale.languageCode == locale?.languageCode ||
-              supportedLocale.countryCode == locale?.countryCode) {
-            return supportedLocale;
-          }
-        }
-        // If the locale of the device is not supported, use the first one from the list (English, in this case).
-        return supportedLocales.first;
-      },
-      // home: isAuthenticated ? Home(passedSelectedIndex: 0) : StartPage(),
-      home: isAuthenticated ? Home(passedSelectedIndex: 0) : StartPage(),
+          theme: fyreworkTheme(),
+          builder: EasyLoading.init(),
+          supportedLocales: [
+            Locale('en', 'US'),
+            Locale('fr', 'FR'),
+            Locale('de', 'DE'),
+            Locale('is', 'IS'),
+          ],
+          // these delegates make sure that the localiztion data for the proper language is loaded
+          localizationsDelegates: [
+            // A class which loads the translation from JSON files
+            AppLocalizations.delegate,
+            //Built-in localization of basic text for Material widgets
+            GlobalMaterialLocalizations.delegate,
+            // Built-in localization for text direction LTR/RTL
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          // Returns a locale which will be used by the app
+          localeResolutionCallback: (locale, supportedLocales) {
+            for (var supportedLocale in supportedLocales) {
+              if (supportedLocale.languageCode == locale?.languageCode ||
+                  supportedLocale.countryCode == locale?.countryCode) {
+                return supportedLocale;
+              }
+            }
+            // If the locale of the device is not supported, use the first one from the list (English, in this case).
+            return supportedLocales.first;
+          },
+          // home: isAuthenticated ? Home(passedSelectedIndex: 0) : StartPage(),
+          home: isAuthenticated ? Home(passedSelectedIndex: 0) : StartPage(),
+        ),
+      ),
     );
   }
 

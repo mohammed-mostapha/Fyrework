@@ -27,7 +27,8 @@ import 'camera_picker_viewer.dart';
 class CameraPicker extends StatefulWidget {
   CameraPicker({
     Key key,
-    this.isAllowRecording = true,
+    // this.isAllowRecording = false,
+    @required this.isAllowRecording,
     this.maximumRecordingDuration = const Duration(seconds: 60),
     this.theme,
     CameraPickerTextDelegate textDelegate,
@@ -68,6 +69,7 @@ class CameraPicker extends StatefulWidget {
     ).push<AssetEntity>(
       SlidePageTransitionBuilder<AssetEntity>(
         builder: CameraPicker(
+          // isAllowRecording: isAllowRecording,
           isAllowRecording: isAllowRecording,
           theme: theme,
           textDelegate: textDelegate,
@@ -126,6 +128,8 @@ class CameraPicker extends StatefulWidget {
 }
 
 class CameraPickerState extends State<CameraPicker> {
+  bool get isAppleOS => Platform.isIOS || Platform.isMacOS;
+
   /// The [Duration] for record detection. (200ms)
   /// 检测是否开始录制的时长 (200毫秒)
   final Duration recordDetectDuration = 200.milliseconds;
@@ -658,7 +662,9 @@ class CameraPickerState extends State<CameraPicker> {
       },
       child: Material(
         // color: FyreworkrColors.fyreworkBlack,
-        color: Theme.of(context).primaryColor,
+        color: fyreworkTheme()
+            .bottomAppBarColor
+            .withOpacity(isAppleOS ? 0.90 : 1.0),
         child: Stack(
           children: <Widget>[
             if (isInitialized)

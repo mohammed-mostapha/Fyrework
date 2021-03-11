@@ -109,16 +109,6 @@ class AssetPicker extends StatelessWidget {
           themeColor: themeColor,
           pickerTheme: pickerTheme,
         );
-        // final List<AssetEntity> result = await Navigator.of(
-        //   context,
-        //   rootNavigator: true,
-        // ).push<List<AssetEntity>>(
-        //   SlidePageTransitionBuilder<List<AssetEntity>>(
-        //     builder: picker,
-        //     transitionCurve: routeCurve,
-        //     transitionDuration: routeDuration,
-        //   ),
-        // );
 
         final List<AssetEntity> result = await Navigator.of(
           context,

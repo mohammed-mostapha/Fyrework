@@ -15,13 +15,15 @@ class StorageRepo {
   // AuthService _authService = locator.get<AuthService>();
 
   //uploading and getting downloadURl of users profiles pics
-  Future<String> uploadProfilePicture(File file, String userId) async {
+  Future<String> uploadProfilePicture(
+      {@required File profilePictureToUpload, @required String userId}) async {
     // var userId = await _authService.getCurrentUID();
 
     var usersProfilePicsStorageRef =
         usersProfilePicsStorage.ref().child("users/profile_pictures/$userId");
 
-    var uploadProfilePicture = usersProfilePicsStorageRef.putFile(file);
+    var uploadProfilePicture =
+        usersProfilePicsStorageRef.putFile(profilePictureToUpload);
 
     var completedTask = await uploadProfilePicture.onComplete;
 

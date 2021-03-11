@@ -153,7 +153,8 @@ class _MyProfileViewState extends State<MyProfileView> {
         // then upload the new pic
         _updatedProfileAvatar = await locator
             .get<StorageRepo>()
-            .uploadProfilePicture(_myNewProfileImage, MyUser.uid);
+            .uploadProfilePicture(
+                profilePictureToUpload: _myNewProfileImage, userId: MyUser.uid);
 
         await DatabaseService()
             .updateMyProfilePicture(MyUser.uid, _updatedProfileAvatar);
@@ -711,7 +712,8 @@ class _MyProfileViewState extends State<MyProfileView> {
             trailing: Icon(Icons.chevron_right, color: Colors.white),
           ),
           onTap: () async {
-            const url = 'http://districthive.com/privacy.php';
+            // const url = 'http://districthive.com/privacy.php';
+            const url = 'https://google.com';
             if (await canLaunch(url)) {
               await launch(url, forceWebView: true, enableJavaScript: true);
             } else {
