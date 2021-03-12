@@ -22,31 +22,12 @@ class FirestoreService {
   final StreamController<List<Gig>> _gigsController =
       StreamController<List<Gig>>.broadcast();
 
-  // final StreamController<List<Comment>> _commentsController =
-  //     StreamController<List<Comment>>.broadcast();
-
-  // Future createUser(User user) async {
-  //   try {
-  //     await _usersCollectionReference.document(user.uid).setData(user.toJson());
-  //   } catch (e) {
-  //     // TODO: Find or create a way to repeat error handling without so much repeated code
-  //     if (e is PlatformException) {
-  //       return e.message;
-  //     }
-
-  //     return e.toString();
-  //   }
-  // }
-
   Future getCurrentUserData(String uid) async {
     try {
       var userData = await _usersCollectionReference.document(uid).get();
-      print('print from getUserData function: ${userData.data}');
       MyUser.fromData(userData.data);
-      print('myUser: $MyUser');
-      print('print second from getUserData function: ${MyUser.uid}');
+      print('see this: loaded userData from cloud to local stoge');
     } catch (e) {
-      // TODO: Find or create a way to repeat error handling without so much repeated code
       if (e is PlatformException) {
         return e.message;
       }

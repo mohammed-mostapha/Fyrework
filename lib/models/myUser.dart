@@ -8,7 +8,7 @@ class MyUser {
   static String email;
   static String password;
   static String userAvatarUrl;
-  static String userLocation;
+  // static String userLocation;
   static bool isMinor;
   static String location;
   static String phoneNumber;
@@ -16,19 +16,14 @@ class MyUser {
   static int lengthOfOngoingGigsByGigId;
 
   MyUser();
-  MyUser.fromData(Map<String, dynamic> data)
-
-  // uid = data['uid'],
-  {
-    print('fromData before');
+  MyUser.fromData(Map<String, dynamic> data) {
     uid = data['id'];
     favoriteHashtags = data['favoriteHashtags'];
     name = data['name'];
     username = data['username'];
     email = data['email'];
-    password = data['password'];
     userAvatarUrl = data['userAvatarUrl'];
-    userLocation = data['userLocation'];
+    // userLocation = data['userLocation'];
     isMinor = data['isMinor'];
     location = data['location'];
     phoneNumber = data['phoneNumber'];
@@ -43,9 +38,8 @@ class MyUser {
     name = null;
     username = null;
     email = null;
-    password = null;
     userAvatarUrl = null;
-    userLocation = null;
+    // userLocation = null;
     isMinor = null;
     location = null;
     phoneNumber = null;
@@ -54,16 +48,21 @@ class MyUser {
   }
 
   bool checkUserDataNullability() {
-    print('checking user data');
+    print('see this: checking user data');
+    print('critical: uid: ${MyUser.uid}');
+    print('critical: favoriteHashtags: ${MyUser.favoriteHashtags}');
+    print('critical: name: ${MyUser.name}');
+    print('critical: username: ${MyUser.username}');
+    print('critical: userAvatarUrl: ${MyUser.userAvatarUrl}');
+    print('critical: location: ${MyUser.location}');
     return [
       uid,
       favoriteHashtags,
       name,
       username,
       email,
-      password,
       userAvatarUrl,
-      userLocation,
+      // userLocation,
       location,
     ].contains(null);
   }

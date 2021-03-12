@@ -19,24 +19,23 @@ class DatabaseService {
   final CollectionReference _takenHandles =
       Firestore.instance.collection('takenHandles');
 
-  Future setUserData(
-    String id,
-    List myFavoriteHashtags,
-    String name,
-    String username,
-    String email,
-    String password,
-    String userAvatarUrl,
-    String location,
-    bool isMinor,
-    dynamic ongoingGigsByGigId,
-    int lengthOfOngoingGigsByGigId,
-  ) async {
+  Future setUserData({
+    @required String id,
+    @required List myFavoriteHashtags,
+    @required String name,
+    @required String handle,
+    @required String email,
+    @required String userAvatarUrl,
+    @required String location,
+    @required bool isMinor,
+    @required dynamic ongoingGigsByGigId,
+    @required int lengthOfOngoingGigsByGigId,
+  }) async {
     return await _usersCollection.document(id).setData({
       'id': uid,
       'favoriteHashtags': FieldValue.arrayUnion(myFavoriteHashtags),
       'name': name,
-      'username': username,
+      'username': handle,
       'email': email,
       'userAvatarUrl': userAvatarUrl,
       'location': location,

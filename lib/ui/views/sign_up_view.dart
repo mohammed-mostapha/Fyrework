@@ -1,5 +1,10 @@
 import 'dart:io';
 
+import 'package:Fyrework/models/myUser.dart';
+import 'package:Fyrework/screens/home/home.dart';
+import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/services/storage_repo.dart';
+import 'package:Fyrework/view_controllers/myUser_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,6 +21,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:Fyrework/services/places_autocomplete.dart';
 import 'package:photo_manager/photo_manager.dart';
+import '../../locator.dart';
 import '../shared/constants.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:intl/intl.dart';
@@ -50,7 +56,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   AnimationController _cameraColorAnimationController;
   Animation _cameraIconColorAnimation;
 
-  List<String> checkifUserExists;
+  List<String> checkIfUserExists = List();
   List _myFavoriteHashtags = List();
   List _fetchedHandles = List();
   bool handleDuplicated = false;
@@ -88,10 +94,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   final signupFormKey = GlobalKey<FormState>();
   String _email,
       _password,
-      // _myHashtag,
       _name,
-      // _username,
-      _userAvatarUrl,
+      // _userAvatarUrl,
       location,
       clientSideWarning,
       serverSideWarning,
@@ -155,9 +159,20 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   }
 
   Future<List<String>> fetchSignInMethodsForEmail(String email) async {
-    checkifUserExists =
-        await FirebaseAuth.instance.fetchSignInMethodsForEmail(email: email);
+    return List.from(
+        await FirebaseAuth.instance.fetchSignInMethodsForEmail(email: email));
   }
+
+  Future uploadMyAvatar(
+      {@required File profilePictureToUPload, @required String userId}) async {
+    var myUploadedAvatarUrl = await locator
+        .get<StorageRepo>()
+        .uploadProfilePicture(
+            profilePictureToUpload: profilePictureToUPload, userId: userId);
+    return myUploadedAvatarUrl;
+  }
+
+  bool isNullOrEmpty(Object o) => o == null || o == "";
 
   void submitSignupSigninRestForm() async {
     // checking whether the user picked a profile pic or not
@@ -165,16 +180,37 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     switch (authFormType) {
       case AuthFormType.signIn:
         if (validate()) {
+          var signIn;
           try {
             EasyLoading.show();
-            await AuthService()
+
+            signIn = await AuthService()
                 .signInWithEmailAndPassword(_email.trim(), _password.trim());
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => HomeController()),
-                ModalRoute.withName('/'));
-            EasyLoading.dismiss();
+
+            print('signIn: $signIn');
+            print('signIn runTimeType: ${signIn.runtimeType}');
+
+            if (signIn != null) {
+              String signInUid = signIn.user.uid;
+
+              await MyUserController().getCurrentUserFromFirebase(signInUid);
+              print('signIn => MyUser.uid: ${MyUser.uid}');
+              Future.delayed(Duration(milliseconds: 1000), () {
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (context) => Home(
+                              passedSelectedIndex: 0,
+                            )),
+                    ModalRoute.withName('/'));
+                EasyLoading.dismiss();
+              });
+            }
           } catch (e) {
             setState(() {
+              print('signIn: $signIn');
+              print('signIn runTimeType: ${signIn.runtimeType}');
+              print('signIn => MyUser.uid: ${MyUser.uid}');
+
               serverSideWarning = 'Wrong email address or password';
             });
             break;
@@ -213,40 +249,119 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             _myHandleController.text.isNotEmpty &&
             !handleDuplicated &&
             _passwordController.text == _confirmPasswordController.text) {
-          ////////////////
-          await fetchSignInMethodsForEmail(_email.trim()).then((value) {
-            if (checkifUserExists.length > 0) {
-              print('this user ia already registered');
-            } else {
-              try {
-                EasyLoading.show();
+          /////////////////////
+          //first, check if this is a registered user
+          checkIfUserExists = await fetchSignInMethodsForEmail(_email.trim());
+          if (checkIfUserExists.isNotEmpty) {
+            setState(() {
+              serverSideWarning = 'This user is already registered';
+              checkIfUserExists.clear();
+              print(
+                  'checkIfUserExists length now: ${checkIfUserExists.length}');
+            });
+          } else {
+            print('checkIfUserExists list is empty');
+            var signUp;
+            String signUpUid;
+            String _myUploadedAvatarUrl;
+            try {
+              EasyLoading.show();
+              location = PlacesAutocomplete.placesAutoCompleteController.text;
+              //create user in Firebase Authentication
+              signUp = await AuthService().createUserWithEmailAndPassword(
+                email: _email.trim(),
+                password: _password.trim(),
+              );
 
-                location = PlacesAutocomplete.placesAutoCompleteController.text;
-                AuthService().createUserWithEmailAndPassword(
-                    email: _email.trim(), password: _password.trim());
-                PlacesAutocomplete.placesAutoCompleteController.clear();
+              print('signUp: $signUp');
+              print('signUp runTimeType: ${signUp.runtimeType}');
 
-                // Navigator.of(context).pushAndRemoveUntil(
-                //     MaterialPageRoute(builder: (context) => HomeController()),
-                //     ModalRoute.withName('/'));
+              if (signUp != null) {
+                signUpUid = signUp.user.uid;
+                print('see this: created signUpId');
 
-                // File profilePictureToUpload = File(_profileImage.path);
-                EasyLoading.dismiss();
-              } catch (e) {
-                EasyLoading.dismiss();
+                _myUploadedAvatarUrl = await uploadMyAvatar(
+                  profilePictureToUPload: _profileImage,
+                  userId: signUpUid,
+                );
+                if (!isNullOrEmpty(_myUploadedAvatarUrl)) {
+                  print('see this: uploaded userAvatar successfully');
+                  // create a new document for the user with the uid in users collection
+                  await DatabaseService(uid: signUpUid).setUserData(
+                      id: signUpUid,
+                      myFavoriteHashtags: _myFavoriteHashtags,
+                      name: _name,
+                      handle: _myHandleController.text,
+                      email: _email,
+                      userAvatarUrl: _myUploadedAvatarUrl,
+                      location: location,
+                      isMinor: _isMinor,
+                      ongoingGigsByGigId: _ongoingGigsByGigId,
+                      lengthOfOngoingGigsByGigId: _lengthOfOngoingGigsByGigId);
 
-                print(
-                    'coming from signingUp user at Firebase authenticaiton $e');
+                  print('see this: created user document in users collection');
+
+                  await DatabaseService()
+                      .addToPopularHashtags(_myFavoriteHashtags);
+
+                  print('see this: added to popularHashtags');
+
+                  await DatabaseService()
+                      .addToTakenHandles(_myHandleController.text);
+
+                  print('see this: added to taken Handles');
+
+                  await MyUserController()
+                      .getCurrentUserFromFirebase(signUpUid);
+                  print('see this: loaded userData from cloud');
+
+                  bool userDataContainsNull =
+                      MyUser().checkUserDataNullability();
+
+                  print(
+                      'see this: userDataContainsNull: $userDataContainsNull');
+
+                  if (!userDataContainsNull) {
+                    print('see this: all userData is positive');
+                    PlacesAutocomplete.placesAutoCompleteController.clear();
+
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => Home(
+                                  passedSelectedIndex: 0,
+                                )),
+                        ModalRoute.withName('/'));
+                    EasyLoading.dismiss();
+                  } else {
+                    print('see this: couldnot load userData to locale storage');
+                    //rescue to let user sign in to fetch his data again
+                    setState(() {
+                      switchFormState('signIn');
+                      _passwordController.clear();
+                    });
+                    EasyLoading.dismiss();
+                  }
+                } else {
+                  setState(() {
+                    serverSideWarning =
+                        'Something went wrong, please try again';
+                  });
+                  EasyLoading.dismiss();
+                }
+              } else {
+                //user hasn't been created in Firebase Authentication
                 setState(() {
-                  // if (e.toString().contains('ERROR_EMAIL_ALREADY_IN_USE')) {
                   serverSideWarning = 'Something went wrong, please try again';
-                  // } else {
-                  // serverSideWarning = '$e';
-                  // }
                 });
+                EasyLoading.dismiss();
               }
+            } catch (e) {
+              setState(() {
+                serverSideWarning = 'Something went wrong, please try again';
+              });
+              EasyLoading.dismiss();
             }
-          });
+          }
         }
         break;
 
@@ -621,7 +736,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                   child: TypeAheadFormField(
                     validator: (value) =>
                         _myFavoriteHashtags.length < 1 ? '' : null,
-                    // onSaved: (value) => _myHashtag = value,
                     textFieldConfiguration: TextFieldConfiguration(
                       controller: _myFavoriteHashtagsController,
                       inputFormatters: [
@@ -735,7 +849,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                             _myHandleController.text.length < 5)
                         ? ''
                         : null,
-                    // onSaved: (value) => _my = value,
                     textFieldConfiguration: TextFieldConfiguration(
                       controller: _myHandleController,
                       style: TextStyle(fontSize: 16.0),
@@ -782,10 +895,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                             ),
                           ],
                         ),
-                        // trailing: Text(
-                        //   '(Taken)',
-                        //   style: TextStyle(fontSize: 16, color: Colors.black),
-                        // ),
                       );
                     },
                     onSuggestionSelected: (suggestion) {

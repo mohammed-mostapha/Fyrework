@@ -19,9 +19,7 @@ class AuthService {
       );
 
   // GET UID
-  // Future<String> getCurrentUID() async {
-  //   return (await _firebaseAuth.currentUser()).uid;
-  // }
+
   Future<String> getCurrentUID() async {
     return (await _firebaseAuth.currentUser()).uid;
   }
@@ -33,63 +31,26 @@ class AuthService {
 
   // Email & Password Sign Up
   Future createUserWithEmailAndPassword({
-    // List myFavoriteHashtags,
-    // String name,
-    // String handle,
     String email,
     String password,
-    // String userAvatarUrl,
-    // File profilePictureToUpload,
-    // String location,
-    // bool isMinor,
-    // dynamic ongoingGigsByGigId,
-    // int lengthOfOngoingGigsByGigId,
   }) async {
     try {
-      final authResult = await _firebaseAuth.createUserWithEmailAndPassword(
+      var signUpAttempt = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      FirebaseUser user = authResult.user;
 
-      // try {
-      //   await uploadMyAvatar(
-      //       profilePictureToUPload: profilePictureToUpload, userId: user.uid);
-      // } catch (e) {
-      //   print('coming from uploadMyAvatar function: $e');
-      // }
+      var authResult = signUpAttempt;
+      return authResult;
+      // FirebaseUser user = authResult.user;
 
     } catch (e) {
       print('coming from creatingUser function: $e');
     }
 
-    // create a new document for the user with the uid in users collection
-    // await DatabaseService(uid: user.uid).setUserData(
-    //   user.uid,
-    //   myFavoriteHashtags,
-    //   name,
-    //   handle,
-    //   email,
-    //   password,
-    //   userAvatarUrl,
-    //   location,
-    //   isMinor,
-    //   ongoingGigsByGigId,
-    //   lengthOfOngoingGigsByGigId,
-    // );
-
-    // await DatabaseService().addToPopularHashtags(myFavoriteHashtags);
-    // await DatabaseService().addToTakenHandles(handle);
-
     // // Update the displayName of the user in authData
     // await updateUserName(name, authResult.user);
     // return authResult.user.uid;
-  }
-
-  Future uploadMyAvatar(
-      {@required File profilePictureToUPload, @required String userId}) async {
-    await locator.get<StorageRepo>().uploadProfilePicture(
-        profilePictureToUpload: profilePictureToUPload, userId: userId);
   }
 
   Future updateUserName(String name, FirebaseUser currentUser) async {
@@ -101,14 +62,15 @@ class AuthService {
   }
 
 //  Email & Password Sign In
-  Future<MyUser> signInWithEmailAndPassword(
+  Future<AuthResult> signInWithEmailAndPassword(
       String email, String password) async {
-    var authResult = await _firebaseAuth.signInWithEmailAndPassword(
+    var signInAttempt = await _firebaseAuth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
-    String myUid = authResult.user.uid;
-    MyUserController().getCurrentUserFromFirebase(myUid);
+
+    var authResult = signInAttempt;
+    return authResult;
   }
 
   // Sign Out
