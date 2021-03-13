@@ -99,7 +99,9 @@ class _ProposalWidgetState extends State<ProposalWidget> {
             Container(
               padding: EdgeInsets.only(left: 10),
               child: TextFormField(
-                style: TextStyle(color: Theme.of(context).accentColor),
+                style: Theme.of(context).textTheme.bodyText1.copyWith(
+                      color: Theme.of(context).accentColor,
+                    ),
                 controller: _addProposalController,
                 decoration: buildSignUpInputDecoration(
                   context,
@@ -158,11 +160,16 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                               SizedBox(
                                 width: 10,
                               ),
-                              Text('Request PayPal escrow deposit',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Theme.of(context).accentColor,
-                                  )),
+                              Text(
+                                'Request PayPal escrow deposit',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .copyWith(
+                                      color: Theme.of(context).accentColor,
+                                    ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ],
                           ),
                           Container(
@@ -216,10 +223,13 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                               ),
                               Text(
                                 'Get paid by cash',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Theme.of(context).accentColor,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .copyWith(
+                                      color: Theme.of(context).accentColor,
+                                    ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ),
@@ -272,10 +282,13 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                               ),
                               Text(
                                 'Agree alternate with the poster',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Theme.of(context).accentColor,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .copyWith(
+                                      color: Theme.of(context).accentColor,
+                                    ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ),

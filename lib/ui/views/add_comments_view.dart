@@ -77,6 +77,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
   bool client = false;
   bool gigICanDo = false;
   bool _keyboardVisible;
+  String gigCurrency;
+  String gigBudget;
 
   final String paperClip = 'assets/svgs/solid/paperclip.svg';
   final String paperPlane = 'assets/svgs/solid/paper-plane.svg';
@@ -119,14 +121,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
     }
   }
 
-  // _showApplyOrHireTemplate() {
-  //   showModalBottomSheet(
-  //       isScrollControlled: true,
-  //       enableDrag: true,
-  //       context: context,
-  //       builder: (BuildContext context) {});
-  // }
-
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
@@ -165,6 +159,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
         appointed = snapshot.data['appointed'];
         appointedUserId = snapshot.data['appointedUserId'];
         appliersOrHirersByUserId = snapshot.data['appliersOrHirersByUserId'];
+        gigCurrency = snapshot.data['gigCurrency'];
+        gigBudget = snapshot.data['gigBudget'];
         appointedUser = appointedUserId == MyUser.uid ? true : false;
 
         return Scaffold(
@@ -172,21 +168,34 @@ class _AddCommentsViewState extends State<AddCommentsView>
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(60),
             child: new AppBar(
+              automaticallyImplyLeading: false,
               backgroundColor: Theme.of(context).primaryColor,
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
+                  ModalRoute.of(context)?.canPop == true
+                      ? GestureDetector(
+                          child: Icon(
+                            Icons.arrow_back,
+                            size: 20,
+                          ),
+                          onTap: () => Navigator.of(context).pop(),
+                        )
+                      : null,
                   Text('Comments',
                       style: Theme.of(context)
                           .textTheme
-                          .headline1
+                          .bodyText1
                           .copyWith(color: fyreworkTheme().accentColor)),
                   Container(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(
-                          '${widget.passedGigCurrency} ${widget.passedGigBudget}',
+                          '$gigCurrency $gigBudget',
                           style: Theme.of(context)
                               .textTheme
                               .bodyText1
@@ -259,8 +268,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                           widget
                                                                               .passedGigOwnerId,
                                                                       passedGigCurrency:
-                                                                          widget
-                                                                              .passedGigCurrency,
+                                                                          gigCurrency,
                                                                       passedGigValue:
                                                                           widget
                                                                               .passedGigValue,
@@ -283,24 +291,25 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(2))),
                                       child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            myGig
-                                                ? 'Your gig'
-                                                : !appliersOrHirersByUserId
-                                                        .contains(MyUser.uid)
-                                                    ? widget.passedGigValue ==
-                                                            'Gig I can do'
-                                                        ? 'Hire'
-                                                        : 'Apply'
-                                                    : 'Request sent',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1
-                                                .copyWith(
-                                                    color: fyreworkTheme()
-                                                        .accentColor),
-                                          )),
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          myGig
+                                              ? 'Your gig'
+                                              : !appliersOrHirersByUserId
+                                                      .contains(MyUser.uid)
+                                                  ? widget.passedGigValue ==
+                                                          'Gig I can do'
+                                                      ? 'Hire'
+                                                      : 'Apply'
+                                                  : 'Request sent',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              .copyWith(
+                                                  color: fyreworkTheme()
+                                                      .accentColor),
+                                        ),
+                                      ),
                                     ),
                                   );
                                 },

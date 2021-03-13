@@ -17,7 +17,7 @@ ThemeData fyreworkTheme() {
       ),
       caption: base.headline6.copyWith(
         // fontFamily: 'Montserrat-Light',
-        fontSize: 16.0,
+        fontSize: 14.0,
         color: Color(0xFFBDBDBD),
         fontWeight: FontWeight.normal,
       ),

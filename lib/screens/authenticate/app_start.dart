@@ -50,7 +50,7 @@ class _StartPageState extends State<StartPage> {
                       },
                       child: Container(
                         height: 40,
-                        width: 80,
+                        width: 70,
                         decoration: BoxDecoration(
                           border: Border.all(width: 2, color: Colors.white),
                           borderRadius: BorderRadius.circular(5),
@@ -78,7 +78,7 @@ class _StartPageState extends State<StartPage> {
                       },
                       child: Container(
                         height: 40,
-                        width: 80,
+                        width: 70,
                         decoration: BoxDecoration(
                           border: Border.all(width: 2, color: Colors.white),
                           borderRadius: BorderRadius.circular(5),
