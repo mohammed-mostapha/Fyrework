@@ -95,7 +95,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   String _email,
       _password,
       _name,
-      // _userAvatarUrl,
       location,
       clientSideWarning,
       serverSideWarning,
@@ -207,10 +206,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             }
           } catch (e) {
             setState(() {
-              print('signIn: $signIn');
-              print('signIn runTimeType: ${signIn.runtimeType}');
-              print('signIn => MyUser.uid: ${MyUser.uid}');
-
               serverSideWarning = 'Wrong email address or password';
             });
             break;
@@ -256,8 +251,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             setState(() {
               serverSideWarning = 'This user is already registered';
               checkIfUserExists.clear();
-              print(
-                  'checkIfUserExists length now: ${checkIfUserExists.length}');
             });
           } else {
             print('checkIfUserExists list is empty');
@@ -367,7 +360,27 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
       case AuthFormType.reset:
         try {
-          await AuthService().sendPasswordResetEmail(_email.trim());
+          if (validate()) {
+            checkIfUserExists = await fetchSignInMethodsForEmail(_email.trim());
+            if (checkIfUserExists.isNotEmpty) {
+              EasyLoading.show();
+              await AuthService().sendPasswordResetEmail(_email.trim());
+              checkIfUserExists.clear();
+              setState(() {
+                serverSideWarning =
+                    'A password reset link has been sent to $_email';
+                authFormType = AuthFormType.signIn;
+                EasyLoading.dismiss();
+              });
+            } else {
+              EasyLoading.show();
+              setState(() {
+                serverSideWarning = 'This email address is n\'t registered';
+                checkIfUserExists.clear();
+              });
+              EasyLoading.dismiss();
+            }
+          }
         } catch (e) {
           setState(() {
             serverSideWarning =
@@ -503,10 +516,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    // _cameraColorAnimationController.dispose();
-    // _cameraIconAnimationController.dispose();
-    // locationController.dispose();
-    // scrollController.dispose();
     super.dispose();
   }
 
@@ -573,7 +582,11 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               child: Text(
                 serverSideWarning,
                 maxLines: 3,
-                style: TextStyle(fontSize: 16, color: Colors.white),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(color: Theme.of(context).accentColor),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             Padding(
@@ -622,6 +635,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                 clientSideWarning,
                 maxLines: 3,
                 style: TextStyle(fontSize: 16, color: Colors.white),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             Padding(
@@ -909,7 +923,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                           width: 0,
                           height: 0,
                         )
-                      : handleDuplicated
+                      : handleDuplicated || _myHandleController.text.length < 5
                           ? FaIcon(
                               FontAwesomeIcons.timesCircle,
                               size: 18,
@@ -1042,10 +1056,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                 ),
               ],
             ),
-
-            // SizedBox(
-            //   width: 20,
-            // ),
             authFormType == AuthFormType.signIn
                 ? Container(
                     decoration: BoxDecoration(
