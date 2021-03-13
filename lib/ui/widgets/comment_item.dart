@@ -577,8 +577,8 @@ class _CommentItemState extends State<CommentItem> {
                                               widget.preferredPaymentMethod !=
                                                       null
                                                   ? SizedBox(
-                                                      width: 20,
-                                                      height: 20,
+                                                      width: 30,
+                                                      height: 30,
                                                       child: SvgPicture.asset(
                                                           widget.preferredPaymentMethod ==
                                                                   'paypal'

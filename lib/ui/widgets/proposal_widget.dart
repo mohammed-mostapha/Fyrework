@@ -97,18 +97,25 @@ class _ProposalWidgetState extends State<ProposalWidget> {
         child: ListView(
           children: <Widget>[
             Container(
-              decoration: BoxDecoration(
-                // color: Theme.of(context).accentColor,
-                borderRadius: BorderRadius.circular(10),
-                border:
-                    Border.all(color: Theme.of(context).accentColor, width: 2),
-              ),
               padding: EdgeInsets.only(left: 10),
               child: TextFormField(
                 style: TextStyle(color: Theme.of(context).accentColor),
                 controller: _addProposalController,
                 decoration: buildSignUpInputDecoration(
-                    context, 'Describe your proposal in brief'),
+                  context,
+                  'Describe your proposal in brief',
+                ).copyWith(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).textTheme.caption.color,
+                      width: 0.5,
+                    ),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Theme.of(context).accentColor, width: 0.5),
+                  ),
+                ),
                 inputFormatters: [
                   new LengthLimitingTextInputFormatter(500),
                 ],
@@ -121,168 +128,179 @@ class _ProposalWidgetState extends State<ProposalWidget> {
               height: 20,
             ),
             Container(
-              decoration: BoxDecoration(
-                  // color: Theme.of(context).accentColor,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                      color: Theme.of(context).accentColor, width: 2)),
               child: Padding(
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: SvgPicture.asset(
-                                paypalIcon,
-                                semanticsLabel: 'paypal',
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                        color: Theme.of(context).textTheme.caption.color,
+                        width: 0.5,
+                      ))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: SvgPicture.asset(
+                                  paypalIcon,
+                                  semanticsLabel: 'paypal',
+                                  color: Theme.of(context).accentColor,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text('Request PayPal escrow deposit',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Theme.of(context).accentColor,
+                                  )),
+                            ],
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
                                 color: Theme.of(context).accentColor,
+                                // borderRadius: BorderRadius.circular(10),
+                                shape: BoxShape.circle),
+                            child: SizedBox(
+                              width: 20,
+                              child: Radio(
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                                value: 'paypal',
+                                groupValue: preferredPaymentMethod,
+                                activeColor: Theme.of(context).primaryColor,
+                                onChanged: (T) {
+                                  setModalState(() {
+                                    preferredPaymentMethod = T;
+                                    proposalBudget = null;
+                                  });
+                                },
                               ),
                             ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text('Request PayPal escrow deposit',
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                        color: Theme.of(context).textTheme.caption.color,
+                        width: 0.5,
+                      ))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: SvgPicture.asset(
+                                  cash,
+                                  semanticsLabel: 'pay',
+                                  color: Theme.of(context).accentColor,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                'Get paid by cash',
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Theme.of(context).accentColor,
-                                )),
-                          ],
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
                               color: Theme.of(context).accentColor,
-                              // borderRadius: BorderRadius.circular(10),
-                              shape: BoxShape.circle),
-                          child: SizedBox(
-                            width: 20,
-                            child: Radio(
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                              value: 'paypal',
-                              groupValue: preferredPaymentMethod,
-                              activeColor: Theme.of(context).primaryColor,
-                              onChanged: (T) {
-                                setModalState(() {
-                                  preferredPaymentMethod = T;
-                                  proposalBudget = null;
-                                });
-                              },
+                              shape: BoxShape.circle,
+                            ),
+                            child: SizedBox(
+                              width: 20,
+                              child: Radio(
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  value: 'cash',
+                                  groupValue: preferredPaymentMethod,
+                                  activeColor: Theme.of(context).primaryColor,
+                                  onChanged: (T) {
+                                    setModalState(() {
+                                      preferredPaymentMethod = T;
+                                    });
+                                  }),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    // Divider(
-                    //   thickness: 0.5,
-                    //   color: Colors.black26,
-                    // ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: SvgPicture.asset(
-                                cash,
-                                semanticsLabel: 'pay',
-                                color: Theme.of(context).accentColor,
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                        color: Theme.of(context).textTheme.caption.color,
+                        width: 0.5,
+                      ))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: SvgPicture.asset(
+                                  alternatePayment,
+                                  semanticsLabel: 'alternate payment',
+                                  color: Theme.of(context).accentColor,
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              'Get paid by cash',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Theme.of(context).accentColor,
+                              SizedBox(
+                                width: 10,
                               ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).accentColor,
-                            shape: BoxShape.circle,
-                          ),
-                          child: SizedBox(
-                            width: 20,
-                            child: Radio(
-                                materialTapTargetSize:
-                                    MaterialTapTargetSize.shrinkWrap,
-                                value: 'cash',
-                                groupValue: preferredPaymentMethod,
-                                activeColor: Theme.of(context).primaryColor,
-                                onChanged: (T) {
-                                  setModalState(() {
-                                    preferredPaymentMethod = T;
-                                  });
-                                }),
-                          ),
-                        ),
-                      ],
-                    ),
-                    // Divider(
-                    //   thickness: 0.5,
-                    //   color: Colors.black26,
-                    // ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: SvgPicture.asset(
-                                alternatePayment,
-                                semanticsLabel: 'alternate payment',
-                                color: Theme.of(context).accentColor,
+                              Text(
+                                'Agree alternate with the poster',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Theme.of(context).accentColor,
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              'Agree alternate with the poster',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Theme.of(context).accentColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).accentColor,
-                            shape: BoxShape.circle,
+                            ],
                           ),
-                          child: SizedBox(
-                            width: 20,
-                            child: Radio(
-                                materialTapTargetSize:
-                                    MaterialTapTargetSize.shrinkWrap,
-                                value: 'alternate_payment',
-                                groupValue: preferredPaymentMethod,
-                                activeColor: Theme.of(context).primaryColor,
-                                onChanged: (T) {
-                                  setModalState(() {
-                                    preferredPaymentMethod = T;
-                                  });
-                                }),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).accentColor,
+                              shape: BoxShape.circle,
+                            ),
+                            child: SizedBox(
+                              width: 20,
+                              child: Radio(
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  value: 'alternate_payment',
+                                  groupValue: preferredPaymentMethod,
+                                  activeColor: Theme.of(context).primaryColor,
+                                  onChanged: (T) {
+                                    setModalState(() {
+                                      preferredPaymentMethod = T;
+                                    });
+                                  }),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -305,13 +323,7 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                       children: <Widget>[
                         Container(
                           // height: 36,
-                          decoration: BoxDecoration(
-                              // color: Theme.of(context).accentColor,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Theme.of(context).accentColor,
-                                width: 2,
-                              )),
+
                           padding: EdgeInsets.only(left: 10),
                           width: 100,
                           child: Row(
@@ -334,7 +346,23 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                                       color: Theme.of(context).accentColor),
                                   controller: _offeredBudgetController,
                                   decoration: buildSignUpInputDecoration(
-                                      context, '0.00'),
+                                          context, '0.00')
+                                      .copyWith(
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .caption
+                                            .color,
+                                        width: 0.5,
+                                      ),
+                                    ),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Theme.of(context).accentColor,
+                                          width: 0.5),
+                                    ),
+                                  ),
 
                                   keyboardType: TextInputType.number,
                                   validator: (value) =>
@@ -354,27 +382,21 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                       width: 20,
                     ),
                     Container(
-                        height: 52,
-                        decoration: BoxDecoration(
-                            // color: Theme.of(context).accentColor,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: Theme.of(context).accentColor,
-                              width: 2,
-                            )),
+                        height: 48,
                         width: 100.0,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).accentColor,
+                          border: Border.all(
+                              color: Theme.of(context).accentColor, width: 0.5),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
                         child: GestureDetector(
                           child: Center(
                             child: Text(
-                              widget.passedGigValue == 'Gigs I can do'
-                                  ? 'Hire'
-                                  : 'Apply',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1
-                                  .copyWith(
-                                      color: Theme.of(context).accentColor),
-                            ),
+                                widget.passedGigValue == 'Gigs I can do'
+                                    ? 'Hire'
+                                    : 'Apply',
+                                style: Theme.of(context).textTheme.bodyText1),
                           ),
                           onTap: () {
                             // Navigator.pop(context);
