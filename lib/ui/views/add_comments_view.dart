@@ -155,7 +155,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
             ),
           );
         }
-
         appointed = snapshot.data['appointed'];
         appointedUserId = snapshot.data['appointedUserId'];
         appliersOrHirersByUserId = snapshot.data['appliersOrHirersByUserId'];

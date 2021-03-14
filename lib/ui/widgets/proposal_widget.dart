@@ -343,15 +343,36 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(right: 10),
-                                child: Text(
-                                  widget.passedGigCurrency,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1
-                                      .copyWith(
-                                        color: Theme.of(context).accentColor,
-                                      ),
+                                child: StreamBuilder<DocumentSnapshot>(
+                                  stream: Firestore.instance
+                                      .collection('gigs')
+                                      .document(widget.passedGigId)
+                                      .snapshots(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<DocumentSnapshot>
+                                          snapshot) {
+                                    return Text(
+                                      // widget.passedGigCurrency,
+                                      snapshot.data['gigCurrency'],
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1
+                                          .copyWith(
+                                            color:
+                                                Theme.of(context).accentColor,
+                                          ),
+                                    );
+                                  },
                                 ),
+                                // child: Text(
+                                //   widget.passedGigCurrency,
+                                //   style: Theme.of(context)
+                                //       .textTheme
+                                //       .bodyText1
+                                //       .copyWith(
+                                //         color: Theme.of(context).accentColor,
+                                //       ),
+                                // ),
                               ),
                               Expanded(
                                 child: TextFormField(
