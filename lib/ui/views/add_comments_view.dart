@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:Fyrework/screens/add_gig/assets_picker/src/constants/constants.dart';
+import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +15,7 @@ import 'package:Fyrework/ui/widgets/client_actions.dart';
 import 'package:Fyrework/ui/widgets/worker_actions.dart';
 import 'package:Fyrework/ui/widgets/workstream_files.dart';
 import 'package:Fyrework/ui/widgets/proposal_widget.dart';
+import 'package:dartx/dartx.dart';
 
 class AddCommentsView extends StatefulWidget {
   final String passedGigId;
@@ -55,7 +60,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
     );
   }
 
-  @override
+  // @override
   // void didChangeMetrics() {
   //   print('device rotated');
   // }
@@ -83,6 +88,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
   final String paperClip = 'assets/svgs/solid/paperclip.svg';
   final String paperPlane = 'assets/svgs/solid/paper-plane.svg';
   final String checkCircle = 'assets/svgs/regular/check-circle.svg';
+  final String downArrow = 'assets/svgs/flaticon/down-arrow.svg';
 
   bool isPrivateComment = false;
   bool proposal = false;
@@ -186,11 +192,161 @@ class _AddCommentsViewState extends State<AddCommentsView>
                       SizedBox(
                         width: 10,
                       ),
-                      Text(!appointed ? 'Comments' : 'Workstream',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1
-                              .copyWith(color: fyreworkTheme().accentColor)),
+                      !appointed
+                          ? Text('Comments',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .copyWith(color: fyreworkTheme().accentColor))
+                          : Container(
+                              width: 130,
+                              child: StreamBuilder(
+                                stream:
+                                    DatabaseService().showGigWorkstreamActions(
+                                  gigId: widget.passedGigId,
+                                ),
+                                builder: (context, snapshot) {
+                                  if (!snapshot.hasData ||
+                                      !(snapshot.data.documents.length > 0)) {
+                                    List<PopupMenuItem> actionItems = [];
+                                    actionItems.add(
+                                      PopupMenuItem<String>(
+                                        child: Center(
+                                          child: Text(
+                                            'Workstream has no history',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1
+                                                .copyWith(
+                                                  color: Theme.of(context)
+                                                      .accentColor,
+                                                ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                    return PopupMenuButton(
+                                      icon: Text(
+                                        'Workstream',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .copyWith(
+                                              color:
+                                                  Theme.of(context).accentColor,
+                                            ),
+                                      ),
+                                      color: Theme.of(context).primaryColor,
+                                      itemBuilder: (BuildContext context) {
+                                        return actionItems;
+                                      },
+                                    );
+                                  }
+                                  List<PopupMenuItem> actionItems = [];
+
+                                  for (int i = 0;
+                                      i < snapshot.data.documents.length;
+                                      i++) {
+                                    DocumentSnapshot actionSnapshot =
+                                        snapshot.data.documents[i];
+                                    String gigWorkstreamActionDate;
+
+                                    if (actionSnapshot.data['createdAt'] !=
+                                        null) {
+                                      gigWorkstreamActionDate =
+                                          DateFormat('yyyy-MM-dd (hh:mm)')
+                                              .format(actionSnapshot
+                                                  .data['createdAt']
+                                                  .toDate());
+                                    }
+
+                                    actionItems.add(
+                                      PopupMenuItem(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border(
+                                              bottom: BorderSide(
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .caption
+                                                      .color,
+                                                  width: 0.5),
+                                            ),
+                                          ),
+                                          child: ListTile(
+                                            leading: CircleAvatar(
+                                              maxRadius: 20,
+                                              backgroundColor: Theme.of(context)
+                                                  .primaryColor,
+                                              backgroundImage: NetworkImage(
+                                                  "${actionSnapshot.data['userAvatarUrl']}"),
+                                            ),
+                                            title: Column(
+                                              children: [
+                                                Text(
+                                                  "${actionSnapshot.data['gigAction']}"
+                                                      .capitalize(),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText1
+                                                      .copyWith(
+                                                        color: Theme.of(context)
+                                                            .accentColor,
+                                                      ),
+                                                ),
+                                                Text(
+                                                  "$gigWorkstreamActionDate",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText1
+                                                      .copyWith(
+                                                        color: Theme.of(context)
+                                                            .accentColor,
+                                                      ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  return PopupMenuButton(
+                                    icon: Row(
+                                      children: [
+                                        Text(
+                                          'Workstream',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              .copyWith(
+                                                color: Theme.of(context)
+                                                    .accentColor,
+                                              ),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        SizedBox(
+                                          width: 12,
+                                          height: 12,
+                                          child: SvgPicture.asset(
+                                            downArrow,
+                                            semanticsLabel: 'down-arrow',
+                                            color:
+                                                Theme.of(context).accentColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    color: Theme.of(context).primaryColor,
+                                    itemBuilder: (BuildContext context) {
+                                      return actionItems;
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
                     ],
                   ),
                   Container(

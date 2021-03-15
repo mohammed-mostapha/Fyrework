@@ -193,9 +193,6 @@ class DatabaseService {
       }
     }
   }
-  //delete my gig by gigId
-
-  //end delete my gig by gigId
 
   Future updateMyProfileData(
     String uid,
@@ -270,13 +267,13 @@ class DatabaseService {
   }
 
 // Add Gig Actions
-  Future addGigActions({
+  Future addGigWorkstreamActions({
     @required String gigId,
     @required String action,
     @required userAvatarUrl,
   }) async {
     return await _gigsCollection.document(gigId).collection('gigActions').add({
-      "gigActions": action,
+      "gigAction": action,
       "userAvatarUrl": userAvatarUrl,
       "createdAt": FieldValue.serverTimestamp(),
     });
@@ -284,5 +281,14 @@ class DatabaseService {
     // updateData({
     //   "gigActions": FieldValue.arrayUnion([action, userAvatarUrl]),
     // });
+  }
+
+  // show gig actions
+  Stream<QuerySnapshot> showGigWorkstreamActions({@required String gigId}) {
+    return _gigsCollection
+        .document(gigId)
+        .collection('gigActions')
+        // .orderBy('createdAt', descending: false)
+        .snapshots();
   }
 }

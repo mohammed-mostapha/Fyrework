@@ -87,7 +87,7 @@ class ClientActions extends StatelessWidget {
                       ),
                     ),
                     onTap: () {
-                      DatabaseService().addGigActions(
+                      DatabaseService().addGigWorkstreamActions(
                         gigId: passedGigId,
                         action: 'unsatisfied',
                         userAvatarUrl: MyUser.userAvatarUrl,
@@ -126,9 +126,9 @@ class ClientActions extends StatelessWidget {
                       ),
                     ),
                     onTap: () {
-                      DatabaseService().addGigActions(
+                      DatabaseService().addGigWorkstreamActions(
                         gigId: passedGigId,
-                        action: 'markedAsCompleted',
+                        action: 'marked As Completed',
                         userAvatarUrl: MyUser.userAvatarUrl,
                       );
                     },
@@ -165,9 +165,9 @@ class ClientActions extends StatelessWidget {
                       ),
                     ),
                     onTap: () {
-                      DatabaseService().addGigActions(
+                      DatabaseService().addGigWorkstreamActions(
                         gigId: passedGigId,
-                        action: 'releasedPayment',
+                        action: 'released Payment',
                         userAvatarUrl: MyUser.userAvatarUrl,
                       );
                     },
@@ -204,9 +204,9 @@ class ClientActions extends StatelessWidget {
                       ),
                     ),
                     onTap: () {
-                      DatabaseService().addGigActions(
+                      DatabaseService().addGigWorkstreamActions(
                         gigId: passedGigId,
-                        action: 'leftReview',
+                        action: 'left Review',
                         userAvatarUrl: MyUser.userAvatarUrl,
                       );
                     },

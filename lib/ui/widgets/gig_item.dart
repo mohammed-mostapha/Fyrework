@@ -358,18 +358,18 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
     final String releaseEscrowPaymentText = 'Release Escrow Payment';
 
     List<String> notAppointedGigActionTexts = [editText, deleteText];
-    List<String> notAppointedGigActionIcons = [editIcon, deleteIcon];
+    // List<String> notAppointedGigActionIcons = [editIcon, deleteIcon];
     List<String> appointedGigActionTexts = [
       leaveReviewText,
       markAsCompletedText,
       releaseEscrowPaymentText,
     ];
 
-    List<String> appointedGigActionIcons = [
-      leaveReviewIcon,
-      markAsCompletedIcon,
-      releaseEscrowPaymentIcon
-    ];
+    // List<String> appointedGigActionIcons = [
+    //   leaveReviewIcon,
+    //   markAsCompletedIcon,
+    //   releaseEscrowPaymentIcon
+    // ];
 
     void yourGigChoicesAction(String choice) {
       if (choice == editText) {
