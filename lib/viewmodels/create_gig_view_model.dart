@@ -57,6 +57,7 @@ class CreateGigViewModel {
         adultContentText: adultContentText,
         adultContentBool: adultContentBool,
         hidden: false,
+        gigActions: [],
       ),
     );
 

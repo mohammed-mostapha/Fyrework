@@ -415,7 +415,17 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                     SizedBox(
                       width: 20,
                     ),
-                    Container(
+                    GestureDetector(
+                      onTap: () {
+                        // Navigator.pop(context);
+
+                        preferredPaymentMethod == null
+                            ? Scaffold.of(context).showSnackBar(
+                                _paymentMethodSnackBar,
+                              )
+                            : submitProposal();
+                      },
+                      child: Container(
                         height: 48,
                         width: 100.0,
                         decoration: BoxDecoration(
@@ -424,24 +434,15 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                               color: Theme.of(context).accentColor, width: 0.5),
                           borderRadius: BorderRadius.circular(2),
                         ),
-                        child: GestureDetector(
-                          child: Center(
-                            child: Text(
-                                widget.passedGigValue == 'Gigs I can do'
-                                    ? 'Hire'
-                                    : 'Apply',
-                                style: Theme.of(context).textTheme.bodyText1),
-                          ),
-                          onTap: () {
-                            // Navigator.pop(context);
-
-                            preferredPaymentMethod == null
-                                ? Scaffold.of(context).showSnackBar(
-                                    _paymentMethodSnackBar,
-                                  )
-                                : submitProposal();
-                          },
-                        )),
+                        child: Center(
+                          child: Text(
+                              widget.passedGigValue == 'Gigs I can do'
+                                  ? 'Hire'
+                                  : 'Apply',
+                              style: Theme.of(context).textTheme.bodyText1),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

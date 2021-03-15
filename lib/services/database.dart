@@ -223,7 +223,7 @@ class DatabaseService {
     }
   }
 
-  Future updateOngoingGigsByGigId(String uid, dynamic gigId) async {
+  Future updateOngoingGigsByGigId(String uid, String gigId) async {
     return await _usersCollection.document(uid).updateData({
       "ongoingGigsByGigId": FieldValue.arrayUnion([gigId])
     });
@@ -269,24 +269,20 @@ class DatabaseService {
     return filteredTakenHandles.toList();
   }
 
-//    Future deleteGig(int index) async {
-//     var dialogResponse = await _dialogService.showConfirmationDialog(
-//       title: 'Are you sure?',
-//       description: 'Do you really want to delete this gig?',
-//       confirmationTitle: 'Yes',
-//       cancelTitle: 'No',
-//     );
-//     if (dialogResponse.confirmed) {
-//       await _firestoreService.deleteGig(_gigs[index].gigId);
-//     }
-//   }
+// Add Gig Actions
+  Future addGigActions({
+    @required String gigId,
+    @required String action,
+    @required userAvatarUrl,
+  }) async {
+    return await _gigsCollection.document(gigId).collection('gigActions').add({
+      "gigActions": action,
+      "userAvatarUrl": userAvatarUrl,
+      "createdAt": FieldValue.serverTimestamp(),
+    });
 
-//   Future navigateToCreateView() async {
-//     await _navigationService.navigateTo(CreateGigViewRoute);
-//   }
-
-//   void editGig(int index) {
-//     _navigationService.navigateTo(CreateGigViewRoute, arguments: _gigs[index]);
-//   }
-// }
+    // updateData({
+    //   "gigActions": FieldValue.arrayUnion([action, userAvatarUrl]),
+    // });
+  }
 }

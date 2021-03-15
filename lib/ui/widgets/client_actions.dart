@@ -1,14 +1,20 @@
+import 'package:Fyrework/models/myUser.dart';
+import 'package:Fyrework/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 
 class ClientActions extends StatelessWidget {
+  @required
+  final String passedGigId;
   final String unsatisfied = 'assets/svgs/flaticon/unsatisfied.svg';
   final String leaveReviewIcon = 'assets/svgs/flaticon/leave_review.svg';
   final String markAsCompletedIcon =
       'assets/svgs/flaticon/mark_as_completed.svg';
   final String releaseEscrowPaymentIcon =
       'assets/svgs/flaticon/release_escrow_payment.svg';
+
+  ClientActions({this.passedGigId});
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +86,13 @@ class ClientActions extends StatelessWidget {
                         ],
                       ),
                     ),
+                    onTap: () {
+                      DatabaseService().addGigActions(
+                        gigId: passedGigId,
+                        action: 'unsatisfied',
+                        userAvatarUrl: MyUser.userAvatarUrl,
+                      );
+                    },
                   ),
                 ),
                 Center(
@@ -112,6 +125,13 @@ class ClientActions extends StatelessWidget {
                         ],
                       ),
                     ),
+                    onTap: () {
+                      DatabaseService().addGigActions(
+                        gigId: passedGigId,
+                        action: 'markedAsCompleted',
+                        userAvatarUrl: MyUser.userAvatarUrl,
+                      );
+                    },
                   ),
                 ),
                 Center(
@@ -144,6 +164,13 @@ class ClientActions extends StatelessWidget {
                         ],
                       ),
                     ),
+                    onTap: () {
+                      DatabaseService().addGigActions(
+                        gigId: passedGigId,
+                        action: 'releasedPayment',
+                        userAvatarUrl: MyUser.userAvatarUrl,
+                      );
+                    },
                   ),
                 ),
                 Center(
@@ -176,6 +203,13 @@ class ClientActions extends StatelessWidget {
                         ],
                       ),
                     ),
+                    onTap: () {
+                      DatabaseService().addGigActions(
+                        gigId: passedGigId,
+                        action: 'leftReview',
+                        userAvatarUrl: MyUser.userAvatarUrl,
+                      );
+                    },
                   ),
                 ),
               ],

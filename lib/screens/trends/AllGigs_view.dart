@@ -113,7 +113,6 @@ class _AllGigsViewState extends State<AllGigsView> {
                                   gigMediaFilesDownloadUrls:
                                       getDocData['gigMediaFilesDownloadUrls'],
                                   gigPost: getDocData['gigPost'],
-                                  // gigDeadline: getDocData['gigDeadline'],
                                   gigCurrency: getDocData['gigCurrency'],
                                   gigBudget: getDocData['gigBudget'],
                                   gigValue: getDocData['gigValue'],
@@ -125,6 +124,7 @@ class _AllGigsViewState extends State<AllGigsView> {
                                   appointedUserId:
                                       getDocData['appointedUserId'],
                                   hidden: getDocData['hidden'],
+                                  gigActions: getDocData['gigActions'],
                                 )
                               : Container(
                                   width: 0,
@@ -132,11 +132,6 @@ class _AllGigsViewState extends State<AllGigsView> {
                                 );
                         });
                   } else {
-                    // return Center(
-                    //   child: Text(
-                    //     'No gigs matching your criteria',
-                    //     style: TextStyle(fontSize: 16),
-                    //   ),
                     return Container(
                       width: 0,
                       height: 0,

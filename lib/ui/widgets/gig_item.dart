@@ -42,6 +42,7 @@ class GigItem extends StatefulWidget {
   final adultContentText;
   final adultContentBool;
   final hidden;
+  final gigActions;
 
   GigItem({
     Key key,
@@ -70,6 +71,7 @@ class GigItem extends StatefulWidget {
     this.adultContentText,
     this.adultContentBool,
     this.hidden,
+    this.gigActions,
   }) : super(key: key);
 
   @override
@@ -454,7 +456,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                           : (myGig && widget.appointed)
                               ? PopupMenuButton(
                                   color: Theme.of(context).primaryColor,
-                                  // onSelected: yourGigChoicesAction,
                                   itemBuilder: (BuildContext context) {
                                     return appointedGigActionTexts
                                         .map((String choice) {

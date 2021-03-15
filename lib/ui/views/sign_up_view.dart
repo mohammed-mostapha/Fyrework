@@ -375,7 +375,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             } else {
               EasyLoading.show();
               setState(() {
-                serverSideWarning = 'This email address is n\'t registered';
+                serverSideWarning = 'This email address is not registered';
                 checkIfUserExists.clear();
               });
               EasyLoading.dismiss();

@@ -32,7 +32,7 @@ class NetworkSensor extends StatelessWidget {
                     height: 30,
                     child: Center(
                       child: Text(
-                        'No Connection',
+                        'No internet connection',
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                     ),

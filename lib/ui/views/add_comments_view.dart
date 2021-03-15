@@ -172,20 +172,27 @@ class _AddCommentsViewState extends State<AddCommentsView>
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  ModalRoute.of(context)?.canPop == true
-                      ? GestureDetector(
-                          child: Icon(
-                            Icons.arrow_back,
-                            size: 20,
-                          ),
-                          onTap: () => Navigator.of(context).pop(),
-                        )
-                      : null,
-                  Text('Comments',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .copyWith(color: fyreworkTheme().accentColor)),
+                  Row(
+                    children: [
+                      ModalRoute.of(context)?.canPop == true
+                          ? GestureDetector(
+                              child: Icon(
+                                Icons.arrow_back,
+                                size: 20,
+                              ),
+                              onTap: () => Navigator.of(context).pop(),
+                            )
+                          : null,
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(!appointed ? 'Comments' : 'Workstream',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: fyreworkTheme().accentColor)),
+                    ],
+                  ),
                   Container(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -454,7 +461,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                               color: Theme.of(context)
                                                   .primaryColor,
                                               borderRadius: BorderRadius.all(
-                                                  Radius.circular(20))),
+                                                  Radius.circular(10))),
                                           child: Row(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.end,
@@ -627,13 +634,10 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                         StateSetter
                                                             setModalState) {
                                                   return Container(
-                                                    // padding:
-                                                    //     MediaQuery.of(context)
-                                                    //         .viewInsets,
                                                     decoration: BoxDecoration(
                                                       color: Theme.of(context)
                                                           .primaryColor
-                                                          .withOpacity(0.8),
+                                                          .withOpacity(0.9),
                                                       borderRadius:
                                                           BorderRadius.only(
                                                         topLeft: const Radius
@@ -650,7 +654,10 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                       // child: hirer ? _hirerActions() : _applierActions(),
                                                       child: !client
                                                           ? WorkerActions()
-                                                          : ClientActions(),
+                                                          : ClientActions(
+                                                              passedGigId: widget
+                                                                  .passedGigId,
+                                                            ),
                                                     ),
                                                   );
                                                 }),
