@@ -604,7 +604,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                               Padding(
                                 padding: const EdgeInsets.all(2.0),
                                 child: Container(
-                                  height: 40,
+                                  // height: 40,
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
@@ -704,7 +704,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                 child: Padding(
                                                   padding:
                                                       const EdgeInsets.only(
-                                                          bottom: 10),
+                                                          bottom: 15),
                                                   child: SizedBox(
                                                     width: 20,
                                                     height: 20,
@@ -726,8 +726,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                         width: 10,
                                       ),
                                       Container(
-                                        width: 40,
-                                        height: 40,
+                                        width: 48,
+                                        height: 48,
                                         decoration: BoxDecoration(
                                             color:
                                                 Theme.of(context).primaryColor,

@@ -204,11 +204,11 @@ class ClientActions extends StatelessWidget {
                       ),
                     ),
                     onTap: () {
-                      DatabaseService().addGigWorkstreamActions(
-                        gigId: passedGigId,
-                        action: 'left Review',
-                        userAvatarUrl: MyUser.userAvatarUrl,
-                      );
+                      // DatabaseService().addGigWorkstreamActions(
+                      //   gigId: passedGigId,
+                      //   action: 'left Review',
+                      //   userAvatarUrl: MyUser.userAvatarUrl,
+                      // );
                     },
                   ),
                 ),
