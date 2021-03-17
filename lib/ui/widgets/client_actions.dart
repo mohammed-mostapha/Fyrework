@@ -112,39 +112,40 @@ class _ClientActionsState extends State<ClientActions> {
                           );
                         }),
                     GestureDetector(
-                        child: FittedBox(
-                          fit: BoxFit.fill,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 30,
-                                height: 30,
-                                child: SvgPicture.asset(markAsCompletedIcon,
-                                    semanticsLabel: 'completed',
-                                    color: Theme.of(context).accentColor),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text('Mark As Completed',
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1
-                                      .copyWith(
-                                          color: Theme.of(context).accentColor))
-                            ],
-                          ),
+                      child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: SvgPicture.asset(markAsCompletedIcon,
+                                  semanticsLabel: 'completed',
+                                  color: Theme.of(context).accentColor),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text('Mark As Completed',
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .copyWith(
+                                        color: Theme.of(context).accentColor))
+                          ],
                         ),
-                        onTap: () {
-                          DatabaseService().addGigWorkstreamActions(
-                            gigId: widget.passedGigId,
-                            action: 'marked as completed',
-                            userAvatarUrl: MyUser.userAvatarUrl,
-                            gigActionOwner: "client",
-                          );
-                        }),
+                      ),
+                      onTap: () {
+                        DatabaseService().addGigWorkstreamActions(
+                          gigId: widget.passedGigId,
+                          action: 'marked as completed',
+                          userAvatarUrl: MyUser.userAvatarUrl,
+                          gigActionOwner: "client",
+                        );
+                      },
+                    ),
                     GestureDetector(
                         child: FittedBox(
                           fit: BoxFit.fill,
@@ -157,13 +158,11 @@ class _ClientActionsState extends State<ClientActions> {
                                 child: SvgPicture.asset(
                                   releaseEscrowPaymentIcon,
                                   semanticsLabel: 'release_escrow_payment',
-                                  color:
-                                      // Theme.of(context).accentColor,
-                                      Theme.of(context)
-                                          .textTheme
-                                          .caption
-                                          .color
-                                          .withOpacity(0.8),
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      .color
+                                      .withOpacity(0.8),
                                 ),
                               ),
                               SizedBox(
@@ -172,18 +171,15 @@ class _ClientActionsState extends State<ClientActions> {
                               Text(
                                 'Release Payment',
                                 textAlign: TextAlign.center,
-                                style:
-                                    // Theme.of(context).textTheme.bodyText1.copyWith(
-                                    //       color: Theme.of(context).accentColor,
-                                    Theme.of(context)
-                                        .textTheme
-                                        .caption
-                                        .copyWith(
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .caption
-                                                .color
-                                                .withOpacity((0.8))),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .caption
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .caption
+                                            .color
+                                            .withOpacity((0.8))),
                               )
                             ],
                           ),
