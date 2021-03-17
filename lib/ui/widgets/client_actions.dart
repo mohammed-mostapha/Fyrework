@@ -408,14 +408,15 @@ class _ClientActionsState extends State<ClientActions> {
                               height: 30,
                               child: SvgPicture.asset(
                                 releaseEscrowPaymentIcon,
-                                semanticsLabel: 'release_escrow_payment',
-                                color:
-                                    // Theme.of(context).accentColor,
-                                    Theme.of(context)
+                                semanticsLabel: 'release_payment',
+                                // color: Theme.of(context).accentColor,
+                                color: !markedAsCompleted
+                                    ? Theme.of(context)
                                         .textTheme
                                         .caption
                                         .color
-                                        .withOpacity(0.8),
+                                        .withOpacity(0.8)
+                                    : Theme.of(context).accentColor,
                               ),
                             ),
                             SizedBox(
@@ -424,27 +425,36 @@ class _ClientActionsState extends State<ClientActions> {
                             Text(
                               'Release Payment',
                               textAlign: TextAlign.center,
-                              style:
-                                  // Theme.of(context).textTheme.bodyText1.copyWith(
-                                  //       color: Theme.of(context).accentColor,
-                                  Theme.of(context).textTheme.caption.copyWith(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .caption
-                                          .color
-                                          .withOpacity((0.8))),
+                              style: !markedAsCompleted
+                                  ? Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .caption
+                                              .color
+                                              .withOpacity((0.8)))
+                                  : Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .copyWith(
+                                        color: Theme.of(context).accentColor,
+                                      ),
                             )
                           ],
                         ),
                       ),
-                      onTap: () {
-                        DatabaseService().addGigWorkstreamActions(
-                          gigId: widget.passedGigId,
-                          action: 'released Payment',
-                          userAvatarUrl: MyUser.userAvatarUrl,
-                          gigActionOwner: 'client',
-                        );
-                      },
+                      onTap: markedAsCompleted
+                          ? () {
+                              DatabaseService().addGigWorkstreamActions(
+                                gigId: widget.passedGigId,
+                                action: 'left Review',
+                                userAvatarUrl: MyUser.userAvatarUrl,
+                                gigActionOwner: 'client',
+                              );
+                            }
+                          : null,
                     ),
                     GestureDetector(
                       child: FittedBox(
