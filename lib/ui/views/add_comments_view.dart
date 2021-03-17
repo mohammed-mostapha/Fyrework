@@ -601,10 +601,9 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                   passedGigOwnerId: widget.passedGigOwnerId,
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: Container(
-                                  // height: 40,
+                              Container(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(2.0),
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
@@ -723,7 +722,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                         ),
                                       ),
                                       SizedBox(
-                                        width: 10,
+                                        width: 5,
                                       ),
                                       Container(
                                         width: 48,
