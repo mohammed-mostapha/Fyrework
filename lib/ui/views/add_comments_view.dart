@@ -527,67 +527,123 @@ class _AddCommentsViewState extends State<AddCommentsView>
                   left: 0,
                   right: 0,
                   child: !appointed
-                      ? Padding(
-                          padding: EdgeInsets.all(5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              CustomSwitch(
-                                activeColor: Theme.of(context).primaryColor,
-                                value: isPrivateComment,
-                                onChanged: (value) {
-                                  setState(() {
-                                    isPrivateComment = value;
-                                  });
-                                },
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
-                                child: TextFormField(
-                                  controller: _addCommentsController,
-                                  decoration: buildSignUpInputDecoration(
-                                      context, 'Add comment...'),
-                                  onFieldSubmitted:
-                                      (String submittedString) async {
-                                    if (submittedString.isNotEmpty) {
-                                      await AddCommentViewModel().addComment(
-                                        gigIdHoldingComment: widget.passedGigId,
-                                        gigOwnerId: widget.passedGigOwnerId,
-                                        commentOwnerUsername: username,
-                                        commentBody: submittedString,
-                                        commentOwnerId: userId,
-                                        commentOwnerAvatarUrl:
-                                            userProfilePictureUrl,
-                                        commentId: '',
-                                        isPrivateComment: isPrivateComment,
-                                        proposal: proposal,
-                                        approved: approved,
-                                        rejected: rejected,
-                                        gigCurrency: widget.passedGigCurrency,
-                                        offeredBudget: offeredBudget,
-                                      );
-                                    }
-
-                                    _addCommentsController.clear();
-                                    _addProposalController.clear();
-                                    _offeredBudgetController.clear();
-                                  },
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.send,
+                      ? Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 15),
+                                // height: 40,
+                                decoration: BoxDecoration(
                                   color: Theme.of(context).primaryColor,
+                                  border: Border.all(
+                                      width: 1,
+                                      color: Theme.of(context).accentColor),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
                                 ),
-                                onPressed: () {
-                                  addComment(persistentPrivateComment: false);
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Expanded(
+                                      child: TextFormField(
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).accentColor),
+                                        controller: _addCommentsController,
+                                        decoration: InputDecoration(
+                                          hintText: "Add comment",
+                                          hintStyle: TextStyle(
+                                              color: Theme.of(context)
+                                                  .accentColor),
+                                          border: InputBorder.none,
+                                        ),
+                                        onFieldSubmitted:
+                                            (String submittedString) async {
+                                          if (submittedString.isNotEmpty) {
+                                            await AddCommentViewModel()
+                                                .addComment(
+                                              gigIdHoldingComment:
+                                                  widget.passedGigId,
+                                              gigOwnerId:
+                                                  widget.passedGigOwnerId,
+                                              commentOwnerUsername: username,
+                                              commentBody: submittedString,
+                                              commentOwnerId: userId,
+                                              commentOwnerAvatarUrl:
+                                                  userProfilePictureUrl,
+                                              commentId: '',
+                                              isPrivateComment:
+                                                  isPrivateComment,
+                                              persistentPrivateComment: true,
+                                              proposal: proposal,
+                                              approved: approved,
+                                              rejected: rejected,
+                                              gigCurrency:
+                                                  widget.passedGigCurrency,
+                                              offeredBudget: offeredBudget,
+                                            );
+                                          }
+
+                                          _addCommentsController.clear();
+                                          _addProposalController.clear();
+                                          _offeredBudgetController.clear();
+                                        },
+                                        minLines: 1,
+                                        maxLines: 6,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(bottom: 10),
+                                      child: CustomSwitch(
+                                        activeColor:
+                                            Theme.of(context).primaryColor,
+                                        value: isPrivateComment,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            isPrivateComment = value;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  border: Border.all(
+                                      width: 1,
+                                      color: Theme.of(context).accentColor),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50))),
+                              child: GestureDetector(
+                                child: Center(
+                                  child: SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: SvgPicture.asset(
+                                      paperPlane,
+                                      semanticsLabel: 'paper-plane',
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                onTap: () {
+                                  addComment(persistentPrivateComment: true);
                                 },
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         )
                       : myGig || appointedUser
                           ? Column(
