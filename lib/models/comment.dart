@@ -6,7 +6,7 @@ class Comment {
   final String commentOwnerAvatarUrl;
   final String commentOwnerUsername;
   final String commentBody;
-  dynamic commentTime;
+  dynamic createdAt;
   final bool isPrivateComment;
   final bool persistentPrivateComment;
   final bool proposal;
@@ -26,7 +26,7 @@ class Comment {
     this.commentOwnerAvatarUrl,
     this.commentOwnerUsername,
     this.commentBody,
-    this.commentTime,
+    this.createdAt,
     this.isPrivateComment,
     this.persistentPrivateComment,
     this.proposal,
@@ -42,15 +42,13 @@ class Comment {
   Map<String, dynamic> toMap() {
     return {
       'gigIdHoldingComment': gigIdHoldingComment,
-      // 'commentId': commentId + DateTime.now().millisecondsSinceEpoch.toString(),
       'gigOwnerId': gigOwnerId,
       'commentId': commentId,
       'commentOwnerId': commentOwnerId,
       'commentOwnerAvatarUrl': commentOwnerAvatarUrl,
       'commentOwnerUsername': commentOwnerUsername,
       'commentBody': commentBody,
-      // 'commentTime': DateTime.now().millisecondsSinceEpoch.toString(),
-      'commentTime': commentTime,
+      'createdAt': createdAt,
       'isPrivateComment': isPrivateComment,
       'persistentPrivateComment': persistentPrivateComment,
       'proposal': proposal,
@@ -75,7 +73,7 @@ class Comment {
       commentOwnerAvatarUrl: map['commentOwnerAvatarUrl'],
       commentOwnerUsername: map['commentOwnerUsername'],
       commentBody: map['commentBody'],
-      commentTime: map['commentTime'],
+      createdAt: map['createdAt'],
       isPrivateComment: map['isPrivateComment'],
       persistentPrivateComment: map['persistentPrivateComment'],
       proposal: map['proposal'],

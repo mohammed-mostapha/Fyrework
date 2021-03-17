@@ -68,7 +68,6 @@ class _ProposalWidgetState extends State<ProposalWidget> {
           commentOwnerId: userId,
           commentOwnerAvatarUrl: userProfilePictureUrl,
           commentId: '',
-          commentTime: new DateTime.now(),
           isPrivateComment: isPrivateComment,
           persistentPrivateComment: true,
           proposal: proposal,

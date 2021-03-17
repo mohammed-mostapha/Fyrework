@@ -60,7 +60,6 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
       commentOwnerId: myUserId,
       commentOwnerAvatarUrl: myUserAvatarUrl,
       commentId: '',
-      commentTime: new DateTime.now(),
       isPrivateComment: false,
       persistentPrivateComment: persistentPrivateComment,
       proposal: false,

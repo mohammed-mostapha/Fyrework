@@ -111,7 +111,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
         commentOwnerId: userId,
         commentOwnerAvatarUrl: userProfilePictureUrl,
         commentId: '',
-        commentTime: new DateTime.now(),
         isPrivateComment: isPrivateComment,
         persistentPrivateComment: persistentPrivateComment,
         proposal: proposal,
@@ -517,11 +516,9 @@ class _AddCommentsViewState extends State<AddCommentsView>
           ),
           body: Builder(builder: (BuildContext context) {
             return Stack(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 CommentsView(
                   isGigAppointed: appointed,
-                  // passedCurrentUserId: userId,
                   gigIdCommentsIdentifier: widget.passedGigId,
                   gigOwnerId: widget.passedGigOwnerId,
                 ),
@@ -564,7 +561,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                         commentOwnerAvatarUrl:
                                             userProfilePictureUrl,
                                         commentId: '',
-                                        commentTime: new DateTime.now(),
                                         isPrivateComment: isPrivateComment,
                                         proposal: proposal,
                                         approved: approved,
@@ -666,9 +662,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                           commentOwnerAvatarUrl:
                                                               userProfilePictureUrl,
                                                           commentId: '',
-                                                          commentTime:
-                                                              new DateTime
-                                                                  .now(),
                                                           isPrivateComment:
                                                               isPrivateComment,
                                                           persistentPrivateComment:

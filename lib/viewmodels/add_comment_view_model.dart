@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:Fyrework/locator.dart';
 import 'package:Fyrework/models/comment.dart';
@@ -20,7 +21,6 @@ class AddCommentViewModel {
     @required String commentOwnerAvatarUrl,
     @required String commentOwnerUsername,
     @required String commentBody,
-    @required DateTime commentTime,
     @required bool isPrivateComment,
     bool persistentPrivateComment,
     @required bool proposal,
@@ -42,7 +42,7 @@ class AddCommentViewModel {
             commentOwnerAvatarUrl: commentOwnerAvatarUrl,
             commentOwnerUsername: commentOwnerUsername,
             commentBody: commentBody,
-            commentTime: commentTime,
+            createdAt: FieldValue.serverTimestamp(),
             isPrivateComment: isPrivateComment,
             persistentPrivateComment: persistentPrivateComment,
             proposal: proposal,

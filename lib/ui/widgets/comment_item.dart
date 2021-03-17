@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:core';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Fyrework/models/myUser.dart';
@@ -24,7 +25,7 @@ class CommentItem extends StatefulWidget {
   final commentOwnerUsername;
   final commentBody;
   final gigCurrency;
-  final commentTime;
+  final createdAt;
   final isPrivateComment;
   final persistentPrivateComment;
   final proposal;
@@ -46,7 +47,7 @@ class CommentItem extends StatefulWidget {
     this.commentOwnerUsername,
     this.commentBody,
     this.gigCurrency,
-    this.commentTime,
+    this.createdAt,
     this.isPrivateComment,
     this.persistentPrivateComment,
     this.proposal,
@@ -74,6 +75,8 @@ class _CommentItemState extends State<CommentItem> {
   Timer _timer;
   int _commentViewIndex = 0;
   double _commentOpacity = 0.9;
+  bool isAppointedUser;
+  dynamic createdAtDateTime;
 
   void initState() {
     super.initState();
@@ -129,6 +132,8 @@ class _CommentItemState extends State<CommentItem> {
         : false;
     myGig = widget.gigOwnerId == MyUser.uid ? true : false;
     myComment = widget.commentOwnerId == MyUser.uid ? true : false;
+    createdAtDateTime =
+        widget.createdAt != null ? widget.createdAt.toDate() : DateTime.now();
 
     if (widget.containMediaFile == true) {
       if (widget.commentBody.contains("jpeg") ||
@@ -651,13 +656,13 @@ class _CommentItemState extends State<CommentItem> {
                                     height: 0,
                                   ),
                 Text(
-                  timeAgo.format(widget.commentTime.toDate()),
+                  timeAgo.format(createdAtDateTime),
                   style: Theme.of(context).textTheme.bodyText2.copyWith(
                         color: myComment
                             ? Theme.of(context).accentColor
                             : Theme.of(context).primaryColor,
                       ),
-                ),
+                )
               ],
             ),
           ],
