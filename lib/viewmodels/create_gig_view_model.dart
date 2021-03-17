@@ -20,7 +20,6 @@ class CreateGigViewModel {
     @required String userId,
     @required String userProfilePictureDownloadUrl,
     @required String username,
-    // dynamic createdAt,
     @required List gigHashtags,
     @required String userLocation,
     @required String gigLocation,
@@ -57,6 +56,9 @@ class CreateGigViewModel {
         adultContentText: adultContentText,
         adultContentBool: adultContentBool,
         hidden: false,
+        paymentReleased: false,
+        markedAsComplete: false,
+        clientLeftReview: false,
         gigActions: [],
       ),
     );

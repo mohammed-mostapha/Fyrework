@@ -254,7 +254,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                     if (actionSnapshot.data['createdAt'] !=
                                         null) {
                                       gigWorkstreamActionDate =
-                                          DateFormat('yyyy-MM-dd (hh:mm)')
+                                          DateFormat('d MMM, yyyy h:mm a')
                                               .format(actionSnapshot
                                                   .data['createdAt']
                                                   .toDate());
@@ -303,6 +303,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                         color: Theme.of(context)
                                                             .accentColor,
                                                       ),
+                                                  textAlign: TextAlign.center,
                                                 ),
                                               ],
                                             ),
@@ -420,7 +421,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                             20,
                                                                         horizontal:
                                                                             10),
-                                                                    // child: hirer ? _hirerActions() : _applierActions(),
                                                                     child:
                                                                         ProposalWidget(
                                                                       passedGigId:
@@ -782,9 +782,10 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                           return Builder(
                                             builder: (BuildContext context) {
                                               return Container(
-                                                height: isPortrait
-                                                    ? screenHeight - 200
-                                                    : screenHeight - 50,
+                                                // height: isPortrait
+                                                //     ? screenHeight / 2
+                                                //     : screenHeight / 3,
+                                                height: 250,
                                                 child: StatefulBuilder(builder:
                                                     (BuildContext context,
                                                         StateSetter
@@ -792,8 +793,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                   return Container(
                                                     decoration: BoxDecoration(
                                                       color: Theme.of(context)
-                                                          .primaryColor
-                                                          .withOpacity(0.9),
+                                                          .primaryColor,
                                                       borderRadius:
                                                           BorderRadius.only(
                                                         topLeft: const Radius

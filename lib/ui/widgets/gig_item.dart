@@ -43,6 +43,9 @@ class GigItem extends StatefulWidget {
   final adultContentBool;
   final hidden;
   final gigActions;
+  final paymentReleased;
+  final markedAsComplete;
+  final clientLeftReview;
 
   GigItem({
     Key key,
@@ -72,6 +75,9 @@ class GigItem extends StatefulWidget {
     this.adultContentBool,
     this.hidden,
     this.gigActions,
+    this.paymentReleased,
+    this.markedAsComplete,
+    this.clientLeftReview,
   }) : super(key: key);
 
   @override

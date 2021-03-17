@@ -319,10 +319,6 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                 ),
               ),
             ),
-            // Divider(
-            //   thickness: 0.5,
-            //   color: Colors.black26,
-            // ),
             SizedBox(
               height: 20,
             ),

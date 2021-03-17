@@ -33,11 +33,6 @@ ThemeData fyreworkTheme() {
         color: Color(0xFF000000),
         fontWeight: FontWeight.normal,
       ),
-      // headline6: base.headline5.copyWith(
-      //   // fontFamily: 'Montserrat-Light',
-      //   fontSize: 12.0,
-      //   color: Colors.grey[500],
-      // ),
     );
   }
 

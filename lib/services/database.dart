@@ -271,11 +271,13 @@ class DatabaseService {
     @required String gigId,
     @required String action,
     @required userAvatarUrl,
+    @required gigActionOwner,
   }) async {
     return await _gigsCollection.document(gigId).collection('gigActions').add({
       "gigAction": action,
       "userAvatarUrl": userAvatarUrl,
       "createdAt": FieldValue.serverTimestamp(),
+      "gigActionOwner": gigActionOwner
     });
 
     // updateData({
@@ -288,7 +290,7 @@ class DatabaseService {
     return _gigsCollection
         .document(gigId)
         .collection('gigActions')
-        // .orderBy('createdAt', descending: false)
+        .orderBy('createdAt', descending: false)
         .snapshots();
   }
 }

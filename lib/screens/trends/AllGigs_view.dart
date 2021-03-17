@@ -125,6 +125,12 @@ class _AllGigsViewState extends State<AllGigsView> {
                                       getDocData['appointedUserId'],
                                   hidden: getDocData['hidden'],
                                   gigActions: getDocData['gigActions'],
+                                  paymentReleased:
+                                      getDocData['paymentReleased'],
+                                  markedAsComplete:
+                                      getDocData['markedAsComplete'],
+                                  clientLeftReview:
+                                      getDocData['clientLeftReview'],
                                 )
                               : Container(
                                   width: 0,

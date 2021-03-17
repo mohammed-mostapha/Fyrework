@@ -21,6 +21,9 @@ class Gig {
   final String appointedusername;
   final List appliersOrHirersByUserId;
   final bool hidden;
+  final bool paymentReleased;
+  final bool markedAsComplete;
+  final bool clientLeftReview;
   final List gigActions;
   Gig({
     this.appointed = false,
@@ -45,6 +48,9 @@ class Gig {
     this.appointedusername,
     this.appliersOrHirersByUserId,
     this.hidden,
+    this.paymentReleased,
+    this.markedAsComplete,
+    this.clientLeftReview,
     this.gigActions,
   });
 
@@ -73,6 +79,9 @@ class Gig {
       'appliersOrHirersByUserId': [],
       'hidden': hidden,
       'gigActions': gigActions,
+      'paymentReleased': paymentReleased,
+      'markedAsComplete': markedAsComplete,
+      'clientLeftReview': clientLeftReview,
     };
   }
 
@@ -103,6 +112,9 @@ class Gig {
       appliersOrHirersByUserId: map['appliersOrHirersByUserId'],
       hidden: map['hidden'],
       gigActions: map['gigActions'],
+      paymentReleased: map['paymentReleased'],
+      markedAsComplete: map['markedAsComplete'],
+      clientLeftReview: map['clientLeftReview'],
     );
   }
 }
