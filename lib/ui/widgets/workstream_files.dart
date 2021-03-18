@@ -180,6 +180,11 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
     return Container(
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
+          border: Border.all(width: 1, color: Theme.of(context).accentColor),
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(10),
+            topRight: const Radius.circular(10),
+          ),
         ),
         width: double.infinity,
         // height: 100,

@@ -257,6 +257,7 @@ class _ClientActionsState extends State<ClientActions> {
           return Container(
             width: double.infinity,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

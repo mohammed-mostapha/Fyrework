@@ -429,7 +429,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                 return Container(
                                                                   height: isPortrait
                                                                       ? screenHeight -
-                                                                          100
+                                                                          200
                                                                       : screenHeight,
                                                                   child:
                                                                       Scaffold(
@@ -442,12 +442,17 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                           BoxDecoration(
                                                                         color: Theme.of(context)
                                                                             .primaryColor,
+                                                                        border: Border.all(
+                                                                            width:
+                                                                                1,
+                                                                            color:
+                                                                                Theme.of(context).accentColor),
                                                                         borderRadius:
                                                                             BorderRadius.only(
                                                                           topLeft:
-                                                                              const Radius.circular(20),
+                                                                              const Radius.circular(10),
                                                                           topRight:
-                                                                              const Radius.circular(20),
+                                                                              const Radius.circular(10),
                                                                         ),
                                                                       ),
                                                                       child:
@@ -894,21 +899,33 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                             height: 0,
                                           )
                                         : GestureDetector(
-                                            child: Container(
-                                              height: 48,
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              child: Center(
-                                                child: Text(
-                                                  'Actions',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyText1
-                                                      .copyWith(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .accentColor),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(2),
+                                              child: Container(
+                                                height: 48,
+                                                child: Center(
+                                                  child: Text(
+                                                    'Actions',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyText1
+                                                        .copyWith(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .accentColor),
+                                                  ),
                                                 ),
+                                                decoration: BoxDecoration(
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    border: Border.all(
+                                                        width: 1,
+                                                        color: Theme.of(context)
+                                                            .accentColor),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10))),
                                               ),
                                             ),
                                             onTap: () {
@@ -919,9 +936,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                   builder:
                                                       (BuildContext context) {
                                                     return Container(
-                                                      // height: isPortrait
-                                                      //     ? screenHeight / 2
-                                                      //     : screenHeight / 3,
                                                       height: 250,
                                                       child: StatefulBuilder(
                                                           builder: (BuildContext
@@ -934,13 +948,18 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                             color: Theme.of(
                                                                     context)
                                                                 .primaryColor,
+                                                            border: Border.all(
+                                                                width: 1,
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .accentColor),
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .only(
                                                               topLeft: const Radius
-                                                                  .circular(20),
+                                                                  .circular(10),
                                                               topRight: const Radius
-                                                                  .circular(20),
+                                                                  .circular(10),
                                                             ),
                                                           ),
                                                           child: Padding(
@@ -953,7 +972,11 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                         10),
                                                             // child: hirer ? _hirerActions() : _applierActions(),
                                                             child: !client
-                                                                ? WorkerActions()
+                                                                ? WorkerActions(
+                                                                    passedGigId:
+                                                                        widget
+                                                                            .passedGigId,
+                                                                  )
                                                                 : ClientActions(
                                                                     passedGigId:
                                                                         widget

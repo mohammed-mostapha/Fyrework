@@ -1,66 +1,305 @@
+import 'package:Fyrework/models/myUser.dart';
+import 'package:Fyrework/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 
-class WorkerActions extends StatelessWidget {
-  final String unsatisfied = 'assets/svgs/flaticon/unsatisfied.svg';
-  final String leaveReviewIcon = 'assets/svgs/flaticon/leave_review.svg';
-  final String markAsCompletedIcon =
-      'assets/svgs/flaticon/mark_as_completed.svg';
-  final String releaseEscrowPaymentIcon =
-      'assets/svgs/flaticon/release_escrow_payment.svg';
+class WorkerActions extends StatefulWidget {
+  @required
+  final String passedGigId;
+
+  WorkerActions({this.passedGigId});
+
+  @override
+  _WorkerActionsState createState() => _WorkerActionsState();
+}
+
+class _WorkerActionsState extends State<WorkerActions> {
+  final String done = 'assets/svgs/flaticon/done.svg';
+
+  final String requestPayment = 'assets/svgs/flaticon/request_payment.svg';
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topLeft: const Radius.circular(20),
-          topRight: const Radius.circular(20),
-        ),
-      ),
-      width: double.infinity,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Actions',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline1
-                    .copyWith(color: Theme.of(context).accentColor),
-              )
-            ],
-          ),
-          Wrap(
-            children: [
-              GestureDetector(
-                child: Column(
+    return StreamBuilder(
+      stream:
+          DatabaseService().showGigWorkstreamActions(gigId: widget.passedGigId),
+      builder: (BuildContext context, AsyncSnapshot gigActionSnapshot) {
+        if (!gigActionSnapshot.hasData) {
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Theme.of(context).accentColor,
+                ),
+              ),
+            ),
+          );
+        } else if (gigActionSnapshot.hasData &&
+            !(gigActionSnapshot.data.documents.length > 0)) {
+          return Container(
+            width: double.infinity,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: SvgPicture.asset(unsatisfied,
-                          semanticsLabel: 'check-circle', color: Colors.green),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
                     Text(
-                      'Unsatisfied',
+                      'Actions',
                       style: Theme.of(context)
                           .textTheme
-                          .bodyText1
+                          .headline1
                           .copyWith(color: Theme.of(context).accentColor),
                     )
                   ],
                 ),
-              )
-            ],
-          ),
-        ],
-      ),
+                SizedBox(
+                  height: 20,
+                ),
+                Wrap(
+                  // alignment: WrapAlignment.spaceEvenly,
+                  spacing: 20,
+                  runSpacing: 20,
+                  runAlignment: WrapAlignment.center,
+                  children: [
+                    GestureDetector(
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: SvgPicture.asset(done,
+                                    semanticsLabel: 'done',
+                                    color: Theme.of(context).accentColor),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text('Mark As Done',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .copyWith(
+                                          color: Theme.of(context).accentColor))
+                            ],
+                          ),
+                        ),
+                        onTap: () {
+                          DatabaseService().addGigWorkstreamActions(
+                            gigId: widget.passedGigId,
+                            action: 'marked as done',
+                            userAvatarUrl: MyUser.userAvatarUrl,
+                            gigActionOwner: "worker",
+                          );
+                        }),
+                    GestureDetector(
+                      child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: SvgPicture.asset(requestPayment,
+                                  semanticsLabel: 'request_payment',
+                                  color: Theme.of(context).accentColor),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text('Request Payment',
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .copyWith(
+                                        color: Theme.of(context).accentColor))
+                          ],
+                        ),
+                      ),
+                      onTap: () {
+                        DatabaseService().addGigWorkstreamActions(
+                          gigId: widget.passedGigId,
+                          action: 'request payment',
+                          userAvatarUrl: MyUser.userAvatarUrl,
+                          gigActionOwner: "worker",
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        } else {
+          String lastGigActionOwner =
+              gigActionSnapshot.data.documents.last['gigActionOwner'];
+          bool workerAction = (lastGigActionOwner == 'worker') ? true : false;
+
+          return Container(
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Actions',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline1
+                          .copyWith(color: Theme.of(context).accentColor),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Wrap(
+                  spacing: 20,
+                  runSpacing: 20,
+                  runAlignment: WrapAlignment.center,
+                  children: [
+                    GestureDetector(
+                      child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: SvgPicture.asset(done,
+                                  semanticsLabel: 'done',
+                                  color: !workerAction
+                                      ? Theme.of(context).accentColor
+                                      : Theme.of(context)
+                                          .textTheme
+                                          .caption
+                                          .color
+                                          .withOpacity(0.8)),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text('Mark As Done',
+                                textAlign: TextAlign.center,
+                                style: !workerAction
+                                    ? Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(
+                                            color:
+                                                Theme.of(context).accentColor)
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .caption
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .caption
+                                                .color
+                                                .withOpacity((0.8))))
+                          ],
+                        ),
+                      ),
+                      onTap: !workerAction
+                          ? () {
+                              DatabaseService().addGigWorkstreamActions(
+                                gigId: widget.passedGigId,
+                                action: 'mark as done',
+                                userAvatarUrl: MyUser.userAvatarUrl,
+                                gigActionOwner: "worker",
+                              );
+                            }
+                          : null,
+                    ),
+                    GestureDetector(
+                      child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: SvgPicture.asset(requestPayment,
+                                  semanticsLabel: 'request_payment',
+                                  color: !workerAction
+                                      ? Theme.of(context).accentColor
+                                      : Theme.of(context)
+                                          .textTheme
+                                          .caption
+                                          .color
+                                          .withOpacity(0.8)),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text('Request Payment',
+                                textAlign: TextAlign.center,
+                                style: !workerAction
+                                    ? Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(
+                                            color:
+                                                Theme.of(context).accentColor)
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .caption
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .caption
+                                                .color
+                                                .withOpacity((0.8)))),
+                          ],
+                        ),
+                      ),
+                      onTap: !workerAction
+                          ? () {
+                              DatabaseService().addGigWorkstreamActions(
+                                gigId: widget.passedGigId,
+                                action: 'requested payment',
+                                userAvatarUrl: MyUser.userAvatarUrl,
+                                gigActionOwner: "worker",
+                              );
+                            }
+                          : null,
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    (!workerAction)
+                        ? Container(
+                            width: 0,
+                            height: 0,
+                          )
+                        : Text(
+                            'Waiting for client action...',
+                            style:
+                                Theme.of(context).textTheme.bodyText1.copyWith(
+                                      color: Theme.of(context).accentColor,
+                                    ),
+                          )
+                  ],
+                )
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 }

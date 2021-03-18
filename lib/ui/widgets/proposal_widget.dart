@@ -359,15 +359,6 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                                     );
                                   },
                                 ),
-                                // child: Text(
-                                //   widget.passedGigCurrency,
-                                //   style: Theme.of(context)
-                                //       .textTheme
-                                //       .bodyText1
-                                //       .copyWith(
-                                //         color: Theme.of(context).accentColor,
-                                //       ),
-                                // ),
                               ),
                               Expanded(
                                 child: TextFormField(
@@ -412,8 +403,6 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        // Navigator.pop(context);
-
                         preferredPaymentMethod == null
                             ? Scaffold.of(context).showSnackBar(
                                 _paymentMethodSnackBar,
