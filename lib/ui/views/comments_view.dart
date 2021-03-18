@@ -15,58 +15,60 @@ class CommentsView extends StatelessWidget {
       @required this.isGigAppointed,
       this.gigOwnerId})
       : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: DatabaseService().gigRelatedComments(gigIdCommentsIdentifier),
       builder: (context, snapshot) {
-        return !snapshot.hasData
-            ? Center(child: Text(''))
-            : snapshot.data.documents.length > 0
-                ? ListView.builder(
-                    itemCount: snapshot.data.documents.length,
-                    itemBuilder: (context, index) {
-                      DocumentSnapshot data = snapshot.data.documents[index];
-                      Map getDocData = data.data;
-                      return GestureDetector(
-                        // onTap: () => model.editGig(index),
-                        child: CommentItem(
-                          // passedCurrentUserId: MyUser.uid,`
-                          isGigAppointed: isGigAppointed,
-                          gigIdHoldingComment:
-                              getDocData['gigIdHoldingComment'],
-                          gigOwnerId: getDocData['gigOwnerId'],
-                          commentId: getDocData['commentId'],
-                          commentOwnerId: getDocData['commentOwnerId'],
-                          commentOwnerAvatarUrl:
-                              getDocData['commentOwnerAvatarUrl'],
-                          commentOwnerUsername:
-                              getDocData['commentOwnerUsername'],
-                          commentBody: getDocData['commentBody'],
-                          gigCurrency: getDocData['gigCurrency'],
-                          createdAt: getDocData['createdAt'],
-                          isPrivateComment: getDocData['isPrivateComment'],
-                          persistentPrivateComment:
-                              getDocData['persistentPrivateComment'],
-                          proposal: getDocData['proposal'],
-                          approved: getDocData['approved'],
-                          rejected: getDocData['rejected'],
-                          offeredBudget: getDocData['offeredBudget'],
-                          preferredPaymentMethod:
-                              getDocData['preferredPaymentMethod'],
-                          workstreamFileUrl: getDocData['workstreamFileUrl'],
-                          containMediaFile: getDocData['containMediaFile'],
+        if (!snapshot.hasData) {
+          return Center(child: Text(''));
+        }
 
-                          // onDeleteItem: () =>
-                          //     model.deleteComment(index),
-                        ),
-                      );
-                    })
-                : Center(
-                    child: Text(
-                    'No comments yet...',
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ));
+        if (snapshot.hasData && !(snapshot.data.documents.length > 0)) {
+          return Center(
+              child: Text(
+            'No comments yet...',
+            style: Theme.of(context).textTheme.bodyText1,
+          ));
+        } else if (snapshot.hasData && snapshot.data.documents.length > 0) {
+          return ListView.builder(
+              itemCount: snapshot.data.documents.length,
+              itemBuilder: (context, index) {
+                DocumentSnapshot data = snapshot.data.documents[index];
+                Map getDocData = data.data;
+                return GestureDetector(
+                  // onTap: () => model.editGig(index),
+                  child: CommentItem(
+                    // passedCurrentUserId: MyUser.uid,`
+                    isGigAppointed: isGigAppointed,
+                    gigIdHoldingComment: getDocData['gigIdHoldingComment'],
+                    gigOwnerId: getDocData['gigOwnerId'],
+                    commentId: getDocData['commentId'],
+                    commentOwnerId: getDocData['commentOwnerId'],
+                    commentOwnerAvatarUrl: getDocData['commentOwnerAvatarUrl'],
+                    commentOwnerUsername: getDocData['commentOwnerUsername'],
+                    commentBody: getDocData['commentBody'],
+                    gigCurrency: getDocData['gigCurrency'],
+                    createdAt: getDocData['createdAt'],
+                    isPrivateComment: getDocData['isPrivateComment'],
+                    persistentPrivateComment:
+                        getDocData['persistentPrivateComment'],
+                    proposal: getDocData['proposal'],
+                    approved: getDocData['approved'],
+                    rejected: getDocData['rejected'],
+                    offeredBudget: getDocData['offeredBudget'],
+                    preferredPaymentMethod:
+                        getDocData['preferredPaymentMethod'],
+                    workstreamFileUrl: getDocData['workstreamFileUrl'],
+                    containMediaFile: getDocData['containMediaFile'],
+
+                    // onDeleteItem: () =>
+                    //     model.deleteComment(index),
+                  ),
+                );
+              });
+        }
       },
     );
   }
