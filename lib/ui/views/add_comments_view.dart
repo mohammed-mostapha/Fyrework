@@ -100,9 +100,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
   String username = MyUser.username;
   dynamic userProfilePictureUrl = MyUser.userAvatarUrl;
 
-  addComment({bool persistentPrivateComment}) {
+  addComment() {
     if (_addCommentsController.text.isNotEmpty) {
-      print('_addCommentsController: ${_addCommentsController.text}');
       AddCommentViewModel().addComment(
         gigIdHoldingComment: widget.passedGigId,
         gigOwnerId: widget.passedGigOwnerId,
@@ -112,7 +111,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
         commentOwnerAvatarUrl: userProfilePictureUrl,
         commentId: '',
         isPrivateComment: isPrivateComment,
-        persistentPrivateComment: persistentPrivateComment,
         proposal: proposal,
         approved: approved,
         rejected: rejected,
@@ -626,8 +624,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                     commentId: '',
                                                     isPrivateComment:
                                                         isPrivateComment,
-                                                    persistentPrivateComment:
-                                                        true,
                                                     proposal: proposal,
                                                     approved: approved,
                                                     rejected: rejected,
@@ -673,8 +669,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      addComment(
-                                          persistentPrivateComment: true);
+                                      addComment();
                                     },
                                     child: Container(
                                       width: 48,
@@ -783,8 +778,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                               commentId: '',
                                                               isPrivateComment:
                                                                   isPrivateComment,
-                                                              persistentPrivateComment:
-                                                                  true,
                                                               proposal:
                                                                   proposal,
                                                               approved:
@@ -883,9 +876,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                   ),
                                                 ),
                                                 onTap: () {
-                                                  addComment(
-                                                      persistentPrivateComment:
-                                                          true);
+                                                  addComment();
                                                 },
                                               ),
                                             ),

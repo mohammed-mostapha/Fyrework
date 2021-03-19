@@ -27,7 +27,6 @@ class CommentItem extends StatefulWidget {
   final gigCurrency;
   final createdAt;
   final isPrivateComment;
-  final persistentPrivateComment;
   final proposal;
   final approved;
   final rejected;
@@ -49,7 +48,6 @@ class CommentItem extends StatefulWidget {
     this.gigCurrency,
     this.createdAt,
     this.isPrivateComment,
-    this.persistentPrivateComment,
     this.proposal,
     this.approved,
     this.rejected,
@@ -734,46 +732,43 @@ class _CommentItemState extends State<CommentItem> {
     return Padding(
       padding: const EdgeInsets.all(0.1),
       child: Container(
-        decoration: BoxDecoration(
-          color: myComment
-              ? Theme.of(context).primaryColor
-              : Theme.of(context).accentColor,
-          border: Border(
-            top: myComment
-                ? BorderSide(width: 0.3, color: Colors.grey[50])
-                : BorderSide(
-                    width: 0.3,
-                    color: Theme.of(context).primaryColor,
-                  ),
-            bottom: myComment
-                ? BorderSide(width: 0.3, color: Colors.grey[50])
-                : BorderSide(
-                    width: 0.3,
-                    color: Theme.of(context).primaryColor,
-                  ),
+          decoration: BoxDecoration(
+            color: myComment
+                ? Theme.of(context).primaryColor
+                : Theme.of(context).accentColor,
+            border: Border(
+              top: myComment
+                  ? BorderSide(width: 0.3, color: Colors.grey[50])
+                  : BorderSide(
+                      width: 0.3,
+                      color: Theme.of(context).primaryColor,
+                    ),
+              bottom: myComment
+                  ? BorderSide(width: 0.3, color: Colors.grey[50])
+                  : BorderSide(
+                      width: 0.3,
+                      color: Theme.of(context).primaryColor,
+                    ),
+            ),
           ),
-        ),
-        child: myGig || myComment
-            ? IndexedStack(
-                index: _commentViewIndex,
-                children: [
-                  AnimatedOpacity(
-                    opacity: _commentOpacity,
-                    child: publicCommentView,
-                    duration: Duration(milliseconds: 500),
-                  ),
-                  AnimatedOpacity(
+          child: myGig || myComment
+              ? IndexedStack(
+                  index: _commentViewIndex,
+                  children: [
+                    AnimatedOpacity(
                       opacity: _commentOpacity,
-                      child: privateCommentView,
-                      duration: Duration(milliseconds: 500)),
-                ],
-              )
-            : !widget.persistentPrivateComment
-                ? widget.isPrivateComment
-                    ? privateCommentView
-                    : publicCommentView
-                : privateCommentView,
-      ),
+                      child: publicCommentView,
+                      duration: Duration(milliseconds: 500),
+                    ),
+                    AnimatedOpacity(
+                        opacity: _commentOpacity,
+                        child: privateCommentView,
+                        duration: Duration(milliseconds: 500)),
+                  ],
+                )
+              : widget.isPrivateComment
+                  ? privateCommentView
+                  : publicCommentView),
     );
   }
 

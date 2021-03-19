@@ -69,7 +69,6 @@ class _ProposalWidgetState extends State<ProposalWidget> {
           commentOwnerAvatarUrl: userProfilePictureUrl,
           commentId: '',
           isPrivateComment: isPrivateComment,
-          persistentPrivateComment: true,
           proposal: proposal,
           approved: approved,
           rejected: rejected,

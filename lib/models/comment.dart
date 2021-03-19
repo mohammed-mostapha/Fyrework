@@ -8,7 +8,6 @@ class Comment {
   final String commentBody;
   dynamic createdAt;
   final bool isPrivateComment;
-  final bool persistentPrivateComment;
   final bool proposal;
   final bool approved;
   final bool rejected;
@@ -28,7 +27,6 @@ class Comment {
     this.commentBody,
     this.createdAt,
     this.isPrivateComment,
-    this.persistentPrivateComment,
     this.proposal,
     this.approved,
     this.rejected,
@@ -50,7 +48,6 @@ class Comment {
       'commentBody': commentBody,
       'createdAt': createdAt,
       'isPrivateComment': isPrivateComment,
-      'persistentPrivateComment': persistentPrivateComment,
       'proposal': proposal,
       'approved': approved,
       'rejected': rejected,
@@ -75,7 +72,6 @@ class Comment {
       commentBody: map['commentBody'],
       createdAt: map['createdAt'],
       isPrivateComment: map['isPrivateComment'],
-      persistentPrivateComment: map['persistentPrivateComment'],
       proposal: map['proposal'],
       approved: map['approved'],
       rejected: map['rejected'],

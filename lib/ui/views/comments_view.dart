@@ -52,8 +52,6 @@ class CommentsView extends StatelessWidget {
                     gigCurrency: getDocData['gigCurrency'],
                     createdAt: getDocData['createdAt'],
                     isPrivateComment: getDocData['isPrivateComment'],
-                    persistentPrivateComment:
-                        getDocData['persistentPrivateComment'],
                     proposal: getDocData['proposal'],
                     approved: getDocData['approved'],
                     rejected: getDocData['rejected'],

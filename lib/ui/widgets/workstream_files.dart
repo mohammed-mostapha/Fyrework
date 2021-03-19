@@ -61,7 +61,6 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
       commentOwnerAvatarUrl: myUserAvatarUrl,
       commentId: '',
       isPrivateComment: false,
-      persistentPrivateComment: persistentPrivateComment,
       proposal: false,
       approved: false,
       rejected: false,
