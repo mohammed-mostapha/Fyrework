@@ -82,7 +82,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
   bool worker = false;
   bool client = false;
   bool gigICanDo = false;
-  bool _keyboardVisible;
+  // bool _keyboardVisible;
   String gigCurrency;
   String gigBudget;
 
@@ -90,6 +90,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
   final String paperPlane = 'assets/svgs/solid/paper-plane.svg';
   final String checkCircle = 'assets/svgs/regular/check-circle.svg';
   final String downArrow = 'assets/svgs/flaticon/down-arrow.svg';
+  final String actions = 'assets/svgs/flaticon/actions.svg';
 
   bool isPrivateComment = false;
   bool proposal = false;
@@ -137,7 +138,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
     gigICanDo = widget.passedGigValue == 'Gig I can do' ? true : false;
     worker = (!myGig && !gigICanDo || myGig && gigICanDo) ? true : false;
     client = (myGig && !gigICanDo || !myGig && gigICanDo) ? true : false;
-    _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
+    // _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
 
     // hirer = (myGig && !gigICanDo || !myGig && gigICanDo) ? true : false;
 
@@ -849,6 +850,113 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                             SizedBox(
                                               width: 5,
                                             ),
+                                            GestureDetector(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(2),
+                                                  child: Container(
+                                                    height: 48,
+                                                    width: 48,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              2),
+                                                      child: Center(
+                                                        child: Center(
+                                                          child: SizedBox(
+                                                            width: 20,
+                                                            height: 20,
+                                                            child: SvgPicture
+                                                                .asset(
+                                                              actions,
+                                                              semanticsLabel:
+                                                                  'paper-plane',
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                        color: Theme.of(context)
+                                                            .primaryColor,
+                                                        border: Border.all(
+                                                            width: 1,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .accentColor),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    10))),
+                                                  ),
+                                                ),
+                                                onTap: () {
+                                                  Scaffold.of(context)
+                                                      .showBottomSheet(
+                                                          (BuildContext
+                                                              context) {
+                                                    return Builder(
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return Container(
+                                                          height: 250,
+                                                          child: StatefulBuilder(
+                                                              builder: (BuildContext
+                                                                      context,
+                                                                  StateSetter
+                                                                      setModalState) {
+                                                            return Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .primaryColor,
+                                                                border: Border.all(
+                                                                    width: 1,
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .accentColor),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .only(
+                                                                  topLeft:
+                                                                      const Radius
+                                                                          .circular(10),
+                                                                  topRight:
+                                                                      const Radius
+                                                                          .circular(10),
+                                                                ),
+                                                              ),
+                                                              child: Padding(
+                                                                padding: const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical:
+                                                                        10,
+                                                                    horizontal:
+                                                                        10),
+                                                                // child: hirer ? _hirerActions() : _applierActions(),
+                                                                child: !client
+                                                                    ? WorkerActions(
+                                                                        passedGigId:
+                                                                            widget.passedGigId,
+                                                                      )
+                                                                    : ClientActions(
+                                                                        passedGigId:
+                                                                            widget.passedGigId,
+                                                                      ),
+                                                              ),
+                                                            );
+                                                          }),
+                                                        );
+                                                      },
+                                                    );
+                                                  });
+                                                }),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
                                             Container(
                                               width: 48,
                                               height: 48,
@@ -884,103 +992,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                         ),
                                       ),
                                     ),
-                                    _keyboardVisible
-                                        ? Container(
-                                            width: 0,
-                                            height: 0,
-                                          )
-                                        : GestureDetector(
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(2),
-                                              child: Container(
-                                                height: 48,
-                                                child: Center(
-                                                  child: Text(
-                                                    'Actions',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyText1
-                                                        .copyWith(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .accentColor),
-                                                  ),
-                                                ),
-                                                decoration: BoxDecoration(
-                                                    color: Theme.of(context)
-                                                        .primaryColor,
-                                                    border: Border.all(
-                                                        width: 1,
-                                                        color: Theme.of(context)
-                                                            .accentColor),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                10))),
-                                              ),
-                                            ),
-                                            onTap: () {
-                                              Scaffold.of(context)
-                                                  .showBottomSheet(
-                                                      (BuildContext context) {
-                                                return Builder(
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return Container(
-                                                      height: 250,
-                                                      child: StatefulBuilder(
-                                                          builder: (BuildContext
-                                                                  context,
-                                                              StateSetter
-                                                                  setModalState) {
-                                                        return Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .primaryColor,
-                                                            border: Border.all(
-                                                                width: 1,
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .accentColor),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .only(
-                                                              topLeft: const Radius
-                                                                  .circular(10),
-                                                              topRight: const Radius
-                                                                  .circular(10),
-                                                            ),
-                                                          ),
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .symmetric(
-                                                                    vertical:
-                                                                        10,
-                                                                    horizontal:
-                                                                        10),
-                                                            // child: hirer ? _hirerActions() : _applierActions(),
-                                                            child: !client
-                                                                ? WorkerActions(
-                                                                    passedGigId:
-                                                                        widget
-                                                                            .passedGigId,
-                                                                  )
-                                                                : ClientActions(
-                                                                    passedGigId:
-                                                                        widget
-                                                                            .passedGigId,
-                                                                  ),
-                                                          ),
-                                                        );
-                                                      }),
-                                                    );
-                                                  },
-                                                );
-                                              });
-                                            })
                                   ],
                                 )
                               : Padding(

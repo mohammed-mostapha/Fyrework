@@ -38,9 +38,7 @@ class CommentsView extends StatelessWidget {
                 DocumentSnapshot data = snapshot.data.documents[index];
                 Map getDocData = data.data;
                 return GestureDetector(
-                  // onTap: () => model.editGig(index),
                   child: CommentItem(
-                    // passedCurrentUserId: MyUser.uid,`
                     isGigAppointed: isGigAppointed,
                     gigIdHoldingComment: getDocData['gigIdHoldingComment'],
                     gigOwnerId: getDocData['gigOwnerId'],
