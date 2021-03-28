@@ -267,12 +267,12 @@ class _UserProfileViewState extends State<UserProfileView> {
         print('snapshot.data: ${snapshot.data}');
         return !snapshot.hasData
             ? Text('')
-            : snapshot.data.documents.length > 0
+            : snapshot.data.docs.length > 0
                 ? ListView.builder(
-                    itemCount: snapshot.data.documents.length,
+                    itemCount: snapshot.data.docs.length,
                     itemBuilder: (context, index) {
-                      DocumentSnapshot data = snapshot.data.documents[index];
-                      Map getDocData = data.data;
+                      DocumentSnapshot data = snapshot.data.docs[index];
+                      Map getDocData = data.data();
                       return GestureDetector(
                         // onTap: () => model.editGig(index),
                         child: UserRelatedGigItem(

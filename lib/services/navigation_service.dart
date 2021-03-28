@@ -13,7 +13,9 @@ class NavigationService {
 
   void previewAllGigs() {
     MaterialPage(
-      builder: (BuildContext context) => Home(passedSelectedIndex: 0),
+      child: Builder(
+        builder: (BuildContext context) => Home(passedSelectedIndex: 0),
+      ),
     );
   }
 

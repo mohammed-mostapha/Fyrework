@@ -29,7 +29,7 @@ class UsersSearchByHandle extends StatelessWidget {
         Iterable<DocumentSnapshot> handleResults;
 
         if (usersSnapshot.hasData && usersSnapshot.data != null) {
-          handleResults = usersSnapshot.data.documents.where((u) =>
+          handleResults = usersSnapshot.data.docs.where((u) =>
               "${u['username']}"
                   .toLowerCase()
                   .contains('developer'.substring(1)));

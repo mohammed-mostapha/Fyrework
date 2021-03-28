@@ -15,6 +15,7 @@ import 'package:provider_architecture/provider_architecture.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sliding_card/sliding_card.dart';
 import 'package:Fyrework/services/popularHashtags.dart';
+import 'package:geocoding/geocoding.dart';
 
 class AddGigDetails extends StatefulWidget {
   // final gigHashtagsController = TextEditingController();
@@ -129,10 +130,10 @@ class _AddGigDetailsState extends State<AddGigDetails> {
   }
 
   getUserLocation() async {
-    Position position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    List<Placemark> placemarks = await Geolocator()
-        .placemarkFromCoordinates(position.latitude, position.longitude);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
     Placemark placemark = placemarks[0];
     // String completeAddress =
     //     '${placemark.subThoroughfare} ${placemark.thoroughfare}, ${placemark.subLocality} ${placemark.locality}, ${placemark.subAdministrativeArea}, ${placemark.administrativeArea} ${placemark.postalCode}, ${placemark.country}';

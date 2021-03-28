@@ -14,9 +14,11 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:Fyrework/screens/add_gig/assets_picker/src/constants/constants.dart';
 import 'package:Fyrework/ui/widgets/gig_item_media_previewer.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:Fyrework/screens/trends/gigIndexProvider.dart';
+import 'package:geocoding/geocoding.dart';
 
 class EditYourGig extends StatefulWidget {
   final gigIndex;
@@ -66,6 +68,8 @@ class EditYourGig extends StatefulWidget {
 }
 
 class _EditYourGigState extends State<EditYourGig> {
+  String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
+
   final _editYourGigFormKey = GlobalKey<FormState>();
   ScrollController scrollController = ScrollController();
   String clientSideWarning;
@@ -127,10 +131,10 @@ class _EditYourGigState extends State<EditYourGig> {
   }
 
   getUserLocation() async {
-    Position position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    List<Placemark> placemarks = await Geolocator()
-        .placemarkFromCoordinates(position.latitude, position.longitude);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
     Placemark placemark = placemarks[0];
     // String completeAddress =
     //     '${placemark.subThoroughfare} ${placemark.thoroughfare}, ${placemark.subLocality} ${placemark.locality}, ${placemark.subAdministrativeArea}, ${placemark.administrativeArea} ${placemark.postalCode}, ${placemark.country}';
@@ -349,7 +353,7 @@ class _EditYourGigState extends State<EditYourGig> {
                                   ),
                                   Flexible(
                                     child: Text(
-                                      "${widget.gigOwnerUsername}".capitalize(),
+                                      capitalize("${widget.gigOwnerUsername}"),
                                       overflow: TextOverflow.ellipsis,
                                       style:
                                           Theme.of(context).textTheme.bodyText1,

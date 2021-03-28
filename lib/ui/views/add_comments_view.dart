@@ -17,6 +17,7 @@ import 'package:Fyrework/ui/widgets/workstream_files.dart';
 import 'package:Fyrework/ui/widgets/proposal_widget.dart';
 import 'package:dartx/dartx.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 
 class AddCommentsView extends StatefulWidget {
   final String passedGigId;
@@ -144,9 +145,9 @@ class _AddCommentsViewState extends State<AddCommentsView>
 
 //first check if this gig is appointed or not
     return StreamBuilder<DocumentSnapshot>(
-        stream: Firestore.instance
+        stream: FirebaseFirestore.instance
             .collection('gigs')
-            .document(widget.passedGigId)
+            .doc(widget.passedGigId)
             .snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -285,12 +286,13 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                             snapshot.data.documents[i];
                                         String gigWorkstreamActionDate;
 
-                                        if (actionSnapshot.data['createdAt'] !=
+                                        if (actionSnapshot
+                                                .data()['createdAt'] !=
                                             null) {
                                           gigWorkstreamActionDate =
                                               DateFormat('d MMM, yyyy h:mm a')
                                                   .format(actionSnapshot
-                                                      .data['createdAt']
+                                                      .data()['createdAt']
                                                       .toDate());
                                         }
 
@@ -314,12 +316,12 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                       Theme.of(context)
                                                           .primaryColor,
                                                   backgroundImage: NetworkImage(
-                                                      "${actionSnapshot.data['userAvatarUrl']}"),
+                                                      "${actionSnapshot.data()['userAvatarUrl']}"),
                                                 ),
                                                 title: Column(
                                                   children: [
                                                     Text(
-                                                      "${actionSnapshot.data['gigAction']}"
+                                                      "${actionSnapshot.data()['gigAction']}"
                                                           .capitalize(),
                                                       style: Theme.of(context)
                                                           .textTheme

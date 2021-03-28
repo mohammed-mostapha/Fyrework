@@ -25,18 +25,18 @@ class CommentsView extends StatelessWidget {
           return Center(child: Text(''));
         }
 
-        if (snapshot.hasData && !(snapshot.data.documents.length > 0)) {
+        if (snapshot.hasData && !(snapshot.data.docs.length > 0)) {
           return Center(
               child: Text(
             'No comments yet...',
             style: Theme.of(context).textTheme.bodyText1,
           ));
-        } else if (snapshot.hasData && snapshot.data.documents.length > 0) {
+        } else if (snapshot.hasData && snapshot.data.docs.length > 0) {
           return ListView.builder(
-              itemCount: snapshot.data.documents.length,
+              itemCount: snapshot.data.docs.length,
               itemBuilder: (context, index) {
-                DocumentSnapshot data = snapshot.data.documents[index];
-                Map getDocData = data.data;
+                DocumentSnapshot data = snapshot.data.docs[index];
+                Map getDocData = data.data();
                 return GestureDetector(
                   child: CommentItem(
                     isGigAppointed: isGigAppointed,

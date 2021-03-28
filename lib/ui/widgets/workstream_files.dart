@@ -44,7 +44,7 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
   final String audio = 'assets/svgs/flaticon/audio.svg';
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  List<StorageUploadTask> _storageUploadTasks = <StorageUploadTask>[];
+  List<UploadTask> _storageUploadTasks = <UploadTask>[];
 
   String myUsername = MyUser.username;
   String myUserId = MyUser.uid;
@@ -109,12 +109,12 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
   uploadWorkstreamFiles(String fileName, String filePath) async {
     print('coming from UploadWorkStreamFiles');
     _fileExtension = fileName.toString().split('.').last;
-    StorageReference storageReference =
+    Reference storageReference =
         FirebaseStorage.instance.ref().child('gigs/workstreamFiles/$fileName');
-    StorageUploadTask uploadTask = storageReference.putFile(File(filePath),
+    UploadTask uploadTask = storageReference.putFile(File(filePath),
         StorageMetadata(contentType: '$_pickType/$_fileExtension'));
 
-    StorageTaskSnapshot uploadTaskCompleted = await uploadTask.onComplete;
+    TaskSnapshot uploadTaskCompleted = await uploadTask;
     String uploadTaskDownloadUrl =
         await uploadTaskCompleted.ref.getDownloadURL();
 
@@ -129,8 +129,8 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
         persistentPrivateComment: true, commentBody: uploadTaskDownloadUrl);
   }
 
-  downloadWorkstreamFile(StorageReference ref) async {
-    final String workstreamFileName = await ref.getName();
+  downloadWorkstreamFile(Reference ref) async {
+    final String workstreamFileName = await ref.name;
     // final String workstreamFilePath = await ref.getPath();
 
     final String workstreamFileUrl = await ref.getDownloadURL();
@@ -142,7 +142,7 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
       await tempFile.delete();
     }
     await tempFile.create();
-    final StorageFileDownloadTask writeFileTask = ref.writeToFile(tempFile);
+    final DownloadTask writeFileTask = ref.writeToFile(tempFile);
     final int byteCount = (await writeFileTask.future).totalByteCount;
     var bodyBytes = workstreamFile.bodyBytes;
 
@@ -403,7 +403,7 @@ class UploadTaskListTile extends StatelessWidget {
   UploadTaskListTile({Key key, this.task, this.onDismissed, this.onDownload})
       : super(key: key);
 
-  final StorageUploadTask task;
+  final UploadTask task;
   final VoidCallback onDismissed;
   final VoidCallback onDownload;
 
