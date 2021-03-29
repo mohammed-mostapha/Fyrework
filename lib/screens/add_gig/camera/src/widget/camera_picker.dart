@@ -14,6 +14,7 @@ import '../widget/circular_progress_bar.dart';
 
 import 'builder/slide_page_transition_builder.dart';
 import 'camera_picker_viewer.dart';
+import 'package:Fyrework/screens/add_gig/screens.dart';
 
 /// Create a camera picker integrate with [CameraDescription].
 /// 通过 [CameraDescription] 整合的拍照选择
@@ -132,7 +133,7 @@ class CameraPickerState extends State<CameraPicker> {
 
   /// The [Duration] for record detection. (200ms)
   /// 检测是否开始录制的时长 (200毫秒)
-  final Duration recordDetectDuration = 200.milliseconds;
+  final Duration recordDetectDuration = Duration(milliseconds: 200);
 
   /// Available cameras.
   /// 可用的相机实例
@@ -149,6 +150,7 @@ class CameraPickerState extends State<CameraPicker> {
   /// The path which the temporary file will be stored.
   /// 临时文件会存放的目录
   String cacheFilePath;
+  int currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
 
   /// Whether the [shootingButton] should animate according to the gesture.
   /// 拍照按钮是否需要执行动画
@@ -253,7 +255,7 @@ class CameraPickerState extends State<CameraPicker> {
       initStorePath();
       initCameras();
     } catch (e) {
-      realDebugPrint('Error when initializing: $e');
+      print('Error when initializing: $e');
       if (context == null) {
         SchedulerBinding.instance.addPostFrameCallback((Duration _) {
           Navigator.of(context).pop();
@@ -305,10 +307,10 @@ class CameraPickerState extends State<CameraPicker> {
           await directory.create(recursive: true);
         }
       } else {
-        realDebugPrint('Failed to initialize path: Still null.');
+        print('Failed to initialize path: Still null.');
       }
     } catch (e) {
-      realDebugPrint('Error when initializing store path: $e');
+      print('Error when initializing store path: $e');
     }
   }
 
@@ -326,7 +328,7 @@ class CameraPickerState extends State<CameraPicker> {
     /// After cameras fetched, judge again with the list is empty or not to ensure
     /// there is at least an available camera for use.
     if (cameraDescription == null && (cameras?.isEmpty ?? true)) {
-      realDebugPrint('No cameras found.');
+      print('No cameras found.');
       return;
     }
 
@@ -393,7 +395,7 @@ class CameraPickerState extends State<CameraPicker> {
           }
         }
       } catch (e) {
-        realDebugPrint('Error when taking pictures: $e');
+        print('Error when taking pictures: $e');
         takenPictureFilePath = null;
       }
     }
@@ -457,10 +459,10 @@ class CameraPickerState extends State<CameraPicker> {
         }
       }).catchError((dynamic e) {
         takenVideoFilePath = null;
-        realDebugPrint('Error when recording video: $e');
+        print('Error when recording video: $e');
         if (cameraController.value.isRecordingVideo) {
           cameraController.stopVideoRecording().catchError((dynamic e) {
-            realDebugPrint('Error when stop recording video: $e');
+            print('Error when stop recording video: $e');
           });
         }
       });
@@ -491,7 +493,7 @@ class CameraPickerState extends State<CameraPicker> {
           }
         }
       }).catchError((dynamic e) {
-        realDebugPrint('Error when stop recording video: $e');
+        print('Error when stop recording video: $e');
       }).whenComplete(() {
         isShootingButtonAnimate = false;
         takenVideoFilePath = null;
@@ -577,7 +579,7 @@ class CameraPickerState extends State<CameraPicker> {
   /// 靠近拍照键的返回键
   Widget get backButton {
     return InkWell(
-      borderRadius: maxBorderRadius,
+      borderRadius: BorderRadius.circular(10),
       // onTap: Navigator.of(context).pop,
       onTap: () {
         // Navigator.pushNamedAndRemoveUntil(context, "/addGig", (r) => false);
@@ -610,7 +612,7 @@ class CameraPickerState extends State<CameraPicker> {
       behavior: HitTestBehavior.opaque,
       onPointerUp: isAllowRecording ? recordDetectionCancel : null,
       child: InkWell(
-        borderRadius: maxBorderRadius,
+        borderRadius: BorderRadius.circular(10),
         onTap: takePicture,
         onLongPress: isAllowRecording ? recordDetection : null,
         child: SizedBox.fromSize(

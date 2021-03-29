@@ -85,6 +85,8 @@ class GigItem extends StatefulWidget {
 }
 
 class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
+  String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
+
   bool myGig = false;
   bool appointed = false;
   bool appointedUser = false;
@@ -414,7 +416,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                               ),
                               Flexible(
                                 child: Text(
-                                  "${widget.gigOwnerUsername}".capitalize(),
+                                  capitalize("${widget.gigOwnerUsername}"),
                                   overflow: TextOverflow.ellipsis,
                                   style: Theme.of(context).textTheme.bodyText1,
                                 ),
@@ -643,7 +645,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "${widget.gigPost}".capitalize(),
+                    capitalize("${widget.gigPost}"),
                     style: Theme.of(context).textTheme.bodyText1,
                   ),
                 ),

@@ -44,7 +44,7 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
   final String audio = 'assets/svgs/flaticon/audio.svg';
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  List<StorageUploadTask> _storageUploadTasks = <StorageUploadTask>[];
+  List<UploadTask> _storageUploadTasks = <UploadTask>[];
 
   String myUsername = MyUser.username;
   String myUserId = MyUser.uid;
@@ -109,12 +109,14 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
   uploadWorkstreamFiles(String fileName, String filePath) async {
     print('coming from UploadWorkStreamFiles');
     _fileExtension = fileName.toString().split('.').last;
-    StorageReference storageReference =
+    Reference storageReference =
         FirebaseStorage.instance.ref().child('gigs/workstreamFiles/$fileName');
-    StorageUploadTask uploadTask = storageReference.putFile(File(filePath),
-        StorageMetadata(contentType: '$_pickType/$_fileExtension'));
+    UploadTask uploadTask = storageReference.putFile(
+      File(filePath),
+      SettableMetadata(contentType: '$_pickType/$_fileExtension'),
+    );
 
-    StorageTaskSnapshot uploadTaskCompleted = await uploadTask.onComplete;
+    TaskSnapshot uploadTaskCompleted = await uploadTask;
     String uploadTaskDownloadUrl =
         await uploadTaskCompleted.ref.getDownloadURL();
 
@@ -129,33 +131,33 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
         persistentPrivateComment: true, commentBody: uploadTaskDownloadUrl);
   }
 
-  downloadWorkstreamFile(StorageReference ref) async {
-    final String workstreamFileName = await ref.getName();
-    // final String workstreamFilePath = await ref.getPath();
+  // downloadWorkstreamFile(Reference ref) async {
+  //   final String workstreamFileName = await ref.name;
+  //   // final String workstreamFilePath = await ref.getPath();
 
-    final String workstreamFileUrl = await ref.getDownloadURL();
-    final http.Response workstreamFile = await http.get(workstreamFileUrl);
-    final Directory systemTempDir = Directory.systemTemp;
-    // final File tempFile = File('${systemTempDir.path}/tmp.jpg'); //adjust this
-    final File tempFile = File('${systemTempDir.path}/$workstreamFileName');
-    if (tempFile.existsSync()) {
-      await tempFile.delete();
-    }
-    await tempFile.create();
-    final StorageFileDownloadTask writeFileTask = ref.writeToFile(tempFile);
-    final int byteCount = (await writeFileTask.future).totalByteCount;
-    var bodyBytes = workstreamFile.bodyBytes;
+  //   final String workstreamFileUrl = await ref.getDownloadURL();
+  //   final http.Response workstreamFile = await http.get(workstreamFileUrl);
+  //   final Directory systemTempDir = Directory.systemTemp;
+  //   // final File tempFile = File('${systemTempDir.path}/tmp.jpg'); //adjust this
+  //   final File tempFile = File('${systemTempDir.path}/$workstreamFileName');
+  //   if (tempFile.existsSync()) {
+  //     await tempFile.delete();
+  //   }
+  //   await tempFile.create();
+  //   final DownloadTask writeFileTask = ref.writeToFile(tempFile);
+  //   final int byteCount = (await writeFileTask.future).totalByteCount;
+  //   var bodyBytes = workstreamFile.bodyBytes;
 
-    print(
-        'Success\nDownloaded $workstreamFileName\nUrl: $workstreamFileUrl\nBytes Count: $byteCount');
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      backgroundColor: Colors.white,
-      content: Image.memory(
-        bodyBytes,
-        fit: BoxFit.fill,
-      ),
-    ));
-  }
+  //   print(
+  //       'Success\nDownloaded $workstreamFileName\nUrl: $workstreamFileUrl\nBytes Count: $byteCount');
+  //   _scaffoldKey.currentState.showSnackBar(SnackBar(
+  //     backgroundColor: Colors.white,
+  //     content: Image.memory(
+  //       bodyBytes,
+  //       fit: BoxFit.fill,
+  //     ),
+  //   ));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -378,123 +380,123 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
   }
 }
 
-class UploadTaskListTile extends StatelessWidget {
-  // addWorkstreamFileAsComment(
-  //     {bool persistentPrivateComment, String commentBody}) {
-  //   AddCommentViewModel().addComment(
-  //     gigIdHoldingComment: WorkstreamFiles.passedGigId,
-  //     gigOwnerId: WorkstreamFiles.passedGigOwnerId,
-  //     commentOwnerUsername: myUsername,
-  //     commentBody: commentBody,
-  //     commentOwnerId: myUserId,
-  //     commentOwnerAvatarUrl: myUserProfilePictureUrl,
-  //     commentId: '',
-  //     commentTime: new DateTime.now(),
-  //     isPrivateComment: false,
-  //     persistentPrivateComment: persistentPrivateComment,
-  //     proposal: false,
-  //     approved: false,
-  //     rejected: false,
-  //     gigCurrency: null,
-  //     offeredBudget: null,
-  //   );
-  // }
+// class UploadTaskListTile extends StatelessWidget {
+// addWorkstreamFileAsComment(
+//     {bool persistentPrivateComment, String commentBody}) {
+//   AddCommentViewModel().addComment(
+//     gigIdHoldingComment: WorkstreamFiles.passedGigId,
+//     gigOwnerId: WorkstreamFiles.passedGigOwnerId,
+//     commentOwnerUsername: myUsername,
+//     commentBody: commentBody,
+//     commentOwnerId: myUserId,
+//     commentOwnerAvatarUrl: myUserProfilePictureUrl,
+//     commentId: '',
+//     commentTime: new DateTime.now(),
+//     isPrivateComment: false,
+//     persistentPrivateComment: persistentPrivateComment,
+//     proposal: false,
+//     approved: false,
+//     rejected: false,
+//     gigCurrency: null,
+//     offeredBudget: null,
+//   );
+// }
 
-  UploadTaskListTile({Key key, this.task, this.onDismissed, this.onDownload})
-      : super(key: key);
+//   UploadTaskListTile({Key key, this.task, this.onDismissed, this.onDownload})
+//       : super(key: key);
 
-  final StorageUploadTask task;
-  final VoidCallback onDismissed;
-  final VoidCallback onDownload;
+//   final UploadTask task;
+//   final VoidCallback onDismissed;
+//   final VoidCallback onDownload;
 
-  Future pushWorkstreamFile() async {
-    print('coming from pushWorkstreamFile');
-    String workstreamfileUrl = await task.lastSnapshot.ref.getDownloadURL();
-    // addWorkstreamFileAsComment(
-    //     persistentPrivateComment: true, commentBody: workstreamfileUrl);
-  }
+//   Future pushWorkstreamFile() async {
+//     print('coming from pushWorkstreamFile');
+//     String workstreamfileUrl = await task.snapshot.ref.getDownloadURL();
+//     // addWorkstreamFileAsComment(
+//     //     persistentPrivateComment: true, commentBody: workstreamfileUrl);
+//   }
 
-  String get uploadStatus {
-    String result;
-    if (task.isComplete) {
-      if (task.isSuccessful) {
-        result = 'Complete';
-        //post a comment with the uploaded file
-        pushWorkstreamFile();
-      } else if (task.isCanceled) {
-        result = 'Canceled';
-      } else {
-        result = 'Failed Error ${task.lastSnapshot.error}';
-      }
-    } else if (task.isInProgress) {
-      result = 'Uploading';
-    } else if (task.isPaused) {
-      result = 'Paused';
-    }
-    return result;
-  }
+//   String get uploadStatus {
+//     String result;
+//     if (task.isComplete) {
+//       if (task.isSuccessful) {
+//         result = 'Complete';
+//         //post a comment with the uploaded file
+//         pushWorkstreamFile();
+//       } else if (task.isCanceled) {
+//         result = 'Canceled';
+//       } else {
+//         result = 'Failed Error ${task.lastSnapshot.error}';
+//       }
+//     } else if (task.isInProgress) {
+//       result = 'Uploading';
+//     } else if (task.isPaused) {
+//       result = 'Paused';
+//     }
+//     return result;
+//   }
 
-  String bytesTransferred(StorageTaskSnapshot snapshot) {
-    return '${snapshot.bytesTransferred} / ${snapshot.bytesTransferred}';
-  }
+//   String bytesTransferred(TaskSnapshot snapshot) {
+//     return '${snapshot.bytesTransferred} / ${snapshot.bytesTransferred}';
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<StorageTaskEvent>(
-        stream: task.events,
-        builder: (BuildContext context,
-            AsyncSnapshot<StorageTaskEvent> asyncSnapshot) {
-          Widget subtitle;
-          if (asyncSnapshot.hasData) {
-            final StorageTaskEvent event = asyncSnapshot.data;
-            final StorageTaskSnapshot snapshot = event.snapshot;
+//   @override
+//   Widget build(BuildContext context) {
+//     return StreamBuilder<StorageTaskEvent>(
+//         stream: task.events,
+//         builder: (BuildContext context,
+//             AsyncSnapshot<StorageTaskEvent> asyncSnapshot) {
+//           Widget subtitle;
+//           if (asyncSnapshot.hasData) {
+//             final StorageTaskEvent event = asyncSnapshot.data;
+//             final TaskSnapshot snapshot = event.snapshot;
 
-            subtitle =
-                Text('$uploadStatus: ${bytesTransferred(snapshot)} bytes sent');
-          } else {
-            subtitle = const Text('Starting...');
-          }
-          return Dismissible(
-            key: Key(task.hashCode.toString()),
-            onDismissed: (_) => onDismissed(),
-            child: ListTile(
-              title: Text('Upload Task #${task.hashCode}'),
-              subtitle: subtitle,
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Offstage(
-                    offstage: !task.isInProgress,
-                    child: IconButton(
-                      icon: const Icon(Icons.pause),
-                      onPressed: () => task.pause(),
-                    ),
-                  ),
-                  Offstage(
-                    offstage: !task.isPaused,
-                    child: IconButton(
-                      icon: const Icon(Icons.file_upload),
-                      onPressed: () => task.resume(),
-                    ),
-                  ),
-                  Offstage(
-                    offstage: task.isComplete,
-                    child: IconButton(
-                      icon: const Icon(Icons.cancel),
-                      onPressed: () => task.cancel(),
-                    ),
-                  ),
-                  Offstage(
-                    offstage: !(task.isComplete && task.isSuccessful),
-                    child: IconButton(
-                      icon: const Icon(Icons.file_download),
-                      onPressed: () => onDownload(),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-}
+//             subtitle =
+//                 Text('$uploadStatus: ${bytesTransferred(snapshot)} bytes sent');
+//           } else {
+//             subtitle = const Text('Starting...');
+//           }
+//           return Dismissible(
+//             key: Key(task.hashCode.toString()),
+//             onDismissed: (_) => onDismissed(),
+//             child: ListTile(
+//               title: Text('Upload Task #${task.hashCode}'),
+//               subtitle: subtitle,
+//               trailing: Row(
+//                 mainAxisSize: MainAxisSize.min,
+//                 children: <Widget>[
+//                   Offstage(
+//                     offstage: !task.isInProgress,
+//                     child: IconButton(
+//                       icon: const Icon(Icons.pause),
+//                       onPressed: () => task.pause(),
+//                     ),
+//                   ),
+//                   Offstage(
+//                     offstage: !task.isPaused,
+//                     child: IconButton(
+//                       icon: const Icon(Icons.file_upload),
+//                       onPressed: () => task.resume(),
+//                     ),
+//                   ),
+//                   Offstage(
+//                     offstage: task.isComplete,
+//                     child: IconButton(
+//                       icon: const Icon(Icons.cancel),
+//                       onPressed: () => task.cancel(),
+//                     ),
+//                   ),
+//                   Offstage(
+//                     offstage: !(task.isComplete && task.isSuccessful),
+//                     child: IconButton(
+//                       icon: const Icon(Icons.file_download),
+//                       onPressed: () => onDownload(),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           );
+//         });
+//   }
+// }

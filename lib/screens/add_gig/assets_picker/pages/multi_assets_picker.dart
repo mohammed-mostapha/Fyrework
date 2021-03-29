@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_common_exports/flutter_common_exports.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Fyrework/screens/home/home.dart';
@@ -91,7 +90,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
   }
 
   String id;
-  final db = Firestore.instance;
+  final db = FirebaseFirestore.instance;
 
   // bool choosedAssets = false;
 
@@ -105,7 +104,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
 
   int get assetsLength => assets.length;
 
-  ThemeData get currentTheme => context.themeData;
+  // ThemeData get currentTheme => context.themeData;
 
   Future<void> selectAssets(PickMethodModel model) async {
     final List<AssetEntity> result = await model.method(context, assets);
@@ -153,44 +152,48 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
   }
 
   Widget _audioAssetWidget(AssetEntity asset) {
-    return ColoredBox(
-      color: context.themeData.dividerColor,
-      child: Stack(
-        children: <Widget>[
-          AnimatedPositioned(
-            duration: kThemeAnimationDuration,
-            top: 0.0,
-            left: 0.0,
-            right: 0.0,
-            bottom: isDisplayingDetail ? 20.0 : 0.0,
-            child: Center(
-              child: Icon(
-                Icons.audiotrack,
-                size: isDisplayingDetail ? 24.0 : 16.0,
-              ),
-            ),
-          ),
-          AnimatedPositioned(
-            duration: kThemeAnimationDuration,
-            left: 0.0,
-            right: 0.0,
-            bottom: isDisplayingDetail ? 0.0 : -20.0,
-            height: 20.0,
-            child: Text(
-              asset.title,
-              style: const TextStyle(
-                height: 1.0,
-                fontSize: 16.0,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ],
-      ),
-    );
+    return Container(width: 0, height: 0);
   }
+
+  // Widget _audioAssetWidget(AssetEntity asset) {
+  //   return ColoredBox(
+  //     color: context.themeData.dividerColor,
+  //     child: Stack(
+  //       children: <Widget>[
+  //         AnimatedPositioned(
+  //           duration: kThemeAnimationDuration,
+  //           top: 0.0,
+  //           left: 0.0,
+  //           right: 0.0,
+  //           bottom: isDisplayingDetail ? 20.0 : 0.0,
+  //           child: Center(
+  //             child: Icon(
+  //               Icons.audiotrack,
+  //               size: isDisplayingDetail ? 24.0 : 16.0,
+  //             ),
+  //           ),
+  //         ),
+  //         AnimatedPositioned(
+  //           duration: kThemeAnimationDuration,
+  //           left: 0.0,
+  //           right: 0.0,
+  //           bottom: isDisplayingDetail ? 0.0 : -20.0,
+  //           height: 20.0,
+  //           child: Text(
+  //             asset.title,
+  //             style: const TextStyle(
+  //               height: 1.0,
+  //               fontSize: 16.0,
+  //             ),
+  //             maxLines: 1,
+  //             overflow: TextOverflow.ellipsis,
+  //             textAlign: TextAlign.center,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _imageAssetWidget(AssetEntity asset) {
     return Image(
@@ -204,7 +207,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
       children: <Widget>[
         Positioned.fill(child: _imageAssetWidget(asset)),
         ColoredBox(
-          color: context.themeData.dividerColor.withOpacity(0.3),
+          color: Theme.of(context).accentColor,
           child: Center(
             child: Icon(
               Icons.video_library,
@@ -259,11 +262,11 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4.0),
-          color: currentTheme.canvasColor.withOpacity(0.5),
+          color: Theme.of(context).accentColor,
         ),
         child: Icon(
           Icons.close,
-          color: currentTheme.iconTheme.color,
+          color: Theme.of(context).primaryColor,
           size: 18.0,
         ),
       ),
@@ -273,7 +276,11 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
   Widget get selectedAssetsWidget => AnimatedContainer(
         duration: kThemeChangeDuration,
         curve: Curves.easeInOut,
-        height: assets.isNotEmpty ? isDisplayingDetail ? 250.0 : 80.0 : 40.0,
+        height: assets.isNotEmpty
+            ? isDisplayingDetail
+                ? 250.0
+                : 80.0
+            : 40.0,
         child: Column(
           children: <Widget>[
             selectedAssetsListView,

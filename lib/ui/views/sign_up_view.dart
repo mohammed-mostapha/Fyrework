@@ -26,6 +26,7 @@ import '../shared/constants.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:geocoding/geocoding.dart';
 
 // enum AuthFormType { signIn, signUp, reset, phone }
 enum AuthFormType { signIn, signUp, reset }
@@ -159,7 +160,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
   Future<List<String>> fetchSignInMethodsForEmail(String email) async {
     return List.from(
-        await FirebaseAuth.instance.fetchSignInMethodsForEmail(email: email));
+        await FirebaseAuth.instance.fetchSignInMethodsForEmail(email));
   }
 
   Future uploadMyAvatar(
@@ -393,10 +394,10 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   }
 
   getUserLocation() async {
-    Position position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    List<Placemark> placemarks = await Geolocator()
-        .placemarkFromCoordinates(position.latitude, position.longitude);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
     Placemark placemark = placemarks[0];
     // String completeAddress =
     //     '${placemark.subThoroughfare} ${placemark.thoroughfare}, ${placemark.subLocality} ${placemark.locality}, ${placemark.subAdministrativeArea}, ${placemark.administrativeArea} ${placemark.postalCode}, ${placemark.country}';

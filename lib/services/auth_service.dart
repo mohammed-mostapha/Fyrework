@@ -14,19 +14,19 @@ class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  Stream<String> get onAuthStateChanged => _firebaseAuth.onAuthStateChanged.map(
-        (FirebaseUser user) => user?.uid,
+  Stream<String> get authStateChanges => _firebaseAuth.authStateChanges().map(
+        (User user) => user?.uid,
       );
 
   // GET UID
 
   Future<String> getCurrentUID() async {
-    return (await _firebaseAuth.currentUser()).uid;
+    return (_firebaseAuth.currentUser).uid;
   }
 
   // GET CURRENT USER
   Future getCurrentUser() async {
-    return await _firebaseAuth.currentUser();
+    return _firebaseAuth.currentUser;
   }
 
   // Email & Password Sign Up
@@ -47,22 +47,16 @@ class AuthService {
     } catch (e) {
       print('coming from creatingUser function: $e');
     }
-
-    // // Update the displayName of the user in authData
-    // await updateUserName(name, authResult.user);
-    // return authResult.user.uid;
   }
 
-  Future updateUserName(String name, FirebaseUser currentUser) async {
-    var userUpdateInfo = UserUpdateInfo();
-    userUpdateInfo.displayName = name;
-    await currentUser.updateProfile(userUpdateInfo);
+  Future updateUserName(String name, User currentUser) async {
+    await FirebaseAuth.instance.currentUser.updateProfile(displayName: name);
     await currentUser.reload();
-    return currentUser.uid;
+    // return currentUser.uid;
   }
 
 //  Email & Password Sign In
-  Future<AuthResult> signInWithEmailAndPassword(
+  Future<UserCredential> signInWithEmailAndPassword(
       String email, String password) async {
     var signInAttempt = await _firebaseAuth.signInWithEmailAndPassword(
       email: email,
@@ -86,11 +80,11 @@ class AuthService {
 
   // Converting an anonymous user to user with gmail
   Future convertWithGoogle() async {
-    final currentUser = await _firebaseAuth.currentUser();
+    final currentUser = _firebaseAuth.currentUser;
     final GoogleSignInAccount googleAccount = await _googleSignIn.signIn();
     final GoogleSignInAuthentication _googleAuth =
         await googleAccount.authentication;
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
+    final AuthCredential credential = GoogleAuthProvider.credential(
       idToken: _googleAuth.idToken,
       accessToken: _googleAuth.accessToken,
     );
@@ -103,7 +97,7 @@ class AuthService {
     final GoogleSignInAccount googleAccount = await _googleSignIn.signIn();
     final GoogleSignInAuthentication _googleAuth =
         await googleAccount.authentication;
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
+    final AuthCredential credential = GoogleAuthProvider.credential(
       idToken: _googleAuth.idToken,
       accessToken: _googleAuth.accessToken,
     );

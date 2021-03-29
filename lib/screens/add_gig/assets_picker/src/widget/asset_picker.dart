@@ -16,6 +16,7 @@ import '../constants/constants.dart';
 import 'builder/fade_image_builder.dart';
 import 'builder/slide_page_transition_builder.dart';
 import 'fixed_appbar.dart';
+import 'package:Fyrework/screens/add_gig/screens.dart';
 
 class AssetPicker extends StatelessWidget {
   AssetPicker({
@@ -126,7 +127,7 @@ class AssetPicker extends StatelessWidget {
         return null;
       }
     } catch (e) {
-      realDebugPrint('Error when calling assets picker: $e');
+      print('Error when calling assets picker: $e');
       return null;
     }
   }
@@ -138,7 +139,7 @@ class AssetPicker extends StatelessWidget {
       PhotoManager.addChangeCallback(callback);
       PhotoManager.startChangeNotify();
     } catch (e) {
-      realDebugPrint('Error when registering assets callback: $e');
+      print('Error when registering assets callback: $e');
     }
   }
 
@@ -149,7 +150,7 @@ class AssetPicker extends StatelessWidget {
       PhotoManager.removeChangeCallback(callback);
       PhotoManager.stopChangeNotify();
     } catch (e) {
-      realDebugPrint('Error when unregistering assets callback: $e');
+      print('Error when unregistering assets callback: $e');
     }
   }
 
@@ -417,7 +418,9 @@ class AssetPicker extends StatelessWidget {
           duration: switchingPathDuration,
           curve: switchingPathCurve,
           top: isAppleOS
-              ? !isSwitchingPath ? -maxHeight : appBarHeight
+              ? !isSwitchingPath
+                  ? -maxHeight
+                  : appBarHeight
               : -(!isSwitchingPath ? maxHeight : 1.0),
           child: AnimatedOpacity(
             duration: switchingPathDuration,
@@ -468,9 +471,12 @@ class AssetPicker extends StatelessWidget {
             if (isAssetsEmpty) {
               return Text(Constants.textDelegate.emptyPlaceHolder);
             } else {
-              return PlatformProgressIndicator(
-                color: theme.iconTheme.color,
-                size: Screens.width / gridCount / 3,
+              // return PlatformProgressIndicator(
+              //   color: theme.iconTheme.color,
+              //   size: Screens.width / gridCount / 3,
+              // );
+              return Center(
+                child: CircularProgressIndicator(),
               );
             }
           },
@@ -487,9 +493,12 @@ class AssetPicker extends StatelessWidget {
             if (isAssetsEmpty) {
               return Text(Constants.textDelegate.emptyPlaceHolder);
             } else {
-              return PlatformProgressIndicator(
-                color: theme.iconTheme.color,
-                size: Screens.width / gridCount / 3,
+              // return PlatformProgressIndicator(
+              //   color: theme.iconTheme.color,
+              //   size: Screens.width / gridCount / 3,
+              // );
+              return Center(
+                child: CircularProgressIndicator(),
               );
             }
           },

@@ -11,21 +11,21 @@ import 'database.dart';
 
 class FirestoreService {
   final CollectionReference _usersCollectionReference =
-      Firestore.instance.collection('users');
+      FirebaseFirestore.instance.collection('users');
   final CollectionReference _gigsCollectionReference =
-      Firestore.instance.collection('gigs');
+      FirebaseFirestore.instance.collection('gigs');
   final CollectionReference _commentsCollectionReference =
-      Firestore.instance.collection('comments');
+      FirebaseFirestore.instance.collection('comments');
   final CollectionReference _popularHashtagsCollectionReference =
-      Firestore.instance.collection('popularHashtags');
+      FirebaseFirestore.instance.collection('popularHashtags');
 
   final StreamController<List<Gig>> _gigsController =
       StreamController<List<Gig>>.broadcast();
 
   Future getCurrentUserData(String uid) async {
     try {
-      var userData = await _usersCollectionReference.document(uid).get();
-      MyUser.fromData(userData.data);
+      var userData = await _usersCollectionReference.doc(uid).get();
+      MyUser.fromData(userData.data());
       print('see this: loaded userData from cloud to local stoge');
     } catch (e) {
       if (e is PlatformException) {
@@ -43,26 +43,26 @@ class FirestoreService {
     try {
       // await _gigCollectionReference.add(gig.toMap());
       await _gigsCollectionReference.add(gig.toMap()).then((gig) {
-        gigId = gig.documentID;
-        DocumentReference gigRef = _gigsCollectionReference.document(gigId);
-        gigRef.updateData({'gigId': gigRef.documentID});
+        gigId = gig.id;
+        DocumentReference gigRef = _gigsCollectionReference.doc(gigId);
+        gigRef.update({'gigId': gigRef.id});
       });
       await DatabaseService(uid: userId)
           .updateOngoingGigsByGigId(userId, gigId);
 
       // only add gigHashtags that dont already exist in popularHashtags cloud firestore collection
       QuerySnapshot popularHashtagsDocuments =
-          await _popularHashtagsCollectionReference.getDocuments();
+          await _popularHashtagsCollectionReference.get();
       List<String> popularHashtagsValues = List();
-      popularHashtagsDocuments.documents.forEach((document) {
-        popularHashtagsValues.add("${document.data['hashtag']}");
+      popularHashtagsDocuments.docs.forEach((document) {
+        popularHashtagsValues.add("${document.data()['hashtag']}");
       });
       print('popularHashtagsValues: $popularHashtagsValues');
       for (int count = 0; count < gigHashtags.length; count++) {
         if (!popularHashtagsValues.contains(gigHashtags[count])) {
           _popularHashtagsCollectionReference
-              .document()
-              .setData({'hashtag': gigHashtags[count]});
+              .doc()
+              .set({'hashtag': gigHashtags[count]});
         }
       }
     } catch (e) {
@@ -79,7 +79,7 @@ class FirestoreService {
       Map<String, dynamic> commentData = comment.toMap();
       DocumentReference commentRef =
           await _commentsCollectionReference.add(commentData).then((comment) {
-        comment.updateData({'commentId': comment.documentID});
+        comment.update({'commentId': comment.id});
       });
       // .document(gigIdHoldingComment +
       //     DateTime.now().millisecondsSinceEpoch.toString())
@@ -99,9 +99,9 @@ class FirestoreService {
   Stream listenToAllGigsRealTime() {
     // Register the handler for when the gigs data changes
     _gigsCollectionReference.snapshots().listen((gigsSnapshot) {
-      if (gigsSnapshot.documents.isNotEmpty) {
-        var gigs = gigsSnapshot.documents
-            .map((snapshot) => Gig.fromMap(snapshot.data, snapshot.documentID))
+      if (gigsSnapshot.docs.isNotEmpty) {
+        var gigs = gigsSnapshot.docs
+            .map((snapshot) => Gig.fromMap(snapshot.data(), snapshot.id))
             .where((mappedItem) => mappedItem.gigHashtags != null)
             .toList();
         // Add the posts onto the controller
@@ -132,18 +132,16 @@ class FirestoreService {
   // }
 
   Future deleteGig(String commentId) async {
-    await _gigsCollectionReference.document(commentId).delete();
+    await _gigsCollectionReference.doc(commentId).delete();
   }
 
   Future deleteComment(String commentId) async {
-    await _commentsCollectionReference.document(commentId).delete();
+    await _commentsCollectionReference.doc(commentId).delete();
   }
 
   Future updateGig(Gig gig) async {
     try {
-      await _gigsCollectionReference
-          .document(gig.gigId)
-          .updateData(gig.toMap());
+      await _gigsCollectionReference.doc(gig.gigId).update(gig.toMap());
     } catch (e) {
       // TODO: Find or create a way to repeat error handling without so much repeated code
       if (e is PlatformException) {
@@ -157,8 +155,8 @@ class FirestoreService {
   Future updateGigAddRemoveLike(String gigId, bool likedOrNot) async {
     try {
       await _gigsCollectionReference
-          .document(gigId)
-          .updateData({'gigLikes': FieldValue.increment(likedOrNot ? 1 : -1)});
+          .doc(gigId)
+          .update({'gigLikes': FieldValue.increment(likedOrNot ? 1 : -1)});
     } catch (e) {
       // TODO: Find or create a way to repeat error handling without so much repeated code
       if (e is PlatformException) {
@@ -173,29 +171,29 @@ class FirestoreService {
       String gigId, String appointedUserId, String commentId) async {
     try {
       var appointedUser =
-          await _usersCollectionReference.document(appointedUserId).get();
-      var appointedUsername = appointedUser.data['username'];
+          await _usersCollectionReference.doc(appointedUserId).get();
+      var appointedUsername = appointedUser.data()['username'];
 
       await DatabaseService(uid: appointedUserId)
           .updateOngoingGigsByGigId(appointedUserId, gigId);
 
-      await _gigsCollectionReference.document(gigId).updateData({
+      await _gigsCollectionReference.doc(gigId).update({
         'appointed': true,
         'appointedUserId': appointedUserId,
         'appointedUsername': appointedUsername
       });
 
-      await _commentsCollectionReference.document(commentId).updateData({
+      await _commentsCollectionReference.doc(commentId).update({
         'approved': true,
         'appointedUserId': appointedUserId,
         'appointedUsername': appointedUsername,
       }).then((value) async {
         await _commentsCollectionReference
             .where('approved', isEqualTo: false)
-            .getDocuments()
+            .get()
             .then((querySnapshots) {
-          querySnapshots.documents.forEach((document) {
-            document.reference.updateData({'rejected': true});
+          querySnapshots.docs.forEach((document) {
+            document.reference.update({'rejected': true});
           });
         });
       });
@@ -208,7 +206,7 @@ class FirestoreService {
 
   Future rejectProposal(String commentId) async {
     try {
-      await _commentsCollectionReference.document(commentId).updateData({
+      await _commentsCollectionReference.doc(commentId).update({
         'rejected': true,
       });
     } catch (e) {
@@ -238,8 +236,8 @@ class FirestoreService {
   Future commentPrivacyToggle(String commentId, bool value) async {
     try {
       await _commentsCollectionReference
-          .document(commentId)
-          .updateData(({'privateComment': value}));
+          .doc(commentId)
+          .update(({'privateComment': value}));
 
       // updateData({'privateComment': value});
     } catch (e) {
@@ -255,8 +253,8 @@ class FirestoreService {
   Future updateComment(Comment comment) async {
     try {
       await _commentsCollectionReference
-          .document(comment.commentId)
-          .updateData(comment.toMap());
+          .doc(comment.commentId)
+          .update(comment.toMap());
     } catch (e) {
       // TODO: Find or create a way to repeat error handling without so much repeated code
       if (e is PlatformException) {

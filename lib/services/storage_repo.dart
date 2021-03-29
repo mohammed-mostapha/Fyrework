@@ -8,9 +8,9 @@ import 'package:Fyrework/locator.dart';
 
 class StorageRepo {
   FirebaseStorage usersProfilePicsStorage =
-      FirebaseStorage(storageBucket: "gs://fyrework-63dd9.appspot.com");
+      FirebaseStorage.instanceFor(bucket: "gs://fyrework-63dd9.appspot.com");
   FirebaseStorage gigMediaFilesStorage =
-      FirebaseStorage(storageBucket: "gs://fyrework-63dd9.appspot.com");
+      FirebaseStorage.instanceFor(bucket: "gs://fyrework-63dd9.appspot.com");
 
   // AuthService _authService = locator.get<AuthService>();
 
@@ -25,7 +25,7 @@ class StorageRepo {
     var uploadProfilePicture =
         usersProfilePicsStorageRef.putFile(profilePictureToUpload);
 
-    var completedTask = await uploadProfilePicture.onComplete;
+    var completedTask = await uploadProfilePicture;
 
     String profilePictureDownloadUrl = await completedTask.ref.getDownloadURL();
 
@@ -41,8 +41,7 @@ class StorageRepo {
   //deleting user profile picture
   Future<dynamic> deleteProfilePicture(String url) async {
     print('print url: $url');
-    StorageReference profilePictureToDelete =
-        await usersProfilePicsStorage.getReferenceFromUrl(url);
+    Reference profilePictureToDelete = await usersProfilePicsStorage.ref(url);
     await profilePictureToDelete.delete();
   }
 
@@ -56,18 +55,18 @@ class StorageRepo {
         title + DateTime.now().millisecondsSinceEpoch.toString();
 
     // GET the reference to the file we want to create
-    final StorageReference gigMediaFilesStorageRef = FirebaseStorage.instance
+    final Reference gigMediaFilesStorageRef = FirebaseStorage.instance
         .ref()
         .child("gigs/gigMediaFiles/$imageFileName");
 
-    StorageUploadTask uploadTask =
-        gigMediaFilesStorageRef.putFile(mediaFileToUpload);
-    StorageTaskSnapshot storageSnapshot = await uploadTask.onComplete;
+    UploadTask uploadTask = gigMediaFilesStorageRef.putFile(mediaFileToUpload);
+    TaskSnapshot storageSnapshot = await uploadTask;
     print('one file has been uploaded');
     //making a downloadable URL of the uploaded image
     var downloadUrl = await storageSnapshot.ref.getDownloadURL();
 
-    if (uploadTask.isComplete) {
+    // if (uploadTask.isComplete) {
+    if (downloadUrl != null) {
       return downloadUrl;
       // return CloudStorageResult(
       //   imageUrl: url,
@@ -79,7 +78,7 @@ class StorageRepo {
   }
 
   Future deleteImage(String imageFileName) async {
-    final StorageReference firebaseStorageRef =
+    final Reference firebaseStorageRef =
         FirebaseStorage.instance.ref().child(imageFileName);
 
     try {

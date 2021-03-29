@@ -36,8 +36,8 @@ class _AllGigsViewState extends State<AllGigsView> {
 
   Future shouldScroll() async {
     QuerySnapshot gigsDocuments =
-        await Firestore.instance.collection('gigs').getDocuments();
-    List<DocumentSnapshot> listOfGigsToCount = gigsDocuments.documents;
+        await FirebaseFirestore.instance.collection('gigs').get();
+    List<DocumentSnapshot> listOfGigsToCount = gigsDocuments.docs;
     gigsCount = listOfGigsToCount.length;
 
     if (gigsCount > 0) {
@@ -80,15 +80,14 @@ class _AllGigsViewState extends State<AllGigsView> {
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return Center(child: Text(''));
-                  } else if (snapshot.data.documents.length > 0) {
+                  } else if (snapshot.data.docs.length > 0) {
                     return ScrollablePositionedList.builder(
                         itemScrollController: gigScrollController,
                         itemPositionsListener: gigPositionsListener,
-                        itemCount: snapshot.data.documents.length,
+                        itemCount: snapshot.data.docs.length,
                         itemBuilder: (context, index) {
-                          DocumentSnapshot data =
-                              snapshot.data.documents[index];
-                          Map getDocData = data.data;
+                          DocumentSnapshot data = snapshot.data.docs[index];
+                          Map getDocData = data.data();
 
                           return getDocData['hidden'] != true
                               ? GigItem(

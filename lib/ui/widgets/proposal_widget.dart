@@ -48,10 +48,10 @@ class _ProposalWidgetState extends State<ProposalWidget> {
   );
 
   addToGigAppliersOrHirersList() {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection('gigs')
-        .document(widget.passedGigId)
-        .updateData({
+        .doc(widget.passedGigId)
+        .update({
       'appliersOrHirersByUserId': FieldValue.arrayUnion([MyUser.uid])
     });
   }
@@ -338,9 +338,9 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                               Padding(
                                 padding: const EdgeInsets.only(right: 10),
                                 child: StreamBuilder<DocumentSnapshot>(
-                                  stream: Firestore.instance
+                                  stream: FirebaseFirestore.instance
                                       .collection('gigs')
-                                      .document(widget.passedGigId)
+                                      .doc(widget.passedGigId)
                                       .snapshots(),
                                   builder: (BuildContext context,
                                       AsyncSnapshot<DocumentSnapshot>

@@ -31,6 +31,7 @@ import 'package:Fyrework/services/popularHashtags.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:geocoding/geocoding.dart';
 
 class MyProfileView extends StatefulWidget {
   @override
@@ -75,10 +76,10 @@ class _MyProfileViewState extends State<MyProfileView> {
   String serverSideWarning;
 
   getUserLocation() async {
-    Position position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    List<Placemark> placemarks = await Geolocator()
-        .placemarkFromCoordinates(position.latitude, position.longitude);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
     Placemark placemark = placemarks[0];
     // String completeAddress =
     //     '${placemark.subThoroughfare} ${placemark.thoroughfare}, ${placemark.subLocality} ${placemark.locality}, ${placemark.subAdministrativeArea}, ${placemark.administrativeArea} ${placemark.postalCode}, ${placemark.country}';
@@ -203,7 +204,7 @@ class _MyProfileViewState extends State<MyProfileView> {
             MyUser.phoneNumber = phone;
           });
         },
-        verificationFailed: (AuthException exception) {
+        verificationFailed: (FirebaseAuthException exception) {
           // return "error";
         },
         codeSent: (String verificationId, [int forceResendingToken]) {
@@ -229,11 +230,12 @@ class _MyProfileViewState extends State<MyProfileView> {
           print(value);
         },
         ignoreBlank: false,
-        autoValidate: false,
+        autoValidateMode: AutovalidateMode.always,
+        // autoValidate: false,
         selectorTextStyle: TextStyle(color: Colors.black),
         textFieldController: _myNewPhoneNumberController,
-        // inputBorder: OutlineInputBorder(),
-        selectorType: PhoneInputSelectorType.DIALOG,
+        keyboardType: TextInputType.number,
+        // selectorType: PhoneInputSelectorType.DIALOG,
       ),
     );
   }
@@ -1309,12 +1311,12 @@ class _MyProfileViewState extends State<MyProfileView> {
         // print('snapshot.data: ${snapshot.data.documents.length}');
         return !snapshot.hasData
             ? Text('')
-            : snapshot.data.documents.length > 0
+            : snapshot.data.docs.length > 0
                 ? ListView.builder(
-                    itemCount: snapshot.data.documents.length,
+                    itemCount: snapshot.data.docs.length,
                     itemBuilder: (context, index) {
-                      DocumentSnapshot data = snapshot.data.documents[index];
-                      Map getDocData = data.data;
+                      DocumentSnapshot data = snapshot.data.docs[index];
+                      Map getDocData = data.data();
                       return GestureDetector(
                         // onTap: () => model.editGig(index),
                         child: UserRelatedGigItem(

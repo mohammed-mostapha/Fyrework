@@ -63,7 +63,7 @@ class _VideoPageBuilderState extends State<VideoPageBuilder> {
       await _controller.initialize();
       _controller.addListener(videoPlayerListener);
     } catch (e) {
-      realDebugPrint('Error when initialize video controller: $e');
+      print('Error when initialize video controller: $e');
       hasErrorWhenInitializing = true;
     } finally {
       if (mounted) {

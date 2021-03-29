@@ -9,15 +9,15 @@ class DatabaseService {
   DatabaseService({this.uid});
   //collection reference
   final CollectionReference _usersCollection =
-      Firestore.instance.collection('users');
+      FirebaseFirestore.instance.collection('users');
   final CollectionReference _gigsCollection =
-      Firestore.instance.collection('gigs');
+      FirebaseFirestore.instance.collection('gigs');
   final CollectionReference _commentsCollection =
-      Firestore.instance.collection('comments');
+      FirebaseFirestore.instance.collection('comments');
   final CollectionReference _popularHashtags =
-      Firestore.instance.collection('popularHashtags');
+      FirebaseFirestore.instance.collection('popularHashtags');
   final CollectionReference _takenHandles =
-      Firestore.instance.collection('takenHandles');
+      FirebaseFirestore.instance.collection('takenHandles');
 
   Future setUserData({
     @required String id,
@@ -31,7 +31,7 @@ class DatabaseService {
     @required dynamic ongoingGigsByGigId,
     @required int lengthOfOngoingGigsByGigId,
   }) async {
-    return await _usersCollection.document(id).setData({
+    return await _usersCollection.doc(id).set({
       'id': uid,
       'favoriteHashtags': FieldValue.arrayUnion(myFavoriteHashtags),
       'name': name,
@@ -49,24 +49,24 @@ class DatabaseService {
   // user Data from snapshots
   OtherUser _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return OtherUser(
-      uid: snapshot.data['Id'],
-      favoriteHashtags: snapshot.data['favoriteHashtags'],
-      name: snapshot.data['name'],
-      username: snapshot.data['username'],
-      email: snapshot.data['email'],
-      userAvatarUrl: snapshot.data['userAvatarUrl'],
-      userLocation: snapshot.data['userLocation'],
-      isMinor: snapshot.data['isMinor'],
-      location: snapshot.data['location'],
-      phoneNumber: snapshot.data['phoneNumber'],
-      ongoingGigsByGigId: snapshot.data['ongoingGigsByGigId'],
-      lengthOfOngoingGigsByGigId: snapshot.data['lengthOfOngoingGigsByGigId'],
+      uid: snapshot.data()['Id'],
+      favoriteHashtags: snapshot.data()['favoriteHashtags'],
+      name: snapshot.data()['name'],
+      username: snapshot.data()['username'],
+      email: snapshot.data()['email'],
+      userAvatarUrl: snapshot.data()['userAvatarUrl'],
+      userLocation: snapshot.data()['userLocation'],
+      isMinor: snapshot.data()['isMinor'],
+      location: snapshot.data()['location'],
+      phoneNumber: snapshot.data()['phoneNumber'],
+      ongoingGigsByGigId: snapshot.data()['ongoingGigsByGigId'],
+      lengthOfOngoingGigsByGigId: snapshot.data()['lengthOfOngoingGigsByGigId'],
     );
   }
 
   // get user doc stream
   Stream<OtherUser> fetchUserData(String id) {
-    return _usersCollection.document(id).snapshots().map(_userDataFromSnapshot);
+    return _usersCollection.doc(id).snapshots().map(_userDataFromSnapshot);
   }
 
   // fetch users in search by query(username)
@@ -104,7 +104,7 @@ class DatabaseService {
   //fetch an individual gig
   Stream<DocumentSnapshot> listenToAnIndividualGig(gigId) {
     // return _gigsCollection.where('gigId', isEqualTo: gigId).snapshots();
-    return _gigsCollection.document(gigId).snapshots();
+    return _gigsCollection.doc(gigId).snapshots();
   }
 
   Stream<QuerySnapshot> userOngoingGigsByGigOwnerId(String userId) {
@@ -112,9 +112,7 @@ class DatabaseService {
   }
 
   Future<QuerySnapshot> myOngoingGigsByGigOwnerId(String userId) {
-    return _gigsCollection
-        .where('gigOwnerId', isEqualTo: userId)
-        .getDocuments();
+    return _gigsCollection.where('gigOwnerId', isEqualTo: userId).get();
   }
 
   Stream<QuerySnapshot> userOngoingGigsByAppointedUserId(String userId) {
@@ -141,7 +139,7 @@ class DatabaseService {
     String updatedProfileAvatar,
   ) async {
     try {
-      return await _usersCollection.document(uid).updateData(
+      return await _usersCollection.doc(uid).update(
         <String, dynamic>{
           'userAvatarUrl': updatedProfileAvatar,
         },
@@ -166,7 +164,7 @@ class DatabaseService {
     String editedGigPost,
   }) async {
     try {
-      return await _gigsCollection.document(gigId).updateData(<String, dynamic>{
+      return await _gigsCollection.doc(gigId).update(<String, dynamic>{
         'gigLocation': editedGigLocation,
         'gigDeadlineInUnixMilliseconds': editedGigDeadline != null
             ? editedGigDeadline.millisecondsSinceEpoch
@@ -189,7 +187,7 @@ class DatabaseService {
     @required String gigId,
   }) async {
     try {
-      return await _gigsCollection.document(gigId).updateData(<String, dynamic>{
+      return await _gigsCollection.doc(gigId).update(<String, dynamic>{
         'hidden': true,
       });
     } catch (e) {
@@ -210,7 +208,7 @@ class DatabaseService {
     String myNewPhoneNumber,
   ) async {
     try {
-      return await _usersCollection.document(uid).updateData(<String, dynamic>{
+      return await _usersCollection.doc(uid).update(<String, dynamic>{
         'hashtag': myNewHashtag,
         'username': myNewUsername,
         'name': myNewName,
@@ -227,7 +225,7 @@ class DatabaseService {
   }
 
   Future updateOngoingGigsByGigId(String uid, String gigId) async {
-    return await _usersCollection.document(uid).updateData({
+    return await _usersCollection.doc(uid).update({
       "ongoingGigsByGigId": FieldValue.arrayUnion([gigId])
     });
   }
@@ -242,9 +240,9 @@ class DatabaseService {
   //fetch popular hashtags
   Future fetchPopularHashtags(String query) async {
     List filteredHashtags = List();
-    QuerySnapshot querySnapshot = await _popularHashtags.getDocuments();
+    QuerySnapshot querySnapshot = await _popularHashtags.get();
     List fetchedHashtags =
-        querySnapshot.documents.map((doc) => doc.data['hashtag']).toList();
+        querySnapshot.docs.map((doc) => doc.data()['hashtag']).toList();
     fetchedHashtags.forEach((element) {
       if (element.contains(query)) {
         filteredHashtags.add(element);
@@ -261,9 +259,9 @@ class DatabaseService {
   //fetch taken Handles
   Future fetchTakenHandles(String query) async {
     List filteredTakenHandles = List();
-    QuerySnapshot querySnapshot = await _takenHandles.getDocuments();
+    QuerySnapshot querySnapshot = await _takenHandles.get();
     List takenHandles =
-        querySnapshot.documents.map((doc) => doc.data['takenHandle']).toList();
+        querySnapshot.docs.map((doc) => doc.data()['takenHandle']).toList();
     takenHandles.forEach((element) {
       if (element.contains(query)) {
         filteredTakenHandles.add(element);
@@ -279,7 +277,7 @@ class DatabaseService {
     @required userAvatarUrl,
     @required gigActionOwner,
   }) async {
-    return await _gigsCollection.document(gigId).collection('gigActions').add({
+    return await _gigsCollection.doc(gigId).collection('gigActions').add({
       "gigAction": action,
       "userAvatarUrl": userAvatarUrl,
       "createdAt": FieldValue.serverTimestamp(),
@@ -294,7 +292,7 @@ class DatabaseService {
   // show gig actions
   Stream<QuerySnapshot> showGigWorkstreamActions({@required String gigId}) {
     return _gigsCollection
-        .document(gigId)
+        .doc(gigId)
         .collection('gigActions')
         .orderBy('createdAt', descending: false)
         .snapshots();
