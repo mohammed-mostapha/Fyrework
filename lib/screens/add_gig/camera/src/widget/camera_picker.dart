@@ -14,7 +14,7 @@ import '../widget/circular_progress_bar.dart';
 
 import 'builder/slide_page_transition_builder.dart';
 import 'camera_picker_viewer.dart';
-import 'package:/Fyrework/screens/add_gig/screens.dart';
+import 'package:Fyrework/screens/add_gig/screens.dart';
 
 /// Create a camera picker integrate with [CameraDescription].
 /// 通过 [CameraDescription] 整合的拍照选择

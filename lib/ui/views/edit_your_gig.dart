@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:core';
 import 'package:Fyrework/screens/home/home.dart';
-import 'package:Fyrework/screens/trends/AllGigs_view.dart';
 import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/services/places_autocomplete.dart';
 import 'package:Fyrework/services/popularHashtags.dart';
@@ -11,7 +10,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:Fyrework/screens/add_gig/assets_picker/src/constants/constants.dart';
 import 'package:Fyrework/ui/widgets/gig_item_media_previewer.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/services/connectivity_status.dart';
 import 'package:Fyrework/services/connectivity_service.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:Fyrework/app_localizations.dart';
 import 'package:Fyrework/screens/authenticate/app_start.dart';
@@ -23,6 +24,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
   var initializaitonSettingsAndroid =
       AndroidInitializationSettings('ic_notification');
@@ -48,7 +50,12 @@ void main() async {
   configLoading();
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -116,16 +123,16 @@ class _HomeControllerState extends State<HomeController> {
       child: NetworkSensor(
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          routes: <String, WidgetBuilder>{
-            '/home': (BuildContext context) => HomeController(),
-            '/signUp': (BuildContext context) => SignUpView(
-                  authFormType: AuthFormType.signUp,
-                ),
-            '/signIn': (BuildContext context) => SignUpView(
-                  authFormType: AuthFormType.signIn,
-                ),
-            '/addGig': (BuildContext context) => Home(passedSelectedIndex: 1),
-          },
+          // routes: <String, WidgetBuilder>{
+          //   '/home': (BuildContext context) => HomeController(),
+          //   '/signUp': (BuildContext context) => SignUpView(
+          //         authFormType: AuthFormType.signUp,
+          //       ),
+          //   '/signIn': (BuildContext context) => SignUpView(
+          //         authFormType: AuthFormType.signIn,
+          //       ),
+          //   '/addGig': (BuildContext context) => Home(passedSelectedIndex: 1),
+          // },
 
           theme: fyreworkTheme(),
           builder: EasyLoading.init(),

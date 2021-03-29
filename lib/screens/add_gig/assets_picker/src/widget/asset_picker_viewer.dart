@@ -20,7 +20,7 @@ import 'builder/fade_image_builder.dart';
 import 'builder/image_page_builder.dart';
 import 'builder/video_page_builder.dart';
 import 'rounded_check_box.dart';
-import 'package:/Fyrework/screens/add_gig/screens.dart';
+import 'package:Fyrework/screens/add_gig/screens.dart';
 
 class AssetPickerViewer extends StatefulWidget {
   const AssetPickerViewer({

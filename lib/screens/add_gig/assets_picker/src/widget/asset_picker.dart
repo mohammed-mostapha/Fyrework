@@ -16,7 +16,7 @@ import '../constants/constants.dart';
 import 'builder/fade_image_builder.dart';
 import 'builder/slide_page_transition_builder.dart';
 import 'fixed_appbar.dart';
-import 'package:/Fyrework/screens/add_gig/screens.dart';
+import 'package:Fyrework/screens/add_gig/screens.dart';
 
 class AssetPicker extends StatelessWidget {
   AssetPicker({

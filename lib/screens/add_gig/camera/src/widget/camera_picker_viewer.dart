@@ -8,7 +8,7 @@ import 'package:video_player/video_player.dart';
 import '../constants/constants.dart';
 
 import 'camera_picker.dart';
-import 'package:/Fyrework/screens/add_gig/screens.dart';
+import 'package:Fyrework/screens/add_gig/screens.dart';
 
 /// Two types for the viewer: image and video.
 /// 两种预览类型：图片和视频

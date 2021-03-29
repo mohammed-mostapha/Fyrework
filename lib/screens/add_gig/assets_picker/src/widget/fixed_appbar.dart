@@ -6,7 +6,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:/Fyrework/screens/add_gig/screens.dart';
+import 'package:Fyrework/screens/add_gig/screens.dart';
 
 /// A custom app bar.
 /// 自定义的顶栏
