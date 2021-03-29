@@ -6,9 +6,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_common_exports/flutter_common_exports.dart';
-
-import '../constants/constants.dart';
+import 'package:/Fyrework/screens/add_gig/screens.dart';
 
 /// A custom app bar.
 /// 自定义的顶栏
@@ -69,7 +67,8 @@ class FixedAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color color = (backgroundColor ?? Theme.of(context).primaryColor)
+    final Color color = Theme.of(context)
+        .primaryColor
         .withOpacity(blurRadius > 0.0 ? 0.90 : 1.0);
 
     Widget _title = title;
@@ -136,18 +135,18 @@ class FixedAppBar extends StatelessWidget {
     }
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: context.themeData.appBarTheme.brightness.isDark
-          ? SystemUiOverlayStyle.light
-          : SystemUiOverlayStyle.dark,
+      // value: context.themeData.appBarTheme.brightness.isDark
+      //     ? SystemUiOverlayStyle.light
+      //     : SystemUiOverlayStyle.dark,
+      value: SystemUiOverlayStyle.dark,
       child: Material(
-        type: color.isTransparent
-            ? MaterialType.transparency
-            : MaterialType.canvas,
-        color: (backgroundColor ??
-                context.themeData.appBarTheme.color ??
-                context.themeData.primaryColor)
+        // type: color.isTransparent
+        //     ? MaterialType.transparency
+        //     : MaterialType.canvas,
+        type: MaterialType.canvas,
+        color: (backgroundColor ?? Theme.of(context).primaryColor)
             .withOpacity(blurRadius > 0.0 ? 0.90 : 1.0),
-        elevation: elevation ?? context.themeData.appBarTheme.elevation ?? 4.0,
+        elevation: 4.0,
         child: child,
       ),
     );

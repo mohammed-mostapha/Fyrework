@@ -8,6 +8,7 @@ import 'package:video_player/video_player.dart';
 import '../constants/constants.dart';
 
 import 'camera_picker.dart';
+import 'package:/Fyrework/screens/add_gig/screens.dart';
 
 /// Two types for the viewer: image and video.
 /// 两种预览类型：图片和视频
@@ -86,7 +87,7 @@ class CameraPickerViewer extends StatefulWidget {
           await Navigator.of(context).push<AssetEntity>(pageRoute);
       return result;
     } catch (e) {
-      realDebugPrint('Error when calling camera picker viewer: $e');
+      print('Error when calling camera picker viewer: $e');
       return null;
     }
   }
@@ -150,7 +151,7 @@ class _CameraPickerViewerState extends State<CameraPickerViewer> {
       await videoController.initialize();
       videoController.addListener(videoPlayerListener);
     } catch (e) {
-      realDebugPrint('Error when initialize video controller: $e');
+      print('Error when initialize video controller: $e');
       hasErrorWhenInitializing = true;
     } finally {
       if (mounted) {
@@ -232,7 +233,7 @@ class _CameraPickerViewerState extends State<CameraPickerViewer> {
         Navigator.of(context).pop(entity);
       });
     } catch (e) {
-      realDebugPrint('Error when creating entity: $e');
+      print('Error when creating entity: $e');
     }
   }
 
@@ -240,7 +241,7 @@ class _CameraPickerViewerState extends State<CameraPickerViewer> {
   /// 预览区的返回按钮
   Widget get previewBackButton {
     return InkWell(
-      borderRadius: maxBorderRadius,
+      borderRadius: BorderRadius.circular(10),
       onTap: () {
         if (previewFile.existsSync()) {
           previewFile.delete();

@@ -20,6 +20,7 @@ import 'builder/fade_image_builder.dart';
 import 'builder/image_page_builder.dart';
 import 'builder/video_page_builder.dart';
 import 'rounded_check_box.dart';
+import 'package:/Fyrework/screens/add_gig/screens.dart';
 
 class AssetPickerViewer extends StatefulWidget {
   const AssetPickerViewer({
@@ -98,7 +99,7 @@ class AssetPickerViewer extends StatefulWidget {
           await Navigator.of(context).push<List<AssetEntity>>(pageRoute);
       return result;
     } catch (e) {
-      realDebugPrint('Error when calling assets picker viewer: $e');
+      print('Error when calling assets picker viewer: $e');
       return null;
     }
   }
@@ -456,9 +457,14 @@ class AssetPickerViewerState extends State<AssetPickerViewer>
   /// Preview item widget for audio.
   /// 音频的底部预览部件
   Widget _audioPreviewItem(AssetEntity asset) {
-    return ColoredBox(
-      color: context.themeData.dividerColor,
-      child: Center(child: Icon(Icons.audiotrack)),
+    // return ColoredBox(
+    // color: context.themeData.dividerColor,
+    // child: Center(child: Icon(Icons.audiotrack)),
+    // );
+    // }
+    return Container(
+      width: 0,
+      height: 0,
     );
   }
 
@@ -676,9 +682,10 @@ class AssetPickerViewerState extends State<AssetPickerViewer>
       child: Theme(
         data: widget.themeData,
         child: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: widget.themeData.brightness.isDark
-              ? SystemUiOverlayStyle.light
-              : SystemUiOverlayStyle.dark,
+          // value: widget.themeData.brightness.isDark
+          // ? SystemUiOverlayStyle.light
+          // : SystemUiOverlayStyle.dark,
+          value: SystemUiOverlayStyle.dark,
           child: Material(
             color: Colors.black,
             child: Stack(

@@ -434,7 +434,7 @@ class UploadTaskListTile extends StatelessWidget {
     return result;
   }
 
-  String bytesTransferred(StorageTaskSnapshot snapshot) {
+  String bytesTransferred(TaskSnapshot snapshot) {
     return '${snapshot.bytesTransferred} / ${snapshot.bytesTransferred}';
   }
 
@@ -447,7 +447,7 @@ class UploadTaskListTile extends StatelessWidget {
           Widget subtitle;
           if (asyncSnapshot.hasData) {
             final StorageTaskEvent event = asyncSnapshot.data;
-            final StorageTaskSnapshot snapshot = event.snapshot;
+            final TaskSnapshot snapshot = event.snapshot;
 
             subtitle =
                 Text('$uploadStatus: ${bytesTransferred(snapshot)} bytes sent');
