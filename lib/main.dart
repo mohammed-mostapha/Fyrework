@@ -114,6 +114,7 @@ class _HomeControllerState extends State<HomeController> {
       create: (context) =>
           ConnectivityService().connectionStatusController.stream,
       child: NetworkSensor(
+        opacity: 0.5,
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           routes: <String, WidgetBuilder>{
