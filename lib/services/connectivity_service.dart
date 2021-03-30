@@ -9,6 +9,7 @@ class ConnectivityService {
 
   ConnectivityService() {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      print('connection is: changed');
       // convert this result into our enum
       var connectionStatus = _getStatusFromResult(result);
 
