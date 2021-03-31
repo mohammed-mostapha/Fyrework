@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:Fyrework/models/myUser.dart';
+import 'package:Fyrework/services/connectivity_provider.dart';
 import 'package:Fyrework/services/connectivity_status.dart';
 import 'package:Fyrework/services/connectivity_service.dart';
+import 'package:Fyrework/ui/widgets/new_network_sensor.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:Fyrework/app_localizations.dart';
@@ -94,7 +96,7 @@ class _HomeControllerState extends State<HomeController> {
   @override
   void initState() {
     super.initState();
-    checkAuthenticity();
+    // checkAuthenticity();
   }
 
   Future checkAuthenticity() async {
@@ -117,57 +119,60 @@ class _HomeControllerState extends State<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<ConnectivityStatus>(
-      create: (context) =>
-          ConnectivityService().connectionStatusController.stream,
-      child: NetworkSensor(
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          routes: <String, WidgetBuilder>{
-            '/home': (BuildContext context) => HomeController(),
-            '/signUp': (BuildContext context) => SignUpView(
-                  authFormType: AuthFormType.signUp,
-                ),
-            '/signIn': (BuildContext context) => SignUpView(
-                  authFormType: AuthFormType.signIn,
-                ),
-            '/addGig': (BuildContext context) => Home(passedSelectedIndex: 1),
-          },
+    return ChangeNotifierProvider(
+      create: (context) => ConnectivityProvider(),
+      child: NewNetworkSensor(),
 
-          theme: fyreworkTheme(),
-          builder: EasyLoading.init(),
-          supportedLocales: [
-            Locale('en', 'US'),
-            Locale('fr', 'FR'),
-            Locale('de', 'DE'),
-            Locale('is', 'IS'),
-          ],
-          // these delegates make sure that the localiztion data for the proper language is loaded
-          localizationsDelegates: [
-            // A class which loads the translation from JSON files
-            AppLocalizations.delegate,
-            //Built-in localization of basic text for Material widgets
-            GlobalMaterialLocalizations.delegate,
-            // Built-in localization for text direction LTR/RTL
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          // Returns a locale which will be used by the app
-          localeResolutionCallback: (locale, supportedLocales) {
-            for (var supportedLocale in supportedLocales) {
-              if (supportedLocale.languageCode == locale?.languageCode ||
-                  supportedLocale.countryCode == locale?.countryCode) {
-                return supportedLocale;
-              }
-            }
-            // If the locale of the device is not supported, use the first one from the list (English, in this case).
-            return supportedLocales.first;
-          },
+      // child: NetworkSensor(
+      //   child: MaterialApp(
+      //     debugShowCheckedModeBanner: false,
+      //     routes: <String, WidgetBuilder>{
+      //       '/home': (BuildContext context) => HomeController(),
+      //       '/signUp': (BuildContext context) => SignUpView(
+      //             authFormType: AuthFormType.signUp,
+      //           ),
+      //       '/signIn': (BuildContext context) => SignUpView(
+      //             authFormType: AuthFormType.signIn,
+      //           ),
+      //       '/addGig': (BuildContext context) =>
+      //           Home(passedSelectedIndex: 1),
+      //     },
 
-          // home: isAuthenticated ? Home(passedSelectedIndex: 0) : StartPage(),
-          // home: (isAuthenticated && !MyUser().checkUserDataNullability())
-          home: isAuthenticated ? Home(passedSelectedIndex: 0) : StartPage(),
-        ),
-      ),
+      //     theme: fyreworkTheme(),
+      //     builder: EasyLoading.init(),
+      //     supportedLocales: [
+      //       Locale('en', 'US'),
+      //       Locale('fr', 'FR'),
+      //       Locale('de', 'DE'),
+      //       Locale('is', 'IS'),
+      //     ],
+      //     // these delegates make sure that the localiztion data for the proper language is loaded
+      //     localizationsDelegates: [
+      //       // A class which loads the translation from JSON files
+      //       AppLocalizations.delegate,
+      //       //Built-in localization of basic text for Material widgets
+      //       GlobalMaterialLocalizations.delegate,
+      //       // Built-in localization for text direction LTR/RTL
+      //       GlobalWidgetsLocalizations.delegate,
+      //     ],
+      //     // Returns a locale which will be used by the app
+      //     localeResolutionCallback: (locale, supportedLocales) {
+      //       for (var supportedLocale in supportedLocales) {
+      //         if (supportedLocale.languageCode == locale?.languageCode ||
+      //             supportedLocale.countryCode == locale?.countryCode) {
+      //           return supportedLocale;
+      //         }
+      //       }
+      //       // If the locale of the device is not supported, use the first one from the list (English, in this case).
+      //       return supportedLocales.first;
+      //     },
+
+      //     // home: isAuthenticated ? Home(passedSelectedIndex: 0) : StartPage(),
+      //     // home: (isAuthenticated && !MyUser().checkUserDataNullability())
+      //     home:
+      //         isAuthenticated ? Home(passedSelectedIndex: 0) : StartPage(),
+      //   ),
+      // ),
     );
   }
 
