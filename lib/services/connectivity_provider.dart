@@ -15,15 +15,15 @@ class ConnectivityProvider with ChangeNotifier {
     await initConnectivity();
     _connectivity.onConnectivityChanged.listen((result) async {
       await initConnectivity();
-      // if (result == ConnectivityResult.none) {
-      //   _isOnline = false;
-      //   notifyListeners();
-      // } else {
-      //   await _updateConnectionStatus().then((bool isConnected) {
-      //     _isOnline = isConnected;
-      //     notifyListeners();
-      //   });
-      // }
+      if (result == ConnectivityResult.none) {
+        _isOnline = false;
+        notifyListeners();
+      } else {
+        await _updateConnectionStatus().then((bool isConnected) {
+          _isOnline = isConnected;
+          notifyListeners();
+        });
+      }
     });
   }
 
