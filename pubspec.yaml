@@ -91,12 +91,22 @@ dependencies:
 
 
 dev_dependencies:
+
+  flutter_test:
+    sdk: flutter
+  
   flutter_asset_generator: ^0.6.1
 
   flutter_native_splash: ^0.3.2
 
-  flutter_test:
-    sdk: flutter
+flutter_native_splash:
+  color: "#000000"
+  image: assets/images/splash.png
+  android: true
+  ios: true
+  android_gravity: fill
+  ios_content_mode: sclaeAspectFill
+
 
 
 # For information on the generic Dart part of this file, see the
