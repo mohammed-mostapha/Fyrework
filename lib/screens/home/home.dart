@@ -67,78 +67,76 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: PageView(
-          controller: _pageController,
-          children: _screens,
-          onPageChanged: _onPageChanged,
-          physics: NeverScrollableScrollPhysics(),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          type: BottomNavigationBarType.fixed,
-          onTap: _onItemTapped,
-          items: [
-            BottomNavigationBarItem(
-              icon: SizedBox(
-                width: 20,
-                height: 20,
-                child: SvgPicture.asset(
-                  _selectedIndex == 0 ? home_filled : home_outlined,
-                  semanticsLabel: 'home',
-                  color: Theme.of(context).accentColor,
-                ),
+    return Scaffold(
+      body: PageView(
+        controller: _pageController,
+        children: _screens,
+        onPageChanged: _onPageChanged,
+        physics: NeverScrollableScrollPhysics(),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        type: BottomNavigationBarType.fixed,
+        onTap: _onItemTapped,
+        items: [
+          BottomNavigationBarItem(
+            icon: SizedBox(
+              width: 20,
+              height: 20,
+              child: SvgPicture.asset(
+                _selectedIndex == 0 ? home_filled : home_outlined,
+                semanticsLabel: 'home',
+                color: Theme.of(context).accentColor,
               ),
-              title: Text('home'),
             ),
-            BottomNavigationBarItem(
-              icon: SizedBox(
-                width: 20,
-                height: 20,
-                child: SvgPicture.asset(
-                  _selectedIndex == 1 ? add_filled : add_outlined,
-                  semanticsLabel: 'add',
-                  color: Theme.of(context).accentColor,
-                ),
+            title: Text('home'),
+          ),
+          BottomNavigationBarItem(
+            icon: SizedBox(
+              width: 20,
+              height: 20,
+              child: SvgPicture.asset(
+                _selectedIndex == 1 ? add_filled : add_outlined,
+                semanticsLabel: 'add',
+                color: Theme.of(context).accentColor,
               ),
-              title: Text('add'),
             ),
-            BottomNavigationBarItem(
-              icon: SizedBox(
-                width: 20,
-                height: 20,
-                child: SvgPicture.asset(
-                  _selectedIndex == 2 ? search_thick : search_thin,
-                  semanticsLabel: 'search',
-                  color: Theme.of(context).accentColor,
-                ),
+            title: Text('add'),
+          ),
+          BottomNavigationBarItem(
+            icon: SizedBox(
+              width: 20,
+              height: 20,
+              child: SvgPicture.asset(
+                _selectedIndex == 2 ? search_thick : search_thin,
+                semanticsLabel: 'search',
+                color: Theme.of(context).accentColor,
               ),
-              title: Text('search'),
             ),
-            BottomNavigationBarItem(
-              icon: SizedBox(
-                width: 20,
-                height: 20,
-                child: CachedNetworkImage(
-                  imageBuilder: (context, imageProvider) => Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: imageProvider, fit: BoxFit.cover),
-                    ),
+            title: Text('search'),
+          ),
+          BottomNavigationBarItem(
+            icon: SizedBox(
+              width: 20,
+              height: 20,
+              child: CachedNetworkImage(
+                imageBuilder: (context, imageProvider) => Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: imageProvider, fit: BoxFit.cover),
                   ),
-                  imageUrl: MyUser.userAvatarUrl,
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
+                imageUrl: MyUser.userAvatarUrl,
+                placeholder: (context, url) => CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(Icons.error),
               ),
-              title: Text('account'),
-            )
-          ],
-        ),
+            ),
+            title: Text('account'),
+          )
+        ],
       ),
     );
   }

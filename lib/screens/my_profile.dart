@@ -217,243 +217,264 @@ class _MyProfileViewState extends State<MyProfileView> {
         });
   }
 
-  Widget phoneVerifyer() {
-    return Container(
-      child: InternationalPhoneNumberInput(
-        onInputChanged: (PhoneNumber number) {
-          print(number.phoneNumber);
-          setState(() {
-            _phoneNumberToVerify = number.toString();
-          });
-        },
-        onInputValidated: (bool value) {
-          print(value);
-        },
-        ignoreBlank: false,
-        autoValidateMode: AutovalidateMode.always,
-        // autoValidate: false,
-        selectorTextStyle: TextStyle(color: Colors.black),
-        textFieldController: _myNewPhoneNumberController,
-        keyboardType: TextInputType.number,
-        // selectorType: PhoneInputSelectorType.DIALOG,
-      ),
-    );
-  }
+  // Widget phoneVerifyer() {
+  //   return Container(
+  //     child: InternationalPhoneNumberInput(
+  //       onInputChanged: (PhoneNumber number) {
+  //         print(number.phoneNumber);
+  //         setState(() {
+  //           _phoneNumberToVerify = number.toString();
+  //         });
+  //       },
+  //       onInputValidated: (bool value) {
+  //         print(value);
+  //       },
+  //       ignoreBlank: false,
+  //       autoValidateMode: AutovalidateMode.always,
+  //       // autoValidate: false,
+  //       selectorTextStyle: TextStyle(color: Colors.black),
+  //       textFieldController: _myNewPhoneNumberController,
+  //       keyboardType: TextInputType.number,
+  //       // selectorType: PhoneInputSelectorType.DIALOG,
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            title: Container(
-              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-              child: Text(
-                MyUser.username,
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.normal),
-              ),
+    _myFavoriteHashtagsController.text =
+        '${MyUser.favoriteHashtags.map((h) => h.toString())}';
+    return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Container(
+            padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+            child: Text(
+              MyUser.username,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1
+                  .copyWith(color: Theme.of(context).accentColor),
             ),
           ),
-          endDrawer: myProfileDrawer(),
-          backgroundColor: Theme.of(context).primaryColor,
-          body: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CachedNetworkImage(
-                          imageBuilder: (context, imageProvider) => Container(
-                            width: 90.0,
-                            height: 90.0,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  image: imageProvider, fit: BoxFit.cover),
-                            ),
-                          ),
-                          imageUrl: MyUser.userAvatarUrl,
-                          placeholder: (context, url) =>
-                              CircularProgressIndicator(),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error),
-                        ),
-                        SizedBox(
-                          height: 50,
-                          child: Column(
-                            children: <Widget>[
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    "Ongoing",
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    MyUser.ongoingGigsByGigId != null
-                                        ? '${MyUser.ongoingGigsByGigId.length}'
-                                        : '0',
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            ],
+        ),
+        endDrawer: myProfileDrawer(),
+        backgroundColor: Theme.of(context).primaryColor,
+        body: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CachedNetworkImage(
+                        imageBuilder: (context, imageProvider) => Container(
+                          width: 90.0,
+                          height: 90.0,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.cover),
                           ),
                         ),
-                        SizedBox(
-                          height: 50,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    "Completed",
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.white),
-                                  ),
+                        imageUrl: MyUser.userAvatarUrl,
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      ),
+                      SizedBox(
+                        height: 50,
+                        child: Column(
+                          children: <Widget>[
+                            Expanded(
+                              child: Center(
+                                child: Text(
+                                  "Ongoing",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .copyWith(
+                                          color: Theme.of(context).accentColor),
                                 ),
                               ),
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    "5",
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.white),
-                                  ),
+                            ),
+                            Expanded(
+                              child: Center(
+                                child: Text(
+                                  MyUser.ongoingGigsByGigId != null
+                                      ? '${MyUser.ongoingGigsByGigId.length}'
+                                      : '0',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .copyWith(
+                                          color: Theme.of(context).accentColor),
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
-                          children: [
-                            Text(
-                              // widget.passedUserFullName,
-                              MyUser.name,
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Container(
-                              child: Row(
-                                children: <Widget>[
-                                  Text('no.',
-                                      style: TextStyle(
-                                          fontSize: 16, color: Colors.white)),
-                                  FaIcon(
-                                    FontAwesomeIcons.solidStar,
-                                    size: 16,
-                                    color: Colors.yellow,
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                        Text(MyUser.location,
-                            style:
-                                TextStyle(fontSize: 16, color: Colors.white)),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: DefaultTabController(
-                      length: 4,
-                      child: Scaffold(
-                        appBar: AppBar(
-                            toolbarHeight: 50,
-                            primary: false,
-                            leading: Container(),
-                            title: Container(),
-                            bottom: TabBar(
-                              indicatorColor: Theme.of(context).primaryColor,
-                              tabs: [
-                                Tab(
-                                    child: SizedBox(
-                                  width: 16,
-                                  height: 16,
-                                  child: SvgPicture.asset(
-                                    grid,
-                                    semanticsLabel: 'grid',
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                )),
-                                Tab(
-                                  child: FaIcon(
-                                    FontAwesomeIcons.checkCircle,
-                                    size: 16,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                                Tab(
-                                  child: FaIcon(
-                                    FontAwesomeIcons.thumbsUp,
-                                    size: 16,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                                Tab(
-                                  child: FaIcon(
-                                    FontAwesomeIcons.star,
-                                    size: 16,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            elevation: 0,
-                            backgroundColor: Color(0xFFfafafa)),
-                        // backgroundColor: FyreworkrColors.fyreworkBlack),
-                        body: TabBarView(
-                          children: [
-                            userOngoingGigs(),
-                            // Container(
-                            //   child: Center(child: Text('Ongoing goes here')),
-                            // ),
-                            Container(
-                              child: Center(child: Text('Done goes here')),
-                            ),
-                            Container(
-                              child:
-                                  Center(child: Text('Liked gigs gies here')),
-                            ),
-                            Container(
-                              child: Center(child: Text('Rating goes here')),
                             ),
                           ],
                         ),
                       ),
+                      SizedBox(
+                        height: 50,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Expanded(
+                              child: Center(
+                                child: Text(
+                                  "Completed",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .copyWith(
+                                          color: Theme.of(context).accentColor),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Center(
+                                child: Text(
+                                  "5",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .copyWith(
+                                          color: Theme.of(context).accentColor),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        children: [
+                          Text(
+                            // widget.passedUserFullName,
+                            MyUser.name,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .copyWith(color: Theme.of(context).accentColor),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Container(
+                            child: Row(
+                              children: <Widget>[
+                                Text(
+                                  'no.',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .copyWith(
+                                          color: Theme.of(context).accentColor),
+                                ),
+                                FaIcon(
+                                  FontAwesomeIcons.solidStar,
+                                  size: 16,
+                                  color: Colors.yellow,
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      Text(
+                        MyUser.location,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: Theme.of(context).accentColor),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: DefaultTabController(
+                    length: 4,
+                    child: Scaffold(
+                      appBar: AppBar(
+                          toolbarHeight: 50,
+                          primary: false,
+                          leading: Container(),
+                          title: Container(),
+                          bottom: TabBar(
+                            indicatorColor: Theme.of(context).primaryColor,
+                            tabs: [
+                              Tab(
+                                  child: SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: SvgPicture.asset(
+                                  grid,
+                                  semanticsLabel: 'grid',
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              )),
+                              Tab(
+                                child: FaIcon(
+                                  FontAwesomeIcons.checkCircle,
+                                  size: 16,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                              Tab(
+                                child: FaIcon(
+                                  FontAwesomeIcons.thumbsUp,
+                                  size: 16,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                              Tab(
+                                child: FaIcon(
+                                  FontAwesomeIcons.star,
+                                  size: 16,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          elevation: 0,
+                          backgroundColor: Color(0xFFfafafa)),
+                      // backgroundColor: FyreworkrColors.fyreworkBlack),
+                      body: TabBarView(
+                        children: [
+                          userOngoingGigs(),
+                          // Container(
+                          //   child: Center(child: Text('Ongoing goes here')),
+                          // ),
+                          Container(
+                            child: Center(child: Text('Done goes here')),
+                          ),
+                          Container(
+                            child: Center(child: Text('Liked gigs gies here')),
+                          ),
+                          Container(
+                            child: Center(child: Text('Rating goes here')),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ],
-              ))),
-    );
+                ),
+              ],
+            )));
   }
 
   Widget serverSideAlert() {
@@ -477,7 +498,10 @@ class _MyProfileViewState extends State<MyProfileView> {
               child: Text(
                 serverSideWarning,
                 maxLines: 3,
-                style: TextStyle(fontSize: 16, color: Colors.white),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(color: Theme.of(context).accentColor),
               ),
             ),
             Padding(
@@ -524,7 +548,10 @@ class _MyProfileViewState extends State<MyProfileView> {
               child: Text(
                 clientSideWarning,
                 maxLines: 3,
-                style: TextStyle(fontSize: 16, color: Colors.white),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(color: Theme.of(context).accentColor),
               ),
             ),
             Padding(
@@ -586,11 +613,13 @@ class _MyProfileViewState extends State<MyProfileView> {
           )),
           child: ListTile(
             contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-            leading: Text('${MyUser.name}',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                )),
+            leading: Text(
+              '${MyUser.name}',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1
+                  .copyWith(color: Theme.of(context).accentColor),
+            ),
           ),
         ),
         GestureDetector(
@@ -614,7 +643,10 @@ class _MyProfileViewState extends State<MyProfileView> {
                   ),
                   Text(
                     'Profile',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: Theme.of(context).accentColor),
                   ),
                 ],
               ),
@@ -648,7 +680,10 @@ class _MyProfileViewState extends State<MyProfileView> {
                   ),
                   Text(
                     'Terms',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: Theme.of(context).accentColor),
                   ),
                 ],
               ),
@@ -675,10 +710,10 @@ class _MyProfileViewState extends State<MyProfileView> {
                           },
                           child: Text(
                             'Dismiss',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .copyWith(color: Theme.of(context).accentColor),
                           ),
                         ),
                       ));
@@ -706,7 +741,10 @@ class _MyProfileViewState extends State<MyProfileView> {
                   ),
                   Text(
                     'Privacy',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: Theme.of(context).accentColor),
                   ),
                 ],
               ),
@@ -734,10 +772,10 @@ class _MyProfileViewState extends State<MyProfileView> {
                           },
                           child: Text(
                             'Dismiss',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .copyWith(color: Theme.of(context).accentColor),
                           ),
                         ),
                       ));
@@ -751,11 +789,6 @@ class _MyProfileViewState extends State<MyProfileView> {
               width: 200,
               child: Row(
                 children: [
-                  // FaIcon(
-                  //   FontAwesomeIcons.shieldAlt,
-                  //   color: Colors.white,
-                  //   size: 16,
-                  // ),
                   SizedBox(
                     width: 16,
                     height: 16,
@@ -770,7 +803,10 @@ class _MyProfileViewState extends State<MyProfileView> {
                   ),
                   Text(
                     'Safety & Security',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: Theme.of(context).accentColor),
                   ),
                 ],
               ),
@@ -800,7 +836,10 @@ class _MyProfileViewState extends State<MyProfileView> {
                   ),
                   Text(
                     'Rules & Policies',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: Theme.of(context).accentColor),
                   ),
                 ],
               ),
@@ -830,7 +869,10 @@ class _MyProfileViewState extends State<MyProfileView> {
                   ),
                   Text(
                     'Legals',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: Theme.of(context).accentColor),
                   ),
                 ],
               ),
@@ -854,16 +896,15 @@ class _MyProfileViewState extends State<MyProfileView> {
               spacing: 2.5,
               children: _myFavoriteHashtags
                   .map((e) => Chip(
-                        backgroundColor: Colors.white,
+                        backgroundColor: Theme.of(context).accentColor,
                         label: Text(
                           '$e',
-                          style: TextStyle(fontSize: 16, color: Colors.black),
+                          style: Theme.of(context).textTheme.bodyText1,
                         ),
                         onDeleted: () {
                           setState(() {
                             _myFavoriteHashtags
                                 .removeWhere((item) => item == e);
-                            print(_myFavoriteHashtags.length);
                           });
                         },
                         deleteIconColor: Colors.black,
@@ -875,7 +916,7 @@ class _MyProfileViewState extends State<MyProfileView> {
             contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
             leading: Icon(
               Icons.chevron_left,
-              color: Colors.white,
+              color: Theme.of(context).accentColor,
             ),
             onTap: () {
               setState(() {
@@ -890,7 +931,10 @@ class _MyProfileViewState extends State<MyProfileView> {
               padding: EdgeInsets.fromLTRB(0, 1.5, 0, 0),
               child: Text(
                 'Profile Picture',
-                style: TextStyle(fontSize: 16, color: Colors.white),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(color: Theme.of(context).accentColor),
               ),
             ),
             trailing: Container(
@@ -954,47 +998,51 @@ class _MyProfileViewState extends State<MyProfileView> {
               ),
               trailing: Container(
                 width: MediaQuery.of(context).size.width / 1.5,
-                child: Expanded(
-                  child: TypeAheadFormField(
-                    // initialValue: MyUser.hashtag,
-                    validator: (value) => value.isEmpty ? '' : null,
-                    onSaved: (value) =>
-                        _myFavoriteHashtagsController.text = value,
-                    textFieldConfiguration: TextFieldConfiguration(
-                      controller: _myFavoriteHashtagsController,
-                      style: DefaultTextStyle.of(context)
-                          .style
-                          .copyWith(fontSize: 16, color: Colors.white),
-                      decoration: profileEditingInputDecoration(
-                          context, 'Favorite #Hashtags'),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TypeAheadFormField(
+                        // initialValue: MyUser.favoriteHashtags.toString(),
+                        validator: (value) => value.isEmpty ? '' : null,
+                        onSaved: (value) =>
+                            _myFavoriteHashtagsController.text = value,
+                        textFieldConfiguration: TextFieldConfiguration(
+                          controller: _myFavoriteHashtagsController,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: Theme.of(context).accentColor),
+                          decoration: profileEditingInputDecoration(
+                              context, 'Favorite #Hashtags'),
+                        ),
+                        suggestionsCallback: (pattern) async {
+                          return await PopularHashtagsService
+                              .fetchPopularHashtags(pattern);
+                        },
+                        itemBuilder: (context, suggestions) {
+                          return ListTile(
+                            title: Text(suggestions),
+                          );
+                        },
+                        onSuggestionSelected: (suggestion) {
+                          if (_myFavoriteHashtags.length < 20 != true) {
+                            setState(() {
+                              clientSideWarning = 'Only 20 #Hashtags allowed';
+                            });
+                          } else if (_myFavoriteHashtagsController
+                                  .text.isNotEmpty &&
+                              !_myFavoriteHashtags.contains(suggestion) &&
+                              _myFavoriteHashtags.length < 20) {
+                            setState(() {
+                              _myFavoriteHashtags.add('#' + suggestion);
+                              _myFavoriteHashtagsController.clear();
+                              print(_myFavoriteHashtags);
+                            });
+                          }
+                        },
+                      ),
                     ),
-                    suggestionsCallback: (pattern) async {
-                      return await PopularHashtagsService.fetchPopularHashtags(
-                          pattern);
-                    },
-                    itemBuilder: (context, suggestions) {
-                      return ListTile(
-                        title: Text(suggestions),
-                      );
-                    },
-                    onSuggestionSelected: (suggestion) {
-                      // _myFavoriteHashtagsController.text = suggestion;
-                      if (_myFavoriteHashtags.length < 20 != true) {
-                        setState(() {
-                          clientSideWarning = 'Only 20 #Hashtags allowed';
-                        });
-                      } else if (_myFavoriteHashtagsController
-                              .text.isNotEmpty &&
-                          !_myFavoriteHashtags.contains(suggestion) &&
-                          _myFavoriteHashtags.length < 20) {
-                        setState(() {
-                          _myFavoriteHashtags.add('#' + suggestion);
-                          _myFavoriteHashtagsController.clear();
-                          print(_myFavoriteHashtags);
-                        });
-                      }
-                    },
-                  ),
+                  ],
                 ),
               ),
             ),
@@ -1006,28 +1054,37 @@ class _MyProfileViewState extends State<MyProfileView> {
               contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
               leading: Container(
                 padding: EdgeInsets.fromLTRB(0, 1.5, 0, 0),
-                child: Text('Username',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    )),
+                child: Text(
+                  'Username',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: Theme.of(context).accentColor),
+                ),
               ),
               trailing: Container(
                 width: MediaQuery.of(context).size.width / 1.5,
-                child: Expanded(
-                  child: Container(
-                    child: TextFormField(
-                      controller: _myNewUsername,
-                      validator: UsernameValidator.validate,
-                      style: TextStyle(fontSize: 16.0, color: Colors.white),
-                      decoration:
-                          profileEditingInputDecoration(context, 'Username'),
-                      // onChanged: (val) {
-                      //   setState(() => _myNewUsername.text = val);
-                      // },
-                      onSaved: (val) => _myNewUsername.text = val,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        child: TextFormField(
+                          controller: _myNewUsername,
+                          validator: UsernameValidator.validate,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: Theme.of(context).accentColor),
+                          decoration: profileEditingInputDecoration(
+                              context, 'Username'),
+                          // onChanged: (val) {
+                          //   setState(() => _myNewUsername.text = val);
+                          // },
+                          onSaved: (val) => _myNewUsername.text = val,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),
@@ -1038,25 +1095,35 @@ class _MyProfileViewState extends State<MyProfileView> {
               contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
               leading: Container(
                 padding: EdgeInsets.fromLTRB(0, 1.5, 0, 0),
-                child: Text('Name',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    )),
+                child: Text(
+                  'Name',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: Theme.of(context).accentColor),
+                ),
               ),
               trailing: Container(
                 width: MediaQuery.of(context).size.width / 1.5,
-                child: Expanded(
-                  child: TextFormField(
-                    controller: _myNewName,
-                    validator: NameValidator.validate,
-                    style: TextStyle(fontSize: 16.0, color: Colors.white),
-                    decoration: profileEditingInputDecoration(context, 'Name'),
-                    // onChanged: (val) {
-                    //   setState(() => _myNewName.text = val);
-                    // },
-                    onSaved: (val) => _myNewName.text = val,
-                  ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _myNewName,
+                        validator: NameValidator.validate,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: Theme.of(context).accentColor),
+                        decoration:
+                            profileEditingInputDecoration(context, 'Name'),
+                        // onChanged: (val) {
+                        //   setState(() => _myNewName.text = val);
+                        // },
+                        onSaved: (val) => _myNewName.text = val,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -1067,26 +1134,35 @@ class _MyProfileViewState extends State<MyProfileView> {
               contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
               leading: Container(
                 padding: EdgeInsets.fromLTRB(0, 1.5, 0, 0),
-                child: Text('Email',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    )),
+                child: Text(
+                  'Email',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: Theme.of(context).accentColor),
+                ),
               ),
               trailing: Container(
                 width: MediaQuery.of(context).size.width / 1.5,
-                child: Expanded(
-                  child: TextFormField(
-                    controller: _myNewEmailaddress,
-                    validator: EmailValidator.validate,
-                    style: TextStyle(fontSize: 16.0, color: Colors.white),
-                    decoration:
-                        profileEditingInputDecoration(context, 'Email address'),
-                    // onChanged: (val) {
-                    //   setState(() => _myNewEmailaddress.text = val);
-                    // },
-                    onSaved: (val) => _myNewEmailaddress.text = val,
-                  ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _myNewEmailaddress,
+                        validator: EmailValidator.validate,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: Theme.of(context).accentColor),
+                        decoration: profileEditingInputDecoration(
+                            context, 'Email address'),
+                        // onChanged: (val) {
+                        //   setState(() => _myNewEmailaddress.text = val);
+                        // },
+                        onSaved: (val) => _myNewEmailaddress.text = val,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -1097,11 +1173,13 @@ class _MyProfileViewState extends State<MyProfileView> {
               contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
               leading: Container(
                 padding: EdgeInsets.fromLTRB(0, 1.5, 0, 0),
-                child: Text('location',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    )),
+                child: Text(
+                  'location',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1
+                      .copyWith(color: Theme.of(context).accentColor),
+                ),
               ),
               trailing: Container(
                 // padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -1167,54 +1245,54 @@ class _MyProfileViewState extends State<MyProfileView> {
           //   ),
           //   onTap: () {},
           // ),
-          GestureDetector(
-              child: ListTile(
-            contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
-            leading: Container(
-              padding: EdgeInsets.fromLTRB(0, 1.5, 0, 0),
-              child: Text('Mobile',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                  )),
-            ),
-            trailing: Container(
-                // padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                width: MediaQuery.of(context).size.width / 1.5,
-                child: (MyUser.phoneNumber == null || MyUser.phoneNumber == '')
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: phoneVerifyer(),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              verifyPhoneNumber(_phoneNumberToVerify, context);
-                            },
-                            child: Text(
-                              'Verify',
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
-                            ),
-                          )
-                        ],
-                      )
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Container(
-                            child: Text('${MyUser.phoneNumber}',
-                                style: TextStyle(color: Colors.white)),
-                          ),
-                          FaIcon(
-                            FontAwesomeIcons.checkCircle,
-                            size: 22,
-                            color: Colors.white,
-                          ),
-                        ],
-                      )),
-          )),
+          // GestureDetector(
+          //     child: ListTile(
+          //   contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
+          //   leading: Container(
+          //     padding: EdgeInsets.fromLTRB(0, 1.5, 0, 0),
+          //     child: Text('Mobile',
+          //         style: TextStyle(
+          //           fontSize: 16,
+          //           color: Colors.white,
+          //         )),
+          //   ),
+          //   trailing: Container(
+          //       // padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          //       width: MediaQuery.of(context).size.width / 1.5,
+          //       child: (MyUser.phoneNumber == null || MyUser.phoneNumber == '')
+          //           ? Row(
+          //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //               children: [
+          //                 Expanded(
+          //                   child: phoneVerifyer(),
+          //                 ),
+          //                 GestureDetector(
+          //                   onTap: () {
+          //                     verifyPhoneNumber(_phoneNumberToVerify, context);
+          //                   },
+          //                   child: Text(
+          //                     'Verify',
+          //                     style:
+          //                         TextStyle(fontSize: 16, color: Colors.white),
+          //                   ),
+          //                 )
+          //               ],
+          //             )
+          //           : Row(
+          //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //               children: <Widget>[
+          //                 Container(
+          //                   child: Text('${MyUser.phoneNumber}',
+          //                       style: TextStyle(color: Colors.white)),
+          //                 ),
+          //                 FaIcon(
+          //                   FontAwesomeIcons.checkCircle,
+          //                   size: 22,
+          //                   color: Colors.white,
+          //                 ),
+          //               ],
+          //             )),
+          // )),
           SizedBox(
             height: 40,
           ),
@@ -1226,10 +1304,8 @@ class _MyProfileViewState extends State<MyProfileView> {
                 onPressed: () {
                   editMyProfile();
                 },
-                child: Text(
-                  'Save',
-                  style: TextStyle(fontSize: 16),
-                ),
+                child:
+                    Text('Save', style: Theme.of(context).textTheme.bodyText1),
               ),
             ),
           ),
@@ -1264,18 +1340,15 @@ class _MyProfileViewState extends State<MyProfileView> {
             child: Column(
               children: <Widget>[
                 Expanded(
-                  child: Text(
-                    "Ongoing gigs",
-                    style: TextStyle(fontSize: 18),
-                  ),
+                  child: Text("Ongoing gigs",
+                      style: Theme.of(context).textTheme.bodyText1),
                 ),
                 Expanded(
                   child: Text(
-                    MyUser.ongoingGigsByGigId != null
-                        ? '${MyUser.ongoingGigsByGigId.length}'
-                        : '0',
-                    style: TextStyle(fontSize: 18),
-                  ),
+                      MyUser.ongoingGigsByGigId != null
+                          ? '${MyUser.ongoingGigsByGigId.length}'
+                          : '0',
+                      style: Theme.of(context).textTheme.bodyText1),
                 ),
               ],
             ),
@@ -1291,10 +1364,8 @@ class _MyProfileViewState extends State<MyProfileView> {
                   ),
                 ),
                 Expanded(
-                  child: Text(
-                    "5",
-                    style: TextStyle(fontSize: 18),
-                  ),
+                  child:
+                      Text("5", style: Theme.of(context).textTheme.bodyText1),
                 ),
               ],
             ),
@@ -1367,7 +1438,10 @@ class _MyProfileViewState extends State<MyProfileView> {
             GestureDetector(
               child: Text(
                 'Log out',
-                style: TextStyle(color: Colors.white, fontSize: 16),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(color: Theme.of(context).accentColor),
               ),
               onTap: () async {
                 try {
