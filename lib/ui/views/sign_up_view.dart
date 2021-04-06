@@ -116,7 +116,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   // DateTime _defaultAge = new DateTime.now();
   final _myFavoriteHashtagsControllerNotEmpty = SnackBar(
     content: Text(
-      'need to add that hashtag!',
+      'Hit Add in hashtags input!',
       style: TextStyle(fontSize: 16),
     ),
   );
@@ -174,7 +174,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
   bool isNullOrEmpty(Object o) => o == null || o == "";
 
-  void submitSignupSigninRestForm() async {
+  void submitSignupSigninResetForm() async {
     // checking whether the user picked a profile pic or not
 
     switch (authFormType) {
@@ -228,10 +228,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
           _signupScaffoldKey.currentState
               .showSnackBar(_myFavoriteHashtagsControllerNotEmpty);
-        } else if (_passwordController.text !=
-            _confirmPasswordController.text) {
-          _signupScaffoldKey.currentState
-              .showSnackBar(_passwordConfirmPasswordSnackBar);
         }
         //check if password & confirm password are identical
         else if (_passwordController.text != _confirmPasswordController.text) {
@@ -258,9 +254,10 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             var signUp;
             String signUpUid;
             String _myUploadedAvatarUrl;
+            String location =
+                PlacesAutocomplete.placesAutoCompleteController.text;
             try {
               EasyLoading.show();
-              location = PlacesAutocomplete.placesAutoCompleteController.text;
               //create user in Firebase Authentication
               signUp = await AuthService().createUserWithEmailAndPassword(
                 email: _email.trim(),
@@ -1076,7 +1073,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                         ),
                         maxLines: 1,
                       ),
-                      onPressed: submitSignupSigninRestForm,
+                      onPressed: submitSignupSigninResetForm,
                     ),
                   )
                 : Container(
@@ -1142,7 +1139,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                     ),
                     maxLines: 1,
                   ),
-                  onPressed: submitSignupSigninRestForm,
+                  onPressed: submitSignupSigninResetForm,
                 ),
               )
             ],
@@ -1200,7 +1197,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
-                onPressed: submitSignupSigninRestForm,
+                onPressed: submitSignupSigninResetForm,
               ),
             )
           : SizedBox(

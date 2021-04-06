@@ -18,7 +18,6 @@ import 'package:Fyrework/services/places_autocomplete.dart';
 import 'package:Fyrework/services/storage_repo.dart';
 import 'package:Fyrework/ui/shared/constants.dart';
 import 'package:Fyrework/ui/views/sign_up_view.dart';
-import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
 import 'package:Fyrework/services/auth_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:Fyrework/ui/widgets/userRelated_gigItem.dart';
@@ -40,6 +39,11 @@ class MyProfileView extends StatefulWidget {
 }
 
 class _MyProfileViewState extends State<MyProfileView> {
+  @override
+  void initState() {
+    _myFavoriteHashtagsList = List.from(MyUser.favoriteHashtags);
+  }
+
   AuthFormType authFormType;
   bool profileEditingMenu = false;
   final String shieldCheck = 'assets/svgs/light/shield-check.svg';
@@ -70,7 +74,7 @@ class _MyProfileViewState extends State<MyProfileView> {
       text: MyUser.phoneNumber == null ? '' : MyUser.phoneNumber);
   String myNewLocation = PlacesAutocomplete.placesAutoCompleteController.text;
 
-  List _myFavoriteHashtags = List();
+  List<String> _myFavoriteHashtagsList = List();
 
   String clientSideWarning;
   String serverSideWarning;
@@ -167,15 +171,16 @@ class _MyProfileViewState extends State<MyProfileView> {
       if (validate()) {
         EasyLoading.show();
         await DatabaseService().updateMyProfileData(
-          MyUser.uid,
-          _myFavoriteHashtagsController.text,
-          _myNewUsername.text,
-          _myNewName.text,
-          _myNewEmailaddress.text,
-          PlacesAutocomplete.placesAutoCompleteController.text,
-          // _myNewPhoneNumberController.text,
-          _phoneNumberToVerify,
-        );
+            uid: MyUser.uid, myNewFavoriteHashtag: _myFavoriteHashtagsList
+            // MyUser.uid,
+            // _myFavoriteHashtagsController.text,
+            // _myNewUsername.text,
+            // _myNewName.text,
+            // _myNewEmailaddress.text,
+            // PlacesAutocomplete.placesAutoCompleteController.text,
+            // // _myNewPhoneNumberController.text,
+            // _phoneNumberToVerify,
+            );
         EasyLoading.dismiss().then(
           (value) => EasyLoading.showSuccess(''),
         );
@@ -242,8 +247,8 @@ class _MyProfileViewState extends State<MyProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    _myFavoriteHashtagsController.text =
-        '${MyUser.favoriteHashtags.map((h) => h.toString())}';
+    // _myFavoriteHashtagsController.text =
+    //     '${MyUser.favoriteHashtags.map((h) => h.toString())}';
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -894,7 +899,7 @@ class _MyProfileViewState extends State<MyProfileView> {
             width: double.infinity,
             child: Wrap(
               spacing: 2.5,
-              children: _myFavoriteHashtags
+              children: _myFavoriteHashtagsList
                   .map((e) => Chip(
                         backgroundColor: Theme.of(context).accentColor,
                         label: Text(
@@ -903,7 +908,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                         ),
                         onDeleted: () {
                           setState(() {
-                            _myFavoriteHashtags
+                            _myFavoriteHashtagsList
                                 .removeWhere((item) => item == e);
                           });
                         },
@@ -1025,18 +1030,18 @@ class _MyProfileViewState extends State<MyProfileView> {
                           );
                         },
                         onSuggestionSelected: (suggestion) {
-                          if (_myFavoriteHashtags.length < 20 != true) {
+                          if (_myFavoriteHashtagsList.length < 20 != true) {
                             setState(() {
                               clientSideWarning = 'Only 20 #Hashtags allowed';
                             });
                           } else if (_myFavoriteHashtagsController
                                   .text.isNotEmpty &&
-                              !_myFavoriteHashtags.contains(suggestion) &&
-                              _myFavoriteHashtags.length < 20) {
+                              !_myFavoriteHashtagsList.contains(suggestion) &&
+                              _myFavoriteHashtagsList.length < 20) {
                             setState(() {
-                              _myFavoriteHashtags.add('#' + suggestion);
+                              _myFavoriteHashtagsList.add('#' + suggestion);
                               _myFavoriteHashtagsController.clear();
-                              print(_myFavoriteHashtags);
+                              print('list: $_myFavoriteHashtagsList');
                             });
                           }
                         },

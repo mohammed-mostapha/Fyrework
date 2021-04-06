@@ -198,18 +198,18 @@ class DatabaseService {
     }
   }
 
-  Future updateMyProfileData(
+  Future updateMyProfileData({
     String uid,
-    String myNewHashtag,
+    List<String> myNewFavoriteHashtag,
     String myNewUsername,
     String myNewName,
     String myNewEmailaddress,
     String myNewLocation,
     String myNewPhoneNumber,
-  ) async {
+  }) async {
     try {
       return await _usersCollection.doc(uid).update(<String, dynamic>{
-        'hashtag': myNewHashtag,
+        'favoriteHashtags': myNewFavoriteHashtag,
         'username': myNewUsername,
         'name': myNewName,
         'email': myNewEmailaddress,
@@ -232,8 +232,13 @@ class DatabaseService {
 
   //add user favorite hashtags to popular hashtags collection
   Future addToPopularHashtags(List favoriteHashtags) async {
+    QuerySnapshot querySnapshot = await _popularHashtags.get();
+    List allPopularHashtags =
+        querySnapshot.docs.map((doc) => doc.data()['hashtag']).toList();
     for (String favoriteHashtag in favoriteHashtags) {
-      _popularHashtags.add({'hashtag': favoriteHashtag});
+      if (!allPopularHashtags.contains(favoriteHashtag)) {
+        _popularHashtags.add({'hashtag': favoriteHashtag});
+      }
     }
   }
 
