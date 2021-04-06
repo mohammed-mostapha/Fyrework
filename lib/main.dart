@@ -95,7 +95,7 @@ class _HomeControllerState extends State<HomeController> {
   @override
   void initState() {
     super.initState();
-    // checkAuthenticity();
+    checkAuthenticity();
   }
 
   Future checkAuthenticity() async {

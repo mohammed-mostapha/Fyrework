@@ -632,7 +632,10 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               child: Text(
                 clientSideWarning,
                 maxLines: 3,
-                style: TextStyle(fontSize: 16, color: Colors.white),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(color: Theme.of(context).accentColor),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -690,7 +693,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           width: double.infinity,
           child: TextFormField(
             validator: EmailValidator.validate,
-            style: TextStyle(fontSize: 16.0),
+            style: Theme.of(context).textTheme.bodyText1,
             decoration: buildSignUpInputDecoration(context, 'Email'),
             onChanged: (val) {
               setState(() => _email = val);
@@ -724,11 +727,12 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
                             backgroundColor: Colors.black,
-                            label: Text(
-                              '$e',
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
-                            ),
+                            label: Text('$e',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .copyWith(
+                                        color: Theme.of(context).accentColor)),
                             onDeleted: () {
                               setState(() {
                                 _myFavoriteHashtags
@@ -801,7 +805,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                               color: Theme.of(context).primaryColor,
                               offset: Offset(0, -2.5))
                         ],
-                        fontSize: 16,
+                        fontSize: 14,
                         color: Colors.transparent,
                         decoration: TextDecoration.underline,
                         decorationThickness: 2,
@@ -863,7 +867,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                         : null,
                     textFieldConfiguration: TextFieldConfiguration(
                       controller: _myHandleController,
-                      style: TextStyle(fontSize: 16.0),
+                      style: Theme.of(context).textTheme.bodyText1,
                       inputFormatters: [
                         new LengthLimitingTextInputFormatter(20),
                         FilteringTextInputFormatter.allow(RegExp("[a-z0-9_]")),
@@ -897,13 +901,11 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                           children: [
                             Text(
                               suggestions,
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.black),
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
                             Text(
                               '(Taken)',
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.black),
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
                           ],
                         ),
@@ -938,7 +940,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                   child: GestureDetector(
                     child: Text(
                       'Add',
-                      style: TextStyle(fontSize: 16, color: Colors.black),
+                      style: Theme.of(context).textTheme.bodyText1,
                     ),
                     onTap: () {
                       FocusScope.of(context).unfocus();
@@ -1006,7 +1008,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       textFields.add(
         TextFormField(
           validator: EmailValidator.validate,
-          style: TextStyle(fontSize: 16.0),
+          style: Theme.of(context).textTheme.bodyText1,
           decoration: buildSignUpInputDecoration(context, 'Email'),
           onSaved: (val) => _email = val,
         ),
@@ -1033,7 +1035,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                   child: TextFormField(
                     controller: _passwordController,
                     validator: PasswordValidator.validate,
-                    style: TextStyle(fontSize: 16.0),
+                    style: Theme.of(context).textTheme.bodyText1,
                     decoration: buildSignUpInputDecoration(context, 'Password'),
                     obscureText: !_showPassword,
                     onSaved: (val) => _password = val,
@@ -1068,9 +1070,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                       textColor: Theme.of(context).accentColor,
                       child: Text(
                         _submitButtonText,
-                        style: TextStyle(
-                          fontSize: 16.0,
-                        ),
+                        style: Theme.of(context).textTheme.bodyText1,
                         maxLines: 1,
                       ),
                       onPressed: submitSignupSigninResetForm,
@@ -1096,7 +1096,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                     child: TextFormField(
                       controller: _confirmPasswordController,
                       validator: PasswordValidator.validate,
-                      style: TextStyle(fontSize: 16.0),
+                      style: Theme.of(context).textTheme.bodyText1,
                       decoration: buildSignUpInputDecoration(
                           context, 'Confirm Password'),
                       obscureText: !_showConfirmPassword,
@@ -1134,9 +1134,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                   textColor: Theme.of(context).accentColor,
                   child: Text(
                     _submitButtonText,
-                    style: TextStyle(
-                      fontSize: 16.0,
-                    ),
+                    style: Theme.of(context).textTheme.bodyText1,
                     maxLines: 1,
                   ),
                   onPressed: submitSignupSigninResetForm,
@@ -1216,8 +1214,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           GestureDetector(
             child: Text(
               _switchButtonText,
-              style: TextStyle(
-                  color: Theme.of(context).primaryColor, fontSize: 16),
+              style: Theme.of(context).textTheme.bodyText1,
               // maxLines: 1,
             ),
             onTap: () {
@@ -1235,7 +1232,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     return GestureDetector(
         child: Text(
           'Forgotten?',
-          style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 16),
+          style: Theme.of(context).textTheme.bodyText1,
           maxLines: 1,
         ),
         onTap: () {
