@@ -151,6 +151,7 @@ class _ProfileEditingSideMenuState extends State<ProfileEditingSideMenu> {
 
           await DatabaseService()
               .updateMyProfilePicture(MyUser.uid, _updatedProfileAvatar);
+          await DatabaseService().addToPopularHashtags(_myFavoriteHashtagsList);
           EasyLoading.dismiss().then(
             (value) => EasyLoading.showSuccess(''),
           );
@@ -167,6 +168,7 @@ class _ProfileEditingSideMenuState extends State<ProfileEditingSideMenu> {
             // // _myNewPhoneNumberController.text,
             // _phoneNumberToVerify,
           );
+          await DatabaseService().addToPopularHashtags(_myFavoriteHashtagsList);
           EasyLoading.dismiss().then(
             (value) => EasyLoading.showSuccess(''),
           );
@@ -409,7 +411,7 @@ class _ProfileEditingSideMenuState extends State<ProfileEditingSideMenu> {
                       Expanded(
                         child: TypeAheadFormField(
                           // initialValue: MyUser.favoriteHashtags.toString(),
-                          validator: (value) => value.isEmpty ? '' : null,
+                          // validator: (value) => value.isEmpty ? '' : null,
                           onSaved: (value) =>
                               _myFavoriteHashtagsController.text = value,
                           textFieldConfiguration: TextFieldConfiguration(

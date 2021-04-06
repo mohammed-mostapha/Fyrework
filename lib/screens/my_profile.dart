@@ -90,249 +90,268 @@ class _MyProfileViewState extends State<MyProfileView> {
   Widget build(BuildContext context) {
     // _myFavoriteHashtagsController.text =
     //     '${MyUser.favoriteHashtags.map((h) => h.toString())}';
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            title: Container(
-              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-              child: Text(
-                MyUser.username,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    .copyWith(color: Theme.of(context).accentColor),
-              ),
-            ),
-          ),
-          endDrawer: myProfileDrawer(),
-          backgroundColor: Theme.of(context).primaryColor,
-          body: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CachedNetworkImage(
-                          imageBuilder: (context, imageProvider) => Container(
-                            width: 90.0,
-                            height: 90.0,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  image: imageProvider, fit: BoxFit.cover),
-                            ),
-                          ),
-                          imageUrl: MyUser.userAvatarUrl,
-                          placeholder: (context, url) =>
-                              CircularProgressIndicator(),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error),
-                        ),
-                        SizedBox(
-                          height: 50,
-                          child: Column(
-                            children: <Widget>[
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    "Ongoing",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        .copyWith(
-                                            color:
-                                                Theme.of(context).accentColor),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    MyUser.ongoingGigsByGigId != null
-                                        ? '${MyUser.ongoingGigsByGigId.length}'
-                                        : '0',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        .copyWith(
-                                            color:
-                                                Theme.of(context).accentColor),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 50,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    "Completed",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        .copyWith(
-                                            color:
-                                                Theme.of(context).accentColor),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    "5",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        .copyWith(
-                                            color:
-                                                Theme.of(context).accentColor),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+    return Container(
+      color: Theme.of(context).primaryColor,
+      child: SafeArea(
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Scaffold(
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+                titleSpacing: 0,
+                leadingWidth: 0,
+                leading: Container(
+                  width: 0,
+                  height: 0,
+                ),
+                title: Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                      child: Text(
+                        MyUser.username,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: Theme.of(context).accentColor),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Row(
+                  ],
+                ),
+              ),
+              endDrawer: myProfileDrawer(),
+              backgroundColor: Theme.of(context).primaryColor,
+              body: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            CachedNetworkImage(
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                width: 90.0,
+                                height: 90.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image: imageProvider, fit: BoxFit.cover),
+                                ),
+                              ),
+                              imageUrl: MyUser.userAvatarUrl,
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
+                            ),
+                            SizedBox(
+                              height: 50,
+                              child: Column(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        "Ongoing",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .accentColor),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        MyUser.ongoingGigsByGigId != null
+                                            ? '${MyUser.ongoingGigsByGigId.length}'
+                                            : '0',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .accentColor),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 50,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        "Completed",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .accentColor),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        "5",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .accentColor),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              children: [
+                                Text(
+                                  // widget.passedUserFullName,
+                                  MyUser.name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .copyWith(
+                                          color: Theme.of(context).accentColor),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Container(
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        'no.',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .accentColor),
+                                      ),
+                                      FaIcon(
+                                        FontAwesomeIcons.solidStar,
+                                        size: 16,
+                                        color: Colors.yellow,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                             Text(
-                              // widget.passedUserFullName,
-                              MyUser.name,
+                              MyUser.location,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyText1
                                   .copyWith(
                                       color: Theme.of(context).accentColor),
                             ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Container(
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    'no.',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        .copyWith(
-                                            color:
-                                                Theme.of(context).accentColor),
-                                  ),
-                                  FaIcon(
-                                    FontAwesomeIcons.solidStar,
-                                    size: 16,
-                                    color: Colors.yellow,
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                        Text(
-                          MyUser.location,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1
-                              .copyWith(color: Theme.of(context).accentColor),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: DefaultTabController(
-                      length: 4,
-                      child: Scaffold(
-                        appBar: AppBar(
-                            toolbarHeight: 50,
-                            primary: false,
-                            leading: Container(),
-                            title: Container(),
-                            bottom: TabBar(
-                              indicatorColor: Theme.of(context).primaryColor,
-                              tabs: [
-                                Tab(
-                                    child: SizedBox(
-                                  width: 16,
-                                  height: 16,
-                                  child: SvgPicture.asset(
-                                    grid,
-                                    semanticsLabel: 'grid',
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                )),
-                                Tab(
-                                  child: FaIcon(
-                                    FontAwesomeIcons.checkCircle,
-                                    size: 16,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                                Tab(
-                                  child: FaIcon(
-                                    FontAwesomeIcons.thumbsUp,
-                                    size: 16,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                                Tab(
-                                  child: FaIcon(
-                                    FontAwesomeIcons.star,
-                                    size: 16,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            elevation: 0,
-                            backgroundColor: Color(0xFFfafafa)),
-                        // backgroundColor: FyreworkrColors.fyreworkBlack),
-                        body: TabBarView(
-                          children: [
-                            userOngoingGigs(),
-                            // Container(
-                            //   child: Center(child: Text('Ongoing goes here')),
-                            // ),
-                            Container(
-                              child: Center(child: Text('Done goes here')),
-                            ),
-                            Container(
-                              child:
-                                  Center(child: Text('Liked gigs gies here')),
-                            ),
-                            Container(
-                              child: Center(child: Text('Rating goes here')),
-                            ),
                           ],
                         ),
                       ),
-                    ),
-                  ),
-                ],
-              ))),
+                      Expanded(
+                        child: DefaultTabController(
+                          length: 4,
+                          child: Scaffold(
+                            appBar: AppBar(
+                                toolbarHeight: 50,
+                                primary: false,
+                                leading: Container(),
+                                title: Container(),
+                                bottom: TabBar(
+                                  indicatorColor:
+                                      Theme.of(context).primaryColor,
+                                  tabs: [
+                                    Tab(
+                                        child: SizedBox(
+                                      width: 16,
+                                      height: 16,
+                                      child: SvgPicture.asset(
+                                        grid,
+                                        semanticsLabel: 'grid',
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    )),
+                                    Tab(
+                                      child: FaIcon(
+                                        FontAwesomeIcons.checkCircle,
+                                        size: 16,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                    Tab(
+                                      child: FaIcon(
+                                        FontAwesomeIcons.thumbsUp,
+                                        size: 16,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                    Tab(
+                                      child: FaIcon(
+                                        FontAwesomeIcons.star,
+                                        size: 16,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                elevation: 0,
+                                backgroundColor: Color(0xFFfafafa)),
+                            // backgroundColor: FyreworkrColors.fyreworkBlack),
+                            body: TabBarView(
+                              children: [
+                                userOngoingGigs(),
+                                // Container(
+                                //   child: Center(child: Text('Ongoing goes here')),
+                                // ),
+                                Container(
+                                  child: Center(child: Text('Done goes here')),
+                                ),
+                                Container(
+                                  child: Center(
+                                      child: Text('Liked gigs gies here')),
+                                ),
+                                Container(
+                                  child:
+                                      Center(child: Text('Rating goes here')),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ))),
+        ),
+      ),
     );
   }
 
