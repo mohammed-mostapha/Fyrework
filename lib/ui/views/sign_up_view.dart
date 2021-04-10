@@ -16,7 +16,7 @@ import 'package:Fyrework/screens/add_gig/assets_picker/src/widget/asset_picker.d
 import 'package:Fyrework/services/auth_service.dart';
 import 'package:Fyrework/services/popularHashtags.dart';
 import 'package:Fyrework/services/takenHandles.dart';
-import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
+import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:Fyrework/services/places_autocomplete.dart';
@@ -525,21 +525,18 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           decoration: BoxDecoration(
             color: Colors.white,
             shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(blurRadius: 5, color: Colors.black54, spreadRadius: 2.5)
-            ],
           ),
           child: CircleAvatar(
             radius: 70.0,
             backgroundColor: Theme.of(context).primaryColor,
             backgroundImage: _profileImage == null
-                ? AssetImage("assets/images/black_placeholder.png")
+                ? AssetImage("assets/images/avatar-placeholder.png")
                 : FileImage(File(_profileImage.path)),
           ),
         ),
         Positioned(
-          bottom: 30.0,
-          right: 20.0,
+          bottom: 60.0,
+          right: 5.0,
           child: GestureDetector(
             onTap: navigateToSelectProfilePicture,
             child: ScaleTransition(
@@ -668,11 +665,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       _headerText = "Sign In";
     } else if (authFormType == AuthFormType.reset) {
       _headerText = "Reset Password";
-    }
-    //  else if (authFormType == AuthFormType.phone) {
-    //   _headerText = "Phone Sign In";
-    // }
-    else {
+    } else {
       _headerText = "Register";
     }
     return Text(
@@ -694,7 +687,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           child: TextFormField(
             validator: EmailValidator.validate,
             style: Theme.of(context).textTheme.bodyText1,
-            decoration: buildSignUpInputDecoration(context, 'Email'),
+            decoration: signUpInputDecoration(context, 'Email'),
             onChanged: (val) {
               setState(() => _email = val);
             },
@@ -749,53 +742,58 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             Row(
               children: [
                 Expanded(
-                  child: TypeAheadFormField(
-                    validator: (value) =>
-                        _myFavoriteHashtags.length < 1 ? '' : null,
-                    textFieldConfiguration: TextFieldConfiguration(
-                      controller: _myFavoriteHashtagsController,
-                      inputFormatters: [
-                        new LengthLimitingTextInputFormatter(20),
-                        FilteringTextInputFormatter.allow(RegExp("[a-z0-9_]")),
-                      ],
-                      decoration: buildSignUpInputDecoration(
-                          context, 'Favorite #Hashtags'),
-                    ),
-                    suggestionsCallback: (pattern) async {
-                      return await PopularHashtagsService.fetchPopularHashtags(
-                          pattern);
-                    },
-                    itemBuilder: (context, suggestions) {
-                      return ListTile(
-                        title: Text(suggestions),
-                      );
-                    },
-                    onSuggestionSelected: (suggestion) {
-                      // _myHashtagController.text = suggestion;
-                      // _myHashtag = suggestion;
-                      if (_myFavoriteHashtags.length < 20 != true) {
-                        setState(() {
-                          clientSideWarning = 'Only 20 #Hashtags allowed';
-                        });
-                      } else if (_myFavoriteHashtags.contains(suggestion)) {
-                        setState(() {
-                          clientSideWarning =
-                              'Duplicate #Hashtags are not allowed';
-                        });
-                        _myFavoriteHashtagsController.clear();
-                      } else if (!_myFavoriteHashtags.contains(suggestion) &&
-                          _myFavoriteHashtags.length < 20) {
-                        setState(() {
-                          _myFavoriteHashtags.add(suggestion);
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: TypeAheadFormField(
+                      validator: (value) =>
+                          _myFavoriteHashtags.length < 1 ? '' : null,
+                      textFieldConfiguration: TextFieldConfiguration(
+                        style: Theme.of(context).textTheme.bodyText1,
+                        controller: _myFavoriteHashtagsController,
+                        inputFormatters: [
+                          new LengthLimitingTextInputFormatter(20),
+                          FilteringTextInputFormatter.allow(
+                              RegExp("[a-z0-9_]")),
+                        ],
+                        decoration: signUpInputDecoration(
+                            context, 'Favorite #Hashtags'),
+                      ),
+                      suggestionsCallback: (pattern) async {
+                        return await PopularHashtagsService
+                            .fetchPopularHashtags(pattern);
+                      },
+                      itemBuilder: (context, suggestions) {
+                        return ListTile(
+                          title: Text(suggestions),
+                        );
+                      },
+                      onSuggestionSelected: (suggestion) {
+                        // _myHashtagController.text = suggestion;
+                        // _myHashtag = suggestion;
+                        if (_myFavoriteHashtags.length < 20 != true) {
+                          setState(() {
+                            clientSideWarning = 'Only 20 #Hashtags allowed';
+                          });
+                        } else if (_myFavoriteHashtags.contains(suggestion)) {
+                          setState(() {
+                            clientSideWarning =
+                                'Duplicate #Hashtags are not allowed';
+                          });
                           _myFavoriteHashtagsController.clear();
-                          print(_myFavoriteHashtags);
-                        });
-                      }
-                    },
+                        } else if (!_myFavoriteHashtags.contains(suggestion) &&
+                            _myFavoriteHashtags.length < 20) {
+                          setState(() {
+                            _myFavoriteHashtags.add(suggestion);
+                            _myFavoriteHashtagsController.clear();
+                            print(_myFavoriteHashtags);
+                          });
+                        }
+                      },
+                    ),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
+                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                   child: GestureDetector(
                     child: Text(
                       'Add',
@@ -844,110 +842,129 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                 ),
               ],
             ),
-            TextFormField(
-              validator: NameValidator.validate,
-              enableSuggestions: false,
-              style: TextStyle(
-                fontSize: 16.0,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: TextFormField(
+                validator: NameValidator.validate,
+                enableSuggestions: false,
+                style: Theme.of(context).textTheme.bodyText1,
+                decoration: signUpInputDecoration(context, 'Name'),
+                // onChanged: (val) {
+                //   setState(() => _name = val);
+                // },
+                onSaved: (val) => _name = val,
               ),
-              decoration: buildSignUpInputDecoration(context, 'Name'),
-              // onChanged: (val) {
-              //   setState(() => _name = val);
-              // },
-              onSaved: (val) => _name = val,
             ),
             //2nd TypeAhead for Handles goes here
-            Row(
-              children: [
-                Expanded(
-                  child: TypeAheadFormField(
-                    validator: (value) => (_myHandleController.text.isEmpty ||
-                            _myHandleController.text.length < 5)
-                        ? ''
-                        : null,
-                    textFieldConfiguration: TextFieldConfiguration(
-                      controller: _myHandleController,
-                      style: Theme.of(context).textTheme.bodyText1,
-                      inputFormatters: [
-                        new LengthLimitingTextInputFormatter(20),
-                        FilteringTextInputFormatter.allow(RegExp("[a-z0-9_]")),
-                      ],
-                      decoration:
-                          buildSignUpInputDecoration(context, '@handle'),
-                      focusNode: handleFocus,
-                    ),
-                    suggestionsCallback: (pattern) async {
-                      _fetchedHandles.clear();
-                      print('fetchedHandles: $_fetchedHandles');
-                      _fetchedHandles =
-                          await TakenHandlesService.fetchTakenHandles(pattern);
-                      print('fetchedHandles: $_fetchedHandles');
-                      if (_fetchedHandles.contains(_myHandleController.text)) {
-                        setState(() {
-                          handleDuplicated = true;
-                        });
-                      } else {
-                        setState(() {
-                          handleDuplicated = false;
-                        });
-                      }
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TypeAheadFormField(
+                      validator: (value) => (_myHandleController.text.isEmpty ||
+                              _myHandleController.text.length < 5)
+                          ? ''
+                          : null,
+                      textFieldConfiguration: TextFieldConfiguration(
+                        controller: _myHandleController,
+                        style: Theme.of(context).textTheme.bodyText1,
+                        inputFormatters: [
+                          new LengthLimitingTextInputFormatter(20),
+                          FilteringTextInputFormatter.allow(
+                              RegExp("[a-z0-9_]")),
+                        ],
+                        decoration: signUpInputDecoration(context, '@handle'),
+                        focusNode: handleFocus,
+                      ),
+                      suggestionsCallback: (pattern) async {
+                        _fetchedHandles.clear();
+                        print('fetchedHandles: $_fetchedHandles');
+                        _fetchedHandles =
+                            await TakenHandlesService.fetchTakenHandles(
+                                pattern);
+                        print('fetchedHandles: $_fetchedHandles');
+                        if (_fetchedHandles
+                            .contains(_myHandleController.text)) {
+                          setState(() {
+                            handleDuplicated = true;
+                          });
+                        } else {
+                          setState(() {
+                            handleDuplicated = false;
+                          });
+                        }
 
-                      return _fetchedHandles;
-                    },
-                    itemBuilder: (context, suggestions) {
-                      return ListTile(
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              suggestions,
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                            Text(
-                              '(Taken)',
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    onSuggestionSelected: (suggestion) {
-                      handleFocus.requestFocus();
-                    },
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                  child: _myHandleController.text.isEmpty
-                      ? Container(
-                          width: 0,
-                          height: 0,
-                        )
-                      : handleDuplicated || _myHandleController.text.length < 5
-                          ? FaIcon(
-                              FontAwesomeIcons.timesCircle,
-                              size: 18,
-                              color: Colors.red,
-                            )
-                          : FaIcon(
-                              FontAwesomeIcons.checkCircle,
-                              size: 18,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                  child: GestureDetector(
-                    child: Text(
-                      'Add',
-                      style: Theme.of(context).textTheme.bodyText1,
+                        return _fetchedHandles;
+                      },
+                      itemBuilder: (context, suggestions) {
+                        return ListTile(
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                suggestions,
+                                style: Theme.of(context).textTheme.bodyText1,
+                              ),
+                              Text(
+                                '(Taken)',
+                                style: Theme.of(context).textTheme.bodyText1,
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      onSuggestionSelected: (suggestion) {
+                        handleFocus.requestFocus();
+                      },
                     ),
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
-                    },
                   ),
-                ),
-              ],
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                    child: _myHandleController.text.isEmpty
+                        ? Container(
+                            width: 0,
+                            height: 0,
+                          )
+                        : handleDuplicated ||
+                                _myHandleController.text.length < 5
+                            ? FaIcon(
+                                FontAwesomeIcons.timesCircle,
+                                size: 18,
+                                color: Colors.red,
+                              )
+                            : FaIcon(
+                                FontAwesomeIcons.checkCircle,
+                                size: 18,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                    child: GestureDetector(
+                      child: Text(
+                        'Add',
+                        style: TextStyle(
+                          shadows: [
+                            Shadow(
+                                color: Theme.of(context).primaryColor,
+                                offset: Offset(0, -2.5))
+                          ],
+                          fontSize: 14,
+                          color: Colors.transparent,
+                          decoration: TextDecoration.underline,
+                          decorationThickness: 2,
+                          decorationColor: Theme.of(context).primaryColor,
+                          decorationStyle: TextDecorationStyle.dotted,
+                        ),
+                      ),
+                      onTap: () {
+                        FocusScope.of(context).unfocus();
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
 
             Row(
@@ -1009,7 +1026,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         TextFormField(
           validator: EmailValidator.validate,
           style: Theme.of(context).textTheme.bodyText1,
-          decoration: buildSignUpInputDecoration(context, 'Email'),
+          decoration: signUpInputDecoration(context, 'Email'),
           onSaved: (val) => _email = val,
         ),
       );
@@ -1032,22 +1049,29 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               children: [
                 Container(
                   width: MediaQuery.of(context).size.width / 2.5,
-                  child: TextFormField(
-                    controller: _passwordController,
-                    validator: PasswordValidator.validate,
-                    style: Theme.of(context).textTheme.bodyText1,
-                    decoration: buildSignUpInputDecoration(context, 'Password'),
-                    obscureText: !_showPassword,
-                    onSaved: (val) => _password = val,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: TextFormField(
+                      controller: _passwordController,
+                      validator: PasswordValidator.validate,
+                      style: Theme.of(context).textTheme.bodyText1,
+                      decoration: signUpInputDecoration(context, 'Password'),
+                      obscureText: !_showPassword,
+                      onSaved: (val) => _password = val,
+                    ),
                   ),
                 ),
-                // SizedBox(
-                //   width: 20,
-                // ),
+                SizedBox(
+                  width: 10,
+                ),
                 GestureDetector(
                   child: _showPassword
-                      ? Icon(Icons.visibility)
-                      : Icon(Icons.visibility_off),
+                      ? Icon(
+                          Icons.visibility,
+                          color: Theme.of(context).primaryColor,
+                        )
+                      : Icon(Icons.visibility_off,
+                          color: Theme.of(context).primaryColor),
                   onTap: () {
                     setState(() {
                       _showPassword = !_showPassword;
@@ -1060,17 +1084,17 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                 ? Container(
                     decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(5),
-                      boxShadow: [
-                        BoxShadow(color: Colors.white, spreadRadius: 8),
-                      ],
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: FlatButton(
                       color: Theme.of(context).primaryColor,
-                      textColor: Theme.of(context).accentColor,
+                      // textColor: Theme.of(context).accentColor,
                       child: Text(
                         _submitButtonText,
-                        style: Theme.of(context).textTheme.bodyText1,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: Theme.of(context).accentColor),
                         maxLines: 1,
                       ),
                       onPressed: submitSignupSigninResetForm,
@@ -1097,19 +1121,21 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                       controller: _confirmPasswordController,
                       validator: PasswordValidator.validate,
                       style: Theme.of(context).textTheme.bodyText1,
-                      decoration: buildSignUpInputDecoration(
-                          context, 'Confirm Password'),
+                      decoration:
+                          signUpInputDecoration(context, 'Confirm Password'),
                       obscureText: !_showConfirmPassword,
                       // onSaved: (val) => _password = val,
                     ),
                   ),
-                  // SizedBox(
-                  //   width: 20,
-                  // ),
+                  SizedBox(
+                    width: 10,
+                  ),
                   GestureDetector(
                     child: _showConfirmPassword
-                        ? Icon(Icons.visibility)
-                        : Icon(Icons.visibility_off),
+                        ? Icon(Icons.visibility,
+                            color: Theme.of(context).primaryColor)
+                        : Icon(Icons.visibility_off,
+                            color: Theme.of(context).primaryColor),
                     onTap: () {
                       setState(() {
                         _showConfirmPassword = !_showConfirmPassword;
@@ -1118,23 +1144,19 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                   ),
                 ],
               ),
-              // SizedBox(
-              //   width: 20,
-              // ),
               Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
-                  borderRadius: BorderRadius.circular(5),
-                  boxShadow: [
-                    BoxShadow(color: Colors.white, spreadRadius: 8),
-                  ],
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: FlatButton(
                   color: Theme.of(context).primaryColor,
                   textColor: Theme.of(context).accentColor,
                   child: Text(
                     _submitButtonText,
-                    style: Theme.of(context).textTheme.bodyText1,
+                    style: Theme.of(context).textTheme.bodyText1.copyWith(
+                          color: Theme.of(context).accentColor,
+                        ),
                     maxLines: 1,
                   ),
                   onPressed: submitSignupSigninResetForm,
@@ -1190,9 +1212,10 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                   padding: EdgeInsets.all(8.0),
                   child: Text(
                     _submitButtonText,
-                    style: TextStyle(
-                      fontSize: 18.0,
-                    ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1
+                        .copyWith(color: Theme.of(context).accentColor),
                   ),
                 ),
                 onPressed: submitSignupSigninResetForm,
@@ -1210,7 +1233,12 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          showForgotPassword(_showForgotPassword),
+          authFormType != AuthFormType.reset
+              ? showForgotPassword(_showForgotPassword)
+              : Container(
+                  width: 0,
+                  height: 0,
+                ),
           GestureDetector(
             child: Text(
               _switchButtonText,
@@ -1236,9 +1264,11 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           maxLines: 1,
         ),
         onTap: () {
-          setState(() {
-            authFormType = AuthFormType.reset;
-          });
+          setState(
+            () {
+              authFormType = AuthFormType.reset;
+            },
+          );
         });
   }
 

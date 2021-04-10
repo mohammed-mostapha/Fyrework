@@ -1,8 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:flutter/material.dart';
-import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
+import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:video_player/video_player.dart';
 
 import '../constants/constants.dart';
@@ -274,7 +275,7 @@ class _CameraPickerViewerState extends State<CameraPickerViewer> {
       minWidth: 20.0,
       height: 32.0,
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      color: fyreworkTheme().accentColor,
+      color: fyreworkDarkTheme().accentColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(3.0),
       ),
@@ -285,7 +286,7 @@ class _CameraPickerViewerState extends State<CameraPickerViewer> {
         //   fontSize: 17.0,
         //   fontWeight: FontWeight.normal,
         // ),
-        style: fyreworkTheme().textTheme.bodyText1,
+        style: fyreworkDarkTheme().textTheme.bodyText1,
       ),
       onPressed: createAssetEntityAndPop,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

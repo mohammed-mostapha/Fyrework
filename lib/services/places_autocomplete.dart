@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:Fyrework/models/myUser.dart';
-import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
+import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:uuid/uuid.dart';
 import 'address_search.dart';
 import 'place_service.dart';
@@ -37,7 +37,7 @@ class _PlacesAutocompleteState extends State<PlacesAutocomplete> {
       child: Expanded(
         child: TextFormField(
           decoration: widget.signUpDecoraiton
-              ? buildSignUpInputDecoration(context, 'Location')
+              ? signUpInputDecoration(context, 'Location')
               : profileEditingInputDecoration(context, 'Location'),
           style: TextStyle(
               color: widget.signUpDecoraiton

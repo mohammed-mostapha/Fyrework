@@ -101,7 +101,7 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                       color: Theme.of(context).accentColor,
                     ),
                 controller: _addProposalController,
-                decoration: buildSignUpInputDecoration(
+                decoration: signUpInputDecoration(
                   context,
                   'Describe your proposal in brief',
                 ).copyWith(
@@ -364,9 +364,9 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                                   style: TextStyle(
                                       color: Theme.of(context).accentColor),
                                   controller: _offeredBudgetController,
-                                  decoration: buildSignUpInputDecoration(
-                                          context, '0.00')
-                                      .copyWith(
+                                  decoration:
+                                      signUpInputDecoration(context, '0.00')
+                                          .copyWith(
                                     enabledBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
                                         color: Theme.of(context)

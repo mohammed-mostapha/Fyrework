@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:Fyrework/screens/add_gig/assets_picker/src/constants/constants.dart';
 import 'package:Fyrework/services/database.dart';
-import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
+import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -231,7 +231,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                       .textTheme
                                       .bodyText1
                                       .copyWith(
-                                          color: fyreworkTheme().accentColor))
+                                          color: Theme.of(context).accentColor))
                               : Container(
                                   width: 130,
                                   child: StreamBuilder(
@@ -402,7 +402,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyText1
-                                  .copyWith(color: fyreworkTheme().accentColor),
+                                  .copyWith(
+                                      color: Theme.of(context).accentColor),
                             ),
                             SizedBox(
                               width: 10,
@@ -507,7 +508,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                   .textTheme
                                                   .bodyText1
                                                   .copyWith(
-                                                      color: fyreworkTheme()
+                                                      color: Theme.of(context)
                                                           .accentColor),
                                             ),
                                           ),

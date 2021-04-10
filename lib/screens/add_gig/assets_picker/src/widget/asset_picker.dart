@@ -3,7 +3,8 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
+import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
+import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -263,10 +264,10 @@ class AssetPicker extends StatelessWidget {
                       Flexible(
                         child: Text(
                           provider.currentPathEntity.name ?? '',
-                          style: fyreworkTheme()
+                          style: fyreworkDarkTheme()
                               .textTheme
                               .bodyText1
-                              .copyWith(color: fyreworkTheme().accentColor),
+                              .copyWith(color: fyreworkDarkTheme().accentColor),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -359,10 +360,11 @@ class AssetPicker extends StatelessWidget {
                           padding: const EdgeInsets.only(right: 10.0),
                           child: Text(
                             pathEntity.name ?? '',
-                            style: fyreworkTheme()
+                            style: fyreworkDarkTheme()
                                 .textTheme
                                 .bodyText1
-                                .copyWith(color: fyreworkTheme().accentColor),
+                                .copyWith(
+                                    color: fyreworkDarkTheme().accentColor),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -370,8 +372,8 @@ class AssetPicker extends StatelessWidget {
                       ),
                       Text(
                         '(${pathEntity.assetCount})',
-                        style: fyreworkTheme().textTheme.bodyText1.copyWith(
-                            color: fyreworkTheme().textTheme.caption.color),
+                        style: fyreworkDarkTheme().textTheme.bodyText1.copyWith(
+                            color: fyreworkDarkTheme().textTheme.caption.color),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -526,10 +528,10 @@ class AssetPicker extends StatelessWidget {
                   ? '${Constants.textDelegate.confirm}'
                       '(${provider.selectedAssets.length}/${provider.maxAssets})'
                   : Constants.textDelegate.confirm,
-              style: fyreworkTheme().textTheme.bodyText1.copyWith(
+              style: fyreworkDarkTheme().textTheme.bodyText1.copyWith(
                     color: provider.isSelectedNotEmpty
-                        ? fyreworkTheme().primaryColor
-                        : fyreworkTheme().textTheme.caption.color,
+                        ? fyreworkDarkTheme().primaryColor
+                        : fyreworkDarkTheme().textTheme.caption.color,
                   ),
             ),
             onPressed: () async {
@@ -748,7 +750,8 @@ class AssetPicker extends StatelessWidget {
                       ? isSingleAssetMode
                           ? Icon(Icons.check,
                               size: 18.0,
-                              color: fyreworkTheme().textTheme.bodyText2.color)
+                              color:
+                                  fyreworkDarkTheme().textTheme.bodyText2.color)
                           : Text(
                               '${selectedAssets.indexOf(asset) + 1}',
                               style: TextStyle(
@@ -980,10 +983,10 @@ class AssetPicker extends StatelessWidget {
                         ? '${Constants.textDelegate.preview}'
                             '(${provider.selectedAssets.length})'
                         : Constants.textDelegate.preview,
-                    style: fyreworkTheme().textTheme.bodyText1.copyWith(
+                    style: fyreworkDarkTheme().textTheme.bodyText1.copyWith(
                           color: isSelectedNotEmpty
-                              ? fyreworkTheme().accentColor
-                              : fyreworkTheme().textTheme.caption.color,
+                              ? fyreworkDarkTheme().accentColor
+                              : fyreworkDarkTheme().textTheme.caption.color,
                         ));
               },
             ),

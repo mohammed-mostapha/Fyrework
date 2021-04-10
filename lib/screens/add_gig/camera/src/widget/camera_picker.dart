@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
 import 'package:Fyrework/screens/add_gig/assets_picker/pages/multi_assets_picker.dart';
-import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
+import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../constants/constants.dart';
@@ -664,7 +665,7 @@ class CameraPickerState extends State<CameraPicker> {
       },
       child: Material(
         // color: FyreworkrColors.fyreworkBlack,
-        color: fyreworkTheme()
+        color: fyreworkDarkTheme()
             .bottomAppBarColor
             .withOpacity(isAppleOS ? 0.90 : 1.0),
         child: Stack(

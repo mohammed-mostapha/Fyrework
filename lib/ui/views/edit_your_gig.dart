@@ -473,12 +473,11 @@ class _EditYourGigState extends State<EditYourGig> {
                                         child: TextFormField(
                                           textAlign: TextAlign.center,
                                           controller: _editedBudgetController,
-                                          decoration:
-                                              buildSignUpInputDecoration(
-                                                      context, 'Budget')
-                                                  .copyWith(
-                                                      enabledBorder:
-                                                          InputBorder.none),
+                                          decoration: signUpInputDecoration(
+                                                  context, 'Budget')
+                                              .copyWith(
+                                                  enabledBorder:
+                                                      InputBorder.none),
                                           // Only numbers can be entered
                                           keyboardType: TextInputType.number,
                                           inputFormatters: <TextInputFormatter>[
@@ -597,10 +596,8 @@ class _EditYourGigState extends State<EditYourGig> {
                                                 RegExp("[a-z0-9_]")),
                                           ],
 
-                                          decoration:
-                                              buildSignUpInputDecoration(
-                                                  context,
-                                                  'Favorite #Hashtags'),
+                                          decoration: signUpInputDecoration(
+                                              context, 'Favorite #Hashtags'),
                                         ),
                                         suggestionsCallback: (pattern) async {
                                           return await PopularHashtagsService
@@ -715,7 +712,7 @@ class _EditYourGigState extends State<EditYourGig> {
                                       const EdgeInsets.fromLTRB(0, 10, 10, 10),
                                   child: TextFormField(
                                     controller: _editedGigPostController,
-                                    decoration: buildSignUpInputDecoration(
+                                    decoration: signUpInputDecoration(
                                         context, 'Describe your gig...'),
                                     inputFormatters: [
                                       new LengthLimitingTextInputFormatter(500),

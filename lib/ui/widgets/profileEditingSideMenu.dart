@@ -9,7 +9,7 @@ import 'package:Fyrework/services/places_autocomplete.dart';
 import 'package:Fyrework/services/popularHashtags.dart';
 import 'package:Fyrework/services/storage_repo.dart';
 import 'package:Fyrework/ui/shared/constants.dart';
-import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
+import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:Fyrework/view_controllers/myUser_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -55,9 +55,11 @@ class _ProfileEditingSideMenuState extends State<ProfileEditingSideMenu> {
   String myNewLocation = PlacesAutocomplete.placesAutoCompleteController.text;
   String _phoneNumberToVerify;
   final _myFavoriteHashtagsListEmpty = SnackBar(
-    backgroundColor: fyreworkTheme().accentColor,
-    content: Text('At least one #Hashtag is required!',
-        style: fyreworkTheme().textTheme.bodyText1),
+    // backgroundColor: Theme.of(context).accentColor,
+    content: Text(
+      'At least one #Hashtag is required!',
+      // style: Theme.of(context).textTheme.bodyText1,
+    ),
   );
 
   bool validate() {

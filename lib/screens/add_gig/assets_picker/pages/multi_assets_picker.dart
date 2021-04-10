@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:async';
-import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
+import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -460,10 +460,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                             backgroundColor: Theme.of(context).primaryColor,
                             label: Text(
                               '$e',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1
-                                  .copyWith(color: fyreworkTheme().accentColor),
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
                             onDeleted: () {
                               setState(() {

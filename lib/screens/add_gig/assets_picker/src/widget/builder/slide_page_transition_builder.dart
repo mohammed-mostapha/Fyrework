@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:Fyrework/screens/add_gig/assets_picker/src/wechat_assets_picker.dart';
-import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
+import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
+import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:Fyrework/screens/add_gig/camera/src/widget/camera_picker.dart';
 
@@ -62,28 +63,28 @@ class SlidePageTransitionBuilder<T> extends PageRoute<T> {
         child: Scaffold(
           bottomNavigationBar: BottomAppBar(
             child: TabBar(
-              indicatorColor: fyreworkTheme().accentColor,
+              indicatorColor: fyreworkDarkTheme().accentColor,
               tabs: [
                 Tab(
                   child: Text(
                     'Gallery',
-                    style: fyreworkTheme().textTheme.bodyText1.copyWith(
+                    style: fyreworkDarkTheme().textTheme.bodyText1.copyWith(
                           // color: theme.textTheme.caption.color,
-                          color: fyreworkTheme().textTheme.caption.color,
+                          color: fyreworkDarkTheme().textTheme.caption.color,
                         ),
                   ),
                 ),
                 Tab(
                   child: Text(
                     'Camera',
-                    style: fyreworkTheme().textTheme.bodyText1.copyWith(
-                          color: fyreworkTheme().textTheme.caption.color,
+                    style: fyreworkDarkTheme().textTheme.bodyText1.copyWith(
+                          color: fyreworkDarkTheme().textTheme.caption.color,
                         ),
                   ),
                 ),
               ],
             ),
-            color: fyreworkTheme()
+            color: fyreworkDarkTheme()
                 .bottomAppBarColor
                 .withOpacity(isAppleOS ? 0.90 : 1.0),
           ),

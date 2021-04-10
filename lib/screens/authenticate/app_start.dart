@@ -25,7 +25,6 @@ class _StartPageState extends State<StartPage> {
     });
 
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -88,13 +87,9 @@ class _StartPageState extends State<StartPage> {
                         child: FittedBox(
                           fit: BoxFit.contain,
                           child: Text(
-                            AppLocalizations.of(context).translate('Login'),
-                            // 'Create account',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                            ),
-                          ),
+                              AppLocalizations.of(context).translate('Login'),
+                              // 'Create account',
+                              style: Theme.of(context).textTheme.bodyText1),
                         ),
                       ),
                     ),

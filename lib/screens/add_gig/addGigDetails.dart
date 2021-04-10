@@ -5,7 +5,7 @@ import 'package:Fyrework/screens/add_gig/assets_picker/pages/multi_assets_picker
 import 'package:Fyrework/screens/add_gig/sizeConfig.dart';
 import 'package:Fyrework/services/places_autocomplete.dart';
 import 'package:Fyrework/ui/shared/constants.dart';
-import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
+import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -238,7 +238,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                       RegExp("[a-z0-9_]")),
                                 ],
 
-                                decoration: buildSignUpInputDecoration(
+                                decoration: signUpInputDecoration(
                                     context, 'Favorite #Hashtags'),
                               ),
                               suggestionsCallback: (pattern) async {
@@ -349,7 +349,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
                         child: TextFormField(
-                          decoration: buildSignUpInputDecoration(
+                          decoration: signUpInputDecoration(
                               context, 'Describe your gig...'),
                           inputFormatters: [
                             new LengthLimitingTextInputFormatter(500),
@@ -443,14 +443,14 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                     MediaQuery.of(context).size.width / 6, 0),
                                 width: MediaQuery.of(context).size.width / 3,
                                 child: TextFormField(
-                                  decoration: buildSignUpInputDecoration(
-                                          context, 'Budget')
-                                      .copyWith(
-                                          enabledBorder: InputBorder.none),
+                                  decoration:
+                                      signUpInputDecoration(context, 'Budget')
+                                          .copyWith(
+                                              enabledBorder: InputBorder.none),
                                   // Only numbers can be entered
                                   keyboardType: TextInputType.number,
                                   inputFormatters: <TextInputFormatter>[
-                                    WhitelistingTextInputFormatter.digitsOnly
+                                    FilteringTextInputFormatter.digitsOnly
                                   ],
                                   onSaved: (value) => _gigBudget = value,
                                   validator: (value) =>

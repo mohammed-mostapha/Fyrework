@@ -1,6 +1,6 @@
 import 'package:Fyrework/services/connectivity_provider.dart';
 import 'package:Fyrework/services/connectivity_status.dart';
-import 'package:Fyrework/ui/shared/fyreworkTheme.dart';
+import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -38,7 +38,7 @@ class _NetworkSensorState extends State<NetworkSensor> {
                     ? Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(
-                          color: fyreworkTheme().accentColor,
+                          color: Theme.of(context).accentColor,
                           width: MediaQuery.of(context).size.width,
                           height: 30,
                           child: Center(
@@ -61,7 +61,7 @@ class _NetworkSensorState extends State<NetworkSensor> {
           child: Center(
               child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(
-                      fyreworkTheme().accentColor))),
+                      Theme.of(context).accentColor))),
         );
       },
     );
