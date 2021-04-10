@@ -792,68 +792,87 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  child: GestureDetector(
-                    child: Text(
-                      'Add',
-                      style: TextStyle(
-                        shadows: [
-                          Shadow(
-                              color: Theme.of(context).primaryColor,
-                              offset: Offset(0, -2.5))
-                        ],
-                        fontSize: 14,
-                        color: Colors.transparent,
-                        decoration: TextDecoration.underline,
-                        decorationThickness: 2,
-                        decorationColor: Theme.of(context).primaryColor,
-                        decorationStyle: TextDecorationStyle.dotted,
+                Container(
+                  width: 70,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: GestureDetector(
+                          child: Center(
+                            child: Text(
+                              'Add',
+                              style: TextStyle(
+                                shadows: [
+                                  Shadow(
+                                      color: Theme.of(context).primaryColor,
+                                      offset: Offset(0, -2.5))
+                                ],
+                                fontSize: 14,
+                                color: Colors.transparent,
+                                decoration: TextDecoration.underline,
+                                decorationThickness: 2,
+                                decorationColor: Theme.of(context).primaryColor,
+                                decorationStyle: TextDecorationStyle.dotted,
+                              ),
+                            ),
+                          ),
+                          onTap: () {
+                            if (_myFavoriteHashtags.length < 20 != true) {
+                              setState(() {
+                                clientSideWarning = 'Only 20 #Hashtags allowed';
+                                _myFavoriteHashtagsController.clear();
+                              });
+                            } else if (_myFavoriteHashtags.contains(
+                                '#' + _myFavoriteHashtagsController.text)) {
+                              setState(() {
+                                clientSideWarning =
+                                    'Duplicate #Hashtags are not allowed';
+                              });
+                              _myFavoriteHashtagsController.clear();
+                            } else if (_myFavoriteHashtagsController
+                                    .text.isNotEmpty &&
+                                !_myFavoriteHashtags.contains(
+                                    '#' + _myFavoriteHashtagsController.text) &&
+                                _myFavoriteHashtags.length < 20) {
+                              setState(() {
+                                _myFavoriteHashtags.add(
+                                    '#' + _myFavoriteHashtagsController.text);
+                                _myFavoriteHashtagsController.clear();
+                                FocusScope.of(context).unfocus();
+                                print(_myFavoriteHashtags);
+                              });
+                            }
+                          },
+                        ),
                       ),
-                    ),
-                    onTap: () {
-                      if (_myFavoriteHashtags.length < 20 != true) {
-                        setState(() {
-                          clientSideWarning = 'Only 20 #Hashtags allowed';
-                          _myFavoriteHashtagsController.clear();
-                        });
-                      } else if (_myFavoriteHashtags
-                          .contains('#' + _myFavoriteHashtagsController.text)) {
-                        setState(() {
-                          clientSideWarning =
-                              'Duplicate #Hashtags are not allowed';
-                        });
-                        _myFavoriteHashtagsController.clear();
-                      } else if (_myFavoriteHashtagsController
-                              .text.isNotEmpty &&
-                          !_myFavoriteHashtags.contains(
-                              '#' + _myFavoriteHashtagsController.text) &&
-                          _myFavoriteHashtags.length < 20) {
-                        setState(() {
-                          _myFavoriteHashtags
-                              .add('#' + _myFavoriteHashtagsController.text);
-                          _myFavoriteHashtagsController.clear();
-                          FocusScope.of(context).unfocus();
-                          print(_myFavoriteHashtags);
-                        });
-                      }
-                    },
+                    ],
                   ),
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: TextFormField(
-                validator: NameValidator.validate,
-                enableSuggestions: false,
-                style: Theme.of(context).textTheme.bodyText1,
-                decoration: signUpInputDecoration(context, 'Name'),
-                // onChanged: (val) {
-                //   setState(() => _name = val);
-                // },
-                onSaved: (val) => _name = val,
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: TextFormField(
+                      validator: NameValidator.validate,
+                      enableSuggestions: false,
+                      style: Theme.of(context).textTheme.bodyText1,
+                      decoration: signUpInputDecoration(context, 'Name'),
+                      // onChanged: (val) {
+                      //   setState(() => _name = val);
+                      // },
+                      onSaved: (val) => _name = val,
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 70,
+                ),
+              ],
             ),
             //2nd TypeAhead for Handles goes here
             Padding(
@@ -920,6 +939,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                     ),
                   ),
                   Container(
+                    width: 20,
                     padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
                     child: _myHandleController.text.isEmpty
                         ? Container(
@@ -939,28 +959,39 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                                 color: Theme.of(context).primaryColor,
                               ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                    child: GestureDetector(
-                      child: Text(
-                        'Add',
-                        style: TextStyle(
-                          shadows: [
-                            Shadow(
-                                color: Theme.of(context).primaryColor,
-                                offset: Offset(0, -2.5))
-                          ],
-                          fontSize: 14,
-                          color: Colors.transparent,
-                          decoration: TextDecoration.underline,
-                          decorationThickness: 2,
-                          decorationColor: Theme.of(context).primaryColor,
-                          decorationStyle: TextDecorationStyle.dotted,
+                  Container(
+                    width: 50,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          child: GestureDetector(
+                            child: Center(
+                              child: Text(
+                                'Add',
+                                style: TextStyle(
+                                  shadows: [
+                                    Shadow(
+                                        color: Theme.of(context).primaryColor,
+                                        offset: Offset(0, -2.5))
+                                  ],
+                                  fontSize: 14,
+                                  color: Colors.transparent,
+                                  decoration: TextDecoration.underline,
+                                  decorationThickness: 2,
+                                  decorationColor:
+                                      Theme.of(context).primaryColor,
+                                  decorationStyle: TextDecorationStyle.dotted,
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              FocusScope.of(context).unfocus();
+                            },
+                          ),
                         ),
-                      ),
-                      onTap: () {
-                        FocusScope.of(context).unfocus();
-                      },
+                      ],
                     ),
                   ),
                 ],
@@ -973,12 +1004,20 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                 PlacesAutocomplete(
                   signUpDecoraiton: true,
                 ),
-                IconButton(
-                  color: Theme.of(context).primaryColor,
-                  onPressed: () {
-                    getUserLocation();
-                  },
-                  icon: Icon(Icons.gps_fixed),
+                Container(
+                  width: 70,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        color: Theme.of(context).primaryColor,
+                        onPressed: () {
+                          getUserLocation();
+                        },
+                        icon: Icon(Icons.gps_fixed),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -995,16 +1034,23 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                       color: Colors.grey,
                     ),
                   )),
-                  Checkbox(
-                    value: _isMinor,
-                    onChanged: (bool value) {
-                      setState(() {
-                        _isMinor = !_isMinor;
-                        print(_isMinor);
-                      });
-                    },
-                    activeColor: Theme.of(context).primaryColor,
-                    checkColor: Theme.of(context).accentColor,
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Checkbox(
+                      value: _isMinor,
+                      onChanged: (bool value) {
+                        setState(() {
+                          _isMinor = !_isMinor;
+                          print(_isMinor);
+                        });
+                      },
+                      activeColor: Theme.of(context).primaryColor,
+                      checkColor: Theme.of(context).accentColor,
+                    ),
                   ),
                 ],
               ),

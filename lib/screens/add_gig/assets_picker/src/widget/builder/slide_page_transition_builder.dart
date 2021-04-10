@@ -70,7 +70,7 @@ class SlidePageTransitionBuilder<T> extends PageRoute<T> {
                     'Gallery',
                     style: fyreworkDarkTheme().textTheme.bodyText1.copyWith(
                           // color: theme.textTheme.caption.color,
-                          color: fyreworkDarkTheme().textTheme.caption.color,
+                          color: fyreworkDarkTheme().accentColor,
                         ),
                   ),
                 ),
@@ -78,7 +78,7 @@ class SlidePageTransitionBuilder<T> extends PageRoute<T> {
                   child: Text(
                     'Camera',
                     style: fyreworkDarkTheme().textTheme.bodyText1.copyWith(
-                          color: fyreworkDarkTheme().textTheme.caption.color,
+                          color: fyreworkDarkTheme().accentColor,
                         ),
                   ),
                 ),
