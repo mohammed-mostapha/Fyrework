@@ -20,6 +20,9 @@ class _StartPageState extends State<StartPage> {
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool darkModeOn = brightness == Brightness.dark;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       previewButtons();
     });
@@ -28,7 +31,9 @@ class _StartPageState extends State<StartPage> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/splash.png'),
+            image: darkModeOn
+                ? AssetImage('assets/images/splash.png')
+                : AssetImage('assets/images/splash_light.png'),
           ),
         ),
         child: Align(
@@ -50,9 +55,12 @@ class _StartPageState extends State<StartPage> {
                       height: 40,
                       width: 80,
                       decoration: BoxDecoration(
-                        border: Border.all(width: 2, color: Colors.white),
+                        border: Border.all(
+                          width: 2,
+                          color: Theme.of(context).primaryColor,
+                        ),
                         borderRadius: BorderRadius.circular(5),
-                        color: Colors.black,
+                        color: Theme.of(context).accentColor,
                       ),
                       child: Center(
                         child: FittedBox(
@@ -60,10 +68,7 @@ class _StartPageState extends State<StartPage> {
                           child: Text(
                             AppLocalizations.of(context).translate('Register'),
                             // 'Create account',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                            ),
+                            style: Theme.of(context).textTheme.bodyText1,
                           ),
                         ),
                       ),
@@ -77,19 +82,22 @@ class _StartPageState extends State<StartPage> {
                       height: 40,
                       width: 80,
                       decoration: BoxDecoration(
-                        border: Border.all(width: 2, color: Colors.white),
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.black,
-                      ),
+                          border: Border.all(
+                            width: 2,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                          color: Theme.of(context).accentColor),
                       // width: MediaQuery.of(context).size.width * 0.80,
                       // height: 50,
                       child: Center(
                         child: FittedBox(
                           fit: BoxFit.contain,
                           child: Text(
-                              AppLocalizations.of(context).translate('Login'),
-                              // 'Create account',
-                              style: Theme.of(context).textTheme.bodyText1),
+                            AppLocalizations.of(context).translate('Login'),
+                            // 'Create account',
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
                         ),
                       ),
                     ),

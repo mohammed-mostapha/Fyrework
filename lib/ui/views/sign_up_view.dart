@@ -1038,7 +1038,9 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
+                        color: darkModeOn
+                            ? Theme.of(context).primaryColor
+                            : Colors.grey[200],
                         borderRadius: BorderRadius.circular(10)),
                     child: Checkbox(
                       value: _isMinor,
@@ -1249,9 +1251,13 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       (authFormType != AuthFormType.signIn &&
               authFormType != AuthFormType.signUp)
           ? Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
               // width: MediaQuery.of(context).size.width * 0.8,
               width: double.infinity,
-              child: RaisedButton(
+              child: FlatButton(
                 color: Theme.of(context).primaryColor,
                 textColor: Theme.of(context).accentColor,
                 child: Padding(
@@ -1276,27 +1282,30 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               width: 0,
               height: 0,
             ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          authFormType != AuthFormType.reset
-              ? showForgotPassword(_showForgotPassword)
-              : Container(
-                  width: 0,
-                  height: 0,
-                ),
-          GestureDetector(
-            child: Text(
-              _switchButtonText,
-              style: Theme.of(context).textTheme.bodyText1,
-              // maxLines: 1,
+      Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            authFormType != AuthFormType.reset
+                ? showForgotPassword(_showForgotPassword)
+                : Container(
+                    width: 0,
+                    height: 0,
+                  ),
+            GestureDetector(
+              child: Text(
+                _switchButtonText,
+                style: Theme.of(context).textTheme.bodyText1,
+                // maxLines: 1,
+              ),
+              onTap: () {
+                switchFormState(_newformState);
+                _passwordController.clear();
+              },
             ),
-            onTap: () {
-              switchFormState(_newformState);
-              _passwordController.clear();
-            },
-          ),
-        ],
+          ],
+        ),
       ),
       buildSocialIcons(_showSocial),
     ];
