@@ -1,3 +1,4 @@
+import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:flutter/material.dart';
 import 'place_service.dart';
 
@@ -15,8 +16,8 @@ class AddressSearch extends SearchDelegate<Suggestion> {
       IconButton(
         tooltip: 'Clear',
         icon: Icon(Icons.clear),
+        color: Colors.grey,
         onPressed: () {
-          close(context, null);
           query = '';
         },
       )
@@ -28,6 +29,7 @@ class AddressSearch extends SearchDelegate<Suggestion> {
     return IconButton(
       tooltip: 'Back',
       icon: Icon(Icons.arrow_back),
+      color: Colors.grey,
       onPressed: () {
         close(context, null);
       },
@@ -49,13 +51,18 @@ class AddressSearch extends SearchDelegate<Suggestion> {
       builder: (context, snapshot) => query == ''
           ? Container(
               padding: EdgeInsets.all(16.0),
-              child: Text('Enter your address'),
+              child: Text(
+                'Enter your address',
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
             )
           : snapshot.hasData
               ? ListView.builder(
                   itemBuilder: (context, index) => ListTile(
-                    title:
-                        Text((snapshot.data[index] as Suggestion).description),
+                    title: Text(
+                      (snapshot.data[index] as Suggestion).description,
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
                     onTap: () {
                       close(context, snapshot.data[index] as Suggestion);
                       // locationController.text =
@@ -64,7 +71,13 @@ class AddressSearch extends SearchDelegate<Suggestion> {
                   ),
                   itemCount: snapshot.data.length,
                 )
-              : Container(child: Text('Loading...')),
+              : Container(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    'Loading...',
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                ),
     );
   }
 }
