@@ -3,13 +3,13 @@ import 'package:flutter/scheduler.dart';
 
 //
 
-var brightness = SchedulerBinding.instance.window.platformBrightness;
-bool darkModeOn = brightness == Brightness.dark;
+// var brightness = SchedulerBinding.instance.window.platformBrightness;
+// bool darkModeOn = brightness == Brightness.dark;
 
 InputDecoration signUpInputDecoration(BuildContext context, String hint) {
   return InputDecoration(
     filled: true,
-    fillColor: darkModeOn ? Colors.grey[900] : Colors.grey[200],
+    // fillColor: darkModeOn ? Colors.grey[900] : Colors.grey[200],
     contentPadding: EdgeInsets.only(left: 10),
     // hintStyle: Theme.of(context).textTheme.caption,
     hintText: hint,

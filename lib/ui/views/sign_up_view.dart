@@ -10,13 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:Fyrework/main.dart';
 import 'package:Fyrework/screens/add_gig/assets_picker/constants/picker_model.dart';
 import 'package:Fyrework/screens/add_gig/assets_picker/src/widget/asset_picker.dart';
 import 'package:Fyrework/services/auth_service.dart';
 import 'package:Fyrework/services/popularHashtags.dart';
 import 'package:Fyrework/services/takenHandles.dart';
-import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:Fyrework/services/places_autocomplete.dart';
@@ -719,13 +717,15 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                           child: Chip(
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
-                            backgroundColor: Colors.black,
-                            label: Text('$e',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    .copyWith(
-                                        color: Theme.of(context).accentColor)),
+                            backgroundColor: Theme.of(context).primaryColor,
+                            label: Text(
+                              '$e',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .copyWith(
+                                      color: Theme.of(context).accentColor),
+                            ),
                             onDeleted: () {
                               setState(() {
                                 _myFavoriteHashtags
@@ -733,7 +733,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                                 print(_myFavoriteHashtags.length);
                               });
                             },
-                            deleteIconColor: Colors.white,
+                            deleteIconColor: Theme.of(context).accentColor,
                           ),
                         ))
                     .toList(),
@@ -1034,24 +1034,27 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                       color: Colors.grey,
                     ),
                   )),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: darkModeOn
-                            ? Theme.of(context).primaryColor
-                            : Colors.grey[200],
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Checkbox(
-                      value: _isMinor,
-                      onChanged: (bool value) {
-                        setState(() {
-                          _isMinor = !_isMinor;
-                          print(_isMinor);
-                        });
-                      },
-                      activeColor: Theme.of(context).primaryColor,
-                      checkColor: Theme.of(context).accentColor,
+                  Padding(
+                    padding: const EdgeInsets.only(right: 5),
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            width: 0.5, color: Theme.of(context).primaryColor),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Checkbox(
+                        value: _isMinor,
+                        onChanged: (bool value) {
+                          setState(() {
+                            _isMinor = !_isMinor;
+                            print(_isMinor);
+                          });
+                        },
+                        activeColor: Theme.of(context).primaryColor,
+                        checkColor: Theme.of(context).accentColor,
+                      ),
                     ),
                   ),
                 ],

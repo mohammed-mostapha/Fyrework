@@ -40,6 +40,7 @@ ThemeData fyreworkLightTheme() {
   final ThemeData base = ThemeData();
   return base.copyWith(
       scaffoldBackgroundColor: Color(0xFFFFFFFF),
+      inputDecorationTheme: InputDecorationTheme(fillColor: Colors.grey[200]),
       textTheme: _basicTextTheme(base.textTheme),
       primaryColor: Color(0xFF000000),
       accentColor: Color(0XFFFFFFFF),
