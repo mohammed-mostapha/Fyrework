@@ -254,8 +254,8 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
       scale: _likeAnimationController,
       child: GestureDetector(
         child: SizedBox(
-          width: 20,
-          height: 20,
+          width: 25,
+          height: 25,
           child: SvgPicture.asset(
             liked ? heartSolid : heart,
             semanticsLabel: 'Like',
@@ -268,8 +268,8 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
 
     GestureDetector commentButton = GestureDetector(
       child: SizedBox(
-        width: 20,
-        height: 20,
+        width: 25,
+        height: 25,
         child: SvgPicture.asset(
           comment,
           semanticsLabel: 'Comment',
@@ -393,7 +393,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
         children: [
           Container(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+              padding: const EdgeInsets.fromLTRB(8, 10, 8, 10),
               child: Column(
                 children: <Widget>[
                   Row(
@@ -401,11 +401,12 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                     children: <Widget>[
                       GestureDetector(
                         child: Container(
-                          width: 200,
+                          // width: 200,
+                          height: 50,
                           child: Row(
                             children: [
                               CircleAvatar(
-                                maxRadius: 20,
+                                maxRadius: 30,
                                 backgroundColor: Theme.of(context).primaryColor,
                                 backgroundImage:
                                     NetworkImage("${widget.gigOwnerAvatarUrl}"),
@@ -414,135 +415,40 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                                 width: 10,
                                 height: 0,
                               ),
-                              Flexible(
-                                child: Text(
-                                  capitalize("${widget.gigOwnerUsername}"),
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      capitalize("${widget.gigOwnerUsername}"),
+                                      overflow: TextOverflow.ellipsis,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      '${widget.gigLocation}',
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2
+                                          .copyWith(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
                         ),
                         onTap: showUserProfile,
                       ),
-                      (myGig && !widget.appointed)
-                          ? PopupMenuButton(
-                              color: Theme.of(context).primaryColor,
-                              onSelected: yourGigChoicesAction,
-                              itemBuilder: (BuildContext context) {
-                                return notAppointedGigActionTexts
-                                    .map((String choice) {
-                                  return PopupMenuItem<String>(
-                                    value: choice,
-                                    child: ListTile(
-                                      leading: SizedBox(
-                                        width: 20,
-                                        height: 20,
-                                        child: SvgPicture.asset(
-                                          choice == editText
-                                              ? editIcon
-                                              : deleteIcon,
-                                          semanticsLabel: 'edit',
-                                          color: Theme.of(context).accentColor,
-                                        ),
-                                      ),
-                                      title: Text(
-                                        choice,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1
-                                            .copyWith(
-                                                color: Theme.of(context)
-                                                    .accentColor),
-                                      ),
-                                    ),
-                                  );
-                                }).toList();
-                              },
-                            )
-                          : (myGig && widget.appointed)
-                              ? PopupMenuButton(
-                                  color: Theme.of(context).primaryColor,
-                                  itemBuilder: (BuildContext context) {
-                                    return appointedGigActionTexts
-                                        .map((String choice) {
-                                      return PopupMenuItem<String>(
-                                        value: choice,
-                                        child: ListTile(
-                                          leading: SizedBox(
-                                            width: 20,
-                                            height: 20,
-                                            child: SvgPicture.asset(
-                                              choice == leaveReviewText
-                                                  ? leaveReviewIcon
-                                                  : choice ==
-                                                          markAsCompletedText
-                                                      ? markAsCompletedIcon
-                                                      : releaseEscrowPaymentIcon,
-                                              semanticsLabel: 'edit',
-                                              color:
-                                                  Theme.of(context).accentColor,
-                                            ),
-                                          ),
-                                          title: Text(
-                                            choice,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1
-                                                .copyWith(
-                                                    color: Theme.of(context)
-                                                        .accentColor),
-                                          ),
-                                        ),
-                                      );
-                                    }).toList();
-                                  },
-                                )
-                              : GestureDetector(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                          width: 1,
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(2))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        (!appliedOrHired && !gigICanDo)
-                                            ? 'APPLY'
-                                            : (!appliedOrHired && gigICanDo)
-                                                ? 'HIRE'
-                                                : (appliedOrHired && !gigICanDo)
-                                                    ? 'APPLIED'
-                                                    : 'HIRED',
-                                        // !gigICanDo ? 'APPLY' : 'HIRE',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1
-                                            .copyWith(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                      ),
-                                    ),
-                                  ),
-                                  onTap: (!appliedOrHired && !gigICanDo)
-                                      ? () {
-                                          //APPLY on this gig
-                                        }
-                                      : (!appliedOrHired && gigICanDo)
-                                          ? () {
-                                              // HIRE the gig poster
-                                            }
-                                          : (appliedOrHired && !gigICanDo)
-                                              ? () {
-                                                  // You have applied on this gig
-                                                }
-                                              : () {
-                                                  // You hired the gig poster
-                                                })
                     ],
                   ),
                 ],
@@ -568,7 +474,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(8, 0, 8, 16.0),
+            padding: const EdgeInsets.fromLTRB(13, 0, 13, 16.0),
             child: Column(
               children: <Widget>[
                 SizedBox(
@@ -590,35 +496,143 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                     ),
 
                     // width: MediaQuery.of(context).size.width / 2.5,
-                    widget.gigLocation != null
-                        ? Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: SvgPicture.asset(
-                                      mapMarkerAlt,
-                                      semanticsLabel: 'Location',
-                                      color: Theme.of(context).primaryColor,
+                    // widget.gigLocation != null
+                    //     ? Expanded(
+                    //         child: Padding(
+                    //           padding: const EdgeInsets.only(left: 10),
+                    //           child: Row(
+                    //             mainAxisAlignment: MainAxisAlignment.end,
+                    //             children: [
+                    //               SizedBox(
+                    //                 width: 16,
+                    //                 height: 16,
+                    //                 child: SvgPicture.asset(
+                    //                   mapMarkerAlt,
+                    //                   semanticsLabel: 'Location',
+                    //                   color: Theme.of(context).primaryColor,
+                    //                 ),
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ),
+                    //       )
+                    //     : Container(width: 0, height: 0),
+                    (myGig && !widget.appointed)
+                        ? PopupMenuButton(
+                            color: Theme.of(context).primaryColor,
+                            onSelected: yourGigChoicesAction,
+                            itemBuilder: (BuildContext context) {
+                              return notAppointedGigActionTexts
+                                  .map((String choice) {
+                                return PopupMenuItem<String>(
+                                  value: choice,
+                                  child: ListTile(
+                                    leading: SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: SvgPicture.asset(
+                                        choice == editText
+                                            ? editIcon
+                                            : deleteIcon,
+                                        semanticsLabel: 'edit',
+                                        color: Theme.of(context).accentColor,
+                                      ),
+                                    ),
+                                    title: Text(
+                                      choice,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1
+                                          .copyWith(
+                                              color: Theme.of(context)
+                                                  .accentColor),
                                     ),
                                   ),
-                                  Flexible(
-                                    child: Text(
-                                      '${widget.gigLocation}',
-                                      overflow: TextOverflow.ellipsis,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText2,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
+                                );
+                              }).toList();
+                            },
                           )
-                        : Container(width: 0, height: 0),
+                        : (myGig && widget.appointed)
+                            ? PopupMenuButton(
+                                color: Theme.of(context).primaryColor,
+                                itemBuilder: (BuildContext context) {
+                                  return appointedGigActionTexts
+                                      .map((String choice) {
+                                    return PopupMenuItem<String>(
+                                      value: choice,
+                                      child: ListTile(
+                                        leading: SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: SvgPicture.asset(
+                                            choice == leaveReviewText
+                                                ? leaveReviewIcon
+                                                : choice == markAsCompletedText
+                                                    ? markAsCompletedIcon
+                                                    : releaseEscrowPaymentIcon,
+                                            semanticsLabel: 'edit',
+                                            color:
+                                                Theme.of(context).accentColor,
+                                          ),
+                                        ),
+                                        title: Text(
+                                          choice,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              .copyWith(
+                                                  color: Theme.of(context)
+                                                      .accentColor),
+                                        ),
+                                      ),
+                                    );
+                                  }).toList();
+                                },
+                              )
+                            : GestureDetector(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                        width: 1,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(2))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      (!appliedOrHired && !gigICanDo)
+                                          ? 'APPLY'
+                                          : (!appliedOrHired && gigICanDo)
+                                              ? 'HIRE'
+                                              : (appliedOrHired && !gigICanDo)
+                                                  ? 'APPLIED'
+                                                  : 'HIRED',
+                                      // !gigICanDo ? 'APPLY' : 'HIRE',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1
+                                          .copyWith(
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                    ),
+                                  ),
+                                ),
+                                onTap: (!appliedOrHired && !gigICanDo)
+                                    ? () {
+                                        //APPLY on this gig
+                                      }
+                                    : (!appliedOrHired && gigICanDo)
+                                        ? () {
+                                            // HIRE the gig poster
+                                          }
+                                        : (appliedOrHired && !gigICanDo)
+                                            ? () {
+                                                // You have applied on this gig
+                                              }
+                                            : () {
+                                                // You hired the gig poster
+                                              })
                   ],
                 ),
                 SizedBox(
@@ -659,7 +673,12 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                               child: GestureDetector(
                                 child: Text(
                                   '$h',
-                                  style: Theme.of(context).textTheme.bodyText2,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText2
+                                      .copyWith(
+                                          color:
+                                              Theme.of(context).primaryColor),
                                 ),
                                 onTap: () {},
                               ),
@@ -679,6 +698,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                           child: SvgPicture.asset(
                             hourglassStart,
                             semanticsLabel: 'hourglass-start',
+                            color: Theme.of(context).primaryColor,
                           ),
                         ),
                         Container(

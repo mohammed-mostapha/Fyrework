@@ -663,10 +663,13 @@ class AppBarTextField extends StatefulWidget implements PreferredSizeWidget {
     this.revealAnimationCurve = Curves.easeIn,
     this.searchButtonIcon = const Icon(Icons.search),
     this.searchContainerColor = Colors.lightBlueAccent,
-    this.clearBtnIcon = const Icon(Icons.close),
+    this.clearBtnIcon = const Icon(
+      Icons.close,
+      color: Colors.grey,
+    ),
     this.backBtnIcon = const Icon(
       Icons.arrow_back,
-      color: Colors.white,
+      color: Colors.grey,
     ),
     this.onOpenSearchPressed,
     this.onBackPressed,

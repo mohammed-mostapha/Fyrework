@@ -5,7 +5,8 @@ class BadgeIcon extends StatelessWidget {
       {this.icon,
       this.badgeCount = 0,
       this.showIfZero = false,
-      this.badgeColor = Colors.red,
+      this.badgeColor,
+      this.badgeCountColor,
       TextStyle badgeTextStyle})
       : this.badgeTextStyle = badgeTextStyle ??
             TextStyle(
@@ -16,6 +17,7 @@ class BadgeIcon extends StatelessWidget {
   final int badgeCount;
   final bool showIfZero;
   final Color badgeColor;
+  final Color badgeCountColor;
   final TextStyle badgeTextStyle;
 
   @override
@@ -34,7 +36,7 @@ class BadgeIcon extends StatelessWidget {
         child: new Container(
           padding: EdgeInsets.all(2),
           decoration: new BoxDecoration(
-            color: badgeColor,
+            color: badgeCountColor,
             border: Border.all(width: 1, color: Colors.black),
             borderRadius: BorderRadius.circular(10),
           ),

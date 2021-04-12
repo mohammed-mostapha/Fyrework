@@ -34,6 +34,8 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool darkModeOn = brightness == Brightness.dark;
 
     return DefaultTabController(
       length: 3,
@@ -54,14 +56,17 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
                             child: SvgPicture.asset(
                               bell,
                               semanticsLabel: 'bell_notifications',
+                              color: Theme.of(context).primaryColor,
                             ),
                           ),
                           badgeCount: 999,
                           badgeColor: Theme.of(context).primaryColor,
+                          badgeCountColor: Theme.of(context).primaryColor,
                           badgeTextStyle: TextStyle(
-                            fontSize: 12,
+                            fontSize:
+                                Theme.of(context).textTheme.bodyText2.fontSize,
                             // color: Theme.of(context).primaryColor,
-                            color: Colors.white,
+                            color: Theme.of(context).accentColor,
                           ),
                         ),
                         onTap: () {},
@@ -76,7 +81,9 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'assets/images/fyrework_logo.png',
+                      darkModeOn
+                          ? 'assets/images/fyrework_logo_white.png'
+                          : 'assets/images/fyrework_logo_black.png',
                       width: 150,
                       height: 40,
                     ),

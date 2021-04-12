@@ -63,9 +63,15 @@ class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
                   url.contains("PNG")) {
                 return Container(
                   width: double.infinity,
-                  child: Image.network(
-                    url,
-                    fit: BoxFit.cover,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.network(
+                        url,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 );
               } else if (url.contains("mp4") ||

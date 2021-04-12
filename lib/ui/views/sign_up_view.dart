@@ -710,33 +710,36 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             ),
             Container(
               width: double.infinity,
-              child: Wrap(
-                children: _myFavoriteHashtags
-                    .map((e) => Padding(
-                          padding: const EdgeInsets.all(2.5),
-                          child: Chip(
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
-                            backgroundColor: Theme.of(context).primaryColor,
-                            label: Text(
-                              '$e',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1
-                                  .copyWith(
-                                      color: Theme.of(context).accentColor),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Wrap(
+                  children: _myFavoriteHashtags
+                      .map((e) => Padding(
+                            padding: const EdgeInsets.all(2.5),
+                            child: Chip(
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              backgroundColor: Theme.of(context).primaryColor,
+                              label: Text(
+                                '$e',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .copyWith(
+                                        color: Theme.of(context).accentColor),
+                              ),
+                              onDeleted: () {
+                                setState(() {
+                                  _myFavoriteHashtags
+                                      .removeWhere((item) => item == e);
+                                  print(_myFavoriteHashtags.length);
+                                });
+                              },
+                              deleteIconColor: Theme.of(context).accentColor,
                             ),
-                            onDeleted: () {
-                              setState(() {
-                                _myFavoriteHashtags
-                                    .removeWhere((item) => item == e);
-                                print(_myFavoriteHashtags.length);
-                              });
-                            },
-                            deleteIconColor: Theme.of(context).accentColor,
-                          ),
-                        ))
-                    .toList(),
+                          ))
+                      .toList(),
+                ),
               ),
             ),
             Row(
