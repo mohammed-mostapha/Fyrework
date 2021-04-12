@@ -28,82 +28,103 @@ class _StartPageState extends State<StartPage> {
     });
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: darkModeOn
-                ? AssetImage('assets/images/splash.png')
-                : AssetImage('assets/images/splash_light.png'),
-          ),
-        ),
-        child: Align(
-          alignment: Alignment(0, 0.5),
-          child: Container(
-            width: MediaQuery.of(context).size.width / 2,
-            child: AnimatedOpacity(
-              opacity: _buttonsOpacity,
-              // opacity: 1,
-              duration: const Duration(milliseconds: 1500),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pushNamed("/signUp");
-                    },
-                    child: Container(
-                      height: 40,
-                      width: 80,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 2,
-                          color: Theme.of(context).primaryColor,
+      body: SafeArea(
+        child: Container(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height / 3,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Image.asset(
+                          darkModeOn
+                              ? 'assets/images/fyrework_logo_white.png'
+                              : 'assets/images/fyrework_logo_black.png',
+                          width: 300,
+                          height: 100,
                         ),
-                        borderRadius: BorderRadius.circular(5),
-                        color: Theme.of(context).accentColor,
-                      ),
-                      child: Center(
-                        child: FittedBox(
-                          fit: BoxFit.contain,
-                          child: Text(
-                            AppLocalizations.of(context).translate('Register'),
-                            // 'Create account',
-                            style: Theme.of(context).textTheme.bodyText1,
-                          ),
-                        ),
-                      ),
+                      ],
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pushNamed("/signIn");
-                    },
-                    child: Container(
-                      height: 40,
-                      width: 80,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                            width: 2,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                          color: Theme.of(context).accentColor),
-                      // width: MediaQuery.of(context).size.width * 0.80,
-                      // height: 50,
-                      child: Center(
-                        child: FittedBox(
-                          fit: BoxFit.contain,
-                          child: Text(
-                            AppLocalizations.of(context).translate('Login'),
-                            // 'Create account',
-                            style: Theme.of(context).textTheme.bodyText1,
+                ),
+                Container(
+                  constraints: BoxConstraints(maxWidth: 300),
+                  // height: MediaQuery.of(context).size.height / 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushNamed("/signUp");
+                          },
+                          child: Container(
+                            height: 40,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 2,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              borderRadius: BorderRadius.circular(5),
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            child: Center(
+                              child: FittedBox(
+                                fit: BoxFit.contain,
+                                child: Text(
+                                    AppLocalizations.of(context)
+                                        .translate('Register'),
+                                    // 'Create account',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(
+                                            color:
+                                                Theme.of(context).accentColor)),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        SizedBox(height: 20),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushNamed("/signIn");
+                          },
+                          child: Container(
+                            height: 40,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 2,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                borderRadius: BorderRadius.circular(5),
+                                color: Theme.of(context).accentColor),
+                            // width: MediaQuery.of(context).size.width * 0.80,
+                            // height: 50,
+                            child: Center(
+                              child: FittedBox(
+                                fit: BoxFit.contain,
+                                child: Text(
+                                  AppLocalizations.of(context)
+                                      .translate('Login'),
+                                  // 'Create account',
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
