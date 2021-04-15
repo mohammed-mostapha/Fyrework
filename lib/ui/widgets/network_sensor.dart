@@ -1,5 +1,6 @@
 import 'package:Fyrework/services/connectivity_provider.dart';
 import 'package:Fyrework/services/connectivity_status.dart';
+import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,11 @@ class _NetworkSensorState extends State<NetworkSensor> {
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool darkModeOn = brightness == Brightness.dark;
+    ThemeData themeOfContext =
+        darkModeOn ? fyreworkDarkTheme() : fyreworkLightTheme();
+
     return Consumer<ConnectivityProvider>(
       builder: (context, model, chilZ) {
         if (model.isOnline != null) {
@@ -38,13 +44,14 @@ class _NetworkSensorState extends State<NetworkSensor> {
                     ? Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(
-                          color: Theme.of(context).accentColor,
+                          color: themeOfContext.primaryColor,
                           width: MediaQuery.of(context).size.width,
                           height: 30,
                           child: Center(
                             child: Text(
                               'No internet connection',
-                              style: Theme.of(context).textTheme.bodyText1,
+                              style: themeOfContext.textTheme.bodyText1
+                                  .copyWith(color: themeOfContext.accentColor),
                             ),
                           ),
                         ))

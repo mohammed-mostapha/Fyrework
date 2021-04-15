@@ -47,6 +47,10 @@ ThemeData fyreworkLightTheme() {
       accentColor: Color(0XFFFFFFFF),
       bottomAppBarColor: Color(0XFF212121),
       hintColor: Colors.grey[500],
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: Color(0XFFFFFFFF),
+        type: BottomNavigationBarType.fixed,
+      ),
       bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.black),
       snackBarTheme: SnackBarThemeData(backgroundColor: Colors.black));
 }

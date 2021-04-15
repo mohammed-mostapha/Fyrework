@@ -74,69 +74,74 @@ class _HomeState extends State<Home> {
         onPageChanged: _onPageChanged,
         physics: NeverScrollableScrollPhysics(),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        type: BottomNavigationBarType.fixed,
-        onTap: _onItemTapped,
-        items: [
-          BottomNavigationBarItem(
-            icon: SizedBox(
-              width: 20,
-              height: 20,
-              child: SvgPicture.asset(
-                _selectedIndex == 0 ? home_filled : home_outlined,
-                semanticsLabel: 'home',
-                color: Theme.of(context).accentColor,
-              ),
-            ),
-            title: Text('home'),
-          ),
-          BottomNavigationBarItem(
-            icon: SizedBox(
-              width: 20,
-              height: 20,
-              child: SvgPicture.asset(
-                _selectedIndex == 1 ? add_filled : add_outlined,
-                semanticsLabel: 'add',
-                color: Theme.of(context).accentColor,
-              ),
-            ),
-            title: Text('add'),
-          ),
-          BottomNavigationBarItem(
-            icon: SizedBox(
-              width: 20,
-              height: 20,
-              child: SvgPicture.asset(
-                _selectedIndex == 2 ? search_thick : search_thin,
-                semanticsLabel: 'search',
-                color: Theme.of(context).accentColor,
-              ),
-            ),
-            title: Text('search'),
-          ),
-          BottomNavigationBarItem(
-            icon: SizedBox(
-              width: 20,
-              height: 20,
-              child: CachedNetworkImage(
-                imageBuilder: (context, imageProvider) => Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        image: imageProvider, fit: BoxFit.cover),
-                  ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border(
+              top: BorderSide(
+                  width: 0.5, color: Theme.of(context).primaryColor)),
+        ),
+        child: BottomNavigationBar(
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          onTap: _onItemTapped,
+          items: [
+            BottomNavigationBarItem(
+              icon: SizedBox(
+                width: 20,
+                height: 20,
+                child: SvgPicture.asset(
+                  _selectedIndex == 0 ? home_filled : home_outlined,
+                  semanticsLabel: 'home',
+                  color: Theme.of(context).primaryColor,
                 ),
-                imageUrl: MyUser.userAvatarUrl,
-                placeholder: (context, url) => CircularProgressIndicator(),
-                errorWidget: (context, url, error) => Icon(Icons.error),
               ),
+              label: 'home',
             ),
-            title: Text('account'),
-          )
-        ],
+            BottomNavigationBarItem(
+              icon: SizedBox(
+                width: 20,
+                height: 20,
+                child: SvgPicture.asset(
+                  _selectedIndex == 1 ? add_filled : add_outlined,
+                  semanticsLabel: 'add',
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+              label: 'add',
+            ),
+            BottomNavigationBarItem(
+              icon: SizedBox(
+                width: 20,
+                height: 20,
+                child: SvgPicture.asset(
+                  _selectedIndex == 2 ? search_thick : search_thin,
+                  semanticsLabel: 'search',
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+              label: 'search',
+            ),
+            BottomNavigationBarItem(
+              icon: SizedBox(
+                width: 20,
+                height: 20,
+                child: CachedNetworkImage(
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: imageProvider, fit: BoxFit.cover),
+                    ),
+                  ),
+                  imageUrl: MyUser.userAvatarUrl,
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
+              ),
+              label: 'account',
+            )
+          ],
+        ),
       ),
     );
   }

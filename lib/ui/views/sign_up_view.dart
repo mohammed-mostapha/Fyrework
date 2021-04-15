@@ -587,7 +587,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               child: IconButton(
                 icon: Icon(
                   Icons.close,
-                  color: Colors.white,
+                  color: Theme.of(context).hintColor,
                 ),
                 onPressed: () {
                   setState(() {
@@ -1095,67 +1095,70 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         _submitButtonText = 'Sign In';
       }
       textFields.add(
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width / 2.5,
-                  child: TextFormField(
-                    controller: _passwordController,
-                    validator: PasswordValidator.validate,
-                    style: Theme.of(context).textTheme.bodyText1,
-                    decoration: signUpInputDecoration(context, 'Password'),
-                    obscureText: !_showPassword,
-                    onSaved: (val) => _password = val,
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                GestureDetector(
-                  child: _showPassword
-                      ? Icon(
-                          Icons.visibility,
-                          color: Theme.of(context).primaryColor,
-                        )
-                      : Icon(Icons.visibility_off,
-                          color: Theme.of(context).primaryColor),
-                  onTap: () {
-                    setState(() {
-                      _showPassword = !_showPassword;
-                    });
-                  },
-                ),
-              ],
-            ),
-            authFormType == AuthFormType.signIn
-                ? Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(10),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width / 2.5,
+                    child: TextFormField(
+                      controller: _passwordController,
+                      validator: PasswordValidator.validate,
+                      style: Theme.of(context).textTheme.bodyText1,
+                      decoration: signUpInputDecoration(context, 'Password'),
+                      obscureText: !_showPassword,
+                      onSaved: (val) => _password = val,
                     ),
-                    child: FlatButton(
-                      color: Theme.of(context).primaryColor,
-                      // textColor: Theme.of(context).accentColor,
-                      child: Text(
-                        _submitButtonText,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1
-                            .copyWith(color: Theme.of(context).accentColor),
-                        maxLines: 1,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  GestureDetector(
+                    child: _showPassword
+                        ? Icon(
+                            Icons.visibility,
+                            color: Theme.of(context).primaryColor,
+                          )
+                        : Icon(Icons.visibility_off,
+                            color: Theme.of(context).primaryColor),
+                    onTap: () {
+                      setState(() {
+                        _showPassword = !_showPassword;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              authFormType == AuthFormType.signIn
+                  ? Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      onPressed: submitSignupSigninResetForm,
+                      child: FlatButton(
+                        color: Theme.of(context).primaryColor,
+                        // textColor: Theme.of(context).accentColor,
+                        child: Text(
+                          _submitButtonText,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: Theme.of(context).accentColor),
+                          maxLines: 1,
+                        ),
+                        onPressed: submitSignupSigninResetForm,
+                      ),
+                    )
+                  : Container(
+                      width: 0,
+                      height: 0,
                     ),
-                  )
-                : Container(
-                    width: 0,
-                    height: 0,
-                  ),
-          ],
+            ],
+          ),
         ),
       );
       if (authFormType == AuthFormType.signUp) {
