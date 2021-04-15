@@ -264,10 +264,7 @@ class AssetPicker extends StatelessWidget {
                       Flexible(
                         child: Text(
                           provider.currentPathEntity.name ?? '',
-                          style: fyreworkDarkTheme()
-                              .textTheme
-                              .bodyText1
-                              .copyWith(color: fyreworkDarkTheme().accentColor),
+                          style: fyreworkDarkTheme().textTheme.bodyText1,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -1043,7 +1040,7 @@ class AssetPicker extends StatelessWidget {
                     child: Center(
                       child: Text(
                         Constants.textDelegate.cancel,
-                        style: const TextStyle(fontSize: 18.0),
+                        style: fyreworkDarkTheme().textTheme.bodyText1,
                       ),
                     ),
                   ),
@@ -1072,44 +1069,46 @@ class AssetPicker extends StatelessWidget {
   /// Layout for Apple OS devices.
   /// 苹果系列设备的选择器布局
   Widget appleOSLayout(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Positioned.fill(
-          child: Selector<AssetPickerProvider, bool>(
-            selector: (BuildContext _, AssetPickerProvider provider) =>
-                provider.hasAssetsToDisplay,
-            builder: (
-              BuildContext _,
-              bool hasAssetsToDisplay,
-              Widget __,
-            ) {
-              return AnimatedSwitcher(
-                duration: switchingPathDuration,
-                child: hasAssetsToDisplay
-                    ? Stack(
-                        children: <Widget>[
-                          RepaintBoundary(
-                            child: Stack(
-                              children: <Widget>[
-                                Positioned.fill(child: assetsGrid(context)),
-                                if (!isSingleAssetMode || isAppleOS)
-                                  PositionedDirectional(
-                                    bottom: 0.0,
-                                    child: bottomActionBar(context),
-                                  ),
-                              ],
+    return SafeArea(
+      child: Stack(
+        children: <Widget>[
+          Positioned.fill(
+            child: Selector<AssetPickerProvider, bool>(
+              selector: (BuildContext _, AssetPickerProvider provider) =>
+                  provider.hasAssetsToDisplay,
+              builder: (
+                BuildContext _,
+                bool hasAssetsToDisplay,
+                Widget __,
+              ) {
+                return AnimatedSwitcher(
+                  duration: switchingPathDuration,
+                  child: hasAssetsToDisplay
+                      ? Stack(
+                          children: <Widget>[
+                            RepaintBoundary(
+                              child: Stack(
+                                children: <Widget>[
+                                  Positioned.fill(child: assetsGrid(context)),
+                                  if (!isSingleAssetMode || isAppleOS)
+                                    PositionedDirectional(
+                                      bottom: 0.0,
+                                      child: bottomActionBar(context),
+                                    ),
+                                ],
+                              ),
                             ),
-                          ),
-                          pathEntityListWidget,
-                        ],
-                      )
-                    : assetsEmptyIndicator,
-              );
-            },
+                            pathEntityListWidget,
+                          ],
+                        )
+                      : assetsEmptyIndicator,
+                );
+              },
+            ),
           ),
-        ),
-        appBar(context),
-      ],
+          appBar(context),
+        ],
+      ),
     );
   }
 
@@ -1129,18 +1128,20 @@ class AssetPicker extends StatelessWidget {
           return AnimatedSwitcher(
             duration: switchingPathDuration,
             child: hasAssetsToDisplay
-                ? Stack(
-                    children: <Widget>[
-                      RepaintBoundary(
-                        child: Column(
-                          children: <Widget>[
-                            Expanded(child: assetsGrid(context)),
-                            if (!isSingleAssetMode) bottomActionBar(context),
-                          ],
+                ? SafeArea(
+                    child: Stack(
+                      children: <Widget>[
+                        RepaintBoundary(
+                          child: Column(
+                            children: <Widget>[
+                              Expanded(child: assetsGrid(context)),
+                              if (!isSingleAssetMode) bottomActionBar(context),
+                            ],
+                          ),
                         ),
-                      ),
-                      pathEntityListWidget,
-                    ],
+                        pathEntityListWidget,
+                      ],
+                    ),
                   )
                 : loadingIndicator,
           );
@@ -1151,6 +1152,11 @@ class AssetPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool darkModeOn = brightness == Brightness.dark;
+    ThemeData themeOfContext =
+        darkModeOn ? fyreworkDarkTheme() : fyreworkLightTheme();
+
     return WillPopScope(
       onWillPop: () {
         Navigator.of(context).pop();
@@ -1158,7 +1164,7 @@ class AssetPicker extends StatelessWidget {
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: overlayStyle,
         child: Theme(
-          data: theme,
+          data: themeOfContext,
           child: ChangeNotifierProvider<AssetPickerProvider>.value(
             value: provider,
             child: Material(

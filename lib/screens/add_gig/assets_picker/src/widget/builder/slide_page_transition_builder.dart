@@ -62,31 +62,26 @@ class SlidePageTransitionBuilder<T> extends PageRoute<T> {
         length: 2,
         child: Scaffold(
           bottomNavigationBar: BottomAppBar(
+            color: Color(0XFF212121),
             child: TabBar(
-              indicatorColor: fyreworkDarkTheme().accentColor,
+              indicatorColor: fyreworkDarkTheme().primaryColor,
               tabs: [
                 Tab(
                   child: Text(
                     'Gallery',
-                    style: fyreworkDarkTheme().textTheme.bodyText1.copyWith(
-                          // color: theme.textTheme.caption.color,
-                          color: fyreworkDarkTheme().accentColor,
-                        ),
+                    style: fyreworkDarkTheme().textTheme.bodyText1,
                   ),
                 ),
                 Tab(
                   child: Text(
                     'Camera',
-                    style: fyreworkDarkTheme().textTheme.bodyText1.copyWith(
-                          color: fyreworkDarkTheme().accentColor,
-                        ),
+                    style: fyreworkDarkTheme().textTheme.bodyText1,
                   ),
                 ),
               ],
             ),
-            color: fyreworkDarkTheme()
-                .bottomAppBarColor
-                .withOpacity(isAppleOS ? 0.90 : 1.0),
+            // color: themeOfContext.bottomAppBarColor
+            //     .withOpacity(isAppleOS ? 0.90 : 1.0),
           ),
           body: TabBarView(
             children: [

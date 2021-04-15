@@ -1103,16 +1103,13 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               children: [
                 Container(
                   width: MediaQuery.of(context).size.width / 2.5,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: TextFormField(
-                      controller: _passwordController,
-                      validator: PasswordValidator.validate,
-                      style: Theme.of(context).textTheme.bodyText1,
-                      decoration: signUpInputDecoration(context, 'Password'),
-                      obscureText: !_showPassword,
-                      onSaved: (val) => _password = val,
-                    ),
+                  child: TextFormField(
+                    controller: _passwordController,
+                    validator: PasswordValidator.validate,
+                    style: Theme.of(context).textTheme.bodyText1,
+                    decoration: signUpInputDecoration(context, 'Password'),
+                    obscureText: !_showPassword,
+                    onSaved: (val) => _password = val,
                   ),
                 ),
                 SizedBox(
@@ -1221,11 +1218,11 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         );
       }
 
-      textFields.add(
-        SizedBox(
-          height: 20,
-        ),
-      );
+      // textFields.add(
+      //   SizedBox(
+      //     height: 20,
+      //   ),
+      // );
     }
 
     return textFields;
@@ -1270,10 +1267,9 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                   padding: EdgeInsets.all(8.0),
                   child: Text(
                     _submitButtonText,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText1
-                        .copyWith(color: Theme.of(context).accentColor),
+                    style: Theme.of(context).textTheme.bodyText1.copyWith(
+                          color: Theme.of(context).accentColor,
+                        ),
                   ),
                 ),
                 onPressed: submitSignupSigninResetForm,
@@ -1282,14 +1278,14 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           : SizedBox(
               height: 0,
             ),
-      authFormType == AuthFormType.signIn
-          ? SizedBox(height: 50)
-          : SizedBox(
-              width: 0,
-              height: 0,
-            ),
+      // authFormType == AuthFormType.signIn
+      //     ? SizedBox(height: 50)
+      //     : SizedBox(
+      //         width: 0,
+      //         height: 0,
+      //       ),
       Padding(
-        padding: const EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -1313,7 +1309,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           ],
         ),
       ),
-      buildSocialIcons(_showSocial),
+      // buildSocialIcons(_showSocial),
     ];
   }
 

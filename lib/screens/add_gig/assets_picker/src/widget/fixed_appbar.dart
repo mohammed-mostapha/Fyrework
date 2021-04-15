@@ -67,9 +67,9 @@ class FixedAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color color = Theme.of(context)
-        .primaryColor
-        .withOpacity(blurRadius > 0.0 ? 0.90 : 1.0);
+    // final Color color = Theme.of(context)
+    //     .primaryColor
+    //     .withOpacity(blurRadius > 0.0 ? 0.90 : 1.0);
 
     Widget _title = title;
     if (centerTitle) {
@@ -77,6 +77,7 @@ class FixedAppBar extends StatelessWidget {
     }
 
     Widget child = Container(
+      color: Color(0XFF212121),
       width: Screens.width,
       height: (height ?? kToolbarHeight) + MediaQuery.of(context).padding.top,
       padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
@@ -98,10 +99,7 @@ class FixedAppBar extends StatelessWidget {
                     : AlignmentDirectional.centerStart,
                 child: DefaultTextStyle(
                   child: _title,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline6
-                      .copyWith(fontSize: 23.0),
+                  style: Theme.of(context).textTheme.headline6,
                   maxLines: 1,
                   softWrap: false,
                   overflow: TextOverflow.ellipsis,

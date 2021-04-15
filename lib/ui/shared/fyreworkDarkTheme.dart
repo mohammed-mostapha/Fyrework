@@ -40,12 +40,12 @@ ThemeData fyreworkDarkTheme() {
   final ThemeData base = ThemeData();
   return base.copyWith(
       scaffoldBackgroundColor: Color(0XFF000000),
-      appBarTheme: AppBarTheme(color: Color(0xFF000000)),
+      indicatorColor: Color(0XFFFFFFFF),
       inputDecorationTheme: InputDecorationTheme(fillColor: Colors.grey[900]),
       textTheme: _basicTextTheme(base.textTheme),
       primaryColor: Color(0xFFFFFFFF),
       accentColor: Color(0XFF000000),
-      bottomAppBarColor: Color(0XFFFFFFFF),
+      bottomAppBarColor: Color(0XFF212121),
       hintColor: Colors.grey[500],
       bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.white),
       snackBarTheme: SnackBarThemeData(backgroundColor: Colors.white));
