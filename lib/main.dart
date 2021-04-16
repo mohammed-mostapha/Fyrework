@@ -119,6 +119,11 @@ class _HomeControllerState extends State<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    // var brightness = MediaQuery.of(context).platformBrightness;
+    // bool darkModeOn = brightness == Brightness.dark;
+    // ThemeData themeOfContext =
+    //     darkModeOn ? fyreworkDarkTheme() : fyreworkLightTheme();
+
     return ChangeNotifierProvider(
       create: (context) => ConnectivityProvider(),
       child: NetworkSensor(

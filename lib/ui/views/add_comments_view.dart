@@ -178,16 +178,13 @@ class _AddCommentsViewState extends State<AddCommentsView>
                   Center(
                     child: CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).accentColor,
+                        Theme.of(context).primaryColor,
                       ),
                     ),
                   ),
                   Text(
                     'Gig no longer exists',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText1
-                        .copyWith(color: Theme.of(context).accentColor),
+                    style: Theme.of(context).textTheme.bodyText1,
                   )
                 ],
               ),
@@ -207,7 +204,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
                 preferredSize: Size.fromHeight(60),
                 child: new AppBar(
                   automaticallyImplyLeading: false,
-                  backgroundColor: Theme.of(context).primaryColor,
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -218,6 +214,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                   child: Icon(
                                     Icons.arrow_back,
                                     size: 20,
+                                    color: Theme.of(context).hintColor,
                                   ),
                                   onTap: () => Navigator.of(context).pop(),
                                 )
@@ -227,11 +224,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                           ),
                           !appointed
                               ? Text('Comments',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1
-                                      .copyWith(
-                                          color: Theme.of(context).accentColor))
+                                  style: Theme.of(context).textTheme.bodyText1)
                               : Container(
                                   width: 130,
                                   child: StreamBuilder(
@@ -241,8 +234,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                     ),
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData ||
-                                          !(snapshot.data.documents.length >
-                                              0)) {
+                                          !(snapshot.data.docs.length > 0)) {
                                         List<PopupMenuItem> actionItems = [];
                                         actionItems.add(
                                           PopupMenuItem<String>(
@@ -251,11 +243,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                 'Workstream has no history',
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .bodyText1
-                                                    .copyWith(
-                                                      color: Theme.of(context)
-                                                          .accentColor,
-                                                    ),
+                                                    .bodyText1,
                                               ),
                                             ),
                                           ),
@@ -265,11 +253,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                             'Workstream',
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyText1
-                                                .copyWith(
-                                                  color: Theme.of(context)
-                                                      .accentColor,
-                                                ),
+                                                .bodyText1,
                                           ),
                                           color: Theme.of(context).primaryColor,
                                           itemBuilder: (BuildContext context) {
@@ -280,10 +264,10 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                       List<PopupMenuItem> actionItems = [];
 
                                       for (int i = 0;
-                                          i < snapshot.data.documents.length;
+                                          i < snapshot.data.docs.length;
                                           i++) {
                                         DocumentSnapshot actionSnapshot =
-                                            snapshot.data.documents[i];
+                                            snapshot.data.docs[i];
                                         String gigWorkstreamActionDate;
 
                                         if (actionSnapshot
@@ -300,13 +284,16 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                           PopupMenuItem(
                                             child: Container(
                                               decoration: BoxDecoration(
+                                                color: Theme.of(context)
+                                                    .accentColor,
                                                 border: Border(
                                                   bottom: BorderSide(
-                                                      color: Theme.of(context)
-                                                          .textTheme
-                                                          .caption
-                                                          .color,
-                                                      width: 0.5),
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .caption
+                                                        .color,
+                                                    width: 0.5,
+                                                  ),
                                                 ),
                                               ),
                                               child: ListTile(
@@ -321,17 +308,11 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                 title: Column(
                                                   children: [
                                                     Text(
-                                                      "${actionSnapshot.data()['gigAction']}"
-                                                          .capitalize(),
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodyText1
-                                                          .copyWith(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .accentColor,
-                                                          ),
-                                                    ),
+                                                        "${actionSnapshot.data()['gigAction']}"
+                                                            .capitalize(),
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyText1),
                                                     Text(
                                                       "$gigWorkstreamActionDate",
                                                       style: Theme.of(context)
@@ -340,7 +321,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                           .copyWith(
                                                             color: Theme.of(
                                                                     context)
-                                                                .accentColor,
+                                                                .primaryColor,
                                                           ),
                                                       textAlign:
                                                           TextAlign.center,
@@ -352,38 +333,37 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                           ),
                                         );
                                       }
-                                      return PopupMenuButton(
-                                        icon: Row(
-                                          children: [
-                                            Text(
-                                              'Workstream',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText1
-                                                  .copyWith(
-                                                    color: Theme.of(context)
-                                                        .accentColor,
-                                                  ),
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            SizedBox(
-                                              width: 12,
-                                              height: 12,
-                                              child: SvgPicture.asset(
-                                                downArrow,
-                                                semanticsLabel: 'down-arrow',
-                                                color: Theme.of(context)
-                                                    .accentColor,
+                                      return Theme(
+                                        data: Theme.of(context).copyWith(
+                                            cardColor:
+                                                Theme.of(context).accentColor),
+                                        child: PopupMenuButton(
+                                          icon: Row(
+                                            children: [
+                                              Text('Workstream',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText1),
+                                              SizedBox(
+                                                width: 5,
                                               ),
-                                            ),
-                                          ],
+                                              SizedBox(
+                                                width: 12,
+                                                height: 12,
+                                                child: SvgPicture.asset(
+                                                  downArrow,
+                                                  semanticsLabel: 'down-arrow',
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          // color: Theme.of(context).primaryColor,
+                                          itemBuilder: (BuildContext context) {
+                                            return actionItems;
+                                          },
                                         ),
-                                        color: Theme.of(context).primaryColor,
-                                        itemBuilder: (BuildContext context) {
-                                          return actionItems;
-                                        },
                                       );
                                     },
                                   ),
@@ -397,14 +377,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
                             SizedBox(
                               width: 10,
                             ),
-                            Text(
-                              '$gigCurrency $gigBudget',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1
-                                  .copyWith(
-                                      color: Theme.of(context).accentColor),
-                            ),
+                            Text('$gigCurrency $gigBudget',
+                                style: Theme.of(context).textTheme.bodyText1),
                             SizedBox(
                               width: 10,
                             ),
@@ -448,7 +422,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                             width:
                                                                                 1,
                                                                             color:
-                                                                                Theme.of(context).accentColor),
+                                                                                Theme.of(context).primaryColor),
                                                                         borderRadius:
                                                                             BorderRadius.only(
                                                                           topLeft:
@@ -495,22 +469,19 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Text(
-                                              myGig
-                                                  ? 'Your gig'
-                                                  : !appliersOrHirersByUserId
-                                                          .contains(MyUser.uid)
-                                                      ? widget.passedGigValue ==
-                                                              'Gig I can do'
-                                                          ? 'Hire'
-                                                          : 'Apply'
-                                                      : 'Request sent',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText1
-                                                  .copyWith(
-                                                      color: Theme.of(context)
-                                                          .accentColor),
-                                            ),
+                                                myGig
+                                                    ? 'Your gig'
+                                                    : !appliersOrHirersByUserId
+                                                            .contains(
+                                                                MyUser.uid)
+                                                        ? widget.passedGigValue ==
+                                                                'Gig I can do'
+                                                            ? 'Hire'
+                                                            : 'Apply'
+                                                        : 'Request sent',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText1),
                                           ),
                                         ),
                                       );
@@ -530,8 +501,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                         decoration: BoxDecoration(
                                             border: Border.all(
                                               width: 1,
-                                              color:
-                                                  Theme.of(context).accentColor,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
                                             ),
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(2))),
@@ -539,12 +510,12 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
                                             'Appointed',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1,
                                           ),
                                         ),
-                                      )
+                                      ),
                           ],
                         ),
                       ),
@@ -560,7 +531,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
               ),
               body: Builder(builder: (BuildContext context) {
                 return Container(
-                  color: Theme.of(context).primaryColor,
                   child: Column(
                     children: <Widget>[
                       Expanded(
@@ -586,7 +556,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                         border: Border.all(
                                             width: 1,
                                             color:
-                                                Theme.of(context).accentColor),
+                                                Theme.of(context).primaryColor),
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(10)),
                                       ),
@@ -598,14 +568,14 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                             child: TextFormField(
                                               style: TextStyle(
                                                   color: Theme.of(context)
-                                                      .accentColor),
+                                                      .primaryColor),
                                               controller:
                                                   _addCommentsController,
                                               decoration: InputDecoration(
                                                 hintText: "Add comment",
                                                 hintStyle: TextStyle(
                                                     color: Theme.of(context)
-                                                        .accentColor),
+                                                        .primaryColor),
                                                 border: InputBorder.none,
                                               ),
                                               onFieldSubmitted: (String
@@ -732,7 +702,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                   border: Border.all(
                                                       width: 1,
                                                       color: Theme.of(context)
-                                                          .accentColor),
+                                                          .primaryColor),
                                                   borderRadius:
                                                       BorderRadius.all(
                                                           Radius.circular(10)),
@@ -834,15 +804,13 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                         child: SizedBox(
                                                           width: 20,
                                                           height: 20,
-                                                          child:
-                                                              SvgPicture.asset(
-                                                            paperClip,
-                                                            semanticsLabel:
-                                                                'paperclip',
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .accentColor,
-                                                          ),
+                                                          child: SvgPicture.asset(
+                                                              paperClip,
+                                                              semanticsLabel:
+                                                                  'paperclip',
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .primaryColor),
                                                         ),
                                                       ),
                                                     ),
@@ -888,7 +856,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                             width: 1,
                                                             color: Theme.of(
                                                                     context)
-                                                                .accentColor),
+                                                                .primaryColor),
                                                         borderRadius:
                                                             BorderRadius.all(
                                                                 Radius.circular(
@@ -920,7 +888,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                     width: 1,
                                                                     color: Theme.of(
                                                                             context)
-                                                                        .accentColor),
+                                                                        .primaryColor),
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .only(
@@ -967,9 +935,10 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                   color: Theme.of(context)
                                                       .primaryColor,
                                                   border: Border.all(
-                                                      width: 1,
-                                                      color: Theme.of(context)
-                                                          .accentColor),
+                                                    width: 1,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                  ),
                                                   borderRadius:
                                                       BorderRadius.all(
                                                           Radius.circular(50))),
@@ -998,15 +967,15 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                   ],
                                 )
                               : Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Container(
-                                    height: 40,
-                                    child: ListTile(
-                                      title: Center(
-                                        child: Text(
-                                          'Private work stream',
-                                          style: TextStyle(fontSize: 16),
-                                        ),
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Center(
+                                    child: Container(
+                                      height: 40,
+                                      child: Text(
+                                        'Private work stream',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
                                       ),
                                     ),
                                   ),
