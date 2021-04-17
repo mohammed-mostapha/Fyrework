@@ -460,7 +460,11 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                             backgroundColor: Theme.of(context).primaryColor,
                             label: Text(
                               '$e',
-                              style: Theme.of(context).textTheme.bodyText1,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .copyWith(
+                                      color: Theme.of(context).accentColor),
                             ),
                             onDeleted: () {
                               setState(() {
@@ -469,7 +473,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                                 print(widget.gigHashtags.length);
                               });
                             },
-                            deleteIconColor: Colors.white,
+                            deleteIconColor: Theme.of(context).accentColor,
                           ),
                         ))
                     .toList(),
@@ -495,6 +499,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                               child: SvgPicture.asset(
                                 hourglassStart,
                                 semanticsLabel: 'hourglass-start',
+                                color: Theme.of(context).primaryColor,
                               ),
                             ),
                             Container(
@@ -577,10 +582,13 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        // body: pickAssetsCommon(),
-        body: gigPreview,
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: SafeArea(
+        child: Scaffold(
+          // body: pickAssetsCommon(),
+          body: gigPreview,
+        ),
       ),
     );
   }

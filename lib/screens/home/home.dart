@@ -68,7 +68,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).accentColor,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
         child: Scaffold(
           body: PageView(
@@ -84,6 +84,7 @@ class _HomeState extends State<Home> {
                       width: 0.5, color: Theme.of(context).primaryColor)),
             ),
             child: BottomNavigationBar(
+              elevation: 0.0,
               showSelectedLabels: false,
               showUnselectedLabels: false,
               onTap: _onItemTapped,

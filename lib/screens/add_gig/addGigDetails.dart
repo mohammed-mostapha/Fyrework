@@ -358,6 +358,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                           children: [
                             Expanded(
                               child: TextFormField(
+                                style: Theme.of(context).textTheme.bodyText1,
                                 decoration: signUpInputDecoration(
                                     context, 'Describe your gig...'),
                                 inputFormatters: [
@@ -455,6 +456,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                 padding: EdgeInsets.fromLTRB(0, 0, 48.0, 0),
                                 width: MediaQuery.of(context).size.width / 3,
                                 child: TextFormField(
+                                  style: Theme.of(context).textTheme.bodyText1,
                                   decoration:
                                       signUpInputDecoration(context, 'Budget'),
 
@@ -540,14 +542,17 @@ class _AddGigDetailsState extends State<AddGigDetails> {
               padding: const EdgeInsets.only(right: 8.0),
               child: Icon(
                 Icons.error_outline,
-                color: Colors.white,
+                color: Theme.of(context).accentColor,
               ),
             ),
             Expanded(
               child: Text(
                 clientSideWarning,
                 maxLines: 3,
-                style: TextStyle(fontSize: 16, color: Colors.white),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(color: Theme.of(context).accentColor),
               ),
             ),
             Padding(
@@ -555,7 +560,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
               child: IconButton(
                 icon: Icon(
                   Icons.close,
-                  color: Colors.white,
+                  color: Theme.of(context).hintColor,
                 ),
                 onPressed: () {
                   setState(() {

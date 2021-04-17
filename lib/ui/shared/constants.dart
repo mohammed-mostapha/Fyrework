@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-
-//
 
 // var brightness = SchedulerBinding.instance.window.platformBrightness;
 // bool darkModeOn = brightness == Brightness.dark;
@@ -15,9 +12,9 @@ InputDecoration signUpInputDecoration(BuildContext context, String hint) {
     hintText: hint,
     errorStyle: TextStyle(height: 0),
     enabledBorder: UnderlineInputBorder(
-        borderSide:
-            BorderSide(color: Theme.of(context).primaryColor, width: 0.5),
-        borderRadius: BorderRadius.circular(10)),
+      borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 0.5),
+      borderRadius: BorderRadius.circular(10),
+    ),
     // focusedBorder: UnderlineInputBorder(
     //     borderSide:
     //         BorderSide(color: Theme.of(context).primaryColor, width: 0.5),

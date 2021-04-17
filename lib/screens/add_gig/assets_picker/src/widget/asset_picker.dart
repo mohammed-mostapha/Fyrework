@@ -982,7 +982,7 @@ class AssetPicker extends StatelessWidget {
                         : Constants.textDelegate.preview,
                     style: fyreworkDarkTheme().textTheme.bodyText1.copyWith(
                           color: isSelectedNotEmpty
-                              ? fyreworkDarkTheme().accentColor
+                              ? fyreworkDarkTheme().primaryColor
                               : fyreworkDarkTheme().textTheme.caption.color,
                         ));
               },
