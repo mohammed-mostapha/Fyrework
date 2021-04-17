@@ -151,10 +151,10 @@ class _AddGigDetailsState extends State<AddGigDetails> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey[50],
-        iconTheme: IconThemeData(
-            color: Theme.of(context).primaryColor //change your color here
-            ),
+        // backgroundColor: Colors.grey[50],
+        // iconTheme: IconThemeData(
+        //     color: Theme.of(context).primaryColor //change your color here
+        //     ),
         actions: <Widget>[
           Padding(
             padding: EdgeInsets.fromLTRB(0, 10, 15, 10),
@@ -176,7 +176,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
         ),
       ),
       body: Container(
-        color: Colors.grey[50],
+        // color: Colors.grey[50],
         child: Form(
           key: _createGigFormKey,
           // autovalidate: true,
@@ -191,35 +191,41 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                   child: Flex(
                     direction: Axis.vertical,
                     children: [
-                      Container(
-                        width: double.infinity,
-                        child: Wrap(
-                          children: _myFavoriteHashtags
-                              .map((e) => Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        0, 0, 2.5, 2.5),
-                                    child: Chip(
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                      backgroundColor: Colors.black,
-                                      label: Text(
-                                        '$e',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1
-                                            .copyWith(color: Colors.white),
-                                      ),
-                                      onDeleted: () {
-                                        setState(() {
-                                          _myFavoriteHashtags
-                                              .removeWhere((item) => item == e);
-                                          print(_myFavoriteHashtags.length);
-                                        });
-                                      },
-                                      deleteIconColor: Colors.white,
-                                    ),
-                                  ))
-                              .toList(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Container(
+                          width: double.infinity,
+                          child: Wrap(
+                            children: _myFavoriteHashtags
+                                .map((e) => Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 0, 2.5, 2.5),
+                                      child: Chip(
+                                          materialTapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
+                                          backgroundColor:
+                                              Theme.of(context).primaryColor,
+                                          label: Text(
+                                            '$e',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1
+                                                .copyWith(
+                                                    color: Theme.of(context)
+                                                        .accentColor),
+                                          ),
+                                          onDeleted: () {
+                                            setState(() {
+                                              _myFavoriteHashtags.removeWhere(
+                                                  (item) => item == e);
+                                              print(_myFavoriteHashtags.length);
+                                            });
+                                          },
+                                          deleteIconColor:
+                                              Theme.of(context).accentColor),
+                                    ))
+                                .toList(),
+                          ),
                         ),
                       ),
                       Row(
@@ -277,7 +283,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 5, 10, 0),
+                            padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
                             child: GestureDetector(
                               child: Text(
                                 'Add',
@@ -347,23 +353,34 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                        child: TextFormField(
-                          decoration: signUpInputDecoration(
-                              context, 'Describe your gig...'),
-                          inputFormatters: [
-                            new LengthLimitingTextInputFormatter(500),
+                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                decoration: signUpInputDecoration(
+                                    context, 'Describe your gig...'),
+                                inputFormatters: [
+                                  new LengthLimitingTextInputFormatter(500),
+                                ],
+                                validator: (value) => value.isEmpty ? '' : null,
+                                onSaved: (value) => _gigPost = value,
+                                maxLines: null,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 48.0,
+                            ),
                           ],
-                          validator: (value) => value.isEmpty ? '' : null,
-                          onSaved: (value) => _gigPost = value,
-                          maxLines: null,
                         ),
                       ),
                       Container(
                         decoration: BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                                    color: Colors.black26, width: 0.5))),
+                          border: Border(
+                            bottom:
+                                BorderSide(color: Colors.black26, width: 0.5),
+                          ),
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
                           child: AppointmentCard(
@@ -397,26 +414,22 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                     child: DropdownButtonFormField(
                                       // dropdownColor: Theme.of(context)
                                       //     .primaryColor,
-                                      dropdownColor:
-                                          Theme.of(context).primaryColor,
+                                      dropdownColor: Color(0xFF212121),
                                       decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        focusedBorder: InputBorder.none,
-                                        enabledBorder: InputBorder.none,
-                                        errorBorder: InputBorder.none,
-                                        disabledBorder: InputBorder.none,
-                                      ),
+                                          // border: InputBorder.none,
+                                          // focusedBorder: InputBorder.none,
+                                          // enabledBorder: InputBorder.none,
+                                          // errorBorder: InputBorder.none,
+                                          // disabledBorder: InputBorder.none,
+                                          ),
                                       items: _currencies
                                           .map((value) => DropdownMenuItem(
                                                 child: Container(
-                                                  width: 40,
-                                                  height: 40,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: Colors.white,
-                                                  ),
-                                                  child: Center(
-                                                    child: Text(value),
+                                                  child: Text(
+                                                    value,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyText1,
                                                   ),
                                                 ),
                                                 value: value,
@@ -439,14 +452,12 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                 ),
                               ),
                               Container(
-                                padding: EdgeInsets.fromLTRB(0, 0,
-                                    MediaQuery.of(context).size.width / 6, 0),
+                                padding: EdgeInsets.fromLTRB(0, 0, 48.0, 0),
                                 width: MediaQuery.of(context).size.width / 3,
                                 child: TextFormField(
                                   decoration:
-                                      signUpInputDecoration(context, 'Budget')
-                                          .copyWith(
-                                              enabledBorder: InputBorder.none),
+                                      signUpInputDecoration(context, 'Budget'),
+
                                   // Only numbers can be entered
                                   keyboardType: TextInputType.number,
                                   inputFormatters: <TextInputFormatter>[
@@ -467,8 +478,14 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            SizedBox(
+                            Container(
                               width: 20,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 0.5,
+                                    color: Theme.of(context).primaryColor),
+                              ),
                               child: Checkbox(
                                 materialTapTargetSize:
                                     MaterialTapTargetSize.shrinkWrap,
@@ -626,14 +643,19 @@ class _AppointmentCardState extends State<AppointmentCard> {
         visibleCardHeight: SizeConfig.safeBlockVertical * 17,
         hiddenCardHeight: SizeConfig.safeBlockVertical * 15,
         frontCardWidget: Container(
-          color: Colors.grey[50],
+          color: Theme.of(context).scaffoldBackgroundColor,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Container(
                 child: Row(
                   children: <Widget>[
-                    SizedBox(
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            width: 0.5, color: Theme.of(context).primaryColor),
+                      ),
                       width: 20,
                       child: Radio(
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -665,7 +687,12 @@ class _AppointmentCardState extends State<AppointmentCard> {
                 width: MediaQuery.of(context).size.width / 3,
                 child: Row(
                   children: <Widget>[
-                    SizedBox(
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            width: 0.5, color: Theme.of(context).primaryColor),
+                      ),
                       width: 20,
                       child: Radio(
                           materialTapTargetSize:
@@ -695,7 +722,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
           ),
         ),
         backCardWidget: Container(
-          color: Colors.grey[50],
+          color: Theme.of(context).scaffoldBackgroundColor,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
             child: Row(

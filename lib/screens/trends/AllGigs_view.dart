@@ -63,7 +63,7 @@ class _AllGigsViewState extends State<AllGigsView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.grey[300],
+      // color: Colors.grey[300],
       child: Consumer2<QueryStringProvider, GigIndexProvider>(
         builder: (context, QueryStringProvider, GigIndexProvider, _) {
           return Stack(
