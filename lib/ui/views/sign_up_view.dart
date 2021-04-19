@@ -4,6 +4,7 @@ import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/screens/home/home.dart';
 import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/services/storage_repo.dart';
+import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/view_controllers/myUser_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -112,24 +113,10 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   TextEditingController _confirmPasswordController = TextEditingController();
   DateTime _defaultAge = Jiffy().subtract(years: 19);
   // DateTime _defaultAge = new DateTime.now();
-  final _myFavoriteHashtagsControllerNotEmpty = SnackBar(
-    content: Text(
-      'Hit Add in hashtags input!',
-      style: TextStyle(fontSize: 16),
-    ),
-  );
-  final _passwordConfirmPasswordSnackBar = SnackBar(
-    content: Text(
-      'Password & Confirm password are not identical!',
-      style: TextStyle(fontSize: 16),
-    ),
-  );
-  final _duplicateHandleSnackBar = SnackBar(
-    content: Text(
-      'Duplicate Handles are not allowed!',
-      style: TextStyle(fontSize: 16),
-    ),
-  );
+  //
+  SnackBar _myFavoriteHashtagsControllerNotEmpty;
+  SnackBar _passwordConfirmPasswordSnackBar;
+  SnackBar _duplicateHandleSnackBar;
 
   void switchFormState(String state) {
     signupFormKey.currentState.reset();
@@ -455,6 +442,33 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    _myFavoriteHashtagsControllerNotEmpty = SnackBar(
+      content: Text(
+        'Hit Add in hashtags input!',
+        style: Theme.of(context)
+            .textTheme
+            .bodyText1
+            .copyWith(color: Theme.of(context).accentColor),
+      ),
+    );
+    _passwordConfirmPasswordSnackBar = SnackBar(
+      content: Text(
+        'Password & Confirm password are not identical!',
+        style: Theme.of(context)
+            .textTheme
+            .bodyText1
+            .copyWith(color: Theme.of(context).accentColor),
+      ),
+    );
+    _duplicateHandleSnackBar = SnackBar(
+      content: Text(
+        'Duplicate Handles are not allowed!',
+        style: Theme.of(context)
+            .textTheme
+            .bodyText1
+            .copyWith(color: Theme.of(context).accentColor),
+      ),
+    );
     final _height = MediaQuery.of(context).size.height;
 
     String _formattedDate = new DateFormat.yMMMd().format(_defaultAge);

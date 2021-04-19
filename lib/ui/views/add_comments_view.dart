@@ -97,23 +97,23 @@ class _AddCommentsViewState extends State<AddCommentsView>
   String username = MyUser.username;
   dynamic userProfilePictureUrl = MyUser.userAvatarUrl;
 
-  addComment() {
+  addComment({@required bool containMediaFile}) {
     if (_addCommentsController.text.isNotEmpty) {
       AddCommentViewModel().addComment(
-        gigIdHoldingComment: widget.passedGigId,
-        gigOwnerId: widget.passedGigOwnerId,
-        commentOwnerUsername: username,
-        commentBody: _addCommentsController.text,
-        commentOwnerId: userId,
-        commentOwnerAvatarUrl: userProfilePictureUrl,
-        commentId: '',
-        isPrivateComment: isPrivateComment,
-        proposal: proposal,
-        approved: approved,
-        rejected: rejected,
-        gigCurrency: widget.passedGigCurrency,
-        offeredBudget: offeredBudget,
-      );
+          gigIdHoldingComment: widget.passedGigId,
+          gigOwnerId: widget.passedGigOwnerId,
+          commentOwnerUsername: username,
+          commentBody: _addCommentsController.text,
+          commentOwnerId: userId,
+          commentOwnerAvatarUrl: userProfilePictureUrl,
+          commentId: '',
+          isPrivateComment: isPrivateComment,
+          proposal: proposal,
+          approved: approved,
+          rejected: rejected,
+          gigCurrency: widget.passedGigCurrency,
+          offeredBudget: offeredBudget,
+          containMediaFile: containMediaFile);
       _addCommentsController.clear();
       _addProposalController.clear();
       _offeredBudgetController.clear();
@@ -662,7 +662,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                       ),
                                       GestureDetector(
                                         onTap: () {
-                                          addComment();
+                                          addComment(containMediaFile: false);
                                         },
                                         child: Container(
                                           width: 48,

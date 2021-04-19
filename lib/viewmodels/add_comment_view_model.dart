@@ -51,6 +51,7 @@ class AddCommentViewModel {
             offeredBudget: offeredBudget,
             preferredPaymentMethod: preferredPaymentMethod,
             containMediaFile: containMediaFile,
+            commentPrivacyToggle: isPrivateComment,
           ),
           gigIdHoldingComment);
     } else {

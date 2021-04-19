@@ -237,7 +237,7 @@ class FirestoreService {
     try {
       await _commentsCollectionReference
           .doc(commentId)
-          .update(({'privateComment': value}));
+          .update(({'commentPrivacyToggle': value}));
 
       // updateData({'privateComment': value});
     } catch (e) {

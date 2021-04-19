@@ -122,15 +122,10 @@ class DatabaseService {
   }
 
   Stream<QuerySnapshot> gigRelatedComments(String gigIdCommentsIdentifier) {
-    // return _commentsCollection
-    //     .where('gigIdHoldingComment', isEqualTo: gigIdCommentsIdentifier)
-    //     .orderBy('createdAt', descending: false)
-    //     .snapshots();
-    Stream<QuerySnapshot> allComments = _commentsCollection
+    return _commentsCollection
         .where('gigIdHoldingComment', isEqualTo: gigIdCommentsIdentifier)
-        // .orderBy('createdAt', descending: false)
+        .orderBy('createdAt', descending: false)
         .snapshots();
-    List<QuerySnapshot> allCommentsFiltered = [];
   }
 
   //update profile picture only

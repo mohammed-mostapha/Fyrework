@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:custom_switch/custom_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Fyrework/models/myUser.dart';
@@ -34,28 +35,30 @@ class CommentItem extends StatefulWidget {
   final preferredPaymentMethod;
   final workstreamFileUrl;
   final containMediaFile;
-  CommentItem({
-    Key key,
-    // this.passedCurrentUserId,
-    this.isGigAppointed,
-    this.gigIdHoldingComment,
-    this.gigOwnerId,
-    this.commentId,
-    this.commentOwnerId,
-    this.commentOwnerAvatarUrl,
-    this.commentOwnerUsername,
-    this.commentBody,
-    this.gigCurrency,
-    this.createdAt,
-    this.isPrivateComment,
-    this.proposal,
-    this.approved,
-    this.rejected,
-    this.offeredBudget,
-    this.preferredPaymentMethod,
-    this.workstreamFileUrl,
-    this.containMediaFile,
-  }) : super(key: key);
+  final commentPrivacyToggle;
+  CommentItem(
+      {Key key,
+      // this.passedCurrentUserId,
+      this.isGigAppointed,
+      this.gigIdHoldingComment,
+      this.gigOwnerId,
+      this.commentId,
+      this.commentOwnerId,
+      this.commentOwnerAvatarUrl,
+      this.commentOwnerUsername,
+      this.commentBody,
+      this.gigCurrency,
+      this.createdAt,
+      this.isPrivateComment,
+      this.proposal,
+      this.approved,
+      this.rejected,
+      this.offeredBudget,
+      this.preferredPaymentMethod,
+      this.workstreamFileUrl,
+      this.containMediaFile,
+      this.commentPrivacyToggle})
+      : super(key: key);
 
   @override
   _CommentItemState createState() => _CommentItemState();
@@ -75,6 +78,7 @@ class _CommentItemState extends State<CommentItem> {
   double _commentOpacity = 0.9;
   bool isAppointedUser;
   dynamic createdAtDateTime;
+  // bool commentPrivacytoggle = false;
 
   void initState() {
     super.initState();
@@ -209,17 +213,26 @@ class _CommentItemState extends State<CommentItem> {
                           : (myComment &&
                                   !widget.proposal &&
                                   !widget.isGigAppointed)
-                              ? Switch(
-                                  activeColor: Colors.blue,
-                                  inactiveThumbColor: Colors.grey[200],
-                                  inactiveTrackColor: Colors.grey[200],
-                                  activeTrackColor: Colors.grey[200],
-                                  value: widget.isPrivateComment,
-                                  onChanged: (value) {
-                                    FirestoreService().commentPrivacyToggle(
-                                        widget.commentId, value);
-                                    commentViewShifter();
-                                  },
+                              ? Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      width: 1,
+                                      color: Theme.of(context).accentColor,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(50)),
+                                  ),
+                                  child: CustomSwitch(
+                                    activeColor: Colors.black,
+                                    value: widget.commentPrivacyToggle,
+                                    onChanged: (value) {
+                                      FirestoreService().commentPrivacyToggle(
+                                        widget.commentId,
+                                        value,
+                                      );
+                                      commentViewShifter();
+                                    },
+                                  ),
                                 )
                               : Container(
                                   width: 0,
@@ -732,43 +745,44 @@ class _CommentItemState extends State<CommentItem> {
     return Padding(
       padding: const EdgeInsets.all(0.1),
       child: Container(
-          decoration: BoxDecoration(
-            color: myComment
-                ? Theme.of(context).primaryColor
-                : Theme.of(context).accentColor,
-            border: Border(
-              top: myComment
-                  ? BorderSide(width: 0.3, color: Colors.grey[50])
-                  : BorderSide(
-                      width: 0.3,
-                      color: Theme.of(context).primaryColor,
-                    ),
-              bottom: myComment
-                  ? BorderSide(width: 0.3, color: Colors.grey[50])
-                  : BorderSide(
-                      width: 0.3,
-                      color: Theme.of(context).primaryColor,
-                    ),
-            ),
+        decoration: BoxDecoration(
+          color: myComment
+              ? Theme.of(context).primaryColor
+              : Theme.of(context).accentColor,
+          border: Border(
+            top: myComment
+                ? BorderSide(width: 0.3, color: Colors.grey[50])
+                : BorderSide(
+                    width: 0.3,
+                    color: Theme.of(context).primaryColor,
+                  ),
+            bottom: myComment
+                ? BorderSide(width: 0.3, color: Colors.grey[50])
+                : BorderSide(
+                    width: 0.3,
+                    color: Theme.of(context).primaryColor,
+                  ),
           ),
-          child: myGig || myComment
-              ? IndexedStack(
-                  index: _commentViewIndex,
-                  children: [
-                    AnimatedOpacity(
+        ),
+        child: myGig || myComment
+            ? IndexedStack(
+                index: _commentViewIndex,
+                children: [
+                  AnimatedOpacity(
+                    opacity: _commentOpacity,
+                    child: publicCommentView,
+                    duration: Duration(milliseconds: 500),
+                  ),
+                  AnimatedOpacity(
                       opacity: _commentOpacity,
-                      child: publicCommentView,
-                      duration: Duration(milliseconds: 500),
-                    ),
-                    AnimatedOpacity(
-                        opacity: _commentOpacity,
-                        child: privateCommentView,
-                        duration: Duration(milliseconds: 500)),
-                  ],
-                )
-              : widget.isPrivateComment
-                  ? privateCommentView
-                  : publicCommentView),
+                      child: privateCommentView,
+                      duration: Duration(milliseconds: 500)),
+                ],
+              )
+            : widget.commentPrivacyToggle
+                ? privateCommentView
+                : publicCommentView,
+      ),
     );
   }
 

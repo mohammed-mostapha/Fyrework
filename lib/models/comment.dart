@@ -16,6 +16,7 @@ class Comment {
   final String preferredPaymentMethod;
   final String workstreamFileUrl;
   final bool containMediaFile;
+  final bool commentPrivacyToggle;
 
   Comment({
     this.gigIdHoldingComment,
@@ -35,6 +36,7 @@ class Comment {
     this.preferredPaymentMethod,
     this.workstreamFileUrl,
     this.containMediaFile,
+    this.commentPrivacyToggle,
   });
 
   Map<String, dynamic> toMap() {
@@ -56,6 +58,7 @@ class Comment {
       'preferredPaymentMethod': preferredPaymentMethod,
       'workstreamFileUrl': workstreamFileUrl,
       'containMediaFile': containMediaFile,
+      'commentPrivacyToggle': commentPrivacyToggle,
     };
   }
 
@@ -80,6 +83,7 @@ class Comment {
       preferredPaymentMethod: map['preferredPaymentMethod'],
       workstreamFileUrl: map['workstreamFileUrl'],
       containMediaFile: map['containMediaFile'],
+      commentPrivacyToggle: map['commentPrivacyToggle'],
     );
   }
 }

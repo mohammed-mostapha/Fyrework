@@ -21,6 +21,9 @@ class CommentsView extends StatelessWidget {
     return StreamBuilder<QuerySnapshot>(
       stream: DatabaseService().gigRelatedComments(gigIdCommentsIdentifier),
       builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          print('look at this error: ${snapshot.error}');
+        }
         if (!snapshot.hasData) {
           return Center(child: Text(''));
         }
@@ -58,6 +61,7 @@ class CommentsView extends StatelessWidget {
                         getDocData['preferredPaymentMethod'],
                     workstreamFileUrl: getDocData['workstreamFileUrl'],
                     containMediaFile: getDocData['containMediaFile'],
+                    commentPrivacyToggle: getDocData['commentPrivacyToggle'],
 
                     // onDeleteItem: () =>
                     //     model.deleteComment(index),
