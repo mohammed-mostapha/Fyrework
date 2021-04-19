@@ -64,7 +64,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
 
   double screenWidth = 0.0;
   double screenHeight = 0.0;
-  bool isPortrait = true;
+  // bool isPortrait = true;
   final _proposalFormKey = GlobalKey<FormState>();
   TextEditingController _addCommentsController = TextEditingController();
   TextEditingController _addProposalController = TextEditingController();
@@ -126,9 +126,9 @@ class _AddCommentsViewState extends State<AddCommentsView>
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
-    isPortrait = MediaQuery.of(context).orientation == Orientation.portrait
-        ? true
-        : false;
+    // isPortrait = MediaQuery.of(context).orientation == Orientation.portrait
+    //     ? true
+    //     : false;
 
     myGig = widget.passedGigOwnerId == MyUser.uid ? true : false;
     gigICanDo = widget.passedGigValue == 'Gig I can do' ? true : false;
@@ -414,10 +414,9 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                       (BuildContext
                                                                           context) {
                                                                     return Container(
-                                                                      height: isPortrait
-                                                                          ? screenHeight -
-                                                                              200
-                                                                          : screenHeight,
+                                                                      height:
+                                                                          screenHeight /
+                                                                              1.5,
                                                                       child:
                                                                           Scaffold(
                                                                         backgroundColor:
@@ -427,7 +426,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                           decoration:
                                                                               BoxDecoration(
                                                                             color:
-                                                                                Theme.of(context).primaryColor,
+                                                                                Theme.of(context).scaffoldBackgroundColor,
                                                                             border:
                                                                                 Border.all(width: 1, color: Theme.of(context).primaryColor),
                                                                             borderRadius:
@@ -439,7 +438,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                           child:
                                                                               Padding(
                                                                             padding:
-                                                                                const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                                                                                const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
                                                                             child:
                                                                                 ProposalWidget(
                                                                               passedGigId: widget.passedGigId,
@@ -460,7 +459,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                               decoration: BoxDecoration(
                                                   border: Border.all(
                                                     width: 1,
-                                                    color: Colors.white,
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
                                                   ),
                                                   borderRadius:
                                                       BorderRadius.all(
@@ -469,19 +469,20 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                 padding:
                                                     const EdgeInsets.all(8.0),
                                                 child: Text(
-                                                    myGig
-                                                        ? 'Your gig'
-                                                        : !appliersOrHirersByUserId
-                                                                .contains(
-                                                                    MyUser.uid)
-                                                            ? widget.passedGigValue ==
-                                                                    'Gig I can do'
-                                                                ? 'Hire'
-                                                                : 'Apply'
-                                                            : 'Request sent',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyText1),
+                                                  myGig
+                                                      ? 'Your gig'
+                                                      : !appliersOrHirersByUserId
+                                                              .contains(
+                                                                  MyUser.uid)
+                                                          ? widget.passedGigValue ==
+                                                                  'Gig I can do'
+                                                              ? 'Hire'
+                                                              : 'Apply'
+                                                          : 'Request sent',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText1,
+                                                ),
                                               ),
                                             ),
                                           );

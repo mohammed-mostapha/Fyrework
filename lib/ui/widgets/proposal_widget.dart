@@ -40,12 +40,7 @@ class _ProposalWidgetState extends State<ProposalWidget> {
   bool approved = false;
   bool rejected = false;
 
-  final _paymentMethodSnackBar = SnackBar(
-    content: Text(
-      'Select a payment method',
-      style: TextStyle(fontSize: 16),
-    ),
-  );
+  SnackBar _paymentMethodSnackBar;
 
   addToGigAppliersOrHirersList() {
     FirebaseFirestore.instance
@@ -88,6 +83,15 @@ class _ProposalWidgetState extends State<ProposalWidget> {
 
   @override
   Widget build(BuildContext context) {
+    _paymentMethodSnackBar = SnackBar(
+      content: Text(
+        'Select a payment method',
+        style: Theme.of(context)
+            .textTheme
+            .bodyText1
+            .copyWith(color: Theme.of(context).accentColor),
+      ),
+    );
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setModalState) {
       return Form(
@@ -95,27 +99,26 @@ class _ProposalWidgetState extends State<ProposalWidget> {
         child: ListView(
           children: <Widget>[
             Container(
-              padding: EdgeInsets.only(left: 10),
               child: TextFormField(
-                style: Theme.of(context).textTheme.bodyText1.copyWith(
-                      color: Theme.of(context).accentColor,
-                    ),
+                style: Theme.of(context).textTheme.bodyText1,
                 controller: _addProposalController,
                 decoration: signUpInputDecoration(
                   context,
                   'Describe your proposal in brief',
-                ).copyWith(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Theme.of(context).textTheme.caption.color,
-                      width: 0.5,
-                    ),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Theme.of(context).accentColor, width: 0.5),
-                  ),
-                ),
+                )
+                // .copyWith(
+                //   enabledBorder: UnderlineInputBorder(
+                //     borderSide: BorderSide(
+                //       color: Theme.of(context).textTheme.caption.color,
+                //       width: 0.5,
+                //     ),
+                //   ),
+                //   focusedBorder: UnderlineInputBorder(
+                //     borderSide: BorderSide(
+                //         color: Theme.of(context).accentColor, width: 0.5),
+                //   ),
+                // )
+                ,
                 inputFormatters: [
                   new LengthLimitingTextInputFormatter(500),
                 ],
@@ -152,7 +155,7 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                                 child: SvgPicture.asset(
                                   paypalIcon,
                                   semanticsLabel: 'paypal',
-                                  color: Theme.of(context).accentColor,
+                                  color: Theme.of(context).primaryColor,
                                 ),
                               ),
                               SizedBox(
@@ -160,21 +163,20 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                               ),
                               Text(
                                 'Request PayPal escrow deposit',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    .copyWith(
-                                      color: Theme.of(context).accentColor,
-                                    ),
+                                style: Theme.of(context).textTheme.bodyText1,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ),
                           Container(
                             decoration: BoxDecoration(
-                                color: Theme.of(context).accentColor,
-                                // borderRadius: BorderRadius.circular(10),
-                                shape: BoxShape.circle),
+                              color: Theme.of(context).accentColor,
+                              border: Border.all(
+                                  width: 0.5,
+                                  color: Theme.of(context).primaryColor),
+                              // borderRadius: BorderRadius.circular(10),
+                              shape: BoxShape.circle,
+                            ),
                             child: SizedBox(
                               width: 20,
                               child: Radio(
@@ -213,7 +215,7 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                                 child: SvgPicture.asset(
                                   cash,
                                   semanticsLabel: 'pay',
-                                  color: Theme.of(context).accentColor,
+                                  color: Theme.of(context).primaryColor,
                                 ),
                               ),
                               SizedBox(
@@ -221,12 +223,7 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                               ),
                               Text(
                                 'Get paid by cash',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    .copyWith(
-                                      color: Theme.of(context).accentColor,
-                                    ),
+                                style: Theme.of(context).textTheme.bodyText1,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ],
@@ -234,6 +231,9 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                           Container(
                             decoration: BoxDecoration(
                               color: Theme.of(context).accentColor,
+                              border: Border.all(
+                                  width: 0.5,
+                                  color: Theme.of(context).primaryColor),
                               shape: BoxShape.circle,
                             ),
                             child: SizedBox(
@@ -272,7 +272,7 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                                 child: SvgPicture.asset(
                                   alternatePayment,
                                   semanticsLabel: 'alternate payment',
-                                  color: Theme.of(context).accentColor,
+                                  color: Theme.of(context).primaryColor,
                                 ),
                               ),
                               SizedBox(
@@ -280,12 +280,7 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                               ),
                               Text(
                                 'Agree alternate with the poster',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    .copyWith(
-                                      color: Theme.of(context).accentColor,
-                                    ),
+                                style: Theme.of(context).textTheme.bodyText1,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ],
@@ -293,6 +288,9 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                           Container(
                             decoration: BoxDecoration(
                               color: Theme.of(context).accentColor,
+                              border: Border.all(
+                                  width: 0.5,
+                                  color: Theme.of(context).primaryColor),
                               shape: BoxShape.circle,
                             ),
                             child: SizedBox(
@@ -321,113 +319,101 @@ class _ProposalWidgetState extends State<ProposalWidget> {
               height: 20,
             ),
             Container(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          // height: 36,
+              height: 48,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        // height: 36,
 
-                          padding: EdgeInsets.only(left: 10),
-                          width: 100,
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: StreamBuilder<DocumentSnapshot>(
-                                  stream: FirebaseFirestore.instance
-                                      .collection('gigs')
-                                      .doc(widget.passedGigId)
-                                      .snapshots(),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<DocumentSnapshot>
-                                          snapshot) {
-                                    return Text(
-                                      // widget.passedGigCurrency,
-                                      snapshot.data['gigCurrency'],
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1
-                                          .copyWith(
-                                            color:
-                                                Theme.of(context).accentColor,
-                                          ),
-                                    );
-                                  },
-                                ),
+                        padding: EdgeInsets.only(left: 10),
+                        width: 100,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: StreamBuilder<DocumentSnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection('gigs')
+                                    .doc(widget.passedGigId)
+                                    .snapshots(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                  return Text(
+                                    snapshot.data['gigCurrency'],
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  );
+                                },
                               ),
-                              Expanded(
-                                child: TextFormField(
-                                  style: TextStyle(
-                                      color: Theme.of(context).accentColor),
-                                  controller: _offeredBudgetController,
-                                  decoration:
-                                      signUpInputDecoration(context, '0.00')
-                                          .copyWith(
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .caption
-                                            .color,
-                                        width: 0.5,
-                                      ),
-                                    ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Theme.of(context).accentColor,
-                                          width: 0.5),
-                                    ),
-                                  ),
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                style: Theme.of(context).textTheme.bodyText1,
+                                controller: _offeredBudgetController,
+                                decoration:
+                                    signUpInputDecoration(context, '0.00')
+                                //         .copyWith(
+                                //   enabledBorder: UnderlineInputBorder(
+                                //     borderSide: BorderSide(
+                                //       color: Theme.of(context)
+                                //           .textTheme
+                                //           .caption
+                                //           .color,
+                                //       width: 0.5,
+                                //     ),
+                                //   ),
+                                //   focusedBorder: UnderlineInputBorder(
+                                //     borderSide: BorderSide(
+                                //         color: Theme.of(context).accentColor,
+                                //         width: 0.5),
+                                //   ),
+                                // ),
+                                ,
+                                keyboardType: TextInputType.number,
+                                validator: (value) => value.isEmpty ? '' : null,
+                                // onSaved: (value) =>
+                                //     proposalBudget = value,
 
-                                  keyboardType: TextInputType.number,
-                                  validator: (value) =>
-                                      value.isEmpty ? '' : null,
-                                  // onSaved: (value) =>
-                                  //     proposalBudget = value,
-
-                                  maxLines: 1,
-                                ),
+                                maxLines: 1,
                               ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        preferredPaymentMethod == null
-                            ? Scaffold.of(context).showSnackBar(
-                                _paymentMethodSnackBar,
-                              )
-                            : submitProposal();
-                      },
-                      child: Container(
-                        height: 48,
-                        width: 100.0,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).accentColor,
-                          border: Border.all(
-                              color: Theme.of(context).accentColor, width: 0.5),
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                        child: Center(
-                          child: Text(
-                              widget.passedGigValue == 'Gigs I can do'
-                                  ? 'Hire'
-                                  : 'Apply',
-                              style: Theme.of(context).textTheme.bodyText1),
+                            ),
+                          ],
                         ),
                       ),
+                    ],
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      preferredPaymentMethod == null
+                          ? Scaffold.of(context).showSnackBar(
+                              _paymentMethodSnackBar,
+                            )
+                          : submitProposal();
+                    },
+                    child: Container(
+                      width: 80.0,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).accentColor,
+                        border: Border.all(
+                            color: Theme.of(context).primaryColor, width: 0.5),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                      child: Center(
+                        child: Text(
+                            widget.passedGigValue == 'Gigs I can do'
+                                ? 'Hire'
+                                : 'Apply',
+                            style: Theme.of(context).textTheme.bodyText1),
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             )
           ],
