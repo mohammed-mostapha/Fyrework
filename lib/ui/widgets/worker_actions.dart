@@ -31,13 +31,13 @@ class _WorkerActionsState extends State<WorkerActions> {
             child: Center(
               child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).accentColor,
+                  Theme.of(context).primaryColor,
                 ),
               ),
             ),
           );
         } else if (gigActionSnapshot.hasData &&
-            !(gigActionSnapshot.data.documents.length > 0)) {
+            !(gigActionSnapshot.data.docs.length > 0)) {
           return Container(
             width: double.infinity,
             child: Column(
@@ -47,10 +47,7 @@ class _WorkerActionsState extends State<WorkerActions> {
                   children: [
                     Text(
                       'Actions',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline1
-                          .copyWith(color: Theme.of(context).accentColor),
+                      style: Theme.of(context).textTheme.headline1,
                     )
                   ],
                 ),
@@ -72,20 +69,18 @@ class _WorkerActionsState extends State<WorkerActions> {
                               SizedBox(
                                 width: 30,
                                 height: 30,
-                                child: SvgPicture.asset(done,
-                                    semanticsLabel: 'done',
-                                    color: Theme.of(context).accentColor),
+                                child: SvgPicture.asset(
+                                  done,
+                                  semanticsLabel: 'done',
+                                  color: Theme.of(context).primaryColor,
+                                ),
                               ),
                               SizedBox(
                                 height: 10,
                               ),
                               Text('Mark As Done',
                                   textAlign: TextAlign.center,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1
-                                      .copyWith(
-                                          color: Theme.of(context).accentColor))
+                                  style: Theme.of(context).textTheme.bodyText1)
                             ],
                           ),
                         ),
@@ -106,20 +101,20 @@ class _WorkerActionsState extends State<WorkerActions> {
                             SizedBox(
                               width: 30,
                               height: 30,
-                              child: SvgPicture.asset(requestPayment,
-                                  semanticsLabel: 'request_payment',
-                                  color: Theme.of(context).accentColor),
+                              child: SvgPicture.asset(
+                                requestPayment,
+                                semanticsLabel: 'request_payment',
+                                color: Theme.of(context).primaryColor,
+                              ),
                             ),
                             SizedBox(
                               height: 10,
                             ),
-                            Text('Request Payment',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    .copyWith(
-                                        color: Theme.of(context).accentColor))
+                            Text(
+                              'Request Payment',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.bodyText1,
+                            )
                           ],
                         ),
                       ),
@@ -139,7 +134,7 @@ class _WorkerActionsState extends State<WorkerActions> {
           );
         } else {
           String lastGigActionOwner =
-              gigActionSnapshot.data.documents.last['gigActionOwner'];
+              gigActionSnapshot.data.docs.last['gigActionOwner'];
           bool workerAction = (lastGigActionOwner == 'worker') ? true : false;
 
           return Container(
@@ -152,10 +147,7 @@ class _WorkerActionsState extends State<WorkerActions> {
                   children: [
                     Text(
                       'Actions',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline1
-                          .copyWith(color: Theme.of(context).accentColor),
+                      style: Theme.of(context).textTheme.headline1,
                     )
                   ],
                 ),
@@ -181,10 +173,8 @@ class _WorkerActionsState extends State<WorkerActions> {
                                   color: !workerAction
                                       ? Theme.of(context).accentColor
                                       : Theme.of(context)
-                                          .textTheme
-                                          .caption
-                                          .color
-                                          .withOpacity(0.8)),
+                                          .primaryColor
+                                          .withOpacity(0.5)),
                             ),
                             SizedBox(
                               height: 10,
@@ -196,17 +186,15 @@ class _WorkerActionsState extends State<WorkerActions> {
                                         .textTheme
                                         .bodyText1
                                         .copyWith(
-                                            color:
-                                                Theme.of(context).accentColor)
+                                          color: Theme.of(context).primaryColor,
+                                        )
                                     : Theme.of(context)
                                         .textTheme
                                         .caption
                                         .copyWith(
                                             color: Theme.of(context)
-                                                .textTheme
-                                                .caption
-                                                .color
-                                                .withOpacity((0.8))))
+                                                .primaryColor
+                                                .withOpacity((0.5))))
                           ],
                         ),
                       ),
@@ -235,10 +223,8 @@ class _WorkerActionsState extends State<WorkerActions> {
                                   color: !workerAction
                                       ? Theme.of(context).accentColor
                                       : Theme.of(context)
-                                          .textTheme
-                                          .caption
-                                          .color
-                                          .withOpacity(0.8)),
+                                          .primaryColor
+                                          .withOpacity(0.5)),
                             ),
                             SizedBox(
                               height: 10,
@@ -251,16 +237,14 @@ class _WorkerActionsState extends State<WorkerActions> {
                                         .bodyText1
                                         .copyWith(
                                             color:
-                                                Theme.of(context).accentColor)
+                                                Theme.of(context).primaryColor)
                                     : Theme.of(context)
                                         .textTheme
                                         .caption
                                         .copyWith(
                                             color: Theme.of(context)
-                                                .textTheme
-                                                .caption
-                                                .color
-                                                .withOpacity((0.8)))),
+                                                .primaryColor
+                                                .withOpacity((0.5)))),
                           ],
                         ),
                       ),
@@ -287,10 +271,7 @@ class _WorkerActionsState extends State<WorkerActions> {
                           )
                         : Text(
                             'Waiting for client action...',
-                            style:
-                                Theme.of(context).textTheme.bodyText1.copyWith(
-                                      color: Theme.of(context).accentColor,
-                                    ),
+                            style: Theme.of(context).textTheme.bodyText1,
                           )
                   ],
                 )

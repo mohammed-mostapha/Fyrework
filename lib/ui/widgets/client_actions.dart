@@ -50,7 +50,7 @@ class _ClientActionsState extends State<ClientActions> {
             ),
           );
         } else if (gigActionSnapshot.hasData &&
-            !(gigActionSnapshot.data.documents.length > 0)) {
+            !(gigActionSnapshot.data.docs.length > 0)) {
           return Container(
             width: double.infinity,
             child: Column(
@@ -245,9 +245,9 @@ class _ClientActionsState extends State<ClientActions> {
           );
         } else {
           String lastGigActionOwner =
-              gigActionSnapshot.data.documents.last['gigActionOwner'];
+              gigActionSnapshot.data.docs.last['gigActionOwner'];
           bool clientAction = (lastGigActionOwner == 'client') ? true : false;
-          List gigActionsList = List.from(gigActionSnapshot.data.documents);
+          List gigActionsList = List.from(gigActionSnapshot.data.docs);
           bool markedAsCompleted = gigActionsList.any(
             (element) => element["gigAction"] == "marked as completed",
           );

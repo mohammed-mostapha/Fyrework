@@ -100,7 +100,7 @@ class _StartPageState extends State<StartPage> {
                             height: 40,
                             decoration: BoxDecoration(
                                 border: Border.all(
-                                  width: 2,
+                                  width: 1,
                                   color: Theme.of(context).primaryColor,
                                 ),
                                 borderRadius: BorderRadius.circular(5),

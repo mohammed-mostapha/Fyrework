@@ -48,7 +48,7 @@ ThemeData fyreworkDarkTheme() {
       textTheme: _basicTextTheme(base.textTheme),
       primaryColor: Color(0xFFFFFFFF),
       accentColor: Color(0XFF000000),
-      bottomAppBarColor: Color(0XFF212121),
+      bottomAppBarColor: Colors.grey[600],
       hintColor: Colors.grey[500],
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: Color(0XFF000000),

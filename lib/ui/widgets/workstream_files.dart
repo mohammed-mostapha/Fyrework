@@ -178,205 +178,189 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
     //   workstreamFilesList.add(tile);
     // });
 
-    return Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          border: Border.all(width: 1, color: Theme.of(context).accentColor),
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(10),
-            topRight: const Radius.circular(10),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).inputDecorationTheme.fillColor,
+            border: Border.all(width: 1, color: Theme.of(context).primaryColor),
+            borderRadius: BorderRadius.only(
+              topLeft: const Radius.circular(10),
+              topRight: const Radius.circular(10),
+            ),
           ),
-        ),
-        width: double.infinity,
-        // height: 100,
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Wrap(
-                alignment: WrapAlignment.spaceEvenly,
-                spacing: 40,
-                runAlignment: WrapAlignment.center,
-                children: [
-                  GestureDetector(
-                    child: FittedBox(
-                      fit: BoxFit.fill,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 30,
-                            height: 30,
-                            child: SvgPicture.asset(
-                              document,
-                              semanticsLabel: 'document',
-                              color: Theme.of(context).accentColor,
+          width: double.infinity,
+          // height: 100,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Wrap(
+                  alignment: WrapAlignment.spaceEvenly,
+                  spacing: 40,
+                  runAlignment: WrapAlignment.center,
+                  children: [
+                    GestureDetector(
+                      child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: SvgPicture.asset(
+                                document,
+                                semanticsLabel: 'document',
+                                color: Theme.of(context).primaryColor,
+                              ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'document',
-                            textAlign: TextAlign.center,
-                            style:
-                                Theme.of(context).textTheme.bodyText1.copyWith(
-                                      color: Theme.of(context).accentColor,
-                                    ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    child: FittedBox(
-                      fit: BoxFit.fill,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 30,
-                            height: 30,
-                            child: SvgPicture.asset(
-                              image,
-                              semanticsLabel: 'image',
-                              color: Theme.of(context).accentColor,
+                            SizedBox(
+                              height: 10,
                             ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'image',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1
-                                .copyWith(color: Theme.of(context).accentColor),
-                          )
-                        ],
-                      ),
-                    ),
-                    onTap: () {
-                      setState(() {
-                        _pickType = FileType.image;
-                      });
-                      openFileExplorer();
-                    },
-                  ),
-                  GestureDetector(
-                    child: FittedBox(
-                      fit: BoxFit.fill,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 30,
-                            height: 30,
-                            child: SvgPicture.asset(
-                              video,
-                              semanticsLabel: 'video',
-                              color: Theme.of(context).accentColor,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'video',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1
-                                .copyWith(color: Theme.of(context).accentColor),
-                          )
-                        ],
-                      ),
-                    ),
-                    onTap: () {
-                      setState(() {
-                        _pickType = FileType.video;
-                      });
-                      openFileExplorer();
-                    },
-                  ),
-                  GestureDetector(
-                    child: FittedBox(
-                      fit: BoxFit.fill,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 30,
-                            height: 30,
-                            child: SvgPicture.asset(
-                              audio,
-                              semanticsLabel: 'audio',
-                              color: Theme.of(context).accentColor,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'audio',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1
-                                .copyWith(color: Theme.of(context).accentColor),
-                          )
-                        ],
-                      ),
-                    ),
-                    onTap: () {
-                      setState(() {
-                        _pickType = FileType.audio;
-                      });
-                      openFileExplorer();
-                    },
-                  ),
-                ],
-              ),
-              Container(
-                width: 200,
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: SwitchListTile.adaptive(
-                        title: Text(
-                          'Multiple Files',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1
-                              .copyWith(color: Theme.of(context).accentColor),
+                            Text(
+                              'document',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.bodyText1,
+                            )
+                          ],
                         ),
-                        onChanged: (bool value) {
-                          setState(() {
-                            _multiPick = value;
-                          });
-                        },
-                        value: _multiPick,
                       ),
-                    )
+                    ),
+                    GestureDetector(
+                      child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: SvgPicture.asset(
+                                image,
+                                semanticsLabel: 'image',
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text('image',
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.bodyText1)
+                          ],
+                        ),
+                      ),
+                      onTap: () {
+                        setState(() {
+                          _pickType = FileType.image;
+                        });
+                        openFileExplorer();
+                      },
+                    ),
+                    GestureDetector(
+                      child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: SvgPicture.asset(
+                                video,
+                                semanticsLabel: 'video',
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text('video',
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.bodyText1)
+                          ],
+                        ),
+                      ),
+                      onTap: () {
+                        setState(() {
+                          _pickType = FileType.video;
+                        });
+                        openFileExplorer();
+                      },
+                    ),
+                    GestureDetector(
+                      child: FittedBox(
+                        fit: BoxFit.fill,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: SvgPicture.asset(
+                                audio,
+                                semanticsLabel: 'audio',
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'audio',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.bodyText1,
+                            )
+                          ],
+                        ),
+                      ),
+                      onTap: () {
+                        setState(() {
+                          _pickType = FileType.audio;
+                        });
+                        openFileExplorer();
+                      },
+                    ),
                   ],
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              // Container(
-              //   color: Colors.white,
-              //   width: double.infinity,
-              //   height: 300,
-              //   child: ListView(
-              //     children: workstreamFilesList,
-              //   ),
-              // )
-            ],
-          ),
-        ));
+                Container(
+                  width: 200,
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: SwitchListTile.adaptive(
+                          title: Text(
+                            'Multiple Files',
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
+                          onChanged: (bool value) {
+                            setState(() {
+                              _multiPick = value;
+                            });
+                          },
+                          value: _multiPick,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                // Container(
+                //   color: Colors.white,
+                //   width: double.infinity,
+                //   height: 300,
+                //   child: ListView(
+                //     children: workstreamFilesList,
+                //   ),
+                // )
+              ],
+            ),
+          )),
+    );
   }
 }
 

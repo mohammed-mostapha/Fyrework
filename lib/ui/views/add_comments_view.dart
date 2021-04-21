@@ -1,4 +1,5 @@
 import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -286,53 +287,63 @@ class _AddCommentsViewState extends State<AddCommentsView>
 
                                             actionItems.add(
                                               PopupMenuItem(
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Theme.of(context)
-                                                        .accentColor,
-                                                    border: Border(
-                                                      bottom: BorderSide(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 10.0),
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
                                                         color: Theme.of(context)
-                                                            .textTheme
-                                                            .caption
-                                                            .color,
-                                                        width: 0.5,
+                                                            .inputDecorationTheme
+                                                            .fillColor,
+                                                        border: Border(
+                                                            // bottom: BorderSide(
+                                                            //   color:
+                                                            //       Theme.of(context)
+                                                            //           .textTheme
+                                                            //           .caption
+                                                            //           .color,
+                                                            //   width: 0.5,
+                                                            // ),
+                                                            ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                    child: ListTile(
+                                                      leading: CircleAvatar(
+                                                        maxRadius: 20,
+                                                        backgroundColor:
+                                                            Theme.of(context)
+                                                                .primaryColor,
+                                                        backgroundImage:
+                                                            NetworkImage(
+                                                                "${actionSnapshot.data()['userAvatarUrl']}"),
                                                       ),
-                                                    ),
-                                                  ),
-                                                  child: ListTile(
-                                                    leading: CircleAvatar(
-                                                      maxRadius: 20,
-                                                      backgroundColor:
-                                                          Theme.of(context)
-                                                              .primaryColor,
-                                                      backgroundImage: NetworkImage(
-                                                          "${actionSnapshot.data()['userAvatarUrl']}"),
-                                                    ),
-                                                    title: Column(
-                                                      children: [
-                                                        Text(
-                                                            "${actionSnapshot.data()['gigAction']}"
-                                                                .capitalize(),
+                                                      title: Column(
+                                                        children: [
+                                                          Text(
+                                                              "${actionSnapshot.data()['gigAction']}"
+                                                                  .capitalize(),
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .bodyText1),
+                                                          Text(
+                                                            "$gigWorkstreamActionDate",
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .bodyText1),
-                                                        Text(
-                                                          "$gigWorkstreamActionDate",
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .bodyText1
-                                                                  .copyWith(
-                                                                    color: Theme.of(
-                                                                            context)
-                                                                        .primaryColor,
-                                                                  ),
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                        ),
-                                                      ],
+                                                                .bodyText1
+                                                                .copyWith(
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .primaryColor,
+                                                                ),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
@@ -403,6 +414,9 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                 MyUser.uid)
                                                         ? () {
                                                             showModalBottomSheet(
+                                                                barrierColor: Theme.of(
+                                                                        context)
+                                                                    .bottomAppBarColor,
                                                                 isScrollControlled:
                                                                     true,
                                                                 context:
@@ -709,7 +723,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                         Container(
                                           child: Padding(
                                             padding: const EdgeInsets.symmetric(
-                                                vertical: 2, horizontal: 16),
+                                                vertical: 5, horizontal: 16),
                                             child: Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.end,
@@ -891,67 +905,65 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                       ),
                                                     ),
                                                     onTap: () {
-                                                      Scaffold.of(context)
-                                                          .showBottomSheet(
-                                                              (BuildContext
-                                                                  context) {
-                                                        return Builder(
+                                                      showModalBottomSheet(
+                                                          context: context,
                                                           builder: (BuildContext
                                                               context) {
-                                                            return Container(
-                                                              height: 250,
-                                                              child: StatefulBuilder(builder:
+                                                            return Builder(
+                                                              builder:
                                                                   (BuildContext
+                                                                      context) {
+                                                                return Container(
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .bottomAppBarColor,
+                                                                  height: 250,
+                                                                  child: StatefulBuilder(builder: (BuildContext
                                                                           context,
                                                                       StateSetter
                                                                           setModalState) {
-                                                                return Container(
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: Theme.of(
-                                                                            context)
-                                                                        .primaryColor,
-                                                                    border: Border.all(
-                                                                        width:
-                                                                            1,
+                                                                    return Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
                                                                         color: Theme.of(context)
-                                                                            .primaryColor),
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .only(
-                                                                      topLeft:
-                                                                          const Radius.circular(
-                                                                              10),
-                                                                      topRight:
-                                                                          const Radius.circular(
-                                                                              10),
-                                                                    ),
-                                                                  ),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .symmetric(
-                                                                        vertical:
-                                                                            10,
-                                                                        horizontal:
-                                                                            10),
-                                                                    // child: hirer ? _hirerActions() : _applierActions(),
-                                                                    child: !client
-                                                                        ? WorkerActions(
-                                                                            passedGigId:
-                                                                                widget.passedGigId,
-                                                                          )
-                                                                        : ClientActions(
-                                                                            passedGigId:
-                                                                                widget.passedGigId,
-                                                                          ),
-                                                                  ),
+                                                                            .inputDecorationTheme
+                                                                            .fillColor,
+                                                                        border:
+                                                                            Border.all(
+                                                                          width:
+                                                                              1,
+                                                                          color:
+                                                                              Theme.of(context).primaryColor,
+                                                                        ),
+                                                                        borderRadius:
+                                                                            BorderRadius.only(
+                                                                          topLeft:
+                                                                              const Radius.circular(10),
+                                                                          topRight:
+                                                                              const Radius.circular(10),
+                                                                        ),
+                                                                      ),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.all(
+                                                                          10,
+                                                                        ),
+                                                                        // child: hirer ? _hirerActions() : _applierActions(),
+                                                                        child: !client
+                                                                            ? WorkerActions(
+                                                                                passedGigId: widget.passedGigId,
+                                                                              )
+                                                                            : ClientActions(
+                                                                                passedGigId: widget.passedGigId,
+                                                                              ),
+                                                                      ),
+                                                                    );
+                                                                  }),
                                                                 );
-                                                              }),
+                                                              },
                                                             );
-                                                          },
-                                                        );
-                                                      });
+                                                          });
                                                     }),
                                                 SizedBox(
                                                   width: 5,
