@@ -708,20 +708,18 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                         ),
                                         Container(
                                           child: Padding(
-                                            padding: const EdgeInsets.all(2.0),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 2, horizontal: 16),
                                             child: Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.end,
                                               children: [
                                                 Expanded(
                                                   child: Container(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 15),
-                                                    // height: 40,
                                                     decoration: BoxDecoration(
                                                       color: Theme.of(context)
-                                                          .primaryColor,
+                                                          .inputDecorationTheme
+                                                          .fillColor,
                                                       border: Border.all(
                                                           width: 1,
                                                           color: Theme.of(
@@ -746,17 +744,9 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                             controller:
                                                                 _addCommentsController,
                                                             decoration:
-                                                                InputDecoration(
-                                                              hintText:
-                                                                  "Add private comment",
-                                                              hintStyle: TextStyle(
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .accentColor),
-                                                              border:
-                                                                  InputBorder
-                                                                      .none,
-                                                            ),
+                                                                signUpInputDecoration(
+                                                                    context,
+                                                                    "Add private comment"),
                                                             onFieldSubmitted:
                                                                 (String
                                                                     submittedString) async {
@@ -808,38 +798,46 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                         SizedBox(
                                                           width: 20,
                                                         ),
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              if (!_filePickerOpened) {
-                                                                _pickFilecontroller
-                                                                    .forward();
-                                                              } else {
-                                                                _pickFilecontroller
-                                                                    .reverse();
-                                                              }
-                                                              _filePickerOpened =
-                                                                  !_filePickerOpened;
-                                                            });
-                                                            //open reveal animation
-                                                            print(
-                                                                'paperclip tapped');
-                                                          },
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    bottom: 15),
-                                                            child: SizedBox(
-                                                              width: 20,
-                                                              height: 20,
-                                                              child: SvgPicture.asset(
-                                                                  paperClip,
-                                                                  semanticsLabel:
-                                                                      'paperclip',
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .primaryColor),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 10),
+                                                          child:
+                                                              GestureDetector(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                if (!_filePickerOpened) {
+                                                                  _pickFilecontroller
+                                                                      .forward();
+                                                                } else {
+                                                                  _pickFilecontroller
+                                                                      .reverse();
+                                                                }
+                                                                _filePickerOpened =
+                                                                    !_filePickerOpened;
+                                                              });
+                                                              //open reveal animation
+                                                              print(
+                                                                  'paperclip tapped');
+                                                            },
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      bottom:
+                                                                          15),
+                                                              child: SizedBox(
+                                                                width: 20,
+                                                                height: 20,
+                                                                child: SvgPicture.asset(
+                                                                    paperClip,
+                                                                    semanticsLabel:
+                                                                        'paperclip',
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .primaryColor),
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
@@ -858,24 +856,19 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                       child: Container(
                                                         height: 48,
                                                         width: 48,
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(2),
+                                                        child: Center(
                                                           child: Center(
-                                                            child: Center(
-                                                              child: SizedBox(
-                                                                width: 20,
-                                                                height: 20,
-                                                                child:
-                                                                    SvgPicture
-                                                                        .asset(
-                                                                  actions,
-                                                                  semanticsLabel:
-                                                                      'paper-plane',
-                                                                  color: Colors
-                                                                      .white,
-                                                                ),
+                                                            child: SizedBox(
+                                                              width: 20,
+                                                              height: 20,
+                                                              child: SvgPicture
+                                                                  .asset(
+                                                                actions,
+                                                                semanticsLabel:
+                                                                    'paper-plane',
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .primaryColor,
                                                               ),
                                                             ),
                                                           ),
@@ -883,7 +876,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                         decoration: BoxDecoration(
                                                             color: Theme.of(
                                                                     context)
-                                                                .primaryColor,
+                                                                .inputDecorationTheme
+                                                                .fillColor,
                                                             border: Border.all(
                                                                 width: 1,
                                                                 color: Theme.of(
@@ -962,37 +956,49 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                 SizedBox(
                                                   width: 5,
                                                 ),
-                                                Container(
-                                                  width: 48,
-                                                  height: 48,
-                                                  decoration: BoxDecoration(
-                                                      color: Theme.of(context)
-                                                          .primaryColor,
-                                                      border: Border.all(
-                                                        width: 1,
-                                                        color: Theme.of(context)
-                                                            .primaryColor,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  50))),
-                                                  child: GestureDetector(
-                                                    child: Center(
-                                                      child: SizedBox(
-                                                        width: 20,
-                                                        height: 20,
-                                                        child: SvgPicture.asset(
-                                                          paperPlane,
-                                                          semanticsLabel:
-                                                              'paper-plane',
-                                                          color: Colors.white,
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    addComment();
+                                                  },
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            2.0),
+                                                    child: Container(
+                                                      width: 48,
+                                                      height: 48,
+                                                      decoration: BoxDecoration(
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .inputDecorationTheme
+                                                              .fillColor,
+                                                          border: Border.all(
+                                                            width: 1,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .primaryColor,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          50))),
+                                                      child: Center(
+                                                        child: SizedBox(
+                                                          width: 20,
+                                                          height: 20,
+                                                          child:
+                                                              SvgPicture.asset(
+                                                            paperPlane,
+                                                            semanticsLabel:
+                                                                'paper-plane',
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .primaryColor,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
-                                                    onTap: () {
-                                                      addComment();
-                                                    },
                                                   ),
                                                 ),
                                               ],

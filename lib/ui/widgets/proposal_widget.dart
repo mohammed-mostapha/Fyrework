@@ -99,32 +99,35 @@ class _ProposalWidgetState extends State<ProposalWidget> {
         child: ListView(
           children: <Widget>[
             Container(
-              child: TextFormField(
-                style: Theme.of(context).textTheme.bodyText1,
-                controller: _addProposalController,
-                decoration: signUpInputDecoration(
-                  context,
-                  'Describe your proposal in brief',
-                )
-                // .copyWith(
-                //   enabledBorder: UnderlineInputBorder(
-                //     borderSide: BorderSide(
-                //       color: Theme.of(context).textTheme.caption.color,
-                //       width: 0.5,
-                //     ),
-                //   ),
-                //   focusedBorder: UnderlineInputBorder(
-                //     borderSide: BorderSide(
-                //         color: Theme.of(context).accentColor, width: 0.5),
-                //   ),
-                // )
-                ,
-                inputFormatters: [
-                  new LengthLimitingTextInputFormatter(500),
-                ],
-                validator: (value) => value.isEmpty ? '' : null,
-                minLines: 1,
-                maxLines: 6,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: TextFormField(
+                  style: Theme.of(context).textTheme.bodyText1,
+                  controller: _addProposalController,
+                  decoration: signUpInputDecoration(
+                    context,
+                    'Describe your proposal in brief',
+                  )
+                  // .copyWith(
+                  //   enabledBorder: UnderlineInputBorder(
+                  //     borderSide: BorderSide(
+                  //       color: Theme.of(context).textTheme.caption.color,
+                  //       width: 0.5,
+                  //     ),
+                  //   ),
+                  //   focusedBorder: UnderlineInputBorder(
+                  //     borderSide: BorderSide(
+                  //         color: Theme.of(context).accentColor, width: 0.5),
+                  //   ),
+                  // )
+                  ,
+                  inputFormatters: [
+                    new LengthLimitingTextInputFormatter(500),
+                  ],
+                  validator: (value) => value.isEmpty ? '' : null,
+                  minLines: 1,
+                  maxLines: 6,
+                ),
               ),
             ),
             SizedBox(
@@ -321,69 +324,75 @@ class _ProposalWidgetState extends State<ProposalWidget> {
             Container(
               height: 48,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        // height: 36,
+                  Container(
+                    // height: 36,
 
-                        padding: EdgeInsets.only(left: 10),
-                        width: 100,
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: StreamBuilder<DocumentSnapshot>(
-                                stream: FirebaseFirestore.instance
-                                    .collection('gigs')
-                                    .doc(widget.passedGigId)
-                                    .snapshots(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<DocumentSnapshot> snapshot) {
-                                  return Text(
-                                    snapshot.data['gigCurrency'],
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
-                                  );
-                                },
-                              ),
-                            ),
-                            Expanded(
-                              child: TextFormField(
-                                style: Theme.of(context).textTheme.bodyText1,
-                                controller: _offeredBudgetController,
-                                decoration:
-                                    signUpInputDecoration(context, '0.00')
-                                //         .copyWith(
-                                //   enabledBorder: UnderlineInputBorder(
-                                //     borderSide: BorderSide(
-                                //       color: Theme.of(context)
-                                //           .textTheme
-                                //           .caption
-                                //           .color,
-                                //       width: 0.5,
-                                //     ),
-                                //   ),
-                                //   focusedBorder: UnderlineInputBorder(
-                                //     borderSide: BorderSide(
-                                //         color: Theme.of(context).accentColor,
-                                //         width: 0.5),
-                                //   ),
-                                // ),
-                                ,
-                                keyboardType: TextInputType.number,
-                                validator: (value) => value.isEmpty ? '' : null,
-                                // onSaved: (value) =>
-                                //     proposalBudget = value,
-
-                                maxLines: 1,
-                              ),
-                            ),
-                          ],
+                    padding: EdgeInsets.only(left: 10),
+                    width: 100,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: StreamBuilder<DocumentSnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('gigs')
+                                .doc(widget.passedGigId)
+                                .snapshots(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<DocumentSnapshot> snapshot) {
+                              if (snapshot.hasData) {
+                                return Text(
+                                  snapshot.data['gigCurrency'],
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                );
+                              }
+                              return SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    ],
+                        Expanded(
+                          child: TextFormField(
+                            style: Theme.of(context).textTheme.bodyText1,
+                            controller: _offeredBudgetController,
+                            decoration: signUpInputDecoration(context, '0.00')
+                            //         .copyWith(
+                            //   enabledBorder: UnderlineInputBorder(
+                            //     borderSide: BorderSide(
+                            //       color: Theme.of(context)
+                            //           .textTheme
+                            //           .caption
+                            //           .color,
+                            //       width: 0.5,
+                            //     ),
+                            //   ),
+                            //   focusedBorder: UnderlineInputBorder(
+                            //     borderSide: BorderSide(
+                            //         color: Theme.of(context).accentColor,
+                            //         width: 0.5),
+                            //   ),
+                            // ),
+                            ,
+                            keyboardType: TextInputType.number,
+                            validator: (value) => value.isEmpty ? '' : null,
+                            // onSaved: (value) =>
+                            //     proposalBudget = value,
+
+                            maxLines: 1,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     width: 20,

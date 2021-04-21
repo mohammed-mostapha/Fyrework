@@ -293,7 +293,6 @@ class _CommentItemState extends State<CommentItem> {
                     ? Column(
                         children: [
                           Container(
-                            color: Colors.white,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -331,8 +330,8 @@ class _CommentItemState extends State<CommentItem> {
                                     ),
                                     widget.preferredPaymentMethod != null
                                         ? SizedBox(
-                                            width: 20,
-                                            height: 20,
+                                            width: 35,
+                                            height: 35,
                                             child: SvgPicture.asset(
                                               widget.preferredPaymentMethod ==
                                                       'paypal'
@@ -493,45 +492,62 @@ class _CommentItemState extends State<CommentItem> {
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    child: Wrap(
-                                      direction: Axis.horizontal,
-                                      alignment: WrapAlignment.start,
-                                      children: [
-                                        Text(
-                                          'You appointed this gig to ',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1
-                                              .copyWith(
-                                                color: myComment
-                                                    ? Theme.of(context)
-                                                        .accentColor
-                                                    : Theme.of(context)
-                                                        .primaryColor,
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                width: 1,
+                                                color: Theme.of(context)
+                                                    .hintColor),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Wrap(
+                                            direction: Axis.horizontal,
+                                            alignment: WrapAlignment.start,
+                                            children: [
+                                              Text(
+                                                'You appointed this gig to ',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText1
+                                                    .copyWith(
+                                                      color: myComment
+                                                          ? Theme.of(context)
+                                                              .accentColor
+                                                          : Theme.of(context)
+                                                              .primaryColor,
+                                                    ),
                                               ),
-                                        ),
-                                        GestureDetector(
-                                          child: Text(
-                                            '${widget.commentOwnerUsername}',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1
-                                                .copyWith(
-                                                    color: myComment
-                                                        ? Theme.of(context)
-                                                            .accentColor
-                                                        : Theme.of(context)
-                                                            .primaryColor,
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                              GestureDetector(
+                                                child: Text(
+                                                  '${widget.commentOwnerUsername}',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText1
+                                                      .copyWith(
+                                                          color: myComment
+                                                              ? Theme.of(
+                                                                      context)
+                                                                  .accentColor
+                                                              : Theme.of(
+                                                                      context)
+                                                                  .primaryColor,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                ),
+                                                onTap: () {
+                                                  showUserProfile();
+                                                },
+                                              ),
+                                            ],
                                           ),
-                                          onTap: () {
-                                            showUserProfile();
-                                          },
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                   Container(
                                     height: 5,
@@ -568,7 +584,7 @@ class _CommentItemState extends State<CommentItem> {
                                                       height: 0,
                                                     ),
                                               SizedBox(
-                                                width: 10,
+                                                width: 5,
                                               ),
                                               widget.offeredBudget != null
                                                   ? Text(
@@ -588,13 +604,13 @@ class _CommentItemState extends State<CommentItem> {
                                                   : Container(
                                                       width: 0, height: 0),
                                               SizedBox(
-                                                width: 10,
+                                                width: 5,
                                               ),
                                               widget.preferredPaymentMethod !=
                                                       null
                                                   ? SizedBox(
-                                                      width: 30,
-                                                      height: 30,
+                                                      width: 35,
+                                                      height: 35,
                                                       child: SvgPicture.asset(
                                                           widget.preferredPaymentMethod ==
                                                                   'paypal'
@@ -621,7 +637,7 @@ class _CommentItemState extends State<CommentItem> {
                                           Container(
                                             decoration: BoxDecoration(
                                                 border: Border.all(
-                                                  width: 2,
+                                                  width: 1,
                                                   color: !widget.approved
                                                       ? !widget.rejected
                                                           ? Theme.of(context)
