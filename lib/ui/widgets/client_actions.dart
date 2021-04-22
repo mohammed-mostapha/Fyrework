@@ -263,10 +263,7 @@ class _ClientActionsState extends State<ClientActions> {
                   children: [
                     Text(
                       'Actions',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline1
-                          .copyWith(color: Theme.of(context).accentColor),
+                      style: Theme.of(context).textTheme.headline1,
                     )
                   ],
                 ),
@@ -292,12 +289,10 @@ class _ClientActionsState extends State<ClientActions> {
                                 unsatisfied,
                                 semanticsLabel: 'unsatisfied',
                                 color: !clientAction
-                                    ? Theme.of(context).accentColor
+                                    ? Theme.of(context).primaryColor
                                     : Theme.of(context)
-                                        .textTheme
-                                        .caption
-                                        .color
-                                        .withOpacity(0.8),
+                                        .primaryColor
+                                        .withOpacity(0.5),
                               ),
                             ),
                             SizedBox(
@@ -307,20 +302,14 @@ class _ClientActionsState extends State<ClientActions> {
                               'Unsatisfied',
                               textAlign: TextAlign.center,
                               style: !clientAction
-                                  ? Theme.of(context)
+                                  ? Theme.of(context).textTheme.bodyText1
+                                  : Theme.of(context)
                                       .textTheme
                                       .bodyText1
                                       .copyWith(
-                                          color: Theme.of(context).accentColor)
-                                  : Theme.of(context)
-                                      .textTheme
-                                      .caption
-                                      .copyWith(
                                           color: Theme.of(context)
-                                              .textTheme
-                                              .caption
-                                              .color
-                                              .withOpacity((0.8))),
+                                              .primaryColor
+                                              .withOpacity((0.5))),
                             )
                           ],
                         ),
@@ -349,12 +338,10 @@ class _ClientActionsState extends State<ClientActions> {
                                 markAsCompletedIcon,
                                 semanticsLabel: 'completed',
                                 color: !clientAction
-                                    ? Theme.of(context).accentColor
+                                    ? Theme.of(context).primaryColor
                                     : Theme.of(context)
-                                        .textTheme
-                                        .caption
-                                        .color
-                                        .withOpacity(0.8),
+                                        .primaryColor
+                                        .withOpacity(0.5),
                               ),
                             ),
                             SizedBox(
@@ -364,20 +351,14 @@ class _ClientActionsState extends State<ClientActions> {
                               'Mark As Completed',
                               textAlign: TextAlign.center,
                               style: !clientAction
-                                  ? Theme.of(context)
+                                  ? Theme.of(context).textTheme.bodyText1
+                                  : Theme.of(context)
                                       .textTheme
                                       .bodyText1
                                       .copyWith(
-                                          color: Theme.of(context).accentColor)
-                                  : Theme.of(context)
-                                      .textTheme
-                                      .caption
-                                      .copyWith(
                                           color: Theme.of(context)
-                                              .textTheme
-                                              .caption
-                                              .color
-                                              .withOpacity((0.8))),
+                                              .primaryColor
+                                              .withOpacity((0.5))),
                             )
                           ],
                         ),
@@ -405,39 +386,23 @@ class _ClientActionsState extends State<ClientActions> {
                               child: SvgPicture.asset(
                                 releaseEscrowPaymentIcon,
                                 semanticsLabel: 'release_payment',
-                                // color: Theme.of(context).accentColor,
-                                color: !markedAsCompleted
-                                    ? Theme.of(context)
-                                        .textTheme
-                                        .caption
-                                        .color
-                                        .withOpacity(0.8)
-                                    : Theme.of(context).accentColor,
+                                // color: !markedAsCompleted
+                                //     ? Theme.of(context).primaryColor
+                                //     : Theme.of(context).primaryColor,
+                                color: Theme.of(context).primaryColor,
                               ),
                             ),
                             SizedBox(
                               height: 10,
                             ),
-                            Text(
-                              'Release Payment',
-                              textAlign: TextAlign.center,
-                              style: !markedAsCompleted
-                                  ? Theme.of(context)
-                                      .textTheme
-                                      .caption
-                                      .copyWith(
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .caption
-                                              .color
-                                              .withOpacity((0.8)))
-                                  : Theme.of(context)
-                                      .textTheme
-                                      .bodyText1
-                                      .copyWith(
-                                        color: Theme.of(context).accentColor,
-                                      ),
-                            )
+                            Text('Release Payment',
+                                textAlign: TextAlign.center,
+                                style: !markedAsCompleted
+                                    ? Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(color: Colors.red)
+                                    : Theme.of(context).textTheme.bodyText1)
                           ],
                         ),
                       ),
@@ -467,11 +432,9 @@ class _ClientActionsState extends State<ClientActions> {
                                 // color: Theme.of(context).accentColor,
                                 color: !markedAsCompleted
                                     ? Theme.of(context)
-                                        .textTheme
-                                        .caption
-                                        .color
+                                        .primaryColor
                                         .withOpacity(0.8)
-                                    : Theme.of(context).accentColor,
+                                    : Theme.of(context).primaryColor,
                               ),
                             ),
                             SizedBox(
@@ -483,18 +446,17 @@ class _ClientActionsState extends State<ClientActions> {
                               style: !markedAsCompleted
                                   ? Theme.of(context)
                                       .textTheme
-                                      .caption
+                                      .bodyText1
                                       .copyWith(
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .caption
-                                              .color
-                                              .withOpacity((0.8)))
+                                        color: Theme.of(context)
+                                            .primaryColor
+                                            .withOpacity(0.8),
+                                      )
                                   : Theme.of(context)
                                       .textTheme
                                       .bodyText1
                                       .copyWith(
-                                        color: Theme.of(context).accentColor,
+                                        color: Theme.of(context).primaryColor,
                                       ),
                             )
                           ],
