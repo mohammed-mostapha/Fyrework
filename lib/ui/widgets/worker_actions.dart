@@ -136,6 +136,13 @@ class _WorkerActionsState extends State<WorkerActions> {
           String lastGigActionOwner =
               gigActionSnapshot.data.docs.last['gigActionOwner'];
           bool workerAction = (lastGigActionOwner == 'worker') ? true : false;
+          List gigActionsList = List.from(gigActionSnapshot.data.docs);
+          bool markedAsCompleted = gigActionsList.any(
+            (element) => element["gigAction"] == "marked as completed",
+          );
+          bool wokerGotPaid = gigActionsList.any(
+            (element) => element["gigAction"] == "worker got paid",
+          );
 
           return Container(
             width: double.infinity,
@@ -168,33 +175,48 @@ class _WorkerActionsState extends State<WorkerActions> {
                             SizedBox(
                               width: 30,
                               height: 30,
-                              child: SvgPicture.asset(done,
-                                  semanticsLabel: 'done',
-                                  color: !workerAction
-                                      ? Theme.of(context).accentColor
-                                      : Theme.of(context)
-                                          .primaryColor
-                                          .withOpacity(0.5)),
+                              child: SvgPicture.asset(
+                                done,
+                                semanticsLabel: 'done',
+                                color: markedAsCompleted
+                                    ? Theme.of(context)
+                                        .primaryColor
+                                        .withOpacity(0.5)
+                                    : !workerAction
+                                        ? Theme.of(context).primaryColor
+                                        : Theme.of(context)
+                                            .primaryColor
+                                            .withOpacity(0.5),
+                              ),
                             ),
                             SizedBox(
                               height: 10,
                             ),
                             Text('Mark As Done',
                                 textAlign: TextAlign.center,
-                                style: !workerAction
+                                style: markedAsCompleted
                                     ? Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        .copyWith(
-                                          color: Theme.of(context).primaryColor,
-                                        )
-                                    : Theme.of(context)
                                         .textTheme
                                         .caption
                                         .copyWith(
                                             color: Theme.of(context)
                                                 .primaryColor
-                                                .withOpacity((0.5))))
+                                                .withOpacity((0.5)))
+                                    : !workerAction
+                                        ? Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .copyWith(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            )
+                                        : Theme.of(context)
+                                            .textTheme
+                                            .caption
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .primaryColor
+                                                    .withOpacity((0.5))))
                           ],
                         ),
                       ),
@@ -216,31 +238,25 @@ class _WorkerActionsState extends State<WorkerActions> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: SvgPicture.asset(requestPayment,
-                                  semanticsLabel: 'request_payment',
-                                  color: !workerAction
-                                      ? Theme.of(context).accentColor
-                                      : Theme.of(context)
-                                          .primaryColor
-                                          .withOpacity(0.5)),
-                            ),
+                                width: 30,
+                                height: 30,
+                                child: SvgPicture.asset(requestPayment,
+                                    semanticsLabel: 'request_payment',
+                                    color: !workerAction
+                                        ? Theme.of(context).primaryColor
+                                        : Theme.of(context)
+                                            .primaryColor
+                                            .withOpacity((0.5)))),
                             SizedBox(
                               height: 10,
                             ),
                             Text('Request Payment',
                                 textAlign: TextAlign.center,
                                 style: !workerAction
-                                    ? Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        .copyWith(
-                                            color:
-                                                Theme.of(context).primaryColor)
+                                    ? Theme.of(context).textTheme.bodyText1
                                     : Theme.of(context)
                                         .textTheme
-                                        .caption
+                                        .bodyText1
                                         .copyWith(
                                             color: Theme.of(context)
                                                 .primaryColor
