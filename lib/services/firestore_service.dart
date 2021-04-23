@@ -74,7 +74,10 @@ class FirestoreService {
     }
   }
 
-  Future addComment(Comment comment, String gigIdHoldingComment) async {
+  Future addComment(
+    Comment comment,
+    String gigIdHoldingComment,
+  ) async {
     try {
       Map<String, dynamic> commentData = comment.toMap();
       DocumentReference commentRef =
@@ -95,6 +98,26 @@ class FirestoreService {
       return e.toString();
     }
   }
+
+  // Future addGigCompletedCommentTemplate(
+  //   Comment comment,
+  //   String gigIdHoldingComment,
+  // ) async {
+  //   try {
+  //     Map<String, dynamic> commentData = comment.toMap();
+  //     DocumentReference commentRef =
+  //         await _commentsCollectionReference.add(commentData).then((comment) {
+  //       comment.update({'commentId': comment.id});
+  //     });
+  //   } catch (e) {
+  //     // TODO: Find or create a way to repeat error handling without so much repeated code
+  //     if (e is PlatformException) {
+  //       return e.message;
+  //     }
+
+  //     return e.toString();
+  //   }
+  // }
 
   Stream listenToAllGigsRealTime() {
     // Register the handler for when the gigs data changes

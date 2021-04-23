@@ -25,15 +25,16 @@ class AddCommentViewModel {
     @required bool proposal,
     @required bool approved,
     @required bool rejected,
-    @required String gigCurrency,
-    @required String offeredBudget,
+    String gigCurrency,
+    String offeredBudget,
     String preferredPaymentMethod,
     @required bool containMediaFile,
+    @required isGigCompleted,
   }) async {
     var result;
-    if (!_editting) {
-      result = await _firestoreService.addComment(
-          Comment(
+    // if (!_editting) {
+    result = await _firestoreService.addComment(
+        Comment(
             gigIdHoldingComment: gigIdHoldingComment,
             gigOwnerId: gigOwnerId,
             commentId: commentId,
@@ -52,29 +53,29 @@ class AddCommentViewModel {
             preferredPaymentMethod: preferredPaymentMethod,
             containMediaFile: containMediaFile,
             commentPrivacyToggle: isPrivateComment,
-          ),
-          gigIdHoldingComment);
-    } else {
-      result = await _firestoreService.updateComment(
-        Comment(
-          gigIdHoldingComment: gigIdHoldingComment,
-          gigOwnerId: gigOwnerId,
-          commentId: commentId,
-          commentOwnerId: commentOwnerId,
-          commentOwnerAvatarUrl: commentOwnerAvatarUrl,
-          commentOwnerUsername: commentOwnerUsername,
-          commentBody: commentBody,
-          // commentTime: commentTime,
-          isPrivateComment: isPrivateComment,
-          proposal: proposal,
-          approved: approved,
-          rejected: rejected,
-          gigCurrency: gigCurrency,
-          offeredBudget: offeredBudget,
-          preferredPaymentMethod: preferredPaymentMethod,
-          containMediaFile: containMediaFile,
-        ),
-      );
-    }
+            isGigCompleted: isGigCompleted),
+        gigIdHoldingComment);
+    // } else {
+    //   result = await _firestoreService.updateComment(
+    //     Comment(
+    //       gigIdHoldingComment: gigIdHoldingComment,
+    //       gigOwnerId: gigOwnerId,
+    //       commentId: commentId,
+    //       commentOwnerId: commentOwnerId,
+    //       commentOwnerAvatarUrl: commentOwnerAvatarUrl,
+    //       commentOwnerUsername: commentOwnerUsername,
+    //       commentBody: commentBody,
+    //       // commentTime: commentTime,
+    //       isPrivateComment: isPrivateComment,
+    //       proposal: proposal,
+    //       approved: approved,
+    //       rejected: rejected,
+    //       gigCurrency: gigCurrency,
+    //       offeredBudget: offeredBudget,
+    //       preferredPaymentMethod: preferredPaymentMethod,
+    //       containMediaFile: containMediaFile,
+    //     ),
+    //   );
+    // }
   }
 }

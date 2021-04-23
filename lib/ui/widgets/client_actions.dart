@@ -1,19 +1,29 @@
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/viewmodels/add_comment_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class ClientActions extends StatefulWidget {
   @required
   final String passedGigId;
+  @required
+  final String passedGigOwnerId;
 
-  ClientActions({this.passedGigId});
+  ClientActions({
+    this.passedGigId,
+    this.passedGigOwnerId,
+  });
 
   @override
   _ClientActionsState createState() => _ClientActionsState();
 }
 
 class _ClientActionsState extends State<ClientActions> {
+  String userId = MyUser.uid;
+  String username = MyUser.username;
+  dynamic userProfilePictureUrl = MyUser.userAvatarUrl;
+
   // bool showReviewTemplate = false;
   final String unsatisfied = 'assets/svgs/flaticon/unsatisfied.svg';
 
@@ -27,12 +37,6 @@ class _ClientActionsState extends State<ClientActions> {
 
   @override
   Widget build(BuildContext context) {
-    // double screenWidth = MediaQuery.of(context).size.width;
-    // double screenHeight = MediaQuery.of(context).size.height;
-    // bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait
-    //     ? true
-    //     : false;
-
     return StreamBuilder(
       stream:
           DatabaseService().showGigWorkstreamActions(gigId: widget.passedGigId),
@@ -60,10 +64,7 @@ class _ClientActionsState extends State<ClientActions> {
                   children: [
                     Text(
                       'Actions',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline1
-                          .copyWith(color: Theme.of(context).accentColor),
+                      style: Theme.of(context).textTheme.headline1,
                     )
                   ],
                 ),
@@ -85,20 +86,20 @@ class _ClientActionsState extends State<ClientActions> {
                               SizedBox(
                                 width: 30,
                                 height: 30,
-                                child: SvgPicture.asset(unsatisfied,
-                                    semanticsLabel: 'unsatisfied',
-                                    color: Theme.of(context).accentColor),
+                                child: SvgPicture.asset(
+                                  unsatisfied,
+                                  semanticsLabel: 'unsatisfied',
+                                  color: Theme.of(context).primaryColor,
+                                ),
                               ),
                               SizedBox(
                                 height: 10,
                               ),
-                              Text('Unsatisfied',
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1
-                                      .copyWith(
-                                          color: Theme.of(context).accentColor))
+                              Text(
+                                'Unsatisfied',
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.bodyText1,
+                              )
                             ],
                           ),
                         ),
@@ -119,30 +120,47 @@ class _ClientActionsState extends State<ClientActions> {
                             SizedBox(
                               width: 30,
                               height: 30,
-                              child: SvgPicture.asset(markAsCompletedIcon,
-                                  semanticsLabel: 'completed',
-                                  color: Theme.of(context).accentColor),
+                              child: SvgPicture.asset(
+                                markAsCompletedIcon,
+                                semanticsLabel: 'completed',
+                                color: Theme.of(context).primaryColor,
+                              ),
                             ),
                             SizedBox(
                               height: 10,
                             ),
-                            Text('Mark As Completed',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    .copyWith(
-                                        color: Theme.of(context).accentColor))
+                            Text(
+                              'Mark As Completed',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.bodyText1,
+                            )
                           ],
                         ),
                       ),
                       onTap: () {
-                        DatabaseService().addGigWorkstreamActions(
+                        DatabaseService()
+                            .addGigWorkstreamActions(
                           gigId: widget.passedGigId,
                           action: 'marked as completed',
                           userAvatarUrl: MyUser.userAvatarUrl,
                           gigActionOwner: "client",
-                        );
+                        )
+                            .then((value) async {
+                          await AddCommentViewModel().addComment(
+                              gigIdHoldingComment: widget.passedGigId,
+                              gigOwnerId: widget.passedGigOwnerId,
+                              commentOwnerUsername: username,
+                              commentBody: 'GIG COMPLETED',
+                              commentOwnerId: userId,
+                              commentOwnerAvatarUrl: userProfilePictureUrl,
+                              commentId: '',
+                              isPrivateComment: true,
+                              proposal: false,
+                              approved: true,
+                              rejected: false,
+                              containMediaFile: false,
+                              isGigCompleted: true);
+                        });
                       },
                     ),
                     GestureDetector(
@@ -155,14 +173,9 @@ class _ClientActionsState extends State<ClientActions> {
                                 width: 30,
                                 height: 30,
                                 child: SvgPicture.asset(
-                                  releaseEscrowPaymentIcon,
-                                  semanticsLabel: 'release_escrow_payment',
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .caption
-                                      .color
-                                      .withOpacity(0.8),
-                                ),
+                                    releaseEscrowPaymentIcon,
+                                    semanticsLabel: 'release_escrow_payment',
+                                    color: Theme.of(context).primaryColor),
                               ),
                               SizedBox(
                                 height: 10,
@@ -170,15 +183,7 @@ class _ClientActionsState extends State<ClientActions> {
                               Text(
                                 'Release Payment',
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .caption
-                                    .copyWith(
-                                        color: Theme.of(context)
-                                            .textTheme
-                                            .caption
-                                            .color
-                                            .withOpacity((0.8))),
+                                style: Theme.of(context).textTheme.bodyText1,
                               )
                             ],
                           ),
@@ -202,29 +207,21 @@ class _ClientActionsState extends State<ClientActions> {
                               SizedBox(
                                 width: 30,
                                 height: 30,
-                                child: SvgPicture.asset(leaveReviewIcon,
-                                    semanticsLabel: 'leave_review',
-                                    // color: Theme.of(context).accentColor,
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .caption
-                                        .color
-                                        .withOpacity(0.8)),
+                                child: SvgPicture.asset(
+                                  leaveReviewIcon,
+                                  semanticsLabel: 'leave_review',
+                                  // color: Theme.of(context).accentColor,
+                                  color: Theme.of(context).primaryColor,
+                                ),
                               ),
                               SizedBox(
                                 height: 10,
                               ),
-                              Text('Leave Review',
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .caption
-                                      .copyWith(
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .caption
-                                              .color
-                                              .withOpacity((0.8))))
+                              Text(
+                                'Leave Review',
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.bodyText1,
+                              )
                             ],
                           ),
                         ),
@@ -248,6 +245,8 @@ class _ClientActionsState extends State<ClientActions> {
               gigActionSnapshot.data.docs.last['gigActionOwner'];
           bool clientAction = (lastGigActionOwner == 'client') ? true : false;
           List gigActionsList = List.from(gigActionSnapshot.data.docs);
+          bool worksteamActionsEmpty =
+              !(gigActionsList.length > 0) ? true : false;
           bool markedAsCompleted = gigActionsList.any(
             (element) => element["gigAction"] == "marked as completed",
           );
@@ -363,7 +362,7 @@ class _ClientActionsState extends State<ClientActions> {
                           ],
                         ),
                       ),
-                      onTap: !clientAction
+                      onTap: !clientAction || worksteamActionsEmpty
                           ? () {
                               DatabaseService().addGigWorkstreamActions(
                                 gigId: widget.passedGigId,
@@ -371,7 +370,16 @@ class _ClientActionsState extends State<ClientActions> {
                                 userAvatarUrl: MyUser.userAvatarUrl,
                                 gigActionOwner: 'client',
                               );
+                              //     .then((value) {
+                              //   print('should add template');
+                              //   addGigCompletedCommentTemplate(
+                              //     containMediaFile: false,
+                              //     commentBody: 'Gig Completed',
+                              //   );
+                              // });
                             }
+                          // look at this
+
                           : null,
                     ),
                     GestureDetector(
@@ -484,24 +492,10 @@ class _ClientActionsState extends State<ClientActions> {
                             height: 0,
                           )
                         : (clientAction && markedAsCompleted)
-                            ? Text(
-                                'You can leave a review...',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    .copyWith(
-                                      color: Theme.of(context).accentColor,
-                                    ),
-                              )
-                            : Text(
-                                'Waiting for worker action...',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    .copyWith(
-                                      color: Theme.of(context).accentColor,
-                                    ),
-                              )
+                            ? Text('You can leave a review...',
+                                style: Theme.of(context).textTheme.bodyText1)
+                            : Text('Waiting for worker action...',
+                                style: Theme.of(context).textTheme.bodyText1)
                   ],
                 )
               ],

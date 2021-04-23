@@ -6,8 +6,13 @@ import 'package:flutter_svg/svg.dart';
 class WorkerActions extends StatefulWidget {
   @required
   final String passedGigId;
+  @required
+  final String passedGigOwnerId;
 
-  WorkerActions({this.passedGigId});
+  WorkerActions({
+    this.passedGigId,
+    this.passedGigOwnerId,
+  });
 
   @override
   _WorkerActionsState createState() => _WorkerActionsState();
@@ -238,15 +243,20 @@ class _WorkerActionsState extends State<WorkerActions> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(
-                                width: 30,
-                                height: 30,
-                                child: SvgPicture.asset(requestPayment,
-                                    semanticsLabel: 'request_payment',
-                                    color: !workerAction
-                                        ? Theme.of(context).primaryColor
-                                        : Theme.of(context)
-                                            .primaryColor
-                                            .withOpacity((0.5)))),
+                              width: 30,
+                              height: 30,
+                              child: SvgPicture.asset(
+                                requestPayment,
+                                semanticsLabel: 'request_payment',
+                                color: !workerAction
+                                    ? Theme.of(context).primaryColor
+                                    : Theme.of(context)
+                                        .primaryColor
+                                        .withOpacity(
+                                          (0.5),
+                                        ),
+                              ),
+                            ),
                             SizedBox(
                               height: 10,
                             ),

@@ -36,36 +36,37 @@ class CommentItem extends StatefulWidget {
   final workstreamFileUrl;
   final containMediaFile;
   final commentPrivacyToggle;
-  CommentItem(
-      {Key key,
-      // this.passedCurrentUserId,
-      this.isGigAppointed,
-      this.gigIdHoldingComment,
-      this.gigOwnerId,
-      this.commentId,
-      this.commentOwnerId,
-      this.commentOwnerAvatarUrl,
-      this.commentOwnerUsername,
-      this.commentBody,
-      this.gigCurrency,
-      this.createdAt,
-      this.isPrivateComment,
-      this.proposal,
-      this.approved,
-      this.rejected,
-      this.offeredBudget,
-      this.preferredPaymentMethod,
-      this.workstreamFileUrl,
-      this.containMediaFile,
-      this.commentPrivacyToggle})
-      : super(key: key);
+  final bool isGigCompleted;
+  CommentItem({
+    Key key,
+    // this.passedCurrentUserId,
+    this.isGigAppointed,
+    this.gigIdHoldingComment,
+    this.gigOwnerId,
+    this.commentId,
+    this.commentOwnerId,
+    this.commentOwnerAvatarUrl,
+    this.commentOwnerUsername,
+    this.commentBody,
+    this.gigCurrency,
+    this.createdAt,
+    this.isPrivateComment,
+    this.proposal,
+    this.approved,
+    this.rejected,
+    this.offeredBudget,
+    this.preferredPaymentMethod,
+    this.workstreamFileUrl,
+    this.containMediaFile,
+    this.commentPrivacyToggle,
+    this.isGigCompleted,
+  }) : super(key: key);
 
   @override
   _CommentItemState createState() => _CommentItemState();
 }
 
 class _CommentItemState extends State<CommentItem> {
-  bool isPortrait;
   final String paypalIcon = 'assets/svgs/flaticon/paypal.svg';
   final String cash = 'assets/svgs/flaticon/cash.svg';
   final String alternatePayment = 'assets/svgs/flaticon/alternate_payment.svg';
@@ -129,9 +130,6 @@ class _CommentItemState extends State<CommentItem> {
 
   @override
   Widget build(BuildContext context) {
-    isPortrait = MediaQuery.of(context).orientation == Orientation.portrait
-        ? true
-        : false;
     myGig = widget.gigOwnerId == MyUser.uid ? true : false;
     myComment = widget.commentOwnerId == MyUser.uid ? true : false;
     createdAtDateTime =
@@ -163,9 +161,10 @@ class _CommentItemState extends State<CommentItem> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                  child: Container(
-                    width: 200,
+                Container(
+                  width: 200,
+                  child: GestureDetector(
+                    onTap: showUserProfile,
                     child: Row(
                       children: [
                         CircleAvatar(
@@ -180,6 +179,7 @@ class _CommentItemState extends State<CommentItem> {
                         ),
                         Flexible(
                           child: Text('${widget.commentOwnerUsername}',
+                              overflow: TextOverflow.ellipsis,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyText1
@@ -192,53 +192,74 @@ class _CommentItemState extends State<CommentItem> {
                       ],
                     ),
                   ),
-                  onTap: showUserProfile,
                 ),
                 SizedBox(
                   height: 5,
                 ),
-                Container(
-                  child: (myGig &&
-                          widget.gigOwnerId != widget.commentOwnerId &&
-                          widget.proposal &&
-                          !widget.approved &&
-                          widget.rejected)
-                      ? RejectedLabel()
-                      : (myGig &&
-                              widget.gigOwnerId != widget.commentOwnerId &&
-                              widget.proposal &&
-                              widget.approved &&
-                              !widget.rejected)
-                          ? ApprovedLabel()
-                          : (myComment &&
-                                  !widget.proposal &&
-                                  !widget.isGigAppointed)
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      width: 1,
-                                      color: Theme.of(context).accentColor,
+                !widget.isGigCompleted
+                    ? Container(
+                        child: (myGig &&
+                                widget.gigOwnerId != widget.commentOwnerId &&
+                                widget.proposal &&
+                                !widget.approved &&
+                                widget.rejected)
+                            ? RejectedLabel()
+                            : (myGig &&
+                                    widget.gigOwnerId !=
+                                        widget.commentOwnerId &&
+                                    widget.proposal &&
+                                    widget.approved &&
+                                    !widget.rejected)
+                                ? ApprovedLabel()
+                                : (myComment &&
+                                        !widget.proposal &&
+                                        !widget.isGigAppointed)
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            width: 1,
+                                            color:
+                                                Theme.of(context).accentColor,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(50)),
+                                        ),
+                                        child: CustomSwitch(
+                                          activeColor: Colors.black,
+                                          value: widget.commentPrivacyToggle,
+                                          onChanged: (value) {
+                                            FirestoreService()
+                                                .commentPrivacyToggle(
+                                              widget.commentId,
+                                              value,
+                                            );
+                                            commentViewShifter();
+                                          },
+                                        ),
+                                      )
+                                    : Container(
+                                        width: 0,
+                                        height: 0,
+                                      ),
+                      )
+                    : Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 1,
+                              color: Colors.green,
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(2))),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'GIG COMPLETED',
+                            style:
+                                Theme.of(context).textTheme.bodyText1.copyWith(
+                                      color: Colors.green,
                                     ),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(50)),
-                                  ),
-                                  child: CustomSwitch(
-                                    activeColor: Colors.black,
-                                    value: widget.commentPrivacyToggle,
-                                    onChanged: (value) {
-                                      FirestoreService().commentPrivacyToggle(
-                                        widget.commentId,
-                                        value,
-                                      );
-                                      commentViewShifter();
-                                    },
-                                  ),
-                                )
-                              : Container(
-                                  width: 0,
-                                  height: 0,
-                                ),
-                ),
+                          ),
+                        ),
+                      ),
               ],
             ),
             SizedBox(
@@ -276,7 +297,7 @@ class _CommentItemState extends State<CommentItem> {
                               ),
                             ))
                         : Container(
-                            width: !isPortrait ? 300 : double.infinity,
+                            width: double.infinity,
                             height: 200,
                             child: ChewieListItem(
                               videoPlayerController:

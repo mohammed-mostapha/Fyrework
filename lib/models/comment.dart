@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Comment {
   final String gigIdHoldingComment;
   final String gigOwnerId;
@@ -17,6 +19,7 @@ class Comment {
   final String workstreamFileUrl;
   final bool containMediaFile;
   final bool commentPrivacyToggle;
+  final bool isGigCompleted;
 
   Comment({
     this.gigIdHoldingComment,
@@ -37,6 +40,7 @@ class Comment {
     this.workstreamFileUrl,
     this.containMediaFile,
     this.commentPrivacyToggle,
+    this.isGigCompleted,
   });
 
   Map<String, dynamic> toMap() {
@@ -59,6 +63,7 @@ class Comment {
       'workstreamFileUrl': workstreamFileUrl,
       'containMediaFile': containMediaFile,
       'commentPrivacyToggle': commentPrivacyToggle,
+      'isGigCompleted': isGigCompleted,
     };
   }
 
@@ -84,6 +89,7 @@ class Comment {
       workstreamFileUrl: map['workstreamFileUrl'],
       containMediaFile: map['containMediaFile'],
       commentPrivacyToggle: map['commentPrivacyToggle'],
+      isGigCompleted: map['isGigCompleted'],
     );
   }
 }

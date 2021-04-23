@@ -101,20 +101,21 @@ class _AddCommentsViewState extends State<AddCommentsView>
   addComment({@required bool containMediaFile}) {
     if (_addCommentsController.text.isNotEmpty) {
       AddCommentViewModel().addComment(
-          gigIdHoldingComment: widget.passedGigId,
-          gigOwnerId: widget.passedGigOwnerId,
-          commentOwnerUsername: username,
-          commentBody: _addCommentsController.text,
-          commentOwnerId: userId,
-          commentOwnerAvatarUrl: userProfilePictureUrl,
-          commentId: '',
-          isPrivateComment: isPrivateComment,
-          proposal: proposal,
-          approved: approved,
-          rejected: rejected,
-          gigCurrency: widget.passedGigCurrency,
-          offeredBudget: offeredBudget,
-          containMediaFile: containMediaFile);
+        gigIdHoldingComment: widget.passedGigId,
+        gigOwnerId: widget.passedGigOwnerId,
+        commentOwnerUsername: username,
+        commentBody: _addCommentsController.text,
+        commentOwnerId: userId,
+        commentOwnerAvatarUrl: userProfilePictureUrl,
+        commentId: '',
+        isPrivateComment: isPrivateComment,
+        proposal: proposal,
+        approved: approved,
+        rejected: rejected,
+        gigCurrency: widget.passedGigCurrency,
+        offeredBudget: offeredBudget,
+        containMediaFile: containMediaFile,
+      );
       _addCommentsController.clear();
       _addProposalController.clear();
       _offeredBudgetController.clear();
@@ -752,15 +753,17 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                         Expanded(
                                                           child: TextFormField(
                                                             style: TextStyle(
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .accentColor),
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .primaryColor,
+                                                            ),
                                                             controller:
                                                                 _addCommentsController,
                                                             decoration:
                                                                 signUpInputDecoration(
-                                                                    context,
-                                                                    "Add private comment"),
+                                                              context,
+                                                              "Add private comment",
+                                                            ),
                                                             onFieldSubmitted:
                                                                 (String
                                                                     submittedString) async {
@@ -953,9 +956,11 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                         child: !client
                                                                             ? WorkerActions(
                                                                                 passedGigId: widget.passedGigId,
+                                                                                passedGigOwnerId: widget.passedGigOwnerId,
                                                                               )
                                                                             : ClientActions(
                                                                                 passedGigId: widget.passedGigId,
+                                                                                passedGigOwnerId: widget.passedGigOwnerId,
                                                                               ),
                                                                       ),
                                                                     );
