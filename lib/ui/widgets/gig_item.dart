@@ -399,7 +399,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                     children: <Widget>[
                       GestureDetector(
                         child: Container(
-                          // width: 200,
+                          width: 200,
                           height: 50,
                           child: Row(
                             children: [

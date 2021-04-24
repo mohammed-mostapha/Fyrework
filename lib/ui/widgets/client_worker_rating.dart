@@ -4,9 +4,9 @@ import 'package:http/http.dart';
 
 class ClientWorkerRating extends StatefulWidget {
   final int maximumRating;
-  final Function(int) onRatingSelected;
+  // final Function(int) onRatingSelected;
 
-  ClientWorkerRating(this.onRatingSelected, [this.maximumRating = 5]);
+  ClientWorkerRating([this.maximumRating = 5]);
 
   @override
   _ClientWorkerRatingState createState() => _ClientWorkerRatingState();
@@ -21,7 +21,7 @@ class _ClientWorkerRatingState extends State<ClientWorkerRating> {
       width: 20,
       height: 20,
       child: SvgPicture.asset(outline_star,
-          semanticsLabel: 'paperclip', color: Theme.of(context).primaryColor),
+          semanticsLabel: 'paperclip', color: Theme.of(context).accentColor),
     );
   }
 

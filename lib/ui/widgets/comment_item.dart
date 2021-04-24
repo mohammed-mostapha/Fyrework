@@ -14,6 +14,7 @@ import 'package:expandable_text/expandable_text.dart';
 import 'package:video_player/video_player.dart';
 
 import 'chewie_list_item.dart';
+import 'client_worker_rating.dart';
 
 class CommentItem extends StatefulWidget {
   // final passedCurrentUserId;
@@ -80,6 +81,8 @@ class _CommentItemState extends State<CommentItem> {
   bool isAppointedUser;
   dynamic createdAtDateTime;
   // bool commentPrivacytoggle = false;
+  String appointedUserId;
+  String appointedUsename;
 
   void initState() {
     super.initState();
@@ -268,43 +271,52 @@ class _CommentItemState extends State<CommentItem> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                widget.containMediaFile != true
-                    ? Container(
-                        child: ExpandableText(
-                          '${widget.commentBody}',
-                          expandText: ' more',
-                          collapseText: ' less',
-                          maxLines: 3,
-                          linkColor: myComment
-                              ? Theme.of(context).accentColor
-                              : Theme.of(context).primaryColor,
-                          style: Theme.of(context).textTheme.bodyText1.copyWith(
-                                color: myComment
-                                    ? Theme.of(context).accentColor
-                                    : Theme.of(context).primaryColor,
-                              ),
-                        ),
+                widget.isGigCompleted
+                    ? Column(
+                        children: [
+                          // Text("Rate $")
+                        ],
                       )
-                    : imageMediaFile
+                    : widget.containMediaFile != true
                         ? Container(
-                            width: 300,
-                            height: 200,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.network(
-                                widget.commentBody,
-                                fit: BoxFit.cover,
-                              ),
-                            ))
-                        : Container(
-                            width: double.infinity,
-                            height: 200,
-                            child: ChewieListItem(
-                              videoPlayerController:
-                                  VideoPlayerController.network(
-                                      widget.commentBody),
+                            child: ExpandableText(
+                              '${widget.commentBody}',
+                              expandText: ' more',
+                              collapseText: ' less',
+                              maxLines: 3,
+                              linkColor: myComment
+                                  ? Theme.of(context).accentColor
+                                  : Theme.of(context).primaryColor,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .copyWith(
+                                    color: myComment
+                                        ? Theme.of(context).accentColor
+                                        : Theme.of(context).primaryColor,
+                                  ),
                             ),
-                          ),
+                          )
+                        : imageMediaFile
+                            ? Container(
+                                width: 300,
+                                height: 200,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                    widget.commentBody,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ))
+                            : Container(
+                                width: double.infinity,
+                                height: 200,
+                                child: ChewieListItem(
+                                  videoPlayerController:
+                                      VideoPlayerController.network(
+                                          widget.commentBody),
+                                ),
+                              ),
                 Container(height: 5),
                 (myGig &&
                         !myComment &&
@@ -406,9 +418,10 @@ class _CommentItemState extends State<CommentItem> {
                                         ),
                                         onTap: () {
                                           FirestoreService().appointedGigToUser(
-                                              widget.gigIdHoldingComment,
-                                              widget.commentOwnerId,
-                                              widget.commentId);
+                                            widget.gigIdHoldingComment,
+                                            widget.commentOwnerId,
+                                            widget.commentId,
+                                          );
                                         }),
                                     SizedBox(
                                       width: 10,
