@@ -245,9 +245,15 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                 child: Center(
                                                   child: Text(
                                                     'Workstream has no history',
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .bodyText1,
+                                                        .bodyText1
+                                                        .copyWith(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .accentColor),
                                                   ),
                                                 ),
                                               ),

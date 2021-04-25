@@ -22,6 +22,7 @@ class Comment {
   final bool isGigCompleted;
   final String appointedUserId;
   final String appointedUsername;
+  final int ratingCount;
 
   Comment({
     this.gigIdHoldingComment,
@@ -45,6 +46,7 @@ class Comment {
     this.isGigCompleted,
     this.appointedUserId,
     this.appointedUsername,
+    this.ratingCount,
   });
 
   Map<String, dynamic> toMap() {
@@ -70,6 +72,7 @@ class Comment {
       'isGigCompleted': isGigCompleted,
       'appointedUserId': appointedUserId,
       'appointedUsername': appointedUsername,
+      'ratingCount': ratingCount,
     };
   }
 
@@ -98,6 +101,7 @@ class Comment {
       isGigCompleted: map['isGigCompleted'],
       appointedUserId: map['appointedUserId'],
       appointedUsername: map['appointedUsername'],
+      ratingCount: map['ratingCount'],
     );
   }
 }

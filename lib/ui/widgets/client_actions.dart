@@ -205,6 +205,7 @@ class _ClientActionsState extends State<ClientActions> {
                                       isGigCompleted: true,
                                       appointedUserId: appointedUserId,
                                       appointedUsername: appointedUsername,
+                                      ratingCount: 0,
                                     );
                                   });
                                 },

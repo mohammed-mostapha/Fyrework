@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:core';
+import 'package:Fyrework/services/database.dart';
 import 'package:custom_switch/custom_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -37,6 +38,7 @@ class CommentItem extends StatefulWidget {
   final isGigCompleted;
   final appointedUserId;
   final appointedUsername;
+  final ratingCount;
   CommentItem({
     Key key,
     // this.passedCurrentUserId,
@@ -62,6 +64,7 @@ class CommentItem extends StatefulWidget {
     this.isGigCompleted,
     this.appointedUserId,
     this.appointedUsername,
+    this.ratingCount,
   }) : super(key: key);
 
   @override
@@ -81,7 +84,8 @@ class _CommentItemState extends State<CommentItem> {
   double _commentOpacity = 0.9;
   bool isAppointedUser;
   dynamic createdAtDateTime;
-  int workerRating;
+  int workerRating = 0;
+  bool _userMissedRating = false;
   // bool commentPrivacytoggle = false;
 
   void initState() {
@@ -120,12 +124,13 @@ class _CommentItemState extends State<CommentItem> {
     }
   }
 
-  showUserProfile() {
+  showUserProfile({@required String userId}) {
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => UserProfileView(
-                  passedUserUid: widget.commentOwnerId,
+                  // passedUserUid: widget.commentOwnerId,
+                  passedUserUid: userId,
                   fromComment: true,
                   fromGig: false,
                 )));
@@ -167,7 +172,9 @@ class _CommentItemState extends State<CommentItem> {
                 Container(
                   width: 200,
                   child: GestureDetector(
-                    onTap: showUserProfile,
+                    onTap: () {
+                      showUserProfile(userId: widget.commentOwnerId);
+                    },
                     child: Row(
                       children: [
                         CircleAvatar(
@@ -271,169 +278,228 @@ class _CommentItemState extends State<CommentItem> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.commentBody),
+                // Text(widget.commentBody),
                 widget.isGigCompleted
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Column(
+                    ? widget.ratingCount > 0 != true
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Wrap(
-                                direction: Axis.horizontal,
-                                alignment: WrapAlignment.start,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text(
-                                    'Rate ',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        .copyWith(
-                                          color: myComment
-                                              ? Theme.of(context).accentColor
-                                              : Theme.of(context).primaryColor,
-                                        ),
+                                  SizedBox(
+                                    height: 10,
                                   ),
-                                  GestureDetector(
-                                    child: Text(
-                                      "${widget.appointedUsername}'s ",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1
-                                          .copyWith(
-                                            color: myComment
-                                                ? Theme.of(context).accentColor
-                                                : Theme.of(context)
-                                                    .primaryColor,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                    onTap: () {
-                                      showUserProfile();
-                                    },
-                                  ),
-                                  Text(
-                                    'work',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        .copyWith(
-                                          color: myComment
-                                              ? Theme.of(context).accentColor
-                                              : Theme.of(context).primaryColor,
-                                        ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              ClientWorkerRating((rating) {
-                                setState(() {
-                                  workerRating = rating;
-                                });
-                              }),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              // SizedBox(
-                              //   height: 50,
-                              //   child: workerRating != null && workerRating > 0
-                              //       ?
-                              //       //  Text(
-                              //       //     "You gave ${widget.appointedUsername} $workerRating stars")
-                              //       Wrap(
-                              //           direction: Axis.horizontal,
-                              //           alignment: WrapAlignment.start,
-                              //           children: [
-                              //             Text(
-                              //               'You gave ',
-                              //               style: Theme.of(context)
-                              //                   .textTheme
-                              //                   .bodyText1
-                              //                   .copyWith(
-                              //                     color: myComment
-                              //                         ? Theme.of(context)
-                              //                             .accentColor
-                              //                         : Theme.of(context)
-                              //                             .primaryColor,
-                              //                   ),
-                              //             ),
-                              //             GestureDetector(
-                              //               child: Text(
-                              //                 "${widget.appointedUsername}'s ",
-                              //                 style: Theme.of(context)
-                              //                     .textTheme
-                              //                     .bodyText1
-                              //                     .copyWith(
-                              //                       color: myComment
-                              //                           ? Theme.of(context)
-                              //                               .accentColor
-                              //                           : Theme.of(context)
-                              //                               .primaryColor,
-                              //                       fontWeight: FontWeight.bold,
-                              //                     ),
-                              //               ),
-                              //               onTap: () {
-                              //                 showUserProfile();
-                              //               },
-                              //             ),
-                              //             Text(
-                              //               '$workerRating stars',
-                              //               style: Theme.of(context)
-                              //                   .textTheme
-                              //                   .bodyText1
-                              //                   .copyWith(
-                              //                     color: myComment
-                              //                         ? Theme.of(context)
-                              //                             .accentColor
-                              //                         : Theme.of(context)
-                              //                             .primaryColor,
-                              //                   ),
-                              //             ),
-                              //           ],
-                              //         )
-                              //       : SizedBox.shrink(),
-                              // ),
-                              GestureDetector(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).accentColor,
-                                      border: Border.all(
-                                        width: 1,
-                                        // color: myComment
-                                        //     ? Theme.of(context).accentColor
-                                        //     : Theme.of(context).primaryColor,
-                                      ),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(
-                                          5,
-                                        ),
-                                      ),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        'Submit Rating',
+                                  Wrap(
+                                    direction: Axis.horizontal,
+                                    alignment: WrapAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Rate ',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1
                                             .copyWith(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
+                                              color: myComment
+                                                  ? Theme.of(context)
+                                                      .accentColor
+                                                  : Theme.of(context)
+                                                      .primaryColor,
                                             ),
                                       ),
-                                    ),
+                                      GestureDetector(
+                                        child: Text(
+                                          "${widget.appointedUsername}'s ",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              .copyWith(
+                                                color: myComment
+                                                    ? Theme.of(context)
+                                                        .accentColor
+                                                    : Theme.of(context)
+                                                        .primaryColor,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                        ),
+                                        onTap: () {
+                                          showUserProfile(
+                                              userId: widget.appointedUserId);
+                                        },
+                                      ),
+                                      Text(
+                                        'work',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .copyWith(
+                                              color: myComment
+                                                  ? Theme.of(context)
+                                                      .accentColor
+                                                  : Theme.of(context)
+                                                      .primaryColor,
+                                            ),
+                                      ),
+                                    ],
                                   ),
-                                  onTap: () {
-                                    print('hiii');
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  ClientWorkerRating((rating) {
+                                    setState(() {
+                                      workerRating = rating;
+                                    });
                                   }),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: [
+                                      !_userMissedRating
+                                          ? Container(
+                                              width: 0,
+                                              height: 0,
+                                            )
+                                          : Container(
+                                              child: Text(
+                                                'give a rate!',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText1
+                                                    .copyWith(
+                                                        color: Theme.of(context)
+                                                            .accentColor),
+                                              ),
+                                            ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      GestureDetector(
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Theme.of(context).accentColor,
+                                              border: Border.all(
+                                                width: 1,
+                                                // color: myComment
+                                                //     ? Theme.of(context).accentColor
+                                                //     : Theme.of(context).primaryColor,
+                                              ),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(
+                                                  5,
+                                                ),
+                                              ),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                'Submit Rating',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText1
+                                                    .copyWith(
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                    ),
+                                              ),
+                                            ),
+                                          ),
+                                          onTap: workerRating > 0 != true
+                                              ? () {
+                                                  setState(() {
+                                                    _userMissedRating = true;
+                                                  });
+                                                }
+                                              : () async {
+                                                  await DatabaseService()
+                                                      .updateCommentRatingCount(
+                                                    commentId: widget.commentId,
+                                                    ratingCount: workerRating,
+                                                  );
+                                                  await DatabaseService()
+                                                      .addRatingToUser(
+                                                    userId:
+                                                        widget.appointedUserId,
+                                                    gigId: widget
+                                                        .gigIdHoldingComment,
+                                                    userRating: workerRating,
+                                                  );
+                                                  setState(() {});
+                                                }),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ],
-                          ),
-                        ],
-                      )
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 1,
+                                        color: Theme.of(context).hintColor),
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Wrap(
+                                    direction: Axis.horizontal,
+                                    alignment: WrapAlignment.start,
+                                    children: [
+                                      Text(
+                                        'You rated ',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .copyWith(
+                                              color: myComment
+                                                  ? Theme.of(context)
+                                                      .accentColor
+                                                  : Theme.of(context)
+                                                      .primaryColor,
+                                            ),
+                                      ),
+                                      GestureDetector(
+                                        child: Text(
+                                          "${widget.appointedUsername}\'s ",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              .copyWith(
+                                                  color: myComment
+                                                      ? Theme.of(context)
+                                                          .accentColor
+                                                      : Theme.of(context)
+                                                          .primaryColor,
+                                                  fontWeight: FontWeight.bold),
+                                        ),
+                                        onTap: () {
+                                          showUserProfile(
+                                              userId: widget.appointedUserId);
+                                        },
+                                      ),
+                                      Text(
+                                        "work with ${widget.ratingCount} star(s)",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .copyWith(
+                                              color: myComment
+                                                  ? Theme.of(context)
+                                                      .accentColor
+                                                  : Theme.of(context)
+                                                      .primaryColor,
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
                     : widget.containMediaFile != true
                         ? Container(
                             child: ExpandableText(
@@ -665,7 +731,8 @@ class _CommentItemState extends State<CommentItem> {
                                                 fontWeight: FontWeight.bold),
                                       ),
                                       onTap: () {
-                                        showUserProfile();
+                                        showUserProfile(
+                                            userId: widget.commentOwnerId);
                                       },
                                     ),
                                   ],
@@ -730,7 +797,9 @@ class _CommentItemState extends State<CommentItem> {
                                                       ),
                                                 ),
                                                 onTap: () {
-                                                  showUserProfile();
+                                                  showUserProfile(
+                                                      userId: widget
+                                                          .commentOwnerId);
                                                 },
                                               ),
                                             ],

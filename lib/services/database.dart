@@ -289,6 +289,24 @@ class DatabaseService {
     // });
   }
 
+  Future addRatingToUser({
+    @required String userId,
+    @required String gigId,
+    @required int userRating,
+  }) async {
+    return await _usersCollection.doc(userId).collection('userRating').add({
+      'gigId': gigId,
+      'userRating': userRating,
+    });
+  }
+
+  Future updateCommentRatingCount(
+      {@required String commentId, @required int ratingCount}) async {
+    return await _commentsCollection.doc(commentId).update({
+      'ratingCount': ratingCount,
+    });
+  }
+
   // show gig actions
   Stream<QuerySnapshot> showGigWorkstreamActions({@required String gigId}) {
     return _gigsCollection

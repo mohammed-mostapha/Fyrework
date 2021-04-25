@@ -32,6 +32,7 @@ class AddCommentViewModel {
     @required bool containMediaFile,
     @required appointedUserId,
     @required appointedUsername,
+    int ratingCount,
   }) async {
     var result;
     // if (!_editting) {
@@ -58,6 +59,7 @@ class AddCommentViewModel {
           isGigCompleted: isGigCompleted,
           appointedUserId: appointedUserId,
           appointedUsername: appointedUsername,
+          ratingCount: ratingCount,
         ),
         gigIdHoldingComment);
     // } else {

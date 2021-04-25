@@ -21,22 +21,28 @@ class _ClientWorkerRatingState extends State<ClientWorkerRating> {
   _buildRatingStars(int index) {
     if (index < _workerRating) {
       return SizedBox(
-        width: 20,
+        width: 25,
         height: 20,
-        child: SvgPicture.asset(
-          solidStar,
-          semanticsLabel: 'rating_star',
-          color: Colors.orange,
+        child: Padding(
+          padding: const EdgeInsets.only(right: 5.0),
+          child: SvgPicture.asset(
+            solidStar,
+            semanticsLabel: 'rating_star',
+            color: Colors.amber,
+          ),
         ),
       );
     }
     return SizedBox(
-      width: 20,
+      width: 25,
       height: 20,
-      child: SvgPicture.asset(
-        outlineStar,
-        semanticsLabel: 'rating_star',
-        color: Theme.of(context).accentColor,
+      child: Padding(
+        padding: const EdgeInsets.only(right: 5.0),
+        child: SvgPicture.asset(
+          outlineStar,
+          semanticsLabel: 'rating_star',
+          color: Theme.of(context).accentColor,
+        ),
       ),
     );
   }
