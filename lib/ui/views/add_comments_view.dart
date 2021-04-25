@@ -115,6 +115,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
         gigCurrency: widget.passedGigCurrency,
         offeredBudget: offeredBudget,
         containMediaFile: containMediaFile,
+        isGigCompleted: false,
       );
       _addCommentsController.clear();
       _addProposalController.clear();

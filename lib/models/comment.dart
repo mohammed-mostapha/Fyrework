@@ -20,6 +20,8 @@ class Comment {
   final bool containMediaFile;
   final bool commentPrivacyToggle;
   final bool isGigCompleted;
+  final String appointedUserId;
+  final String appointedUsername;
 
   Comment({
     this.gigIdHoldingComment,
@@ -41,6 +43,8 @@ class Comment {
     this.containMediaFile,
     this.commentPrivacyToggle,
     this.isGigCompleted,
+    this.appointedUserId,
+    this.appointedUsername,
   });
 
   Map<String, dynamic> toMap() {
@@ -64,6 +68,8 @@ class Comment {
       'containMediaFile': containMediaFile,
       'commentPrivacyToggle': commentPrivacyToggle,
       'isGigCompleted': isGigCompleted,
+      'appointedUserId': appointedUserId,
+      'appointedUsername': appointedUsername,
     };
   }
 
@@ -90,6 +96,8 @@ class Comment {
       containMediaFile: map['containMediaFile'],
       commentPrivacyToggle: map['commentPrivacyToggle'],
       isGigCompleted: map['isGigCompleted'],
+      appointedUserId: map['appointedUserId'],
+      appointedUsername: map['appointedUsername'],
     );
   }
 }

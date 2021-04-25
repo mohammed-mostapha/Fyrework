@@ -56,20 +56,23 @@ class _ProposalWidgetState extends State<ProposalWidget> {
       // isPrivateComment = true;
       proposal = true;
       await AddCommentViewModel().addComment(
-          gigIdHoldingComment: widget.passedGigId,
-          gigOwnerId: widget.passedGigOwnerId,
-          commentOwnerUsername: username,
-          commentBody: _addProposalController.text,
-          commentOwnerId: userId,
-          commentOwnerAvatarUrl: userProfilePictureUrl,
-          commentId: '',
-          isPrivateComment: isPrivateComment,
-          proposal: proposal,
-          approved: approved,
-          rejected: rejected,
-          gigCurrency: widget.passedGigCurrency,
-          offeredBudget: _offeredBudgetController.text,
-          preferredPaymentMethod: preferredPaymentMethod);
+        gigIdHoldingComment: widget.passedGigId,
+        gigOwnerId: widget.passedGigOwnerId,
+        commentOwnerUsername: username,
+        commentBody: _addProposalController.text,
+        commentOwnerId: userId,
+        commentOwnerAvatarUrl: userProfilePictureUrl,
+        commentId: '',
+        isPrivateComment: isPrivateComment,
+        proposal: proposal,
+        approved: approved,
+        rejected: rejected,
+        gigCurrency: widget.passedGigCurrency,
+        offeredBudget: _offeredBudgetController.text,
+        preferredPaymentMethod: preferredPaymentMethod,
+        isGigCompleted: false,
+        containMediaFile: false,
+      );
       addToGigAppliersOrHirersList();
       isPrivateComment = false;
       proposal = false;

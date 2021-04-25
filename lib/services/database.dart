@@ -297,4 +297,10 @@ class DatabaseService {
         .orderBy('createdAt', descending: false)
         .snapshots();
   }
+
+  Future<DocumentSnapshot> fetchAppointedUserData(
+      {@required String gigId}) async {
+    DocumentSnapshot appointedUser = await _gigsCollection.doc(gigId).get();
+    return appointedUser;
+  }
 }

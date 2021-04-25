@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:core';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:custom_switch/custom_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/services/firestore_service.dart';
-import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:Fyrework/ui/widgets/user_profile.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:expandable_text/expandable_text.dart';
@@ -37,7 +34,9 @@ class CommentItem extends StatefulWidget {
   final workstreamFileUrl;
   final containMediaFile;
   final commentPrivacyToggle;
-  final bool isGigCompleted;
+  final isGigCompleted;
+  final appointedUserId;
+  final appointedUsername;
   CommentItem({
     Key key,
     // this.passedCurrentUserId,
@@ -61,6 +60,8 @@ class CommentItem extends StatefulWidget {
     this.containMediaFile,
     this.commentPrivacyToggle,
     this.isGigCompleted,
+    this.appointedUserId,
+    this.appointedUsername,
   }) : super(key: key);
 
   @override
@@ -81,8 +82,6 @@ class _CommentItemState extends State<CommentItem> {
   bool isAppointedUser;
   dynamic createdAtDateTime;
   // bool commentPrivacytoggle = false;
-  String appointedUserId;
-  String appointedUsename;
 
   void initState() {
     super.initState();
@@ -271,10 +270,68 @@ class _CommentItemState extends State<CommentItem> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(widget.commentBody),
                 widget.isGigCompleted
-                    ? Column(
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          // Text("Rate $")
+                          Column(
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Wrap(
+                                direction: Axis.horizontal,
+                                alignment: WrapAlignment.start,
+                                children: [
+                                  Text(
+                                    'Rate ',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(
+                                          color: myComment
+                                              ? Theme.of(context).accentColor
+                                              : Theme.of(context).primaryColor,
+                                        ),
+                                  ),
+                                  GestureDetector(
+                                    child: Text(
+                                      "${widget.appointedUsername}'s ",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1
+                                          .copyWith(
+                                            color: myComment
+                                                ? Theme.of(context).accentColor
+                                                : Theme.of(context)
+                                                    .primaryColor,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                    onTap: () {
+                                      showUserProfile();
+                                    },
+                                  ),
+                                  Text(
+                                    'work',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(
+                                          color: myComment
+                                              ? Theme.of(context).accentColor
+                                              : Theme.of(context).primaryColor,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              ClientWorkerRating(),
+                            ],
+                          ),
                         ],
                       )
                     : widget.containMediaFile != true
@@ -563,15 +620,14 @@ class _CommentItemState extends State<CommentItem> {
                                                       .textTheme
                                                       .bodyText1
                                                       .copyWith(
-                                                          color: myComment
-                                                              ? Theme.of(
-                                                                      context)
-                                                                  .accentColor
-                                                              : Theme.of(
-                                                                      context)
-                                                                  .primaryColor,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                        color: myComment
+                                                            ? Theme.of(context)
+                                                                .accentColor
+                                                            : Theme.of(context)
+                                                                .primaryColor,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
                                                 ),
                                                 onTap: () {
                                                   showUserProfile();

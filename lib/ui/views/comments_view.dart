@@ -63,6 +63,8 @@ class CommentsView extends StatelessWidget {
                     containMediaFile: getDocData['containMediaFile'],
                     commentPrivacyToggle: getDocData['commentPrivacyToggle'],
                     isGigCompleted: getDocData['isGigCompleted'],
+                    appointedUserId: getDocData['appointedUserId'],
+                    appointedUsername: getDocData['appointedUsername'],
 
                     // onDeleteItem: () =>
                     //     model.deleteComment(index),

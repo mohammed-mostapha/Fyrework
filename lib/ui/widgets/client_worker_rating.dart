@@ -33,8 +33,11 @@ class _ClientWorkerRatingState extends State<ClientWorkerRating> {
       );
     });
 
-    return Row(
-      children: stars,
+    return FittedBox(
+      fit: BoxFit.contain,
+      child: Row(
+        children: stars,
+      ),
     );
   }
 
