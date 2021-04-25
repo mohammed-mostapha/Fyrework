@@ -81,6 +81,7 @@ class _CommentItemState extends State<CommentItem> {
   double _commentOpacity = 0.9;
   bool isAppointedUser;
   dynamic createdAtDateTime;
+  int workerRating;
   // bool commentPrivacytoggle = false;
 
   void initState() {
@@ -329,7 +330,106 @@ class _CommentItemState extends State<CommentItem> {
                               SizedBox(
                                 height: 10,
                               ),
-                              ClientWorkerRating(),
+                              ClientWorkerRating((rating) {
+                                setState(() {
+                                  workerRating = rating;
+                                });
+                              }),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              // SizedBox(
+                              //   height: 50,
+                              //   child: workerRating != null && workerRating > 0
+                              //       ?
+                              //       //  Text(
+                              //       //     "You gave ${widget.appointedUsername} $workerRating stars")
+                              //       Wrap(
+                              //           direction: Axis.horizontal,
+                              //           alignment: WrapAlignment.start,
+                              //           children: [
+                              //             Text(
+                              //               'You gave ',
+                              //               style: Theme.of(context)
+                              //                   .textTheme
+                              //                   .bodyText1
+                              //                   .copyWith(
+                              //                     color: myComment
+                              //                         ? Theme.of(context)
+                              //                             .accentColor
+                              //                         : Theme.of(context)
+                              //                             .primaryColor,
+                              //                   ),
+                              //             ),
+                              //             GestureDetector(
+                              //               child: Text(
+                              //                 "${widget.appointedUsername}'s ",
+                              //                 style: Theme.of(context)
+                              //                     .textTheme
+                              //                     .bodyText1
+                              //                     .copyWith(
+                              //                       color: myComment
+                              //                           ? Theme.of(context)
+                              //                               .accentColor
+                              //                           : Theme.of(context)
+                              //                               .primaryColor,
+                              //                       fontWeight: FontWeight.bold,
+                              //                     ),
+                              //               ),
+                              //               onTap: () {
+                              //                 showUserProfile();
+                              //               },
+                              //             ),
+                              //             Text(
+                              //               '$workerRating stars',
+                              //               style: Theme.of(context)
+                              //                   .textTheme
+                              //                   .bodyText1
+                              //                   .copyWith(
+                              //                     color: myComment
+                              //                         ? Theme.of(context)
+                              //                             .accentColor
+                              //                         : Theme.of(context)
+                              //                             .primaryColor,
+                              //                   ),
+                              //             ),
+                              //           ],
+                              //         )
+                              //       : SizedBox.shrink(),
+                              // ),
+                              GestureDetector(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).accentColor,
+                                      border: Border.all(
+                                        width: 1,
+                                        // color: myComment
+                                        //     ? Theme.of(context).accentColor
+                                        //     : Theme.of(context).primaryColor,
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(
+                                          5,
+                                        ),
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'Submit Rating',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .copyWith(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    print('hiii');
+                                  }),
                             ],
                           ),
                         ],
@@ -593,7 +693,7 @@ class _CommentItemState extends State<CommentItem> {
                                                 color: Theme.of(context)
                                                     .hintColor),
                                             borderRadius:
-                                                BorderRadius.circular(10)),
+                                                BorderRadius.circular(5)),
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Wrap(

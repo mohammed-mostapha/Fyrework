@@ -4,24 +4,40 @@ import 'package:http/http.dart';
 
 class ClientWorkerRating extends StatefulWidget {
   final int maximumRating;
-  // final Function(int) onRatingSelected;
+  final Function(int) onRatingSelected;
 
-  ClientWorkerRating([this.maximumRating = 5]);
+  ClientWorkerRating(this.onRatingSelected, [this.maximumRating = 5]);
 
   @override
   _ClientWorkerRatingState createState() => _ClientWorkerRatingState();
 }
 
 class _ClientWorkerRatingState extends State<ClientWorkerRating> {
-  final String outline_star = 'assets/svgs/flaticon/outline_star.svg';
-  final String solid_star = 'assets/svgs/flaticon/solid_star.svg';
+  final String outlineStar = 'assets/svgs/flaticon/outline_star.svg';
+  final String solidStar = 'assets/svgs/flaticon/solid_star.svg';
+
+  int _workerRating = 0;
 
   _buildRatingStars(int index) {
+    if (index < _workerRating) {
+      return SizedBox(
+        width: 20,
+        height: 20,
+        child: SvgPicture.asset(
+          solidStar,
+          semanticsLabel: 'rating_star',
+          color: Colors.orange,
+        ),
+      );
+    }
     return SizedBox(
       width: 20,
       height: 20,
-      child: SvgPicture.asset(outline_star,
-          semanticsLabel: 'paperclip', color: Theme.of(context).accentColor),
+      child: SvgPicture.asset(
+        outlineStar,
+        semanticsLabel: 'rating_star',
+        color: Theme.of(context).accentColor,
+      ),
     );
   }
 
@@ -29,7 +45,12 @@ class _ClientWorkerRatingState extends State<ClientWorkerRating> {
     final stars = List.generate(this.widget.maximumRating, (index) {
       return GestureDetector(
         child: _buildRatingStars(index),
-        onTap: () {},
+        onTap: () {
+          setState(() {
+            _workerRating = index + 1;
+          });
+          this.widget.onRatingSelected(_workerRating);
+        },
       );
     });
 
