@@ -143,6 +143,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
             builder: (context) => AddCommentsView(
                   passedGigId: widget.gigId,
                   passedGigOwnerId: widget.gigOwnerId,
+                  passGigOwnerUsername: widget.gigOwnerUsername,
                   passedCurrentUserId: widget.currentUserId,
                   // passedGigAppointed: widget.appointed,
                   passedGigValue: widget.gigValue,

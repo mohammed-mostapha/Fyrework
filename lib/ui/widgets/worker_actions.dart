@@ -8,10 +8,13 @@ class WorkerActions extends StatefulWidget {
   final String passedGigId;
   @required
   final String passedGigOwnerId;
+  @required
+  final String passedGigOwnerUsername;
 
   WorkerActions({
     this.passedGigId,
     this.passedGigOwnerId,
+    this.passedGigOwnerUsername,
   });
 
   @override

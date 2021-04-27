@@ -4,7 +4,6 @@ import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/screens/home/home.dart';
 import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/services/storage_repo.dart';
-import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/view_controllers/myUser_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

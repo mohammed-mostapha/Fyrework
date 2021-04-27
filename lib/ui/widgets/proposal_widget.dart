@@ -9,12 +9,14 @@ import 'package:flutter_svg/svg.dart';
 class ProposalWidget extends StatefulWidget {
   final String passedGigId;
   final String passedGigOwnerId;
+  final String passedGigOwnerUsername;
   final String passedGigCurrency;
   final String passedGigValue;
 
   ProposalWidget({
     @required this.passedGigId,
     @required this.passedGigOwnerId,
+    @required this.passedGigOwnerUsername,
     @required this.passedGigCurrency,
     @required this.passedGigValue,
   });
@@ -58,6 +60,7 @@ class _ProposalWidgetState extends State<ProposalWidget> {
       await AddCommentViewModel().addComment(
         gigIdHoldingComment: widget.passedGigId,
         gigOwnerId: widget.passedGigOwnerId,
+        gigOwnerUsername: widget.passedGigOwnerUsername,
         commentOwnerUsername: username,
         commentBody: _addProposalController.text,
         commentOwnerId: userId,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class Comment {
   final String gigIdHoldingComment;
   final String gigOwnerId;
+  final String gigOwnerUsername;
   final String commentId;
   final String commentOwnerId;
   final String commentOwnerAvatarUrl;
@@ -27,6 +28,7 @@ class Comment {
   Comment({
     this.gigIdHoldingComment,
     this.gigOwnerId,
+    this.gigOwnerUsername,
     this.commentId,
     this.commentOwnerId,
     this.commentOwnerAvatarUrl,
@@ -53,6 +55,7 @@ class Comment {
     return {
       'gigIdHoldingComment': gigIdHoldingComment,
       'gigOwnerId': gigOwnerId,
+      'gigOwnerUsername': gigOwnerUsername,
       'commentId': commentId,
       'commentOwnerId': commentOwnerId,
       'commentOwnerAvatarUrl': commentOwnerAvatarUrl,
@@ -82,6 +85,7 @@ class Comment {
     return Comment(
       gigIdHoldingComment: map['gigIdHoldingComment'],
       gigOwnerId: map['gigOwnerId'],
+      gigOwnerUsername: map['gigOwnerUsername'],
       commentId: map['commentId'],
       commentOwnerId: map['commentOwnerId'],
       commentOwnerAvatarUrl: map['commentOwnerAvatarUrl'],

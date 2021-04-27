@@ -45,6 +45,7 @@ class CommentsView extends StatelessWidget {
                     isGigAppointed: isGigAppointed,
                     gigIdHoldingComment: getDocData['gigIdHoldingComment'],
                     gigOwnerId: getDocData['gigOwnerId'],
+                    gigOwnerUsername: getDocData['gigOwnerUsername'],
                     commentId: getDocData['commentId'],
                     commentOwnerId: getDocData['commentOwnerId'],
                     commentOwnerAvatarUrl: getDocData['commentOwnerAvatarUrl'],

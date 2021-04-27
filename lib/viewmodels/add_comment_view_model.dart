@@ -16,6 +16,7 @@ class AddCommentViewModel {
   Future addComment({
     @required String gigIdHoldingComment,
     @required String gigOwnerId,
+    @required String gigOwnerUsername,
     String commentId,
     @required String commentOwnerId,
     @required String commentOwnerAvatarUrl,
@@ -30,8 +31,8 @@ class AddCommentViewModel {
     String preferredPaymentMethod,
     @required bool isGigCompleted,
     @required bool containMediaFile,
-    @required appointedUserId,
-    @required appointedUsername,
+    appointedUserId,
+    appointedUsername,
     int ratingCount,
   }) async {
     var result;
@@ -40,6 +41,7 @@ class AddCommentViewModel {
         Comment(
           gigIdHoldingComment: gigIdHoldingComment,
           gigOwnerId: gigOwnerId,
+          gigOwnerUsername: gigOwnerUsername,
           commentId: commentId,
           commentOwnerId: commentOwnerId,
           commentOwnerAvatarUrl: commentOwnerAvatarUrl,

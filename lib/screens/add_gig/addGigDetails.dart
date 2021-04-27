@@ -430,7 +430,12 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                                     value,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .bodyText1,
+                                                        .bodyText1
+                                                        .copyWith(
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .accentColor,
+                                                        ),
                                                   ),
                                                 ),
                                                 value: value,

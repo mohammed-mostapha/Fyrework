@@ -9,10 +9,13 @@ class ClientActions extends StatefulWidget {
   final String passedGigId;
   @required
   final String passedGigOwnerId;
+  @required
+  final String pasedGigOwnerUsername;
 
   ClientActions({
     this.passedGigId,
     this.passedGigOwnerId,
+    this.pasedGigOwnerUsername,
   });
 
   @override
@@ -191,6 +194,8 @@ class _ClientActionsState extends State<ClientActions> {
                                     await AddCommentViewModel().addComment(
                                       gigIdHoldingComment: widget.passedGigId,
                                       gigOwnerId: widget.passedGigOwnerId,
+                                      gigOwnerUsername:
+                                          widget.pasedGigOwnerUsername,
                                       commentOwnerUsername: username,
                                       commentBody: 'GIG COMPLETED',
                                       commentOwnerId: userId,

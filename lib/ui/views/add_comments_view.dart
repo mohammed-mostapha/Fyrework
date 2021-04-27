@@ -2,6 +2,7 @@ import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/ui/shared/constants.dart';
@@ -18,6 +19,7 @@ import 'package:intl/intl.dart';
 class AddCommentsView extends StatefulWidget {
   final String passedGigId;
   final String passedGigOwnerId;
+  final String passGigOwnerUsername;
   final String passedCurrentUserId;
   final String passedGigCurrency;
   final String passedGigValue;
@@ -27,6 +29,7 @@ class AddCommentsView extends StatefulWidget {
     Key key,
     @required this.passedGigId,
     @required this.passedGigOwnerId,
+    @required this.passGigOwnerUsername,
     @required this.passedCurrentUserId,
     @required this.passedGigValue,
     @required this.passedGigCurrency,
@@ -103,6 +106,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
       AddCommentViewModel().addComment(
         gigIdHoldingComment: widget.passedGigId,
         gigOwnerId: widget.passedGigOwnerId,
+        gigOwnerUsername: widget.passGigOwnerUsername,
         commentOwnerUsername: username,
         commentBody: _addCommentsController.text,
         commentOwnerId: userId,
@@ -465,6 +469,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                                 ProposalWidget(
                                                                               passedGigId: widget.passedGigId,
                                                                               passedGigOwnerId: widget.passedGigOwnerId,
+                                                                              passedGigOwnerUsername: widget.passGigOwnerUsername,
                                                                               passedGigCurrency: gigCurrency,
                                                                               passedGigValue: widget.passedGigValue,
                                                                             ),
@@ -613,6 +618,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                   .passedGigId,
                                                           gigOwnerId: widget
                                                               .passedGigOwnerId,
+                                                          gigOwnerUsername: widget
+                                                              .passGigOwnerUsername,
                                                           commentOwnerUsername:
                                                               username,
                                                           commentBody:
@@ -631,6 +638,9 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                               .passedGigCurrency,
                                                           offeredBudget:
                                                               offeredBudget,
+                                                          containMediaFile:
+                                                              false,
+                                                          isGigCompleted: false,
                                                         );
                                                       }
 
@@ -641,6 +651,10 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                       _offeredBudgetController
                                                           .clear();
                                                     },
+                                                    inputFormatters: [
+                                                      LengthLimitingTextInputFormatter(
+                                                          50),
+                                                    ],
                                                     minLines: 1,
                                                     maxLines: 6,
                                                   ),
@@ -794,6 +808,13 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                   commentId: '',
                                                                   isPrivateComment:
                                                                       isPrivateComment,
+                                                                  isGigCompleted:
+                                                                      false,
+                                                                  containMediaFile:
+                                                                      false,
+                                                                  gigOwnerUsername:
+                                                                      widget
+                                                                          .passGigOwnerUsername,
                                                                   proposal:
                                                                       proposal,
                                                                   approved:
@@ -815,6 +836,10 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                               _offeredBudgetController
                                                                   .clear();
                                                             },
+                                                            inputFormatters: [
+                                                              LengthLimitingTextInputFormatter(
+                                                                  50),
+                                                            ],
                                                             minLines: 1,
                                                             maxLines: 6,
                                                           ),
@@ -968,6 +993,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                             : ClientActions(
                                                                                 passedGigId: widget.passedGigId,
                                                                                 passedGigOwnerId: widget.passedGigOwnerId,
+                                                                                pasedGigOwnerUsername: widget.passGigOwnerUsername,
                                                                               ),
                                                                       ),
                                                                     );
