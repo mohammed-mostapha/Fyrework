@@ -45,17 +45,19 @@ class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           CarouselSlider(
-            height: preferredHeight != null
-                ? preferredHeight
-                : MediaQuery.of(context).size.height / 2,
-            initialPage: 0,
-            enableInfiniteScroll:
-                receivedGigMediaFilesUrls.length > 1 ? true : false,
-            onPageChanged: (index) {
-              setState(() {
-                _current = index;
-              });
-            },
+            options: CarouselOptions(
+              height: preferredHeight != null
+                  ? preferredHeight
+                  : MediaQuery.of(context).size.height / 2,
+              initialPage: 0,
+              enableInfiniteScroll:
+                  receivedGigMediaFilesUrls.length > 1 ? true : false,
+              onPageChanged: (index, carouselPageChangedReason) {
+                setState(() {
+                  _current = index;
+                });
+              },
+            ),
             items: receivedGigMediaFilesUrls.map((url) {
               //condition to specify whether its an image or a video to show
               if (url.contains("jpeg") ||

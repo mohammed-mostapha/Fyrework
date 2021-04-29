@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:core';
 import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/ui/shared/constants.dart';
+import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
+import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:Fyrework/viewmodels/add_comment_view_model.dart';
 import 'package:custom_switch/custom_switch.dart';
 import 'package:flutter/material.dart';
@@ -144,6 +146,9 @@ class _CommentItemState extends State<CommentItem> {
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool darkModeOn = brightness == Brightness.dark;
+
     myGig = widget.gigOwnerId == MyUser.uid ? true : false;
     myComment = widget.commentOwnerId == MyUser.uid ? true : false;
     appointedUser = widget.appointedUserId == MyUser.uid ? true : false;
@@ -309,55 +314,64 @@ class _CommentItemState extends State<CommentItem> {
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(10)),
                                           ),
-                                          child: TextFormField(
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                            ),
-                                            // controller:
-                                            //     _clientReviewTextController,
-                                            decoration: signUpInputDecoration(
-                                              context,
-                                              "Leave Review...",
-                                            ),
-                                            // onFieldSubmitted:
-                                            //     (String submittedString) async {
-                                            //   if (submittedString.isNotEmpty) {
-                                            //     await AddCommentViewModel()
-                                            //         .addComment(
-                                            //       gigIdHoldingComment:
-                                            //           widget.passedGigId,
-                                            //       gigOwnerId: widget.passedGigOwnerId,
-                                            //       commentOwnerUsername: username,
-                                            //       commentBody: submittedString,
-                                            //       commentOwnerId: userId,
-                                            //       commentOwnerAvatarUrl:
-                                            //           userProfilePictureUrl,
-                                            //       commentId: '',
-                                            //       isPrivateComment: isPrivateComment,
-                                            //       isGigCompleted: false,
-                                            //       containMediaFile: false,
-                                            //       gigOwnerUsername:
-                                            //           widget.passGigOwnerUsername,
-                                            //       proposal: proposal,
-                                            //       approved: approved,
-                                            //       rejected: rejected,
-                                            //       gigCurrency:
-                                            //           widget.passedGigCurrency,
-                                            //       offeredBudget: offeredBudget,
-                                            //     );
-                                            //   }
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(1.0),
+                                            child: TextFormField(
+                                              style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                              ),
+                                              // controller:
+                                              //     _clientReviewTextController,
+                                              decoration: signUpInputDecoration(
+                                                  context,
+                                                  "Leave Review...",
+                                                  !darkModeOn
+                                                      ? fyreworkDarkTheme()
+                                                          .inputDecorationTheme
+                                                          .fillColor
+                                                      : fyreworkLightTheme()
+                                                          .inputDecorationTheme
+                                                          .fillColor),
+                                              // onFieldSubmitted:
+                                              //     (String submittedString) async {
+                                              //   if (submittedString.isNotEmpty) {
+                                              //     await AddCommentViewModel()
+                                              //         .addComment(
+                                              //       gigIdHoldingComment:
+                                              //           widget.passedGigId,
+                                              //       gigOwnerId: widget.passedGigOwnerId,
+                                              //       commentOwnerUsername: username,
+                                              //       commentBody: submittedString,
+                                              //       commentOwnerId: userId,
+                                              //       commentOwnerAvatarUrl:
+                                              //           userProfilePictureUrl,
+                                              //       commentId: '',
+                                              //       isPrivateComment: isPrivateComment,
+                                              //       isGigCompleted: false,
+                                              //       containMediaFile: false,
+                                              //       gigOwnerUsername:
+                                              //           widget.passGigOwnerUsername,
+                                              //       proposal: proposal,
+                                              //       approved: approved,
+                                              //       rejected: rejected,
+                                              //       gigCurrency:
+                                              //           widget.passedGigCurrency,
+                                              //       offeredBudget: offeredBudget,
+                                              //     );
+                                              //   }
 
-                                            //   _addCommentsController.clear();
-                                            //   _addProposalController.clear();
-                                            //   _offeredBudgetController.clear();
-                                            // },
-                                            inputFormatters: [
-                                              LengthLimitingTextInputFormatter(
-                                                  50),
-                                            ],
-                                            minLines: 1,
-                                            maxLines: 6,
+                                              //   _addCommentsController.clear();
+                                              //   _addProposalController.clear();
+                                              //   _offeredBudgetController.clear();
+                                              // },
+                                              inputFormatters: [
+                                                LengthLimitingTextInputFormatter(
+                                                    50),
+                                              ],
+                                              minLines: 1,
+                                              maxLines: 6,
+                                            ),
                                           ),
                                         ),
                                       ),
