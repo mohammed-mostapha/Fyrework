@@ -1057,7 +1057,9 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                       height: 40,
                       decoration: BoxDecoration(
                         border: Border.all(
-                            width: 0.5, color: Theme.of(context).primaryColor),
+                          width: 0.5,
+                          color: Theme.of(context).primaryColor,
+                        ),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Checkbox(

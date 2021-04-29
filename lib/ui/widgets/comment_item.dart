@@ -301,103 +301,75 @@ class _CommentItemState extends State<CommentItem> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Expanded(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Theme.of(context)
-                                                .inputDecorationTheme
-                                                .fillColor,
-                                            border: Border.all(
-                                              width: 1,
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                            ),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10)),
+                                        child: TextFormField(
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(context).accentColor,
                                           ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(1.0),
-                                            child: TextFormField(
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                              ),
-                                              // controller:
-                                              //     _clientReviewTextController,
-                                              decoration: signUpInputDecoration(
-                                                  context,
-                                                  "Leave Review...",
-                                                  !darkModeOn
-                                                      ? fyreworkDarkTheme()
-                                                          .inputDecorationTheme
-                                                          .fillColor
-                                                      : fyreworkLightTheme()
-                                                          .inputDecorationTheme
-                                                          .fillColor),
-                                              // onFieldSubmitted:
-                                              //     (String submittedString) async {
-                                              //   if (submittedString.isNotEmpty) {
-                                              //     await AddCommentViewModel()
-                                              //         .addComment(
-                                              //       gigIdHoldingComment:
-                                              //           widget.passedGigId,
-                                              //       gigOwnerId: widget.passedGigOwnerId,
-                                              //       commentOwnerUsername: username,
-                                              //       commentBody: submittedString,
-                                              //       commentOwnerId: userId,
-                                              //       commentOwnerAvatarUrl:
-                                              //           userProfilePictureUrl,
-                                              //       commentId: '',
-                                              //       isPrivateComment: isPrivateComment,
-                                              //       isGigCompleted: false,
-                                              //       containMediaFile: false,
-                                              //       gigOwnerUsername:
-                                              //           widget.passGigOwnerUsername,
-                                              //       proposal: proposal,
-                                              //       approved: approved,
-                                              //       rejected: rejected,
-                                              //       gigCurrency:
-                                              //           widget.passedGigCurrency,
-                                              //       offeredBudget: offeredBudget,
-                                              //     );
-                                              //   }
+                                          controller:
+                                              _clientReviewTextController,
+                                          decoration: signUpInputDecoration(
+                                              context,
+                                              "Leave Review...",
+                                              !darkModeOn
+                                                  ? fyreworkDarkTheme()
+                                                      .inputDecorationTheme
+                                                      .fillColor
+                                                  : fyreworkLightTheme()
+                                                      .inputDecorationTheme
+                                                      .fillColor),
+                                          // onFieldSubmitted:
+                                          //     (String submittedString) async {
+                                          //   if (submittedString.isNotEmpty) {
+                                          //     await AddCommentViewModel()
+                                          //         .addComment(
+                                          //       gigIdHoldingComment:
+                                          //           widget.passedGigId,
+                                          //       gigOwnerId: widget.passedGigOwnerId,
+                                          //       commentOwnerUsername: username,
+                                          //       commentBody: submittedString,
+                                          //       commentOwnerId: userId,
+                                          //       commentOwnerAvatarUrl:
+                                          //           userProfilePictureUrl,
+                                          //       commentId: '',
+                                          //       isPrivateComment: isPrivateComment,
+                                          //       isGigCompleted: false,
+                                          //       containMediaFile: false,
+                                          //       gigOwnerUsername:
+                                          //           widget.passGigOwnerUsername,
+                                          //       proposal: proposal,
+                                          //       approved: approved,
+                                          //       rejected: rejected,
+                                          //       gigCurrency:
+                                          //           widget.passedGigCurrency,
+                                          //       offeredBudget: offeredBudget,
+                                          //     );
+                                          //   }
 
-                                              //   _addCommentsController.clear();
-                                              //   _addProposalController.clear();
-                                              //   _offeredBudgetController.clear();
-                                              // },
-                                              inputFormatters: [
-                                                LengthLimitingTextInputFormatter(
-                                                    50),
-                                              ],
-                                              minLines: 1,
-                                              maxLines: 6,
-                                            ),
-                                          ),
+                                          //   _addCommentsController.clear();
+                                          //   _addProposalController.clear();
+                                          //   _offeredBudgetController.clear();
+                                          // },
+                                          inputFormatters: [
+                                            LengthLimitingTextInputFormatter(
+                                                100),
+                                          ],
+                                          maxLength: 100,
+                                          minLines: 1,
+                                          maxLines: 6,
                                         ),
                                       ),
                                       SizedBox(width: 10),
                                       Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Wrap(
-                                            direction: Axis.horizontal,
-                                            alignment: WrapAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Rate ',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1
-                                                    .copyWith(
-                                                      color: myComment
-                                                          ? Theme.of(context)
-                                                              .accentColor
-                                                          : Theme.of(context)
-                                                              .primaryColor,
-                                                    ),
-                                              ),
-                                              GestureDetector(
-                                                child: Text(
-                                                  "${widget.appointedUsername}'s ",
+                                          Container(
+                                            width: 100,
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  'Rate ',
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .bodyText1
@@ -407,31 +379,37 @@ class _CommentItemState extends State<CommentItem> {
                                                                 .accentColor
                                                             : Theme.of(context)
                                                                 .primaryColor,
-                                                        fontWeight:
-                                                            FontWeight.bold,
                                                       ),
                                                 ),
-                                                onTap: () {
-                                                  showUserProfile(
-                                                    userId:
-                                                        widget.appointedUserId,
-                                                  );
-                                                },
-                                              ),
-                                              Text(
-                                                'work',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1
-                                                    .copyWith(
-                                                      color: myComment
-                                                          ? Theme.of(context)
-                                                              .accentColor
-                                                          : Theme.of(context)
-                                                              .primaryColor,
-                                                    ),
-                                              ),
-                                            ],
+                                                GestureDetector(
+                                                  child: Text(
+                                                    "${widget.appointedUsername}ssssssssssssss",
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyText1
+                                                        .copyWith(
+                                                          color: myComment
+                                                              ? Theme.of(
+                                                                      context)
+                                                                  .accentColor
+                                                              : Theme.of(
+                                                                      context)
+                                                                  .primaryColor,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                  onTap: () {
+                                                    showUserProfile(
+                                                      userId: widget
+                                                          .appointedUserId,
+                                                    );
+                                                  },
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                           SizedBox(
                                             height: 10,
