@@ -882,6 +882,11 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                       //   setState(() => _name = val);
                       // },
                       onSaved: (val) => _name = val,
+                      inputFormatters: [
+                        new LengthLimitingTextInputFormatter(20),
+                        // FilteringTextInputFormatter.allow(
+                        //     RegExp("[a-z0-9_]")),
+                      ],
                     ),
                   ),
                 ),

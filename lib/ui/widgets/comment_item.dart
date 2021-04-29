@@ -6,6 +6,7 @@ import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:Fyrework/viewmodels/add_comment_view_model.dart';
 import 'package:custom_switch/custom_switch.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -295,95 +296,40 @@ class _CommentItemState extends State<CommentItem> {
                 widget.isGigCompleted
                     ? myGig || myComment
                         ? widget.ratingCount > 0 != true
-                            ? Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Expanded(
-                                        child: TextFormField(
-                                          style: TextStyle(
-                                            color:
-                                                Theme.of(context).accentColor,
-                                          ),
-                                          controller:
-                                              _clientReviewTextController,
-                                          decoration: signUpInputDecoration(
-                                              context,
-                                              "Leave Review...",
-                                              !darkModeOn
-                                                  ? fyreworkDarkTheme()
-                                                      .inputDecorationTheme
-                                                      .fillColor
-                                                  : fyreworkLightTheme()
-                                                      .inputDecorationTheme
-                                                      .fillColor),
-                                          // onFieldSubmitted:
-                                          //     (String submittedString) async {
-                                          //   if (submittedString.isNotEmpty) {
-                                          //     await AddCommentViewModel()
-                                          //         .addComment(
-                                          //       gigIdHoldingComment:
-                                          //           widget.passedGigId,
-                                          //       gigOwnerId: widget.passedGigOwnerId,
-                                          //       commentOwnerUsername: username,
-                                          //       commentBody: submittedString,
-                                          //       commentOwnerId: userId,
-                                          //       commentOwnerAvatarUrl:
-                                          //           userProfilePictureUrl,
-                                          //       commentId: '',
-                                          //       isPrivateComment: isPrivateComment,
-                                          //       isGigCompleted: false,
-                                          //       containMediaFile: false,
-                                          //       gigOwnerUsername:
-                                          //           widget.passGigOwnerUsername,
-                                          //       proposal: proposal,
-                                          //       approved: approved,
-                                          //       rejected: rejected,
-                                          //       gigCurrency:
-                                          //           widget.passedGigCurrency,
-                                          //       offeredBudget: offeredBudget,
-                                          //     );
-                                          //   }
-
-                                          //   _addCommentsController.clear();
-                                          //   _addProposalController.clear();
-                                          //   _offeredBudgetController.clear();
-                                          // },
-                                          inputFormatters: [
-                                            LengthLimitingTextInputFormatter(
-                                                100),
-                                          ],
-                                          maxLength: 100,
-                                          minLines: 1,
-                                          maxLines: 6,
-                                        ),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            width: 100,
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  'Rate ',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyText1
-                                                      .copyWith(
-                                                        color: myComment
-                                                            ? Theme.of(context)
-                                                                .accentColor
-                                                            : Theme.of(context)
-                                                                .primaryColor,
-                                                      ),
-                                                ),
-                                                GestureDetector(
-                                                  child: Text(
-                                                    "${widget.appointedUsername}ssssssssssssss",
+                            ? SizedBox(
+                                height: 200,
+                                child: Column(
+                                  children: [
+                                    SizedBox(width: 10),
+                                    Column(
+                                      children: [
+                                        Container(
+                                          child: RichText(
+                                            textAlign: TextAlign.center,
+                                            overflow: TextOverflow.ellipsis,
+                                            text: TextSpan(
+                                                style:
+                                                    DefaultTextStyle.of(context)
+                                                        .style,
+                                                children: [
+                                                  TextSpan(
+                                                    text: 'Rate ',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyText1
+                                                        .copyWith(
+                                                          color: myComment
+                                                              ? Theme.of(
+                                                                      context)
+                                                                  .accentColor
+                                                              : Theme.of(
+                                                                      context)
+                                                                  .primaryColor,
+                                                        ),
+                                                  ),
+                                                  TextSpan(
+                                                    text:
+                                                        "${widget.appointedUsername}",
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .bodyText1
@@ -398,86 +344,150 @@ class _CommentItemState extends State<CommentItem> {
                                                           fontWeight:
                                                               FontWeight.bold,
                                                         ),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                                    recognizer:
+                                                        TapGestureRecognizer()
+                                                          ..onTap = () {
+                                                            showUserProfile(
+                                                              userId: widget
+                                                                  .appointedUserId,
+                                                            );
+                                                          },
                                                   ),
-                                                  onTap: () {
-                                                    showUserProfile(
-                                                      userId: widget
-                                                          .appointedUserId,
-                                                    );
-                                                  },
-                                                ),
-                                              ],
-                                            ),
+                                                ]),
                                           ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          ClientWorkerRating((rating) {
-                                            setState(() {
-                                              workerRating = rating;
-                                            });
-                                          }),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  GestureDetector(
-                                      child: Container(
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        ClientWorkerRating((rating) {
+                                          setState(() {
+                                            workerRating = rating;
+                                          });
+                                        }),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Expanded(
+                                      child: TextFormField(
+                                        style: TextStyle(
                                           color: Theme.of(context).accentColor,
-                                          border: Border.all(
-                                            width: 1,
-                                          ),
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(
-                                              5,
-                                            ),
-                                          ),
                                         ),
-                                        child: Center(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              'Submit Review',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText1
-                                                  .copyWith(
-                                                    color: Theme.of(context)
-                                                        .primaryColor,
-                                                  ),
-                                            ),
-                                          ),
-                                        ),
+                                        controller: _clientReviewTextController,
+                                        decoration: signUpInputDecoration(
+                                                context,
+                                                "Leave Review...",
+                                                !darkModeOn
+                                                    ? fyreworkDarkTheme()
+                                                        .inputDecorationTheme
+                                                        .fillColor
+                                                    : fyreworkLightTheme()
+                                                        .inputDecorationTheme
+                                                        .fillColor)
+                                            .copyWith(
+                                                contentPadding:
+                                                    EdgeInsets.all(10)),
+                                        // onFieldSubmitted:
+                                        //     (String submittedString) async {
+                                        //   if (submittedString.isNotEmpty) {
+                                        //     await AddCommentViewModel()
+                                        //         .addComment(
+                                        //       gigIdHoldingComment:
+                                        //           widget.passedGigId,
+                                        //       gigOwnerId: widget.passedGigOwnerId,
+                                        //       commentOwnerUsername: username,
+                                        //       commentBody: submittedString,
+                                        //       commentOwnerId: userId,
+                                        //       commentOwnerAvatarUrl:
+                                        //           userProfilePictureUrl,
+                                        //       commentId: '',
+                                        //       isPrivateComment: isPrivateComment,
+                                        //       isGigCompleted: false,
+                                        //       containMediaFile: false,
+                                        //       gigOwnerUsername:
+                                        //           widget.passGigOwnerUsername,
+                                        //       proposal: proposal,
+                                        //       approved: approved,
+                                        //       rejected: rejected,
+                                        //       gigCurrency:
+                                        //           widget.passedGigCurrency,
+                                        //       offeredBudget: offeredBudget,
+                                        //     );
+                                        //   }
+
+                                        //   _addCommentsController.clear();
+                                        //   _addProposalController.clear();
+                                        //   _offeredBudgetController.clear();
+                                        // },
+                                        inputFormatters: [
+                                          LengthLimitingTextInputFormatter(100),
+                                        ],
+
+                                        maxLength: 100,
+                                        // minLines: 1,
+                                        maxLines: 6,
                                       ),
-                                      onTap: workerRating > 0 != true
-                                          ? () {
-                                              setState(() {
-                                                _userMissedRating = true;
-                                              });
-                                            }
-                                          : () async {
-                                              await DatabaseService()
-                                                  .updateCommentRatingCount(
-                                                commentId: widget.commentId,
-                                                ratingCount: workerRating,
-                                              );
-                                              await DatabaseService()
-                                                  .addRatingToUser(
-                                                userId: widget.appointedUserId,
-                                                gigId:
-                                                    widget.gigIdHoldingComment,
-                                                userRating: workerRating,
-                                              );
-                                              setState(() {});
-                                            }),
-                                ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    GestureDetector(
+                                        child: Container(
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            color:
+                                                Theme.of(context).accentColor,
+                                            border: Border.all(
+                                              width: 1,
+                                            ),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(
+                                                5,
+                                              ),
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                'Submit Review',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText1
+                                                    .copyWith(
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                    ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        onTap: workerRating > 0 != true
+                                            ? () {
+                                                setState(() {
+                                                  _userMissedRating = true;
+                                                });
+                                              }
+                                            : () async {
+                                                await DatabaseService()
+                                                    .updateCommentRatingCount(
+                                                  commentId: widget.commentId,
+                                                  ratingCount: workerRating,
+                                                );
+                                                await DatabaseService()
+                                                    .addRatingToUser(
+                                                  userId:
+                                                      widget.appointedUserId,
+                                                  gigId: widget
+                                                      .gigIdHoldingComment,
+                                                  userRating: workerRating,
+                                                );
+                                                setState(() {});
+                                              }),
+                                  ],
+                                ),
                               )
                             : Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
