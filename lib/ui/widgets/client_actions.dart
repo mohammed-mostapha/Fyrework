@@ -197,7 +197,7 @@ class _ClientActionsState extends State<ClientActions> {
                                       gigOwnerUsername:
                                           widget.pasedGigOwnerUsername,
                                       commentOwnerUsername: username,
-                                      commentBody: 'GIG COMPLETED',
+                                      commentBody: 'wating client review',
                                       commentOwnerId: userId,
                                       commentOwnerAvatarUrl:
                                           userProfilePictureUrl,
@@ -211,6 +211,7 @@ class _ClientActionsState extends State<ClientActions> {
                                       appointedUserId: appointedUserId,
                                       appointedUsername: appointedUsername,
                                       ratingCount: 0,
+                                      leftReview: false,
                                     );
                                   });
                                 },

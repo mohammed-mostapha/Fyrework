@@ -34,6 +34,7 @@ class AddCommentViewModel {
     appointedUserId,
     appointedUsername,
     int ratingCount,
+    bool leftReview,
   }) async {
     var result;
     // if (!_editting) {
@@ -62,6 +63,7 @@ class AddCommentViewModel {
           appointedUserId: appointedUserId,
           appointedUsername: appointedUsername,
           ratingCount: ratingCount,
+          leftReview: leftReview,
         ),
         gigIdHoldingComment);
     // } else {

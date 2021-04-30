@@ -4,9 +4,13 @@ import 'package:http/http.dart';
 
 class ClientWorkerRating extends StatefulWidget {
   final int maximumRating;
+  final int passedRatingCount;
   final Function(int) onRatingSelected;
 
-  ClientWorkerRating(this.onRatingSelected, [this.maximumRating = 5]);
+  ClientWorkerRating(
+      {this.onRatingSelected,
+      @required this.passedRatingCount,
+      this.maximumRating = 5});
 
   @override
   _ClientWorkerRatingState createState() => _ClientWorkerRatingState();
@@ -16,10 +20,10 @@ class _ClientWorkerRatingState extends State<ClientWorkerRating> {
   final String outlineStar = 'assets/svgs/flaticon/outline_star.svg';
   final String solidStar = 'assets/svgs/flaticon/solid_star.svg';
 
-  int _workerRating = 0;
+  int _selectedRating = 0;
 
   _buildRatingStars(int index) {
-    if (index < _workerRating) {
+    if (index < _selectedRating) {
       return SizedBox(
         width: 25,
         height: 20,
@@ -53,10 +57,54 @@ class _ClientWorkerRatingState extends State<ClientWorkerRating> {
         child: _buildRatingStars(index),
         onTap: () {
           setState(() {
-            _workerRating = index + 1;
+            _selectedRating = index + 1;
           });
-          this.widget.onRatingSelected(_workerRating);
+          this.widget.onRatingSelected(_selectedRating);
         },
+      );
+    });
+
+    return FittedBox(
+      fit: BoxFit.contain,
+      child: Row(
+        children: stars,
+      ),
+    );
+  }
+
+  _buildUserSelectedRatingStars(index, _passedRatingCount) {
+    if (index < _passedRatingCount) {
+      return SizedBox(
+        width: 25,
+        height: 20,
+        child: Padding(
+          padding: const EdgeInsets.only(right: 5.0),
+          child: SvgPicture.asset(
+            solidStar,
+            semanticsLabel: 'rating_star',
+            color: Colors.amber,
+          ),
+        ),
+      );
+    }
+    return SizedBox(
+      width: 25,
+      height: 20,
+      child: Padding(
+        padding: const EdgeInsets.only(right: 5.0),
+        child: SvgPicture.asset(
+          outlineStar,
+          semanticsLabel: 'rating_star',
+          color: Theme.of(context).accentColor,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUserSelectedRating(int passedRatingCount) {
+    final stars = List.generate(this.widget.maximumRating, (index) {
+      return SizedBox(
+        child: _buildUserSelectedRatingStars(index, passedRatingCount),
       );
     });
 
@@ -70,6 +118,8 @@ class _ClientWorkerRatingState extends State<ClientWorkerRating> {
 
   @override
   Widget build(BuildContext context) {
-    return _buildClientWorkerRating();
+    return widget.passedRatingCount > 0
+        ? _buildUserSelectedRating(widget.passedRatingCount)
+        : _buildClientWorkerRating();
   }
 }

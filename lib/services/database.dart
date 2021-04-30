@@ -307,6 +307,13 @@ class DatabaseService {
     });
   }
 
+  Future updateLeftReviewToTrue(
+      {@required String commentId, @required String review}) async {
+    return await _commentsCollection
+        .doc(commentId)
+        .update({'leftReview': true, 'commentBody': review});
+  }
+
   // show gig actions
   Stream<QuerySnapshot> showGigWorkstreamActions({@required String gigId}) {
     return _gigsCollection

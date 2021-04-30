@@ -4,7 +4,6 @@ import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/ui/shared/constants.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
-import 'package:Fyrework/viewmodels/add_comment_view_model.dart';
 import 'package:custom_switch/custom_switch.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +45,7 @@ class CommentItem extends StatefulWidget {
   final appointedUserId;
   final appointedUsername;
   final ratingCount;
+  final leftReview;
   CommentItem({
     Key key,
     // this.passedCurrentUserId,
@@ -73,6 +73,7 @@ class CommentItem extends StatefulWidget {
     this.appointedUserId,
     this.appointedUsername,
     this.ratingCount,
+    this.leftReview,
   }) : super(key: key);
 
   @override
@@ -295,7 +296,7 @@ class _CommentItemState extends State<CommentItem> {
                 // Text(widget.commentBody),
                 widget.isGigCompleted
                     ? myGig || myComment
-                        ? widget.ratingCount > 0 != true
+                        ? widget.leftReview != true
                             ? SizedBox(
                                 height: 200,
                                 child: Column(
@@ -359,11 +360,14 @@ class _CommentItemState extends State<CommentItem> {
                                         SizedBox(
                                           height: 10,
                                         ),
-                                        ClientWorkerRating((rating) {
-                                          setState(() {
-                                            workerRating = rating;
-                                          });
-                                        }),
+                                        ClientWorkerRating(
+                                          onRatingSelected: (rating) {
+                                            setState(() {
+                                              workerRating = rating;
+                                            });
+                                          },
+                                          passedRatingCount: widget.ratingCount,
+                                        ),
                                       ],
                                     ),
                                     SizedBox(
@@ -484,79 +488,115 @@ class _CommentItemState extends State<CommentItem> {
                                                       .gigIdHoldingComment,
                                                   userRating: workerRating,
                                                 );
+                                                await DatabaseService()
+                                                    .updateLeftReviewToTrue(
+                                                        commentId:
+                                                            widget.commentId,
+                                                        review:
+                                                            _clientReviewTextController
+                                                                .text);
                                                 setState(() {});
                                               }),
                                   ],
                                 ),
                               )
-                            : Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                            : Column(
                                 children: [
+                                  ClientWorkerRating(
+                                    onRatingSelected: (rating) {
+                                      setState(() {
+                                        workerRating = rating;
+                                      });
+                                    },
+                                    passedRatingCount: widget.ratingCount,
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
                                   Container(
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            width: 1,
-                                            color: Theme.of(context).hintColor),
-                                        borderRadius: BorderRadius.circular(5)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Wrap(
-                                        direction: Axis.horizontal,
-                                        alignment: WrapAlignment.start,
-                                        children: [
-                                          Text(
-                                            'You rated ',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1
-                                                .copyWith(
-                                                  color: myComment
-                                                      ? Theme.of(context)
-                                                          .accentColor
-                                                      : Theme.of(context)
-                                                          .primaryColor,
-                                                ),
-                                          ),
-                                          GestureDetector(
-                                            child: Text(
-                                              "${widget.appointedUsername}\'s ",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText1
-                                                  .copyWith(
-                                                      color: myComment
-                                                          ? Theme.of(context)
-                                                              .accentColor
-                                                          : Theme.of(context)
-                                                              .primaryColor,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                            ),
-                                            onTap: () {
-                                              showUserProfile(
-                                                  userId:
-                                                      widget.appointedUserId);
-                                            },
-                                          ),
-                                          Text(
-                                            "work with ${widget.ratingCount} star(s)",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1
-                                                .copyWith(
-                                                  color: myComment
-                                                      ? Theme.of(context)
-                                                          .accentColor
-                                                      : Theme.of(context)
-                                                          .primaryColor,
-                                                ),
-                                          ),
-                                        ],
+                                    child: Center(
+                                      child: Text(
+                                        '${widget.commentBody}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .copyWith(
+                                                color: Theme.of(context)
+                                                    .accentColor),
                                       ),
                                     ),
                                   ),
                                 ],
                               )
+                        //  Row(
+                        //     mainAxisAlignment: MainAxisAlignment.end,
+                        //     children: [
+                        //       Container(
+                        //         decoration: BoxDecoration(
+                        //             border: Border.all(
+                        //                 width: 1,
+                        //                 color: Theme.of(context).hintColor),
+                        //             borderRadius: BorderRadius.circular(5)),
+                        //         child: Padding(
+                        //           padding: const EdgeInsets.all(8.0),
+                        //           child: Wrap(
+                        //             direction: Axis.horizontal,
+                        //             alignment: WrapAlignment.start,
+                        //             children: [
+                        //               Text(
+                        //                 'You rated ',
+                        //                 style: Theme.of(context)
+                        //                     .textTheme
+                        //                     .bodyText1
+                        //                     .copyWith(
+                        //                       color: myComment
+                        //                           ? Theme.of(context)
+                        //                               .accentColor
+                        //                           : Theme.of(context)
+                        //                               .primaryColor,
+                        //                     ),
+                        //               ),
+                        //               GestureDetector(
+                        //                 child: Text(
+                        //                   "${widget.appointedUsername}\'s ",
+                        //                   style: Theme.of(context)
+                        //                       .textTheme
+                        //                       .bodyText1
+                        //                       .copyWith(
+                        //                           color: myComment
+                        //                               ? Theme.of(context)
+                        //                                   .accentColor
+                        //                               : Theme.of(context)
+                        //                                   .primaryColor,
+                        //                           fontWeight:
+                        //                               FontWeight.bold),
+                        //                 ),
+                        //                 onTap: () {
+                        //                   showUserProfile(
+                        //                       userId:
+                        //                           widget.appointedUserId);
+                        //                 },
+                        //               ),
+                        //               Text(
+                        //                 "work with ${widget.ratingCount} star(s)",
+                        //                 style: Theme.of(context)
+                        //                     .textTheme
+                        //                     .bodyText1
+                        //                     .copyWith(
+                        //                       color: myComment
+                        //                           ? Theme.of(context)
+                        //                               .accentColor
+                        //                           : Theme.of(context)
+                        //                               .primaryColor,
+                        //                     ),
+                        //               ),
+                        //             ],
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   )
+
                         : appointedUser
                             ? Row(
                                 mainAxisAlignment: MainAxisAlignment.center,

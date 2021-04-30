@@ -67,6 +67,7 @@ class CommentsView extends StatelessWidget {
                     appointedUserId: getDocData['appointedUserId'],
                     appointedUsername: getDocData['appointedUsername'],
                     ratingCount: getDocData['ratingCount'],
+                    leftReview: getDocData['leftReview'],
 
                     // onDeleteItem: () =>
                     //     model.deleteComment(index),
