@@ -72,7 +72,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       duration: Duration(milliseconds: 125),
       value: 1.0,
       lowerBound: 1.0,
-      upperBound: 1.75,
+      upperBound: 1.5,
     );
 
     _cameraColorAnimationController = AnimationController(

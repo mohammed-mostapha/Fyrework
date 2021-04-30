@@ -80,7 +80,10 @@ class CommentItem extends StatefulWidget {
   _CommentItemState createState() => _CommentItemState();
 }
 
-class _CommentItemState extends State<CommentItem> {
+class _CommentItemState extends State<CommentItem>
+    with TickerProviderStateMixin {
+  AnimationController _ratingStarsAnimationController;
+  TextEditingController _clientReviewTextController = TextEditingController();
   final String paypalIcon = 'assets/svgs/flaticon/paypal.svg';
   final String cash = 'assets/svgs/flaticon/cash.svg';
   final String alternatePayment = 'assets/svgs/flaticon/alternate_payment.svg';
@@ -94,12 +97,20 @@ class _CommentItemState extends State<CommentItem> {
   double _commentOpacity = 0.9;
   bool isAppointedUser;
   dynamic createdAtDateTime;
-  int workerRating = 0;
+  int initialRating = 0;
   bool _userMissedRating = false;
   // bool commentPrivacytoggle = false;
 
   void initState() {
     super.initState();
+
+    _ratingStarsAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 125),
+      value: 1.0,
+      lowerBound: 1.0,
+      upperBound: 1.5,
+    );
   }
 
   void commentViewShifter() {
@@ -156,7 +167,6 @@ class _CommentItemState extends State<CommentItem> {
     appointedUser = widget.appointedUserId == MyUser.uid ? true : false;
     createdAtDateTime =
         widget.createdAt != null ? widget.createdAt.toDate() : DateTime.now();
-    TextEditingController _clientReviewTextController = TextEditingController();
 
     if (widget.containMediaFile == true) {
       if (widget.commentBody.contains("jpeg") ||
@@ -360,13 +370,18 @@ class _CommentItemState extends State<CommentItem> {
                                         SizedBox(
                                           height: 10,
                                         ),
-                                        ClientWorkerRating(
-                                          onRatingSelected: (rating) {
-                                            setState(() {
-                                              workerRating = rating;
-                                            });
-                                          },
-                                          passedRatingCount: widget.ratingCount,
+                                        ScaleTransition(
+                                          scale:
+                                              _ratingStarsAnimationController,
+                                          child: ClientWorkerRating(
+                                            onRatingSelected: (rating) {
+                                              setState(() {
+                                                initialRating = rating;
+                                              });
+                                            },
+                                            passedRatingCount:
+                                                widget.ratingCount,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -468,8 +483,16 @@ class _CommentItemState extends State<CommentItem> {
                                             ),
                                           ),
                                         ),
-                                        onTap: workerRating > 0 != true
+                                        onTap: initialRating > 0 != true
                                             ? () {
+                                                _ratingStarsAnimationController
+                                                    .forward()
+                                                    .then((value) {
+                                                  _ratingStarsAnimationController
+                                                      .forward();
+                                                  _ratingStarsAnimationController
+                                                      .reverse();
+                                                });
                                                 setState(() {
                                                   _userMissedRating = true;
                                                 });
@@ -478,7 +501,7 @@ class _CommentItemState extends State<CommentItem> {
                                                 await DatabaseService()
                                                     .updateCommentRatingCount(
                                                   commentId: widget.commentId,
-                                                  ratingCount: workerRating,
+                                                  ratingCount: initialRating,
                                                 );
                                                 await DatabaseService()
                                                     .addRatingToUser(
@@ -486,7 +509,7 @@ class _CommentItemState extends State<CommentItem> {
                                                       widget.appointedUserId,
                                                   gigId: widget
                                                       .gigIdHoldingComment,
-                                                  userRating: workerRating,
+                                                  userRating: initialRating,
                                                 );
                                                 await DatabaseService()
                                                     .updateLeftReviewToTrue(
@@ -505,7 +528,7 @@ class _CommentItemState extends State<CommentItem> {
                                   ClientWorkerRating(
                                     onRatingSelected: (rating) {
                                       setState(() {
-                                        workerRating = rating;
+                                        initialRating = rating;
                                       });
                                     },
                                     passedRatingCount: widget.ratingCount,
