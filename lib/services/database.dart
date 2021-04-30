@@ -307,7 +307,7 @@ class DatabaseService {
     });
   }
 
-  Future updateLeftReviewToTrue(
+  Future updateLeftReviewFieldToTrue(
       {@required String commentId, @required String review}) async {
     return await _commentsCollection
         .doc(commentId)

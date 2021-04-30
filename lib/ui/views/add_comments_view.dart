@@ -944,62 +944,65 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                           context: context,
                                                           builder: (BuildContext
                                                               context) {
-                                                            return Builder(
-                                                              builder:
-                                                                  (BuildContext
-                                                                      context) {
-                                                                return Container(
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .bottomAppBarColor,
-                                                                  height: 250,
-                                                                  child: StatefulBuilder(builder: (BuildContext
-                                                                          context,
-                                                                      StateSetter
-                                                                          setModalState) {
+                                                            return Container(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .scaffoldBackgroundColor,
+                                                              child: SafeArea(
+                                                                child: Builder(
+                                                                  builder:
+                                                                      (BuildContext
+                                                                          context) {
                                                                     return Container(
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        color: Theme.of(context)
-                                                                            .inputDecorationTheme
-                                                                            .fillColor,
-                                                                        border:
-                                                                            Border.all(
-                                                                          width:
-                                                                              1,
-                                                                          color:
-                                                                              Theme.of(context).primaryColor,
-                                                                        ),
-                                                                        borderRadius:
-                                                                            BorderRadius.only(
-                                                                          topLeft:
-                                                                              const Radius.circular(10),
-                                                                          topRight:
-                                                                              const Radius.circular(10),
-                                                                        ),
-                                                                      ),
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            const EdgeInsets.all(
-                                                                          10,
-                                                                        ),
-                                                                        // child: hirer ? _hirerActions() : _applierActions(),
-                                                                        child: !client
-                                                                            ? WorkerActions(
-                                                                                passedGigId: widget.passedGigId,
-                                                                                passedGigOwnerId: widget.passedGigOwnerId,
-                                                                              )
-                                                                            : ClientActions(
-                                                                                passedGigId: widget.passedGigId,
-                                                                                passedGigOwnerId: widget.passedGigOwnerId,
-                                                                                pasedGigOwnerUsername: widget.passGigOwnerUsername,
-                                                                              ),
-                                                                      ),
+                                                                      color: Theme.of(
+                                                                              context)
+                                                                          .bottomAppBarColor,
+                                                                      height:
+                                                                          250,
+                                                                      child: StatefulBuilder(builder: (BuildContext
+                                                                              context,
+                                                                          StateSetter
+                                                                              setModalState) {
+                                                                        return Container(
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            color:
+                                                                                Theme.of(context).inputDecorationTheme.fillColor,
+                                                                            border:
+                                                                                Border.all(
+                                                                              width: 1,
+                                                                              color: Theme.of(context).primaryColor,
+                                                                            ),
+                                                                            borderRadius:
+                                                                                BorderRadius.only(
+                                                                              topLeft: const Radius.circular(10),
+                                                                              topRight: const Radius.circular(10),
+                                                                            ),
+                                                                          ),
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.all(
+                                                                              10,
+                                                                            ),
+                                                                            // child: hirer ? _hirerActions() : _applierActions(),
+                                                                            child: !client
+                                                                                ? WorkerActions(
+                                                                                    passedGigId: widget.passedGigId,
+                                                                                    passedGigOwnerId: widget.passedGigOwnerId,
+                                                                                  )
+                                                                                : ClientActions(
+                                                                                    passedGigId: widget.passedGigId,
+                                                                                    passedGigOwnerId: widget.passedGigOwnerId,
+                                                                                    pasedGigOwnerUsername: widget.passGigOwnerUsername,
+                                                                                  ),
+                                                                          ),
+                                                                        );
+                                                                      }),
                                                                     );
-                                                                  }),
-                                                                );
-                                                              },
+                                                                  },
+                                                                ),
+                                                              ),
                                                             );
                                                           });
                                                     }),
