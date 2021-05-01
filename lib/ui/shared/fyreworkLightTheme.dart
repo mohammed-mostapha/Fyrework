@@ -42,6 +42,9 @@ ThemeData fyreworkLightTheme() {
       scaffoldBackgroundColor: Color(0xFFFFFFFF),
       appBarTheme: AppBarTheme(
         color: Color(0xFFFFFFFF),
+        iconTheme: IconThemeData(
+          color: Color(0XFF000000),
+        ),
       ),
       indicatorColor: Color(0XFF000000),
       inputDecorationTheme: InputDecorationTheme(fillColor: Colors.grey[200]),

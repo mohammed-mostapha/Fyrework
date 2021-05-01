@@ -418,8 +418,6 @@ class _ClientActionsState extends State<ClientActions> {
                                           //   );
                                           // });
                                         }
-                                      // look at this
-
                                       : null,
                                 ),
                                 GestureDetector(

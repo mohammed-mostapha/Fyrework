@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:Fyrework/ui/widgets/profileEditingSideMenu.dart';
+import 'package:Fyrework/ui/widgets/profile_rating_stars.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -91,7 +92,7 @@ class _MyProfileViewState extends State<MyProfileView> {
     // _myFavoriteHashtagsController.text =
     //     '${MyUser.favoriteHashtags.map((h) => h.toString())}';
     return Container(
-      color: Theme.of(context).primaryColor,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
         child: GestureDetector(
           onTap: () {
@@ -112,17 +113,13 @@ class _MyProfileViewState extends State<MyProfileView> {
                       padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                       child: Text(
                         MyUser.username,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1
-                            .copyWith(color: Theme.of(context).accentColor),
+                        style: Theme.of(context).textTheme.bodyText1,
                       ),
                     ),
                   ],
                 ),
               ),
               endDrawer: myProfileDrawer(),
-              backgroundColor: Theme.of(context).primaryColor,
               body: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
@@ -160,10 +157,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                                         "Ongoing",
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyText1
-                                            .copyWith(
-                                                color: Theme.of(context)
-                                                    .accentColor),
+                                            .bodyText1,
                                       ),
                                     ),
                                   ),
@@ -175,10 +169,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                                             : '0',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyText1
-                                            .copyWith(
-                                                color: Theme.of(context)
-                                                    .accentColor),
+                                            .bodyText1,
                                       ),
                                     ),
                                   ),
@@ -196,10 +187,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                                         "Completed",
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyText1
-                                            .copyWith(
-                                                color: Theme.of(context)
-                                                    .accentColor),
+                                            .bodyText1,
                                       ),
                                     ),
                                   ),
@@ -209,10 +197,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                                         "5",
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyText1
-                                            .copyWith(
-                                                color: Theme.of(context)
-                                                    .accentColor),
+                                            .bodyText1,
                                       ),
                                     ),
                                   ),
@@ -235,34 +220,34 @@ class _MyProfileViewState extends State<MyProfileView> {
                                 Text(
                                   // widget.passedUserFullName,
                                   MyUser.name,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1
-                                      .copyWith(
-                                          color: Theme.of(context).accentColor),
+                                  style: Theme.of(context).textTheme.bodyText1,
                                 ),
                                 SizedBox(
                                   width: 5,
                                 ),
                                 Container(
                                   child: Row(
-                                    children: <Widget>[
-                                      Text(
-                                        'no.',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1
-                                            .copyWith(
-                                                color: Theme.of(context)
-                                                    .accentColor),
-                                      ),
-                                      FaIcon(
-                                        FontAwesomeIcons.solidStar,
-                                        size: 16,
-                                        color: Colors.yellow,
-                                      ),
-                                    ],
+                                    children: <Widget>[],
                                   ),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  'Rank',
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Container(
+                                  width: 100,
+                                  height: 20,
+                                  child: ProfileRatingStars(),
                                 )
                               ],
                             ),
