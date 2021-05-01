@@ -28,6 +28,7 @@ class _MyProfileViewState extends State<MyProfileView> {
     super.initState();
   }
 
+  final String currentUserId = MyUser.uid;
   AuthFormType authFormType;
   bool profileEditingMenu = false;
   final String shieldCheck = 'assets/svgs/light/shield-check.svg';
@@ -100,6 +101,7 @@ class _MyProfileViewState extends State<MyProfileView> {
           },
           child: Scaffold(
               appBar: AppBar(
+                elevation: 0.0,
                 automaticallyImplyLeading: false,
                 titleSpacing: 0,
                 leadingWidth: 0,
@@ -267,49 +269,50 @@ class _MyProfileViewState extends State<MyProfileView> {
                           length: 4,
                           child: Scaffold(
                             appBar: AppBar(
-                                toolbarHeight: 50,
-                                primary: false,
-                                leading: Container(),
-                                title: Container(),
-                                bottom: TabBar(
-                                  indicatorColor:
-                                      Theme.of(context).primaryColor,
-                                  tabs: [
-                                    Tab(
-                                        child: SizedBox(
-                                      width: 16,
-                                      height: 16,
-                                      child: SvgPicture.asset(
-                                        grid,
-                                        semanticsLabel: 'grid',
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    )),
-                                    Tab(
-                                      child: FaIcon(
-                                        FontAwesomeIcons.checkCircle,
-                                        size: 16,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
+                              toolbarHeight: 50,
+                              primary: false,
+                              leading: Container(width: 0, height: 0),
+                              title: Container(width: 0, height: 0),
+                              bottom: TabBar(
+                                indicatorColor: Theme.of(context).primaryColor,
+                                tabs: [
+                                  Tab(
+                                      child: SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: SvgPicture.asset(
+                                      grid,
+                                      semanticsLabel: 'grid',
+                                      color: Theme.of(context).primaryColor,
                                     ),
-                                    Tab(
-                                      child: FaIcon(
-                                        FontAwesomeIcons.thumbsUp,
-                                        size: 16,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
+                                  )),
+                                  Tab(
+                                    child: FaIcon(
+                                      FontAwesomeIcons.checkCircle,
+                                      size: 16,
+                                      color: Theme.of(context).primaryColor,
                                     ),
-                                    Tab(
-                                      child: FaIcon(
-                                        FontAwesomeIcons.star,
-                                        size: 16,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
+                                  ),
+                                  Tab(
+                                    child: FaIcon(
+                                      FontAwesomeIcons.thumbsUp,
+                                      size: 16,
+                                      color: Theme.of(context).primaryColor,
                                     ),
-                                  ],
-                                ),
-                                elevation: 0,
-                                backgroundColor: Color(0xFFfafafa)),
+                                  ),
+                                  Tab(
+                                    child: FaIcon(
+                                      FontAwesomeIcons.star,
+                                      size: 16,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              elevation: 0,
+                              backgroundColor:
+                                  Theme.of(context).scaffoldBackgroundColor,
+                            ),
                             // backgroundColor: FyreworkrColors.fyreworkBlack),
                             body: TabBarView(
                               children: [
@@ -322,11 +325,13 @@ class _MyProfileViewState extends State<MyProfileView> {
                                 ),
                                 Container(
                                   child: Center(
-                                      child: Text('Liked gigs gies here')),
+                                    child: Text('Liked gigs gies here'),
+                                  ),
                                 ),
                                 Container(
-                                  child:
-                                      Center(child: Text('Rating goes here')),
+                                  child: Center(
+                                    child: Text('Rating goes here'),
+                                  ),
                                 ),
                               ],
                             ),
@@ -713,38 +718,62 @@ class _MyProfileViewState extends State<MyProfileView> {
       future: DatabaseService().myOngoingGigsByGigOwnerId(MyUser.uid),
       builder: (context, snapshot) {
         // print('snapshot.data: ${snapshot.data.documents.length}');
-        return !snapshot.hasData
-            ? Text('')
-            : snapshot.data.docs.length > 0
-                ? ListView.builder(
-                    itemCount: snapshot.data.docs.length,
-                    itemBuilder: (context, index) {
-                      DocumentSnapshot data = snapshot.data.docs[index];
-                      Map getDocData = data.data();
-                      return GestureDetector(
-                        // onTap: () => model.editGig(index),
-                        child: UserRelatedGigItem(
-                          gigId: getDocData['gigId'],
-                          gigOwnerId: getDocData['gigOwnderId'],
-                          userProfilePictureDownloadUrl:
-                              getDocData['userProfilePictureDownloadUrl'],
-                          userFullName: getDocData['userFullName'],
-                          gigHashtags: getDocData['gigHashtags'],
-                          gigMediaFilesDownloadUrls:
-                              getDocData['gigMediaFilesDownloadUrls'],
-                          gigPost: getDocData['gigPost'],
-                          gigDeadline: getDocData['gigDeadline'],
-                          gigCurrency: getDocData['gigCurrency'],
-                          gigBudget: getDocData['gigBudget'],
-                          gigValue: getDocData['gigValue'],
-                          gigLikes: getDocData['gigLikes'],
-                          adultContentText: getDocData['adultContentText'],
-                          adultContentBool: getDocData['adultContentBool'],
-                          // onDeleteItem: () => model.deleteGig(index),
-                        ),
-                      );
-                    })
-                : Center(child: Text('You haven\'t posted any gigs yet'));
+        return snapshot.hasError
+            ? Center(
+                child: Text(
+                "Gigs are not available right now",
+                style: Theme.of(context).textTheme.bodyText1,
+              ))
+            : !snapshot.hasData
+                ? Text('')
+                : snapshot.data.docs.length > 0
+                    ? ListView.builder(
+                        itemCount: snapshot.data.docs.length,
+                        itemBuilder: (context, index) {
+                          DocumentSnapshot data = snapshot.data.docs[index];
+                          Map getDocData = data.data();
+                          return GestureDetector(
+                            // onTap: () => model.editGig(index),
+                            child: UserRelatedGigItem(
+                              index: index,
+                              appointed: getDocData['appointed'],
+                              appointedusername:
+                                  getDocData['appointedUserFullName'],
+                              appliersOrHirersByUserId:
+                                  getDocData['appliersOrHirersByUserId'],
+                              gigId: getDocData['gigId'],
+                              currentUserId: currentUserId,
+                              gigOwnerId: getDocData['gigOwnerId'],
+                              gigOwnerAvatarUrl:
+                                  getDocData['gigOwnerAvatarUrl'],
+                              gigOwnerUsername: getDocData['gigOwnerUsername'],
+                              createdAt: getDocData['createdAt'],
+                              gigOwnerLocation: getDocData['gigOwnerLocation'],
+                              gigLocation: getDocData['gigLocation'],
+                              gigHashtags: getDocData['gigHashtags'],
+                              gigMediaFilesDownloadUrls:
+                                  getDocData['gigMediaFilesDownloadUrls'],
+                              gigPost: getDocData['gigPost'],
+                              gigCurrency: getDocData['gigCurrency'],
+                              gigBudget: getDocData['gigBudget'],
+                              gigValue: getDocData['gigValue'],
+                              gigLikes: getDocData['gigLikes'],
+                              adultContentText: getDocData['adultContentText'],
+                              adultContentBool: getDocData['adultContentBool'],
+                              appointedUserId: getDocData['appointedUserId'],
+                              hidden: getDocData['hidden'],
+                              gigActions: getDocData['gigActions'],
+                              paymentReleased: getDocData['paymentReleased'],
+                              markedAsComplete: getDocData['markedAsComplete'],
+                              clientLeftReview: getDocData['clientLeftReview'],
+                            ),
+                          );
+                        })
+                    : Center(
+                        child: Text(
+                        "You have not posted any gigs yet",
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ));
       },
     );
   }

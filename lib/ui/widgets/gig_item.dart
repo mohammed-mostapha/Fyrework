@@ -8,7 +8,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:Fyrework/screens/add_gig/assets_picker/src/constants/constants.dart';
 import 'package:Fyrework/services/firestore_service.dart';
 import 'package:Fyrework/ui/views/add_comments_view.dart';
 import 'package:Fyrework/ui/widgets/gig_item_media_previewer.dart';
@@ -370,17 +369,10 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
     final String releaseEscrowPaymentText = 'Release Escrow Payment';
 
     List<String> notAppointedGigActionTexts = [editText, deleteText];
-    // List<String> notAppointedGigActionIcons = [editIcon, deleteIcon];
     List<String> appointedGigActionTexts = [
       markAsCompletedText,
       releaseEscrowPaymentText,
     ];
-
-    // List<String> appointedGigActionIcons = [
-    //   leaveReviewIcon,
-    //   markAsCompletedIcon,
-    //   releaseEscrowPaymentIcon
-    // ];
 
     void yourGigChoicesAction(String choice) {
       if (choice == editText) {

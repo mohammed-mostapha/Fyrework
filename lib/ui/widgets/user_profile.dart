@@ -1,3 +1,4 @@
+import 'package:Fyrework/models/myUser.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -28,6 +29,8 @@ class UserProfileView extends StatefulWidget {
 }
 
 class _UserProfileViewState extends State<UserProfileView> {
+  final String currentUserId = MyUser.uid;
+
   AuthService _authService = locator.get<AuthService>();
   StorageRepo _storageRepo = locator.get<StorageRepo>();
   AuthFormType authFormType;
@@ -276,23 +279,36 @@ class _UserProfileViewState extends State<UserProfileView> {
                       return GestureDetector(
                         // onTap: () => model.editGig(index),
                         child: UserRelatedGigItem(
+                          index: index,
+                          appointed: getDocData['appointed'],
+                          appointedusername:
+                              getDocData['appointedUserFullName'],
+                          appliersOrHirersByUserId:
+                              getDocData['appliersOrHirersByUserId'],
                           gigId: getDocData['gigId'],
-                          gigOwnerId: getDocData['gigOwnderId'],
-                          userProfilePictureDownloadUrl:
-                              getDocData['userProfilePictureDownloadUrl'],
-                          userFullName: getDocData['userFullName'],
+                          currentUserId: currentUserId,
+                          gigOwnerId: getDocData['gigOwnerId'],
+                          gigOwnerAvatarUrl: getDocData['gigOwnerAvatarUrl'],
+                          gigOwnerUsername: getDocData['gigOwnerUsername'],
+                          createdAt: getDocData['createdAt'],
+                          gigOwnerLocation: getDocData['gigOwnerLocation'],
+                          gigLocation: getDocData['gigLocation'],
                           gigHashtags: getDocData['gigHashtags'],
                           gigMediaFilesDownloadUrls:
                               getDocData['gigMediaFilesDownloadUrls'],
                           gigPost: getDocData['gigPost'],
-                          gigDeadline: getDocData['gigDeadline'],
                           gigCurrency: getDocData['gigCurrency'],
                           gigBudget: getDocData['gigBudget'],
                           gigValue: getDocData['gigValue'],
                           gigLikes: getDocData['gigLikes'],
                           adultContentText: getDocData['adultContentText'],
                           adultContentBool: getDocData['adultContentBool'],
-                          // onDeleteItem: () => model.deleteGig(index),
+                          appointedUserId: getDocData['appointedUserId'],
+                          hidden: getDocData['hidden'],
+                          gigActions: getDocData['gigActions'],
+                          paymentReleased: getDocData['paymentReleased'],
+                          markedAsComplete: getDocData['markedAsComplete'],
+                          clientLeftReview: getDocData['clientLeftReview'],
                         ),
                       );
                     })
