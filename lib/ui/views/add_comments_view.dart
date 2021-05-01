@@ -1,5 +1,6 @@
 import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
+import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -131,6 +132,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
 
   @override
   Widget build(BuildContext context) {
+    // var brightness = MediaQuery.of(context).platformBrightness;
+    // bool darkModeOn = brightness == Brightness.dark;
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     // isPortrait = MediaQuery.of(context).orientation == Orientation.portrait
@@ -308,16 +311,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                         color: Theme.of(context)
                                                             .inputDecorationTheme
                                                             .fillColor,
-                                                        border: Border(
-                                                            // bottom: BorderSide(
-                                                            //   color:
-                                                            //       Theme.of(context)
-                                                            //           .textTheme
-                                                            //           .caption
-                                                            //           .color,
-                                                            //   width: 0.5,
-                                                            // ),
-                                                            ),
+                                                        border: Border(),
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(10)),
@@ -937,9 +931,12 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                     .circular(
                                                                         50.0),
                                                           ),
-                                                          backgroundColor: Theme
-                                                                  .of(context)
-                                                              .scaffoldBackgroundColor,
+                                                          backgroundColor:
+                                                              fyreworkLightTheme()
+                                                                  .accentColor,
+                                                          //  Theme
+                                                          //         .of(context)
+                                                          //     .scaffoldBackgroundColor,
                                                           context: context,
                                                           builder: (BuildContext
                                                               context) {
@@ -957,19 +954,19 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                           StateSetter
                                                                               setModalState) {
                                                                         return Container(
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            border:
-                                                                                Border.all(
-                                                                              width: 1,
-                                                                              color: Theme.of(context).primaryColor,
-                                                                            ),
-                                                                            borderRadius:
-                                                                                BorderRadius.only(
-                                                                              topLeft: const Radius.circular(50),
-                                                                              topRight: const Radius.circular(50),
-                                                                            ),
-                                                                          ),
+                                                                          // decoration:
+                                                                          //     BoxDecoration(
+                                                                          //   border:
+                                                                          //       Border.all(
+                                                                          //     width: 1,
+                                                                          //     color: Theme.of(context).primaryColor,
+                                                                          //   ),
+                                                                          //   borderRadius:
+                                                                          //       BorderRadius.only(
+                                                                          //     topLeft: const Radius.circular(50),
+                                                                          //     topRight: const Radius.circular(50),
+                                                                          //   ),
+                                                                          // ),
                                                                           child:
                                                                               Padding(
                                                                             padding:

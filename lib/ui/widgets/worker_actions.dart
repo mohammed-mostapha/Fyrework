@@ -1,5 +1,6 @@
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -39,7 +40,7 @@ class _WorkerActionsState extends State<WorkerActions> {
             child: Center(
               child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).primaryColor,
+                  fyreworkLightTheme().primaryColor,
                 ),
               ),
             ),
@@ -55,7 +56,7 @@ class _WorkerActionsState extends State<WorkerActions> {
                   children: [
                     Text(
                       'Actions',
-                      style: Theme.of(context).textTheme.headline1,
+                      style: fyreworkLightTheme().textTheme.headline1,
                     )
                   ],
                 ),
@@ -80,7 +81,7 @@ class _WorkerActionsState extends State<WorkerActions> {
                                 child: SvgPicture.asset(
                                   done,
                                   semanticsLabel: 'done',
-                                  color: Theme.of(context).primaryColor,
+                                  color: fyreworkLightTheme().primaryColor,
                                 ),
                               ),
                               SizedBox(
@@ -88,7 +89,8 @@ class _WorkerActionsState extends State<WorkerActions> {
                               ),
                               Text('Mark As Done',
                                   textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.bodyText1)
+                                  style:
+                                      fyreworkLightTheme().textTheme.bodyText1)
                             ],
                           ),
                         ),
@@ -112,7 +114,7 @@ class _WorkerActionsState extends State<WorkerActions> {
                               child: SvgPicture.asset(
                                 requestPayment,
                                 semanticsLabel: 'request_payment',
-                                color: Theme.of(context).primaryColor,
+                                color: fyreworkLightTheme().primaryColor,
                               ),
                             ),
                             SizedBox(
@@ -121,7 +123,7 @@ class _WorkerActionsState extends State<WorkerActions> {
                             Text(
                               'Request Payment',
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.bodyText1,
+                              style: fyreworkLightTheme().textTheme.bodyText1,
                             )
                           ],
                         ),
@@ -162,7 +164,7 @@ class _WorkerActionsState extends State<WorkerActions> {
                   children: [
                     Text(
                       'Actions',
-                      style: Theme.of(context).textTheme.headline1,
+                      style: fyreworkLightTheme().textTheme.headline1,
                     )
                   ],
                 ),
@@ -187,12 +189,12 @@ class _WorkerActionsState extends State<WorkerActions> {
                                 done,
                                 semanticsLabel: 'done',
                                 color: markedAsCompleted
-                                    ? Theme.of(context)
+                                    ? fyreworkLightTheme()
                                         .primaryColor
                                         .withOpacity(0.5)
                                     : !workerAction
-                                        ? Theme.of(context).primaryColor
-                                        : Theme.of(context)
+                                        ? fyreworkLightTheme().primaryColor
+                                        : fyreworkLightTheme()
                                             .primaryColor
                                             .withOpacity(0.5),
                               ),
@@ -203,26 +205,26 @@ class _WorkerActionsState extends State<WorkerActions> {
                             Text('Mark As Done',
                                 textAlign: TextAlign.center,
                                 style: markedAsCompleted
-                                    ? Theme.of(context)
+                                    ? fyreworkLightTheme()
                                         .textTheme
                                         .caption
                                         .copyWith(
-                                            color: Theme.of(context)
+                                            color: fyreworkLightTheme()
                                                 .primaryColor
                                                 .withOpacity((0.5)))
                                     : !workerAction
-                                        ? Theme.of(context)
+                                        ? fyreworkLightTheme()
                                             .textTheme
                                             .bodyText1
                                             .copyWith(
-                                              color: Theme.of(context)
+                                              color: fyreworkLightTheme()
                                                   .primaryColor,
                                             )
-                                        : Theme.of(context)
+                                        : fyreworkLightTheme()
                                             .textTheme
                                             .caption
                                             .copyWith(
-                                                color: Theme.of(context)
+                                                color: fyreworkLightTheme()
                                                     .primaryColor
                                                     .withOpacity((0.5))))
                           ],
@@ -252,8 +254,8 @@ class _WorkerActionsState extends State<WorkerActions> {
                                 requestPayment,
                                 semanticsLabel: 'request_payment',
                                 color: !workerAction
-                                    ? Theme.of(context).primaryColor
-                                    : Theme.of(context)
+                                    ? fyreworkLightTheme().primaryColor
+                                    : fyreworkLightTheme()
                                         .primaryColor
                                         .withOpacity(
                                           (0.5),
@@ -266,12 +268,12 @@ class _WorkerActionsState extends State<WorkerActions> {
                             Text('Request Payment',
                                 textAlign: TextAlign.center,
                                 style: !workerAction
-                                    ? Theme.of(context).textTheme.bodyText1
-                                    : Theme.of(context)
+                                    ? fyreworkLightTheme().textTheme.bodyText1
+                                    : fyreworkLightTheme()
                                         .textTheme
                                         .bodyText1
                                         .copyWith(
-                                            color: Theme.of(context)
+                                            color: fyreworkLightTheme()
                                                 .primaryColor
                                                 .withOpacity((0.5)))),
                           ],
@@ -300,7 +302,7 @@ class _WorkerActionsState extends State<WorkerActions> {
                           )
                         : Text(
                             'Waiting for client action...',
-                            style: Theme.of(context).textTheme.bodyText1,
+                            style: fyreworkLightTheme().textTheme.bodyText1,
                           )
                   ],
                 )

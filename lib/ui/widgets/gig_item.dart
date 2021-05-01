@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:core';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
+import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
@@ -102,7 +104,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
   final String hourglassStart = 'assets/svgs/light/hourglass-start.svg';
   final String editIcon = 'assets/svgs/flaticon/edit.svg';
   final String deleteIcon = 'assets/svgs/flaticon/delete.svg';
-  final String leaveReviewIcon = 'assets/svgs/flaticon/leave_review.svg';
   final String markAsCompletedIcon =
       'assets/svgs/flaticon/mark_as_completed.svg';
   final String releaseEscrowPaymentIcon =
@@ -192,6 +193,11 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool darkModeOn = brightness == Brightness.dark;
+    ThemeData themeOfOppositeContext =
+        darkModeOn ? fyreworkLightTheme() : fyreworkDarkTheme();
+
     myGig = widget.gigOwnerId == MyUser.uid ? true : false;
     appointed = widget.appointed;
     appointedUserId = widget.appointedUserId;
@@ -360,14 +366,12 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
 
     final String editText = 'Edit Your Gig';
     final String deleteText = 'Delete Your Gig';
-    final String leaveReviewText = 'Leave Review';
     final String markAsCompletedText = 'Mark as completed';
     final String releaseEscrowPaymentText = 'Release Escrow Payment';
 
     List<String> notAppointedGigActionTexts = [editText, deleteText];
     // List<String> notAppointedGigActionIcons = [editIcon, deleteIcon];
     List<String> appointedGigActionTexts = [
-      leaveReviewText,
       markAsCompletedText,
       releaseEscrowPaymentText,
     ];
@@ -400,50 +404,65 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                     children: <Widget>[
                       GestureDetector(
                         child: Container(
-                          width: 200,
+                          width: 250,
                           height: 50,
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                maxRadius: 30,
-                                backgroundColor: Theme.of(context).primaryColor,
-                                backgroundImage:
-                                    NetworkImage("${widget.gigOwnerAvatarUrl}"),
-                              ),
-                              Container(
-                                width: 10,
-                                height: 0,
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      capitalize("${widget.gigOwnerUsername}"),
-                                      overflow: TextOverflow.ellipsis,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Row(
+                              children: [
+                                Container(
+                                  child: CircleAvatar(
+                                    maxRadius: 30,
+                                    backgroundColor:
+                                        Theme.of(context).primaryColor,
+                                    backgroundImage: NetworkImage(
+                                        "${widget.gigOwnerAvatarUrl}"),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                  height: 0,
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Flexible(
+                                      child: Container(
+                                        width: 150,
+                                        child: Text(
+                                          capitalize(
+                                              "${widget.gigOwnerUsername}"),
+                                          overflow: TextOverflow.ellipsis,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Flexible(
-                                    child: Text(
-                                      '${widget.gigLocation}',
-                                      overflow: TextOverflow.ellipsis,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText2
-                                          .copyWith(
-                                              color: Theme.of(context)
-                                                  .primaryColor),
+                                    SizedBox(
+                                      height: 5,
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                    Flexible(
+                                      child: Container(
+                                        width: 150,
+                                        child: Text(
+                                          '${widget.gigLocation}',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText2
+                                              .copyWith(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                              ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         onTap: showUserProfile,
@@ -485,36 +504,49 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                             )
                           : (myGig && widget.appointed)
                               ? PopupMenuButton(
+                                  icon: Icon(Icons.more_horiz,
+                                      color: Theme.of(context).primaryColor),
                                   color: Theme.of(context).primaryColor,
                                   itemBuilder: (BuildContext context) {
                                     return appointedGigActionTexts
                                         .map((String choice) {
                                       return PopupMenuItem<String>(
                                         value: choice,
-                                        child: ListTile(
-                                          leading: SizedBox(
-                                            width: 20,
-                                            height: 20,
-                                            child: SvgPicture.asset(
-                                              choice == leaveReviewText
-                                                  ? leaveReviewIcon
-                                                  : choice ==
-                                                          markAsCompletedText
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: themeOfOppositeContext
+                                                    .inputDecorationTheme
+                                                    .fillColor,
+                                                border: Border(),
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            child: ListTile(
+                                              leading: SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child: SvgPicture.asset(
+                                                  choice == markAsCompletedText
                                                       ? markAsCompletedIcon
                                                       : releaseEscrowPaymentIcon,
-                                              semanticsLabel: 'edit',
-                                              color:
-                                                  Theme.of(context).accentColor,
+                                                  semanticsLabel:
+                                                      'popupMenuItem',
+                                                  color: Theme.of(context)
+                                                      .accentColor,
+                                                ),
+                                              ),
+                                              title: Text(
+                                                choice,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText1
+                                                    .copyWith(
+                                                        color: Theme.of(context)
+                                                            .accentColor),
+                                              ),
                                             ),
-                                          ),
-                                          title: Text(
-                                            choice,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1
-                                                .copyWith(
-                                                    color: Theme.of(context)
-                                                        .accentColor),
                                           ),
                                         ),
                                       );

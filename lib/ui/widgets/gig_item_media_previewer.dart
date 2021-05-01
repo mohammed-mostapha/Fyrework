@@ -49,6 +49,7 @@ class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
               height: preferredHeight != null
                   ? preferredHeight
                   : MediaQuery.of(context).size.height / 2,
+              viewportFraction: 0.95,
               initialPage: 0,
               enableInfiniteScroll:
                   receivedGigMediaFilesUrls.length > 1 ? true : false,

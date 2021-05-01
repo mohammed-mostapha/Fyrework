@@ -1,5 +1,7 @@
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
+import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:Fyrework/viewmodels/add_comment_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -50,7 +52,7 @@ class _ClientActionsState extends State<ClientActions> {
                   child: Center(
                       child: Text(
                 'Actions not available right now',
-                style: Theme.of(context).textTheme.bodyText1,
+                style: fyreworkLightTheme().textTheme.bodyText1,
               )));
             case ConnectionState.waiting:
             case ConnectionState.active:
@@ -58,7 +60,7 @@ class _ClientActionsState extends State<ClientActions> {
                   child: Center(
                       child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).primaryColor),
+                    fyreworkLightTheme().primaryColor),
               )));
             case ConnectionState.done:
               if (appointedUserSnapshot.hasError) {
@@ -66,7 +68,7 @@ class _ClientActionsState extends State<ClientActions> {
                     child: Center(
                         child: Text(
                   'Actions not available right now',
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: fyreworkLightTheme().textTheme.bodyText1,
                 )));
               } else if (appointedUserSnapshot.hasData) {
                 appointedUserId = appointedUserSnapshot.data['appointedUserId'];
@@ -85,7 +87,7 @@ class _ClientActionsState extends State<ClientActions> {
                         child: Center(
                           child: CircularProgressIndicator(
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              Theme.of(context).accentColor,
+                              fyreworkLightTheme().accentColor,
                             ),
                           ),
                         ),
@@ -101,7 +103,8 @@ class _ClientActionsState extends State<ClientActions> {
                               children: [
                                 Text(
                                   'Actions',
-                                  style: Theme.of(context).textTheme.headline1,
+                                  style:
+                                      fyreworkLightTheme().textTheme.headline1,
                                 )
                               ],
                             ),
@@ -124,12 +127,10 @@ class _ClientActionsState extends State<ClientActions> {
                                           SizedBox(
                                             width: 30,
                                             height: 30,
-                                            child: SvgPicture.asset(
-                                              unsatisfied,
-                                              semanticsLabel: 'unsatisfied',
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                            ),
+                                            child: SvgPicture.asset(unsatisfied,
+                                                semanticsLabel: 'unsatisfied',
+                                                color: fyreworkLightTheme()
+                                                    .primaryColor),
                                           ),
                                           SizedBox(
                                             height: 10,
@@ -137,7 +138,7 @@ class _ClientActionsState extends State<ClientActions> {
                                           Text(
                                             'Unsatisfied',
                                             textAlign: TextAlign.center,
-                                            style: Theme.of(context)
+                                            style: fyreworkLightTheme()
                                                 .textTheme
                                                 .bodyText1,
                                           )
@@ -165,8 +166,8 @@ class _ClientActionsState extends State<ClientActions> {
                                           child: SvgPicture.asset(
                                             markAsCompletedIcon,
                                             semanticsLabel: 'completed',
-                                            color:
-                                                Theme.of(context).primaryColor,
+                                            color: fyreworkLightTheme()
+                                                .primaryColor,
                                           ),
                                         ),
                                         SizedBox(
@@ -175,7 +176,7 @@ class _ClientActionsState extends State<ClientActions> {
                                         Text(
                                           'Mark As Completed',
                                           textAlign: TextAlign.center,
-                                          style: Theme.of(context)
+                                          style: fyreworkLightTheme()
                                               .textTheme
                                               .bodyText1,
                                         )
@@ -230,7 +231,7 @@ class _ClientActionsState extends State<ClientActions> {
                                                 releaseEscrowPaymentIcon,
                                                 semanticsLabel:
                                                     'release_escrow_payment',
-                                                color: Theme.of(context)
+                                                color: fyreworkLightTheme()
                                                     .primaryColor),
                                           ),
                                           SizedBox(
@@ -239,7 +240,7 @@ class _ClientActionsState extends State<ClientActions> {
                                           Text(
                                             'Release Payment',
                                             textAlign: TextAlign.center,
-                                            style: Theme.of(context)
+                                            style: fyreworkLightTheme()
                                                 .textTheme
                                                 .bodyText1,
                                           )
@@ -286,7 +287,8 @@ class _ClientActionsState extends State<ClientActions> {
                               children: [
                                 Text(
                                   'Actions',
-                                  style: Theme.of(context).textTheme.headline1,
+                                  style:
+                                      fyreworkLightTheme().textTheme.headline1,
                                 )
                               ],
                             ),
@@ -313,8 +315,9 @@ class _ClientActionsState extends State<ClientActions> {
                                             unsatisfied,
                                             semanticsLabel: 'unsatisfied',
                                             color: !clientAction
-                                                ? Theme.of(context).primaryColor
-                                                : Theme.of(context)
+                                                ? fyreworkLightTheme()
+                                                    .primaryColor
+                                                : fyreworkLightTheme()
                                                     .primaryColor
                                                     .withOpacity(0.5),
                                           ),
@@ -326,16 +329,18 @@ class _ClientActionsState extends State<ClientActions> {
                                           'Unsatisfied',
                                           textAlign: TextAlign.center,
                                           style: !clientAction
-                                              ? Theme.of(context)
+                                              ? fyreworkLightTheme()
                                                   .textTheme
                                                   .bodyText1
-                                              : Theme.of(context)
+                                              : fyreworkLightTheme()
                                                   .textTheme
                                                   .bodyText1
                                                   .copyWith(
-                                                      color: Theme.of(context)
-                                                          .primaryColor
-                                                          .withOpacity((0.5))),
+                                                      color:
+                                                          fyreworkLightTheme()
+                                                              .primaryColor
+                                                              .withOpacity(
+                                                                  (0.5))),
                                         )
                                       ],
                                     ),
@@ -366,8 +371,9 @@ class _ClientActionsState extends State<ClientActions> {
                                             markAsCompletedIcon,
                                             semanticsLabel: 'completed',
                                             color: !clientAction
-                                                ? Theme.of(context).primaryColor
-                                                : Theme.of(context)
+                                                ? fyreworkLightTheme()
+                                                    .primaryColor
+                                                : fyreworkLightTheme()
                                                     .primaryColor
                                                     .withOpacity(0.5),
                                           ),
@@ -376,19 +382,21 @@ class _ClientActionsState extends State<ClientActions> {
                                           height: 10,
                                         ),
                                         Text(
-                                          'Mark As Completed',
+                                          'Mark as Completed',
                                           textAlign: TextAlign.center,
                                           style: !clientAction
-                                              ? Theme.of(context)
+                                              ? fyreworkLightTheme()
                                                   .textTheme
                                                   .bodyText1
-                                              : Theme.of(context)
+                                              : fyreworkLightTheme()
                                                   .textTheme
                                                   .bodyText1
                                                   .copyWith(
-                                                      color: Theme.of(context)
-                                                          .primaryColor
-                                                          .withOpacity((0.5))),
+                                                      color:
+                                                          fyreworkLightTheme()
+                                                              .primaryColor
+                                                              .withOpacity(
+                                                                  (0.5))),
                                         )
                                       ],
                                     ),
@@ -427,11 +435,8 @@ class _ClientActionsState extends State<ClientActions> {
                                           child: SvgPicture.asset(
                                             releaseEscrowPaymentIcon,
                                             semanticsLabel: 'release_payment',
-                                            // color: !markedAsCompleted
-                                            //     ? Theme.of(context).primaryColor
-                                            //     : Theme.of(context).primaryColor,
-                                            color:
-                                                Theme.of(context).primaryColor,
+                                            color: fyreworkLightTheme()
+                                                .primaryColor,
                                           ),
                                         ),
                                         SizedBox(
@@ -439,14 +444,9 @@ class _ClientActionsState extends State<ClientActions> {
                                         ),
                                         Text('Release Payment',
                                             textAlign: TextAlign.center,
-                                            style: !markedAsCompleted
-                                                ? Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1
-                                                    .copyWith(color: Colors.red)
-                                                : Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1)
+                                            style: fyreworkLightTheme()
+                                                .textTheme
+                                                .bodyText1)
                                       ],
                                     ),
                                   ),
@@ -474,11 +474,11 @@ class _ClientActionsState extends State<ClientActions> {
                                       )
                                     : (clientAction && markedAsCompleted)
                                         ? Text('You can leave a review...',
-                                            style: Theme.of(context)
+                                            style: fyreworkLightTheme()
                                                 .textTheme
                                                 .bodyText1)
                                         : Text('Waiting for worker action...',
-                                            style: Theme.of(context)
+                                            style: fyreworkLightTheme()
                                                 .textTheme
                                                 .bodyText1)
                               ],
@@ -494,8 +494,8 @@ class _ClientActionsState extends State<ClientActions> {
           return Container(
               child: Center(
                   child: CircularProgressIndicator(
-            valueColor:
-                AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+            valueColor: AlwaysStoppedAnimation<Color>(
+                fyreworkLightTheme().primaryColor),
           )));
         },
       ),
