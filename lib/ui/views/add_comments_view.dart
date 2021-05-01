@@ -756,11 +756,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                       color: Theme.of(context)
                                                           .inputDecorationTheme
                                                           .fillColor,
-                                                      border: Border.all(
-                                                          width: 1,
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .primaryColor),
                                                       borderRadius:
                                                           BorderRadius.all(
                                                               Radius.circular(
@@ -914,10 +909,10 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                   .asset(
                                                                 actions,
                                                                 semanticsLabel:
-                                                                    'paper-plane',
+                                                                    'actions',
                                                                 color: Theme.of(
                                                                         context)
-                                                                    .primaryColor,
+                                                                    .accentColor,
                                                               ),
                                                             ),
                                                           ),
@@ -925,38 +920,36 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                         decoration: BoxDecoration(
                                                             color: Theme.of(
                                                                     context)
-                                                                .inputDecorationTheme
-                                                                .fillColor,
-                                                            border: Border.all(
-                                                                width: 1,
-                                                                color: Theme.of(
-                                                                        context)
-                                                                    .primaryColor),
+                                                                .primaryColor,
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .all(Radius
                                                                         .circular(
-                                                                            10))),
+                                                                            50))),
                                                       ),
                                                     ),
                                                     onTap: () {
                                                       showModalBottomSheet(
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        50.0),
+                                                          ),
+                                                          backgroundColor: Theme
+                                                                  .of(context)
+                                                              .scaffoldBackgroundColor,
                                                           context: context,
                                                           builder: (BuildContext
                                                               context) {
                                                             return Container(
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .scaffoldBackgroundColor,
                                                               child: SafeArea(
                                                                 child: Builder(
                                                                   builder:
                                                                       (BuildContext
                                                                           context) {
                                                                     return Container(
-                                                                      color: Theme.of(
-                                                                              context)
-                                                                          .bottomAppBarColor,
                                                                       height:
                                                                           250,
                                                                       child: StatefulBuilder(builder: (BuildContext
@@ -966,8 +959,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                         return Container(
                                                                           decoration:
                                                                               BoxDecoration(
-                                                                            color:
-                                                                                Theme.of(context).inputDecorationTheme.fillColor,
                                                                             border:
                                                                                 Border.all(
                                                                               width: 1,
@@ -975,8 +966,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                             ),
                                                                             borderRadius:
                                                                                 BorderRadius.only(
-                                                                              topLeft: const Radius.circular(10),
-                                                                              topRight: const Radius.circular(10),
+                                                                              topLeft: const Radius.circular(50),
+                                                                              topRight: const Radius.circular(50),
                                                                             ),
                                                                           ),
                                                                           child:
@@ -1021,16 +1012,9 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                       width: 48,
                                                       height: 48,
                                                       decoration: BoxDecoration(
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .inputDecorationTheme
-                                                              .fillColor,
-                                                          border: Border.all(
-                                                            width: 1,
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .primaryColor,
-                                                          ),
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .primaryColor,
                                                           borderRadius:
                                                               BorderRadius.all(
                                                                   Radius
@@ -1047,7 +1031,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                 'paper-plane',
                                                             color: Theme.of(
                                                                     context)
-                                                                .primaryColor,
+                                                                .accentColor,
                                                           ),
                                                         ),
                                                       ),

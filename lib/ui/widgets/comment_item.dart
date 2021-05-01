@@ -451,45 +451,12 @@ class _CommentItemState extends State<CommentItem>
                                               .copyWith(
                                                   contentPadding:
                                                       EdgeInsets.all(10)),
-                                          // onFieldSubmitted:
-                                          //     (String submittedString) async {
-                                          //   if (submittedString.isNotEmpty) {
-                                          //     await AddCommentViewModel()
-                                          //         .addComment(
-                                          //       gigIdHoldingComment:
-                                          //           widget.passedGigId,
-                                          //       gigOwnerId: widget.passedGigOwnerId,
-                                          //       commentOwnerUsername: username,
-                                          //       commentBody: submittedString,
-                                          //       commentOwnerId: userId,
-                                          //       commentOwnerAvatarUrl:
-                                          //           userProfilePictureUrl,
-                                          //       commentId: '',
-                                          //       isPrivateComment: isPrivateComment,
-                                          //       isGigCompleted: false,
-                                          //       containMediaFile: false,
-                                          //       gigOwnerUsername:
-                                          //           widget.passGigOwnerUsername,
-                                          //       proposal: proposal,
-                                          //       approved: approved,
-                                          //       rejected: rejected,
-                                          //       gigCurrency:
-                                          //           widget.passedGigCurrency,
-                                          //       offeredBudget: offeredBudget,
-                                          //     );
-                                          //   }
-
-                                          //   _addCommentsController.clear();
-                                          //   _addProposalController.clear();
-                                          //   _offeredBudgetController.clear();
-                                          // },
                                           inputFormatters: [
                                             LengthLimitingTextInputFormatter(
                                                 100),
                                           ],
-
                                           maxLength: 100,
-                                          // minLines: 1,
+                                          minLines: 1,
                                           maxLines: 6,
                                         ),
                                       ),

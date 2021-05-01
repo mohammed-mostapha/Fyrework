@@ -53,6 +53,6 @@ ThemeData fyreworkDarkTheme() {
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: Color(0XFF000000),
           type: BottomNavigationBarType.fixed),
-      bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.white),
+      // bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.white),
       snackBarTheme: SnackBarThemeData(backgroundColor: Colors.white));
 }
