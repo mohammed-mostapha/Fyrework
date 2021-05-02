@@ -216,22 +216,9 @@ class _MyProfileViewState extends State<MyProfileView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Row(
-                              children: [
-                                Text(
-                                  // widget.passedUserFullName,
-                                  MyUser.name,
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Container(
-                                  child: Row(
-                                    children: <Widget>[],
-                                  ),
-                                )
-                              ],
+                            Text(
+                              MyUser.name,
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
                             SizedBox(
                               height: 10,
@@ -254,11 +241,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                             ),
                             Text(
                               MyUser.location,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1
-                                  .copyWith(
-                                      color: Theme.of(context).accentColor),
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
                           ],
                         ),
@@ -316,20 +299,30 @@ class _MyProfileViewState extends State<MyProfileView> {
                             body: TabBarView(
                               children: [
                                 userOngoingGigs(),
-                                // Container(
-                                //   child: Center(child: Text('Ongoing goes here')),
-                                // ),
                                 Container(
-                                  child: Center(child: Text('Done goes here')),
+                                  child: Center(
+                                      child: Text(
+                                    'Done goes here',
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  )),
                                 ),
                                 Container(
                                   child: Center(
-                                    child: Text('Liked gigs gies here'),
+                                    child: Text(
+                                      'Liked gigs gies here',
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
                                   ),
                                 ),
                                 Container(
                                   child: Center(
-                                    child: Text('Rating goes here'),
+                                    child: Text(
+                                      'Rating goes here',
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -724,7 +717,10 @@ class _MyProfileViewState extends State<MyProfileView> {
                 style: Theme.of(context).textTheme.bodyText1,
               ))
             : !snapshot.hasData
-                ? Text('')
+                ? Text(
+                    "Gigs are not available right now",
+                    style: Theme.of(context).textTheme.bodyText1,
+                  )
                 : snapshot.data.docs.length > 0
                     ? ListView.builder(
                         itemCount: snapshot.data.docs.length,

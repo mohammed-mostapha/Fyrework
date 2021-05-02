@@ -8,7 +8,6 @@ class MyUser {
   static String email;
   static String password;
   static String userAvatarUrl;
-  // static String userLocation;
   static bool isMinor;
   static String location;
   static String phoneNumber;

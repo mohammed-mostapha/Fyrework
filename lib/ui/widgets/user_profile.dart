@@ -1,6 +1,9 @@
 import 'package:Fyrework/models/myUser.dart';
+import 'package:Fyrework/ui/widgets/profile_rating_stars.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:Fyrework/locator.dart';
 import 'package:Fyrework/services/database.dart';
@@ -29,6 +32,7 @@ class UserProfileView extends StatefulWidget {
 }
 
 class _UserProfileViewState extends State<UserProfileView> {
+  final String grid = 'assets/svgs/light/th.svg';
   final String currentUserId = MyUser.uid;
 
   AuthService _authService = locator.get<AuthService>();
@@ -37,33 +41,54 @@ class _UserProfileViewState extends State<UserProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: StreamBuilder(
-          stream: DatabaseService().fetchUserData(widget.passedUserUid),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Container(
-                child: Center(
-                    child: Text(
-                  'Loading profile...',
-                  style: Theme.of(context).textTheme.bodyText1,
-                )),
-              );
-            }
-            return snapshot.data != null
-                ? Scaffold(
-                    backgroundColor: Theme.of(context).primaryColor,
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: SafeArea(
+        child: StreamBuilder(
+            stream: DatabaseService().fetchUserData(widget.passedUserUid),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                  child: Center(
+                      child: Text(
+                    'Loading Profile...',
+                    style: Theme.of(context).textTheme.bodyText1,
+                  )),
+                );
+              }
+              if (snapshot.hasError) {
+                return Container(
+                  child: Center(
+                      child: Text(
+                    'Profile no longer exists',
+                    style: Theme.of(context).textTheme.bodyText1,
+                  )),
+                );
+              }
+              if (!snapshot.hasData) {
+                return Container(
+                  child: Center(
+                      child: Text(
+                    'Profile no longer exists',
+                    style: Theme.of(context).textTheme.bodyText1,
+                  )),
+                );
+              } else {
+                if (snapshot.data != null) {
+                  return Scaffold(
                     appBar: AppBar(
+                      elevation: 0.0,
                       automaticallyImplyLeading: false,
-                      title: Container(
-                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                        child: Text(
-                          snapshot.data.username,
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.normal),
-                        ),
+                      title: Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                            child: Text(
+                              snapshot.data.username,
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     body: Padding(
@@ -71,73 +96,90 @@ class _UserProfileViewState extends State<UserProfileView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage(snapshot.data.userAvatarUrl),
-                                radius: 50,
-                              ),
-                              SizedBox(
-                                height: 50,
-                                child: Column(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          "Ongoing",
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white),
-                                        ),
-                                      ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CachedNetworkImage(
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                    width: 90.0,
+                                    height: 90.0,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover),
                                     ),
-                                    Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          snapshot.data.ongoingGigsByGigId !=
-                                                  null
-                                              ? '${snapshot.data.ongoingGigsByGigId.length}'
-                                              : '0',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
+                                  imageUrl: snapshot.data.userAvatarUrl,
+                                  placeholder: (context, url) =>
+                                      CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 50,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          "Completed",
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white),
+                                SizedBox(
+                                  height: 50,
+                                  child: Column(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Center(
+                                          child: Text(
+                                            "Ongoing",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Expanded(
-                                      child: Center(
-                                        child: Text(
-                                          "5",
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white),
+                                      Expanded(
+                                        child: Center(
+                                          child: Text(
+                                            snapshot.data.ongoingGigsByGigId !=
+                                                    null
+                                                ? '${snapshot.data.ongoingGigsByGigId.length}'
+                                                : '0',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                                SizedBox(
+                                  height: 50,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Center(
+                                          child: Text(
+                                            "Completed",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1,
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Center(
+                                          child: Text(
+                                            "5",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           SizedBox(
                             height: 10,
@@ -147,37 +189,34 @@ class _UserProfileViewState extends State<UserProfileView> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
+                                Text(
+                                  snapshot.data.name,
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
                                 Row(
                                   children: [
                                     Text(
-                                      // widget.passedUserFullName,
-                                      snapshot.data.name,
-                                      style: TextStyle(
-                                          fontSize: 16, color: Colors.white),
+                                      'Rank',
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
                                     ),
                                     SizedBox(
-                                      width: 5,
+                                      width: 10,
                                     ),
                                     Container(
-                                      child: Row(
-                                        children: <Widget>[
-                                          Text('no.',
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.white)),
-                                          FaIcon(
-                                            FontAwesomeIcons.solidStar,
-                                            size: 16,
-                                            color: Colors.yellow,
-                                          ),
-                                        ],
-                                      ),
+                                      width: 100,
+                                      height: 20,
+                                      child: ProfileRatingStars(),
                                     )
                                   ],
                                 ),
-                                Text(snapshot.data.location,
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.white)),
+                                Text(
+                                  snapshot.data.location,
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
                               ],
                             ),
                           ),
@@ -186,59 +225,83 @@ class _UserProfileViewState extends State<UserProfileView> {
                               length: 4,
                               child: Scaffold(
                                 appBar: AppBar(
-                                    toolbarHeight: 50,
-                                    primary: false,
-                                    leading: Container(),
-                                    title: Container(),
-                                    bottom: TabBar(
-                                      indicatorColor:
-                                          Theme.of(context).primaryColor,
-                                      tabs: [
-                                        Tab(
-                                            child: FaIcon(
-                                                FontAwesomeIcons.borderAll,
-                                                size: 16,
-                                                color: Theme.of(context)
-                                                    .primaryColor)),
-                                        Tab(
-                                          child: FaIcon(
-                                              FontAwesomeIcons.checkCircle,
-                                              size: 16,
-                                              color: Theme.of(context)
-                                                  .primaryColor),
+                                  toolbarHeight: 50,
+                                  primary: false,
+                                  leading: Container(width: 0, height: 0),
+                                  title: Container(width: 0, height: 0),
+                                  bottom: TabBar(
+                                    indicatorColor:
+                                        Theme.of(context).primaryColor,
+                                    tabs: [
+                                      Tab(
+                                          child: SizedBox(
+                                        width: 16,
+                                        height: 16,
+                                        child: SvgPicture.asset(
+                                          grid,
+                                          semanticsLabel: 'grid',
+                                          color: Theme.of(context).primaryColor,
                                         ),
-                                        Tab(
-                                          child: FaIcon(
-                                              FontAwesomeIcons.thumbsUp,
-                                              size: 16,
-                                              color: Theme.of(context)
-                                                  .primaryColor),
+                                      )),
+                                      Tab(
+                                        child: FaIcon(
+                                          FontAwesomeIcons.checkCircle,
+                                          size: 16,
+                                          color: Theme.of(context).primaryColor,
                                         ),
-                                        Tab(
-                                          child: FaIcon(FontAwesomeIcons.star,
-                                              size: 16,
-                                              color: Theme.of(context)
-                                                  .primaryColor),
+                                      ),
+                                      Tab(
+                                        child: FaIcon(
+                                          FontAwesomeIcons.thumbsUp,
+                                          size: 16,
+                                          color: Theme.of(context).primaryColor,
                                         ),
-                                      ],
-                                    ),
-                                    elevation: 0,
-                                    backgroundColor: Color(0xFFfafafa)),
-                                // backgroundColor: FyreworkrColors.fyreworkBlack),
+                                      ),
+                                      Tab(
+                                        child: FaIcon(
+                                          FontAwesomeIcons.star,
+                                          size: 16,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  elevation: 0,
+                                  backgroundColor:
+                                      Theme.of(context).scaffoldBackgroundColor,
+                                ),
                                 body: TabBarView(
                                   children: [
                                     userOngoingGigs(),
                                     Container(
-                                      child:
-                                          Center(child: Text('Done goes here')),
+                                      child: Center(
+                                        child: Text(
+                                          'Done goes here',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                        ),
+                                      ),
                                     ),
                                     Container(
                                       child: Center(
-                                          child: Text('Liked gigs gies here')),
+                                        child: Text(
+                                          'Liked gigs gies here',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                        ),
+                                      ),
                                     ),
                                     Container(
                                       child: Center(
-                                          child: Text('Rating goes here')),
+                                        child: Text(
+                                          'Rating goes here',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -248,15 +311,19 @@ class _UserProfileViewState extends State<UserProfileView> {
                         ],
                       ),
                     ),
-                  )
-                : Container(
+                  );
+                } else {
+                  return Container(
                     child: Center(
                         child: Text(
                       'Profile no longer exists',
                       style: Theme.of(context).textTheme.bodyText1,
                     )),
                   );
-          }),
+                }
+              }
+            }),
+      ),
     );
   }
 
@@ -267,52 +334,65 @@ class _UserProfileViewState extends State<UserProfileView> {
           : DatabaseService()
               .userOngoingGigsByAppointedUserId(widget.passedUserUid),
       builder: (context, snapshot) {
-        print('snapshot.data: ${snapshot.data}');
-        return !snapshot.hasData
-            ? Text('')
-            : snapshot.data.docs.length > 0
-                ? ListView.builder(
-                    itemCount: snapshot.data.docs.length,
-                    itemBuilder: (context, index) {
-                      DocumentSnapshot data = snapshot.data.docs[index];
-                      Map getDocData = data.data();
-                      return GestureDetector(
-                        // onTap: () => model.editGig(index),
-                        child: UserRelatedGigItem(
-                          index: index,
-                          appointed: getDocData['appointed'],
-                          appointedusername:
-                              getDocData['appointedUserFullName'],
-                          appliersOrHirersByUserId:
-                              getDocData['appliersOrHirersByUserId'],
-                          gigId: getDocData['gigId'],
-                          currentUserId: currentUserId,
-                          gigOwnerId: getDocData['gigOwnerId'],
-                          gigOwnerAvatarUrl: getDocData['gigOwnerAvatarUrl'],
-                          gigOwnerUsername: getDocData['gigOwnerUsername'],
-                          createdAt: getDocData['createdAt'],
-                          gigOwnerLocation: getDocData['gigOwnerLocation'],
-                          gigLocation: getDocData['gigLocation'],
-                          gigHashtags: getDocData['gigHashtags'],
-                          gigMediaFilesDownloadUrls:
-                              getDocData['gigMediaFilesDownloadUrls'],
-                          gigPost: getDocData['gigPost'],
-                          gigCurrency: getDocData['gigCurrency'],
-                          gigBudget: getDocData['gigBudget'],
-                          gigValue: getDocData['gigValue'],
-                          gigLikes: getDocData['gigLikes'],
-                          adultContentText: getDocData['adultContentText'],
-                          adultContentBool: getDocData['adultContentBool'],
-                          appointedUserId: getDocData['appointedUserId'],
-                          hidden: getDocData['hidden'],
-                          gigActions: getDocData['gigActions'],
-                          paymentReleased: getDocData['paymentReleased'],
-                          markedAsComplete: getDocData['markedAsComplete'],
-                          clientLeftReview: getDocData['clientLeftReview'],
-                        ),
-                      );
-                    })
-                : Center(child: Text('This user hasn\'t posted any gigs yet'));
+        return snapshot.hasError
+            ? Center(
+                child: Text(
+                "Gigs are not available right now",
+                style: Theme.of(context).textTheme.bodyText1,
+              ))
+            : !snapshot.hasData
+                ? Text(
+                    "Gigs are not available right now",
+                    style: Theme.of(context).textTheme.bodyText1,
+                  )
+                : snapshot.data.docs.length > 0
+                    ? ListView.builder(
+                        itemCount: snapshot.data.docs.length,
+                        itemBuilder: (context, index) {
+                          DocumentSnapshot data = snapshot.data.docs[index];
+                          Map getDocData = data.data();
+                          return GestureDetector(
+                            // onTap: () => model.editGig(index),
+                            child: UserRelatedGigItem(
+                              index: index,
+                              appointed: getDocData['appointed'],
+                              appointedusername:
+                                  getDocData['appointedUserFullName'],
+                              appliersOrHirersByUserId:
+                                  getDocData['appliersOrHirersByUserId'],
+                              gigId: getDocData['gigId'],
+                              currentUserId: currentUserId,
+                              gigOwnerId: getDocData['gigOwnerId'],
+                              gigOwnerAvatarUrl:
+                                  getDocData['gigOwnerAvatarUrl'],
+                              gigOwnerUsername: getDocData['gigOwnerUsername'],
+                              createdAt: getDocData['createdAt'],
+                              gigOwnerLocation: getDocData['gigOwnerLocation'],
+                              gigLocation: getDocData['gigLocation'],
+                              gigHashtags: getDocData['gigHashtags'],
+                              gigMediaFilesDownloadUrls:
+                                  getDocData['gigMediaFilesDownloadUrls'],
+                              gigPost: getDocData['gigPost'],
+                              gigCurrency: getDocData['gigCurrency'],
+                              gigBudget: getDocData['gigBudget'],
+                              gigValue: getDocData['gigValue'],
+                              gigLikes: getDocData['gigLikes'],
+                              adultContentText: getDocData['adultContentText'],
+                              adultContentBool: getDocData['adultContentBool'],
+                              appointedUserId: getDocData['appointedUserId'],
+                              hidden: getDocData['hidden'],
+                              gigActions: getDocData['gigActions'],
+                              paymentReleased: getDocData['paymentReleased'],
+                              markedAsComplete: getDocData['markedAsComplete'],
+                              clientLeftReview: getDocData['clientLeftReview'],
+                            ),
+                          );
+                        })
+                    : Center(
+                        child: Text(
+                        "This user has not posted any gigs yet",
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ));
       },
     );
   }

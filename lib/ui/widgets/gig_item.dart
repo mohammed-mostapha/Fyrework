@@ -133,7 +133,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
         _likeAnimationController.reverse();
       });
     });
-    FirestoreService().updateGigAddRemoveLike(widget.gigId.gigId, liked);
+    FirestoreService().updateGigAddRemoveLike(widget.gigId, liked);
   }
 
   _commentButtonPressed() {
@@ -152,31 +152,31 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                 )));
   }
 
-  _doubleTappedLike() {
-    if (liked == false && showLikeOverlay == false) {
-      setState(() {
-        liked = true;
-        showLikeOverlay = true;
-        _likeAnimationController.forward().then((value) {
-          _likeAnimationController.reverse();
-        });
-        if (showLikeOverlay) {
-          Timer(const Duration(milliseconds: 500), () {
-            setState(() {
-              showLikeOverlay = false;
-            });
-          });
-        }
+  // _doubleTappedLike() {
+  //   if (liked == false && showLikeOverlay == false) {
+  //     setState(() {
+  //       liked = true;
+  //       showLikeOverlay = true;
+  //       _likeAnimationController.forward().then((value) {
+  //         _likeAnimationController.reverse();
+  //       });
+  //       if (showLikeOverlay) {
+  //         Timer(const Duration(milliseconds: 500), () {
+  //           setState(() {
+  //             showLikeOverlay = false;
+  //           });
+  //         });
+  //       }
 
-        FirestoreService().updateGigAddRemoveLike(widget.gigId.gigId, liked);
-      });
-    }
-    showLikeOverlay = true;
-    _likeAnimationController.forward().then((value) {
-      _likeAnimationController.reverse();
-      showLikeOverlay = false;
-    });
-  }
+  //       FirestoreService().updateGigAddRemoveLike(widget.gigId, liked);
+  //     });
+  //   }
+  //   showLikeOverlay = true;
+  //   _likeAnimationController.forward().then((value) {
+  //     _likeAnimationController.reverse();
+  //     showLikeOverlay = false;
+  //   });
+  // }
 
   showUserProfile() {
     Navigator.push(
@@ -263,7 +263,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
           child: SvgPicture.asset(
             liked ? heartSolid : heart,
             semanticsLabel: 'Like',
-            color: liked ? Colors.red[400] : Theme.of(context).primaryColor,
+            color: liked ? Colors.red[300] : Theme.of(context).primaryColor,
           ),
         ),
         onTap: () => _likedPressed(),
@@ -596,20 +596,20 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
             ),
           ),
           GestureDetector(
-            onDoubleTap: () => _doubleTappedLike(),
+            // onDoubleTap: () => _doubleTappedLike(),
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
                 GigItemMediaPreviewer(
                   receivedGigMediaFilesUrls: widget.gigMediaFilesDownloadUrls,
                 ),
-                showLikeOverlay
-                    ? Icon(
-                        Icons.favorite,
-                        size: 120.0,
-                        color: Colors.white,
-                      )
-                    : Container()
+                // showLikeOverlay
+                //     ? Icon(
+                //         Icons.favorite,
+                //         size: 120.0,
+                //         color: Colors.white,
+                //       )
+                //     : Container()
               ],
             ),
           ),
@@ -668,17 +668,16 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                             widget.gigLikes != 0 &&
                             widget.gigLikes > 0
                         ? Flexible(
-                            child: Text(
-                            '${widget.gigLikes}' + ' ' + 'likes',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ))
+                            child: Text('${widget.gigLikes}' + ' ' + 'likes',
+                                style: Theme.of(context).textTheme.bodyText1))
                         : Container(
                             width: 0,
                             height: 0,
                           ),
                   ],
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 Container(
                   alignment: Alignment.centerLeft,
