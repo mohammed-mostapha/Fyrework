@@ -1154,23 +1154,25 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                 ],
               ),
               authFormType == AuthFormType.signIn
-                  ? Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: FlatButton(
-                        color: Theme.of(context).primaryColor,
-                        // textColor: Theme.of(context).accentColor,
-                        child: Text(
-                          _submitButtonText,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1
-                              .copyWith(color: Theme.of(context).accentColor),
-                          maxLines: 1,
+                  ? GestureDetector(
+                      onTap: submitSignupSigninResetForm,
+                      child: Container(
+                        width: 80,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        onPressed: submitSignupSigninResetForm,
+                        child: Center(
+                          child: Text(
+                            _submitButtonText,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .copyWith(color: Theme.of(context).accentColor),
+                            maxLines: 1,
+                          ),
+                        ),
                       ),
                     )
                   : Container(
@@ -1218,22 +1220,24 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                   ),
                 ],
               ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: FlatButton(
-                  color: Theme.of(context).primaryColor,
-                  textColor: Theme.of(context).accentColor,
-                  child: Text(
-                    _submitButtonText,
-                    style: Theme.of(context).textTheme.bodyText1.copyWith(
-                          color: Theme.of(context).accentColor,
-                        ),
-                    maxLines: 1,
+              GestureDetector(
+                onTap: submitSignupSigninResetForm,
+                child: Container(
+                  width: 80,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  onPressed: submitSignupSigninResetForm,
+                  child: Center(
+                    child: Text(
+                      _submitButtonText,
+                      style: Theme.of(context).textTheme.bodyText1.copyWith(
+                            color: Theme.of(context).accentColor,
+                          ),
+                      maxLines: 1,
+                    ),
+                  ),
                 ),
               )
             ],
@@ -1276,26 +1280,26 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
     return [
       (authFormType != AuthFormType.signIn &&
               authFormType != AuthFormType.signUp)
-          ? Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              // width: MediaQuery.of(context).size.width * 0.8,
-              width: double.infinity,
-              child: FlatButton(
-                color: Theme.of(context).primaryColor,
-                textColor: Theme.of(context).accentColor,
+          ? GestureDetector(
+              onTap: submitSignupSigninResetForm,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                width: double.infinity,
+                height: 48,
                 child: Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    _submitButtonText,
-                    style: Theme.of(context).textTheme.bodyText1.copyWith(
-                          color: Theme.of(context).accentColor,
-                        ),
+                  child: Center(
+                    child: Text(
+                      _submitButtonText,
+                      style: Theme.of(context).textTheme.bodyText1.copyWith(
+                            color: Theme.of(context).accentColor,
+                          ),
+                    ),
                   ),
                 ),
-                onPressed: submitSignupSigninResetForm,
               ),
             )
           : SizedBox(

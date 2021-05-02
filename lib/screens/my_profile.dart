@@ -30,7 +30,6 @@ class _MyProfileViewState extends State<MyProfileView> {
 
   final String currentUserId = MyUser.uid;
   AuthFormType authFormType;
-  bool profileEditingMenu = false;
   final String shieldCheck = 'assets/svgs/light/shield-check.svg';
   final String lock = 'assets/svgs/light/lock.svg';
   final String balanceScale = 'assets/svgs/light/balance-scale.svg';
@@ -354,17 +353,12 @@ class _MyProfileViewState extends State<MyProfileView> {
           border: Border(
             left: BorderSide(color: Colors.grey[50], width: 0.5),
           )),
-      width: !profileEditingMenu
-          ? MediaQuery.of(context).size.width / 1.5
-          : MediaQuery.of(context).size.width,
+      width: MediaQuery.of(context).size.width / 1.5,
       height: MediaQuery.of(context).size.height,
       child: Column(
         children: [
-          Expanded(
-              child: !profileEditingMenu
-                  ? generalSideMenu(platform)
-                  : ProfileEditingSideMenu()),
-          !profileEditingMenu ? showSignOut(context) : Container(),
+          Expanded(child: generalSideMenu(platform)),
+          showSignOut(context)
         ],
       ),
     );
@@ -376,7 +370,7 @@ class _MyProfileViewState extends State<MyProfileView> {
         Container(
           decoration: BoxDecoration(
               border: Border(
-            bottom: BorderSide(color: Colors.grey[50], width: 0.5),
+            bottom: BorderSide(color: Theme.of(context).hintColor, width: 0.5),
           )),
           child: ListTile(
             contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
@@ -390,42 +384,42 @@ class _MyProfileViewState extends State<MyProfileView> {
           ),
         ),
         GestureDetector(
-          child: ListTile(
-            contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-            leading: Container(
-              width: 100,
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: SvgPicture.asset(
-                      userIcon,
-                      semanticsLabel: 'user',
-                      color: Colors.white,
+            child: ListTile(
+              contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+              leading: Container(
+                width: 100,
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: SvgPicture.asset(
+                        userIcon,
+                        semanticsLabel: 'user',
+                        color: Theme.of(context).accentColor,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Profile',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyText1
-                        .copyWith(color: Theme.of(context).accentColor),
-                  ),
-                ],
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      'Profile',
+                      style: Theme.of(context).textTheme.bodyText1.copyWith(
+                            color: Theme.of(context).accentColor,
+                          ),
+                    ),
+                  ],
+                ),
               ),
+              trailing: Icon(Icons.chevron_right,
+                  color: Theme.of(context).accentColor),
             ),
-            trailing: Icon(Icons.chevron_right, color: Colors.white),
-          ),
-          onTap: () {
-            setState(() {
-              profileEditingMenu = true;
-            });
-          },
-        ),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ProfileEditingSideMenu()));
+            }),
         GestureDetector(
           child: ListTile(
             contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
@@ -439,7 +433,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                     child: SvgPicture.asset(
                       balanceScale,
                       semanticsLabel: 'terms',
-                      color: Colors.white,
+                      color: Theme.of(context).accentColor,
                     ),
                   ),
                   SizedBox(
@@ -455,7 +449,8 @@ class _MyProfileViewState extends State<MyProfileView> {
                 ],
               ),
             ),
-            trailing: Icon(Icons.chevron_right, color: Colors.white),
+            trailing:
+                Icon(Icons.chevron_right, color: Theme.of(context).accentColor),
           ),
           onTap: () async {
             const url = 'http://districthive.com/terms.php';
@@ -500,7 +495,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                     child: SvgPicture.asset(
                       lock,
                       semanticsLabel: 'lock',
-                      color: Colors.white,
+                      color: Theme.of(context).accentColor,
                     ),
                   ),
                   SizedBox(
@@ -516,7 +511,8 @@ class _MyProfileViewState extends State<MyProfileView> {
                 ],
               ),
             ),
-            trailing: Icon(Icons.chevron_right, color: Colors.white),
+            trailing:
+                Icon(Icons.chevron_right, color: Theme.of(context).accentColor),
           ),
           onTap: () async {
             // const url = 'http://districthive.com/privacy.php';
@@ -562,7 +558,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                     child: SvgPicture.asset(
                       shieldCheck,
                       semanticsLabel: 'shield-check',
-                      color: Colors.white,
+                      color: Theme.of(context).accentColor,
                     ),
                   ),
                   SizedBox(
@@ -578,7 +574,8 @@ class _MyProfileViewState extends State<MyProfileView> {
                 ],
               ),
             ),
-            trailing: Icon(Icons.chevron_right, color: Colors.white),
+            trailing:
+                Icon(Icons.chevron_right, color: Theme.of(context).accentColor),
           ),
           onTap: () {},
         ),
@@ -594,8 +591,8 @@ class _MyProfileViewState extends State<MyProfileView> {
                     height: 16,
                     child: SvgPicture.asset(
                       policies,
-                      semanticsLabel: 'user',
-                      color: Colors.white,
+                      semanticsLabel: 'Rules & Policies',
+                      color: Theme.of(context).accentColor,
                     ),
                   ),
                   SizedBox(
@@ -611,7 +608,8 @@ class _MyProfileViewState extends State<MyProfileView> {
                 ],
               ),
             ),
-            trailing: Icon(Icons.chevron_right, color: Colors.white),
+            trailing:
+                Icon(Icons.chevron_right, color: Theme.of(context).accentColor),
           ),
           onTap: () {},
         ),
@@ -628,7 +626,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                     child: SvgPicture.asset(
                       legals,
                       semanticsLabel: 'legals',
-                      color: Colors.white,
+                      color: Theme.of(context).accentColor,
                     ),
                   ),
                   SizedBox(
@@ -644,7 +642,8 @@ class _MyProfileViewState extends State<MyProfileView> {
                 ],
               ),
             ),
-            trailing: Icon(Icons.chevron_right, color: Colors.white),
+            trailing:
+                Icon(Icons.chevron_right, color: Theme.of(context).accentColor),
           ),
           onTap: () {},
         ),
@@ -791,7 +790,7 @@ class _MyProfileViewState extends State<MyProfileView> {
               child: SvgPicture.asset(
                 signOut,
                 semanticsLabel: 'sign out',
-                color: Colors.white,
+                color: Theme.of(context).accentColor,
               ),
             ),
             Container(

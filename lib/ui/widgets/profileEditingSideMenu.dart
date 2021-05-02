@@ -297,6 +297,21 @@ class _ProfileEditingSideMenuState extends State<ProfileEditingSideMenu> {
         key: _editMyProfileFormKey,
         child: ListView(
           children: <Widget>[
+            ListTile(
+              contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+              leading: GestureDetector(
+                child: Icon(
+                  Icons.chevron_left,
+                  color: Theme.of(context).accentColor,
+                ),
+                onTap: () {
+                  setState(() {
+                    Navigator.of(context).pop();
+                    _myNewProfileImage = null;
+                  });
+                },
+              ),
+            ),
             Container(
               padding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
               width: double.infinity,
@@ -318,21 +333,6 @@ class _ProfileEditingSideMenuState extends State<ProfileEditingSideMenu> {
                           deleteIconColor: Colors.black,
                         ))
                     .toList(),
-              ),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-              leading: GestureDetector(
-                child: Icon(
-                  Icons.chevron_left,
-                  color: Theme.of(context).accentColor,
-                ),
-                onTap: () {
-                  setState(() {
-                    Navigator.of(context).pop();
-                    _myNewProfileImage = null;
-                  });
-                },
               ),
             ),
             ListTile(
@@ -757,15 +757,21 @@ class _ProfileEditingSideMenuState extends State<ProfileEditingSideMenu> {
             ListTile(
               contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
               title: Center(
-                child: FlatButton(
-                  color: Colors.white,
-                  onPressed: () {
-                    editMyProfile();
-                  },
-                  child: Text('Save',
-                      style: Theme.of(context).textTheme.bodyText1),
+                  child: GestureDetector(
+                onTap: editMyProfile,
+                child: Container(
+                  width: 80,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).accentColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: Text('Save',
+                        style: Theme.of(context).textTheme.bodyText1),
+                  ),
                 ),
-              ),
+              )),
             ),
           ],
         ),

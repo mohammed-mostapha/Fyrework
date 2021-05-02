@@ -999,7 +999,9 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                 ),
                                                 GestureDetector(
                                                   onTap: () {
-                                                    addComment();
+                                                    addComment(
+                                                        containMediaFile:
+                                                            false);
                                                   },
                                                   child: Padding(
                                                     padding:
