@@ -183,8 +183,8 @@ class _ClientActionsState extends State<ClientActions> {
                                       ],
                                     ),
                                   ),
-                                  onTap: () {
-                                    DatabaseService()
+                                  onTap: () async {
+                                    await DatabaseService()
                                         .addGigWorkstreamActions(
                                       gigId: widget.passedGigId,
                                       action: 'marked as completed',

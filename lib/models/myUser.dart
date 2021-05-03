@@ -1,5 +1,3 @@
-import 'package:Fyrework/ui/views/sign_up_view.dart';
-
 class MyUser {
   static String uid;
   static List favoriteHashtags;
@@ -11,8 +9,8 @@ class MyUser {
   static bool isMinor;
   static String location;
   static String phoneNumber;
-  static dynamic ongoingGigsByGigId;
-  static int lengthOfOngoingGigsByGigId;
+  static dynamic openGigsByGigId;
+  static int lengthOfOpenGigsByGigId;
 
   MyUser();
   MyUser.fromData(Map<String, dynamic> data) {
@@ -26,9 +24,8 @@ class MyUser {
     isMinor = data['isMinor'];
     location = data['location'];
     phoneNumber = data['phoneNumber'];
-    ongoingGigsByGigId = data['ongoingGigsByGigId'];
-    lengthOfOngoingGigsByGigId = data['lengthOfOngoingGigsByGigId'];
-    print('fromData uid: $uid');
+    openGigsByGigId = data['openGigsByGigId'];
+    lengthOfOpenGigsByGigId = data['lengthOfOpenGigsByGigId'];
   }
 
   MyUser.clearData() {
@@ -42,8 +39,8 @@ class MyUser {
     isMinor = null;
     location = null;
     phoneNumber = null;
-    ongoingGigsByGigId = null;
-    lengthOfOngoingGigsByGigId = null;
+    openGigsByGigId = null;
+    lengthOfOpenGigsByGigId = null;
   }
 
   bool checkUserDataNullability() {

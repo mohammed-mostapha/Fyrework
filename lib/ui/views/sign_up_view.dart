@@ -101,9 +101,11 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   bool _isMinor = false;
   bool _showPassword = false;
   bool _showConfirmPassword = false;
-  bool _shouldAddHashtag = false;
-  dynamic _ongoingGigsByGigId;
-  int _lengthOfOngoingGigsByGigId;
+  // bool _shouldAddHashtag = false;
+  List _openGigsByGigId = List();
+  List _completedGigsByGigId = List();
+  int _lengthOfOpenGigsByGigId = 0;
+  int _lengthOfCompletedGigsByGigId = 0;
   final TextEditingController phoneNumberController = TextEditingController();
   TextEditingController _ageOfUserController = TextEditingController();
   TextEditingController _myFavoriteHashtagsController = TextEditingController();
@@ -260,19 +262,25 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                   userId: signUpUid,
                 );
                 if (!isNullOrEmpty(_myUploadedAvatarUrl)) {
-                  print('see this: uploaded userAvatar successfully');
+                  print(
+                      "creates user document _openGigsByGigId: $_openGigsByGigId");
+                  print(
+                      "creates user document _lengthOfOpenGigsByGigId: $_lengthOfOpenGigsByGigId");
                   // create a new document for the user with the uid in users collection
                   await DatabaseService(uid: signUpUid).setUserData(
-                      id: signUpUid,
-                      myFavoriteHashtags: _myFavoriteHashtags,
-                      name: _name,
-                      handle: _myHandleController.text,
-                      email: _email,
-                      userAvatarUrl: _myUploadedAvatarUrl,
-                      location: location,
-                      isMinor: _isMinor,
-                      ongoingGigsByGigId: _ongoingGigsByGigId,
-                      lengthOfOngoingGigsByGigId: _lengthOfOngoingGigsByGigId);
+                    id: signUpUid,
+                    myFavoriteHashtags: _myFavoriteHashtags,
+                    name: _name,
+                    handle: _myHandleController.text,
+                    email: _email,
+                    userAvatarUrl: _myUploadedAvatarUrl,
+                    location: location,
+                    isMinor: _isMinor,
+                    openGigsByGigId: _openGigsByGigId,
+                    lengthOfOpenGigsByGigId: _lengthOfOpenGigsByGigId,
+                    completedGigsByGigId: _completedGigsByGigId,
+                    lengthOfCompletedGigsByGigId: _lengthOfCompletedGigsByGigId,
+                  );
 
                   print('see this: created user document in users collection');
 
@@ -1262,7 +1270,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
     if (authFormType == AuthFormType.signIn) {
       _submitButtonText = 'Sign In';
-      // _switchButtonText = 'New User? Create Account';
       _switchButtonText = 'Register';
       _newformState = 'signUp';
       _showForgotPassword = true;
@@ -1305,12 +1312,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           : SizedBox(
               height: 0,
             ),
-      // authFormType == AuthFormType.signIn
-      //     ? SizedBox(height: 50)
-      //     : SizedBox(
-      //         width: 0,
-      //         height: 0,
-      //       ),
       Padding(
         padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
         child: Row(
@@ -1336,7 +1337,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           ],
         ),
       ),
-      // buildSocialIcons(_showSocial),
     ];
   }
 

@@ -5,15 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:Fyrework/locator.dart';
 import 'package:Fyrework/services/database.dart';
-import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:Fyrework/ui/views/sign_up_view.dart';
-import 'package:Fyrework/services/auth_service.dart';
-import 'package:Fyrework/services/storage_repo.dart';
 import 'package:Fyrework/ui/widgets/userRelated_gigItem.dart';
-
-import 'gig_item.dart';
 
 class UserProfileView extends StatefulWidget {
   final String passedUserUid;
@@ -34,9 +28,6 @@ class UserProfileView extends StatefulWidget {
 class _UserProfileViewState extends State<UserProfileView> {
   final String grid = 'assets/svgs/light/th.svg';
   final String currentUserId = MyUser.uid;
-
-  AuthService _authService = locator.get<AuthService>();
-  StorageRepo _storageRepo = locator.get<StorageRepo>();
   AuthFormType authFormType;
 
   @override
@@ -126,7 +117,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                                       Expanded(
                                         child: Center(
                                           child: Text(
-                                            "Ongoing",
+                                            "Open",
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyText1,
@@ -138,7 +129,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                                           child: Text(
                                             snapshot.data.ongoingGigsByGigId !=
                                                     null
-                                                ? '${snapshot.data.ongoingGigsByGigId.length}'
+                                                ? '${snapshot.data.openGigsByGigId.length}'
                                                 : '0',
                                             style: Theme.of(context)
                                                 .textTheme
@@ -272,7 +263,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                                 ),
                                 body: TabBarView(
                                   children: [
-                                    userOngoingGigs(),
+                                    userOpenGigs(),
                                     Container(
                                       child: Center(
                                         child: Text(
@@ -327,12 +318,12 @@ class _UserProfileViewState extends State<UserProfileView> {
     );
   }
 
-  userOngoingGigs() {
+  userOpenGigs() {
     return StreamBuilder<QuerySnapshot>(
       stream: widget.fromGig
-          ? DatabaseService().userOngoingGigsByGigOwnerId(widget.passedUserUid)
+          ? DatabaseService().userOpenGigsByGigOwnerId(widget.passedUserUid)
           : DatabaseService()
-              .userOngoingGigsByAppointedUserId(widget.passedUserUid),
+              .userOpenGigsByAppointedUserId(widget.passedUserUid),
       builder: (context, snapshot) {
         return snapshot.hasError
             ? Center(

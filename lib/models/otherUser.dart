@@ -9,8 +9,8 @@ class OtherUser {
   final bool isMinor;
   final String location;
   final String phoneNumber;
-  final dynamic ongoingGigsByGigId;
-  final int lengthOfOngoingGigsByGigId;
+  final dynamic openGigsByGigId;
+  final int lengthOfOpenGigsByGigId;
 
   OtherUser({
     this.uid,
@@ -23,8 +23,8 @@ class OtherUser {
     this.isMinor,
     this.location,
     this.phoneNumber,
-    this.ongoingGigsByGigId,
-    this.lengthOfOngoingGigsByGigId,
+    this.openGigsByGigId,
+    this.lengthOfOpenGigsByGigId,
   });
 
   // OtherUser.fromData(Map<String, dynamic> data)

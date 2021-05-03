@@ -155,7 +155,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                                   Expanded(
                                     child: Center(
                                       child: Text(
-                                        "Ongoing",
+                                        "Open",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1,
@@ -165,8 +165,8 @@ class _MyProfileViewState extends State<MyProfileView> {
                                   Expanded(
                                     child: Center(
                                       child: Text(
-                                        MyUser.ongoingGigsByGigId != null
-                                            ? '${MyUser.ongoingGigsByGigId.length}'
+                                        MyUser.openGigsByGigId != null
+                                            ? '${MyUser.openGigsByGigId.length}'
                                             : '0',
                                         style: Theme.of(context)
                                             .textTheme
@@ -298,7 +298,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                             // backgroundColor: FyreworkrColors.fyreworkBlack),
                             body: TabBarView(
                               children: [
-                                userOngoingGigs(),
+                                userOpenGigs(),
                                 Container(
                                   child: Center(
                                       child: Text(
@@ -670,13 +670,13 @@ class _MyProfileViewState extends State<MyProfileView> {
             child: Column(
               children: <Widget>[
                 Expanded(
-                  child: Text("Ongoing gigs",
+                  child: Text("Open gigs",
                       style: Theme.of(context).textTheme.bodyText1),
                 ),
                 Expanded(
                   child: Text(
-                      MyUser.ongoingGigsByGigId != null
-                          ? '${MyUser.ongoingGigsByGigId.length}'
+                      MyUser.openGigsByGigId != null
+                          ? '${MyUser.openGigsByGigId.length}'
                           : '0',
                       style: Theme.of(context).textTheme.bodyText1),
                 ),
@@ -705,9 +705,9 @@ class _MyProfileViewState extends State<MyProfileView> {
     );
   }
 
-  userOngoingGigs() {
+  userOpenGigs() {
     return FutureBuilder<QuerySnapshot>(
-      future: DatabaseService().myOngoingGigsByGigOwnerId(MyUser.uid),
+      future: DatabaseService().myOpenGigsByGigOwnerId(MyUser.uid),
       builder: (context, snapshot) {
         // print('snapshot.data: ${snapshot.data.documents.length}');
         return snapshot.hasError

@@ -47,8 +47,7 @@ class FirestoreService {
         DocumentReference gigRef = _gigsCollectionReference.doc(gigId);
         gigRef.update({'gigId': gigRef.id});
       });
-      await DatabaseService(uid: userId)
-          .updateOngoingGigsByGigId(userId, gigId);
+      await DatabaseService(uid: userId).updateOpenGigsByGigId(userId, gigId);
 
       // only add gigHashtags that dont already exist in popularHashtags cloud firestore collection
       QuerySnapshot popularHashtagsDocuments =
@@ -191,14 +190,14 @@ class FirestoreService {
   }
 
   Future appointedGigToUser(
-      String gigId, String appointedUserId, String commentId) async {
+      {String gigId, String appointedUserId, String commentId}) async {
     try {
       var appointedUser =
           await _usersCollectionReference.doc(appointedUserId).get();
       var appointedUsername = appointedUser.data()['username'];
 
       await DatabaseService(uid: appointedUserId)
-          .updateOngoingGigsByGigId(appointedUserId, gigId);
+          .updateOpenGigsByGigId(appointedUserId, gigId);
 
       await _gigsCollectionReference.doc(gigId).update({
         'appointed': true,

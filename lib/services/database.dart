@@ -28,8 +28,10 @@ class DatabaseService {
     @required String userAvatarUrl,
     @required String location,
     @required bool isMinor,
-    @required dynamic ongoingGigsByGigId,
-    @required int lengthOfOngoingGigsByGigId,
+    @required List openGigsByGigId,
+    @required int lengthOfOpenGigsByGigId,
+    @required List completedGigsByGigId,
+    @required int lengthOfCompletedGigsByGigId,
   }) async {
     return await _usersCollection.doc(id).set({
       'id': uid,
@@ -41,8 +43,10 @@ class DatabaseService {
       'location': location,
       'phoneNumber': null,
       'isMinor?': isMinor,
-      'ongoingGigsByGigId': ongoingGigsByGigId,
-      'lengthOfOngoingGigsByGigId': lengthOfOngoingGigsByGigId,
+      'openGigsByGigId': openGigsByGigId,
+      'lengthOfOpenGigsByGigId': lengthOfOpenGigsByGigId,
+      'completedGigsByGigId': completedGigsByGigId,
+      'lengthOfCompletedGigsByGigId': lengthOfCompletedGigsByGigId,
     });
   }
 
@@ -59,8 +63,8 @@ class DatabaseService {
       isMinor: snapshot.data()['isMinor'],
       location: snapshot.data()['location'],
       phoneNumber: snapshot.data()['phoneNumber'],
-      ongoingGigsByGigId: snapshot.data()['ongoingGigsByGigId'],
-      lengthOfOngoingGigsByGigId: snapshot.data()['lengthOfOngoingGigsByGigId'],
+      openGigsByGigId: snapshot.data()['openGigsByGigId'],
+      lengthOfOpenGigsByGigId: snapshot.data()['lengthOfOpenGigsByGigId'],
     );
   }
 
@@ -107,15 +111,15 @@ class DatabaseService {
     return _gigsCollection.doc(gigId).snapshots();
   }
 
-  Stream<QuerySnapshot> userOngoingGigsByGigOwnerId(String userId) {
+  Stream<QuerySnapshot> userOpenGigsByGigOwnerId(String userId) {
     return _gigsCollection.where('gigOwnerId', isEqualTo: userId).snapshots();
   }
 
-  Future<QuerySnapshot> myOngoingGigsByGigOwnerId(String userId) {
+  Future<QuerySnapshot> myOpenGigsByGigOwnerId(String userId) {
     return _gigsCollection.where('gigOwnerId', isEqualTo: userId).get();
   }
 
-  Stream<QuerySnapshot> userOngoingGigsByAppointedUserId(String userId) {
+  Stream<QuerySnapshot> userOpenGigsByAppointedUserId(String userId) {
     return _gigsCollection
         .where('appointedUserId', isEqualTo: userId)
         .snapshots();
@@ -219,9 +223,12 @@ class DatabaseService {
     }
   }
 
-  Future updateOngoingGigsByGigId(String uid, String gigId) async {
+  Future updateOpenGigsByGigId(String uid, String gigId) async {
     return await _usersCollection.doc(uid).update({
-      "ongoingGigsByGigId": FieldValue.arrayUnion([gigId])
+      "openGigsByGigId": FieldValue.arrayUnion(
+        [gigId],
+      ),
+      "lengthOfOpenGigsByGigId": FieldValue.increment(1),
     });
   }
 
@@ -288,6 +295,9 @@ class DatabaseService {
     //   "gigActions": FieldValue.arrayUnion([action, userAvatarUrl]),
     // });
   }
+
+  Future convertOpenGigToCompletedGig(
+      {String gigOwnerId, String appointedUserId, String gigId}) async {}
 
   Future addRatingToUser({
     @required String userId,

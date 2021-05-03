@@ -770,9 +770,10 @@ class _CommentItemState extends State<CommentItem>
                                         ),
                                         onTap: () {
                                           FirestoreService().appointedGigToUser(
-                                            widget.gigIdHoldingComment,
-                                            widget.commentOwnerId,
-                                            widget.commentId,
+                                            gigId: widget.gigIdHoldingComment,
+                                            appointedUserId:
+                                                widget.commentOwnerId,
+                                            commentId: widget.commentId,
                                           );
                                         }),
                                     SizedBox(
