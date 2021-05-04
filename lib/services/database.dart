@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:Fyrework/models/otherUser.dart';
@@ -7,6 +8,9 @@ class DatabaseService {
   final String uid;
 
   DatabaseService({this.uid});
+  //db reference
+  FirebaseApp fyreworkApp = Firebase.app();
+
   //collection reference
   final CollectionReference _usersCollection =
       FirebaseFirestore.instance.collection('users');
@@ -296,8 +300,34 @@ class DatabaseService {
     // });
   }
 
-  Future convertOpenGigToCompletedGig(
-      {String gigOwnerId, String appointedUserId, String gigId}) async {}
+  //converting open gigs to completed gigs for both gigOwner & appointedUser
+  Future convertOpenGigToCompletedGig({
+    @required String gigId,
+    @required String gigOwnerId,
+    @required String appointedUserId,
+  }) async {
+    FirebaseFirestore db = FirebaseFirestore.instanceFor(app: fyreworkApp);
+    var batch = db.batch();
+
+    //for the gigOwner
+    batch.update(_usersCollection.doc(gigOwnerId), {
+      'openGigsByGigId': FieldValue.arrayRemove([gigId]),
+      'lengthOfOpenGigsByGigId': FieldValue.increment(-1),
+      'completedGigsByGigId': FieldValue.arrayUnion([gigId]),
+      'lengthOfCompletedGigsByGigId': FieldValue.increment(1),
+    });
+
+    //for the appointedUser
+    batch.update(_usersCollection.doc(appointedUserId), {
+      'openGigsByGigId': FieldValue.arrayRemove([gigId]),
+      'lengthOfOpenGigsByGigId': FieldValue.increment(-1),
+      'completedGigsByGigId': FieldValue.arrayUnion([gigId]),
+      'lengthOfCompletedGigsByGigId': FieldValue.increment(1),
+    });
+
+    //execute batch writes
+    batch.commit();
+  }
 
   Future addRatingToUser({
     @required String userId,
