@@ -101,19 +101,17 @@ class _ProfileRatingStarsState extends State<ProfileRatingStars> {
                   print(
                       'documentsNo: ${userRatingDocumentSnapshotsList.length}');
 
+                  int userRatingSum = userRatingDocumentSnapshotsList.reduce(
+                    (a, b) => a + b,
+                  );
+                  print('documentsNo sum: $userRatingSum');
+
                   int estimatedUserRating =
-                      userRatingDocumentSnapshotsList.reduce((a, b) => a + b);
-                  print('documentsNo sum: $estimatedUserRating');
+                      (userRatingSum / userRatingDocumentSnapshotsList.length)
+                          .toInt();
+                  print('estimatedUserRating = $estimatedUserRating');
 
-                  // setState(() {
-                  //   _userProfileRatingCount = estimatedUserRating;
-                  // });
-
-                  // List<dynamic> alluserRatingFieldValues =
-                  //     userRatingDocumentsnapshots
-                  //         .map((r) => r.data()['userRating'])
-                  //         .toList();
-                  // print('userRatingCount: ${alluserRatingFieldValues.length}');
+                  _userProfileRatingCount = estimatedUserRating;
                 } else {
                   _buildProfileRatingStars();
                 }

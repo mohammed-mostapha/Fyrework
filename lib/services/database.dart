@@ -56,7 +56,7 @@ class DatabaseService {
           .doc(id)
           .collection('userRating')
           .doc(id)
-          .set({'thisUserId': id}),
+          .set({'userRating': 0}),
     );
   }
 
