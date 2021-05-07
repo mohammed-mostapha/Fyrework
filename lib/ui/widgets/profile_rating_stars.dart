@@ -1,4 +1,3 @@
-import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -76,30 +75,40 @@ class _ProfileRatingStarsState extends State<ProfileRatingStars> {
                 child: Center(
                   child: CircularProgressIndicator(
                     valueColor: new AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).primaryColor),
+                      Theme.of(context).primaryColor,
+                    ),
                   ),
                 ),
               );
             case ConnectionState.waiting:
             case ConnectionState.active:
-              return Container(
-                width: 20,
-                height: 20,
-                child: Center(
-                  child: CircularProgressIndicator(
-                    valueColor: new AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).primaryColor),
-                  ),
-                ),
-              );
+              return _buildProfileRatingStars();
             case ConnectionState.done:
               if (userRatingSnapshot.hasError) {
                 return _buildProfileRatingStars();
               } else if (userRatingSnapshot.hasData) {
                 if (userRatingSnapshot.data != null) {
-                  List<QueryDocumentSnapshot> userRatingDocumentsnapshots =
+                  List userRatingDocumentSnapshotsList = [];
+                  List<QueryDocumentSnapshot> userRatingDocumentSnapshots =
                       userRatingSnapshot.data.docs;
-                  print('length: ${userRatingDocumentsnapshots.length}');
+
+                  userRatingDocumentSnapshots.forEach((element) {
+                    if (element.data().containsKey('userRating')) {
+                      userRatingDocumentSnapshotsList
+                          .add(element.data()['userRating']);
+                    }
+                  });
+                  print(
+                      'documentsNo: ${userRatingDocumentSnapshotsList.length}');
+
+                  int estimatedUserRating =
+                      userRatingDocumentSnapshotsList.reduce((a, b) => a + b);
+                  print('documentsNo sum: $estimatedUserRating');
+
+                  // setState(() {
+                  //   _userProfileRatingCount = estimatedUserRating;
+                  // });
+
                   // List<dynamic> alluserRatingFieldValues =
                   //     userRatingDocumentsnapshots
                   //         .map((r) => r.data()['userRating'])
