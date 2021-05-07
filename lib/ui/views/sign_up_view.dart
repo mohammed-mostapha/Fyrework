@@ -173,14 +173,10 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             signIn = await AuthService()
                 .signInWithEmailAndPassword(_email.trim(), _password.trim());
 
-            print('signIn: $signIn');
-            print('signIn runTimeType: ${signIn.runtimeType}');
-
             if (signIn != null) {
               String signInUid = signIn.user.uid;
 
               await MyUserController().getCurrentUserFromFirebase(signInUid);
-              print('signIn => MyUser.uid: ${MyUser.uid}');
               Future.delayed(Duration(milliseconds: 1000), () {
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
@@ -250,9 +246,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                 password: _password.trim(),
               );
 
-              print('signUp: $signUp');
-              print('signUp runTimeType: ${signUp.runtimeType}');
-
               if (signUp != null) {
                 signUpUid = signUp.user.uid;
                 print('see this: created signUpId');
@@ -267,7 +260,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                   print(
                       "creates user document _lengthOfOpenGigsByGigId: $_lengthOfOpenGigsByGigId");
                   // create a new document for the user with the uid in users collection
-                  await DatabaseService(uid: signUpUid).setUserData(
+                  await DatabaseService().setUserData(
                     id: signUpUid,
                     myFavoriteHashtags: _myFavoriteHashtags,
                     name: _name,
@@ -892,8 +885,9 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                       onSaved: (val) => _name = val,
                       inputFormatters: [
                         new LengthLimitingTextInputFormatter(20),
-                        // FilteringTextInputFormatter.allow(
-                        //     RegExp("[a-z0-9_]")),
+                        FilteringTextInputFormatter.allow(
+                          RegExp("[a-zA-z0-9_]"),
+                        ),
                       ],
                     ),
                   ),
@@ -1110,6 +1104,10 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           style: Theme.of(context).textTheme.bodyText1,
           decoration: signUpInputDecoration(context, 'Email'),
           onSaved: (val) => _email = val,
+          inputFormatters: [
+            new LengthLimitingTextInputFormatter(50),
+            FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9-_@.]")),
+          ],
         ),
       );
       textFields.add(SizedBox(height: 20));

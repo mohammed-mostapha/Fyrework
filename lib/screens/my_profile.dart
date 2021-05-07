@@ -195,7 +195,9 @@ class _MyProfileViewState extends State<MyProfileView> {
                                   Expanded(
                                     child: Center(
                                       child: Text(
-                                        "5",
+                                        MyUser.completedGigsByGigId != null
+                                            ? '${MyUser.completedGigsByGigId.length}'
+                                            : '0',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1,
@@ -223,21 +225,16 @@ class _MyProfileViewState extends State<MyProfileView> {
                             SizedBox(
                               height: 10,
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  'Rank',
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Container(
-                                  width: 100,
-                                  height: 20,
-                                  child: ProfileRatingStars(),
-                                )
-                              ],
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              width: 100,
+                              // height: 20,
+                              child: ProfileRatingStars(userId: MyUser.uid),
+                            ),
+                            SizedBox(
+                              height: 10,
                             ),
                             Text(
                               MyUser.location,

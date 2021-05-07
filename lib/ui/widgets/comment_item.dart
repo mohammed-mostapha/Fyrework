@@ -180,8 +180,9 @@ class _CommentItemState extends State<CommentItem>
         userRating: initialRating,
       );
       await DatabaseService().updateLeftReviewFieldToTrue(
-          commentId: widget.commentId,
-          review: _clientReviewTextController.text);
+        commentId: widget.commentId,
+        review: _clientReviewTextController.text,
+      );
       setState(() {});
     }
   }

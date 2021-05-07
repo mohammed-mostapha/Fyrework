@@ -5,9 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:Fyrework/models/otherUser.dart';
 
 class DatabaseService {
-  final String uid;
+  // final String uid;
 
-  DatabaseService({this.uid});
+  // DatabaseService({this.uid});
   //db reference
   FirebaseApp fyreworkApp = Firebase.app();
 
@@ -38,7 +38,7 @@ class DatabaseService {
     @required int lengthOfCompletedGigsByGigId,
   }) async {
     return await _usersCollection.doc(id).set({
-      'id': uid,
+      'id': id,
       'favoriteHashtags': FieldValue.arrayUnion(myFavoriteHashtags),
       'name': name,
       'username': handle,
@@ -51,7 +51,13 @@ class DatabaseService {
       'lengthOfOpenGigsByGigId': lengthOfOpenGigsByGigId,
       'completedGigsByGigId': completedGigsByGigId,
       'lengthOfCompletedGigsByGigId': lengthOfCompletedGigsByGigId,
-    });
+    }).then(
+      (value) => _usersCollection
+          .doc(id)
+          .collection('userRating')
+          .doc(id)
+          .set({'thisUserId': id}),
+    );
   }
 
   // user Data from snapshots
@@ -69,7 +75,14 @@ class DatabaseService {
       phoneNumber: snapshot.data()['phoneNumber'],
       openGigsByGigId: snapshot.data()['openGigsByGigId'],
       lengthOfOpenGigsByGigId: snapshot.data()['lengthOfOpenGigsByGigId'],
+      completedGigsByGigId: snapshot.data()['completedGigsByGigId'],
+      lengthOfCompletedGigsByGigId:
+          snapshot.data()['lengthOfCompletedGigsByGigId'],
     );
+  }
+
+  Future<QuerySnapshot> fetchUserRating({@required String userId}) {
+    return _usersCollection.doc(userId).collection('userRating').get();
   }
 
   // get user doc stream

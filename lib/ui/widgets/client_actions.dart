@@ -195,41 +195,36 @@ class _ClientActionsState extends State<ClientActions> {
                                         gigOwnerId: widget.passedGigOwnerId,
                                         appointedUserId: appointedUserId,
                                       );
-                                      await AddCommentViewModel()
-                                          .addComment(
-                                            gigIdHoldingComment:
-                                                widget.passedGigId,
-                                            gigOwnerId: widget.passedGigOwnerId,
-                                            gigOwnerUsername:
-                                                widget.pasedGigOwnerUsername,
-                                            commentOwnerUsername: username,
-                                            commentBody: 'wating client review',
-                                            commentOwnerId: userId,
-                                            commentOwnerAvatarUrl:
-                                                userProfilePictureUrl,
-                                            commentId: '',
-                                            isPrivateComment: true,
-                                            proposal: false,
-                                            approved: true,
-                                            rejected: false,
-                                            containMediaFile: false,
-                                            isGigCompleted: true,
-                                            appointedUserId: appointedUserId,
-                                            appointedUsername:
-                                                appointedUsername,
-                                            ratingCount: 0,
-                                            leftReview: false,
-                                          )
-                                          .then((value) => () async {
-                                                await DatabaseService()
-                                                    .addGigWorkstreamActions(
-                                                  gigId: widget.passedGigId,
-                                                  action: 'marked as completed',
-                                                  userAvatarUrl:
-                                                      MyUser.userAvatarUrl,
-                                                  gigActionOwner: "client",
-                                                );
-                                              });
+                                      await AddCommentViewModel().addComment(
+                                        gigIdHoldingComment: widget.passedGigId,
+                                        gigOwnerId: widget.passedGigOwnerId,
+                                        gigOwnerUsername:
+                                            widget.pasedGigOwnerUsername,
+                                        commentOwnerUsername: username,
+                                        commentBody: 'wating client review',
+                                        commentOwnerId: userId,
+                                        commentOwnerAvatarUrl:
+                                            userProfilePictureUrl,
+                                        commentId: '',
+                                        isPrivateComment: true,
+                                        proposal: false,
+                                        approved: true,
+                                        rejected: false,
+                                        containMediaFile: false,
+                                        isGigCompleted: true,
+                                        appointedUserId: appointedUserId,
+                                        appointedUsername: appointedUsername,
+                                        ratingCount: 0,
+                                        leftReview: false,
+                                      );
+
+                                      await DatabaseService()
+                                          .addGigWorkstreamActions(
+                                        gigId: widget.passedGigId,
+                                        action: 'marked as completed',
+                                        userAvatarUrl: MyUser.userAvatarUrl,
+                                        gigActionOwner: "client",
+                                      );
                                     },
                                   ),
                                   GestureDetector(

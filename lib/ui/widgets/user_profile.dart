@@ -200,7 +200,8 @@ class _UserProfileViewState extends State<UserProfileView> {
                                     Container(
                                       width: 100,
                                       height: 20,
-                                      child: ProfileRatingStars(),
+                                      child: ProfileRatingStars(
+                                          userId: widget.passedUserUid),
                                     )
                                   ],
                                 ),
