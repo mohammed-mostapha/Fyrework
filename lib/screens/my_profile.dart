@@ -225,9 +225,6 @@ class _MyProfileViewState extends State<MyProfileView> {
                             SizedBox(
                               height: 10,
                             ),
-                            SizedBox(
-                              width: 10,
-                            ),
                             Container(
                               width: 100,
                               // height: 20,
@@ -245,7 +242,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                       ),
                       Expanded(
                         child: DefaultTabController(
-                          length: 4,
+                          length: 3,
                           child: Scaffold(
                             appBar: AppBar(
                               toolbarHeight: 50,
@@ -279,13 +276,6 @@ class _MyProfileViewState extends State<MyProfileView> {
                                       color: Theme.of(context).primaryColor,
                                     ),
                                   ),
-                                  Tab(
-                                    child: FaIcon(
-                                      FontAwesomeIcons.star,
-                                      size: 16,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
                                 ],
                               ),
                               elevation: 0,
@@ -308,15 +298,6 @@ class _MyProfileViewState extends State<MyProfileView> {
                                   child: Center(
                                     child: Text(
                                       'Liked gigs gies here',
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  child: Center(
-                                    child: Text(
-                                      'Rating goes here',
                                       style:
                                           Theme.of(context).textTheme.bodyText1,
                                     ),

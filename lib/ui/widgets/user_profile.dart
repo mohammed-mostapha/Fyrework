@@ -127,7 +127,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                                       Expanded(
                                         child: Center(
                                           child: Text(
-                                            snapshot.data.ongoingGigsByGigId !=
+                                            snapshot.data.openGigsByGigId !=
                                                     null
                                                 ? '${snapshot.data.openGigsByGigId.length}'
                                                 : '0',
@@ -159,7 +159,11 @@ class _UserProfileViewState extends State<UserProfileView> {
                                       Expanded(
                                         child: Center(
                                           child: Text(
-                                            "5",
+                                            snapshot.data
+                                                        .completedGigsByGigId !=
+                                                    null
+                                                ? '${MyUser.completedGigsByGigId.length}'
+                                                : '0',
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyText1,
@@ -187,23 +191,14 @@ class _UserProfileViewState extends State<UserProfileView> {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      'Rank',
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Container(
-                                      width: 100,
-                                      height: 20,
-                                      child: ProfileRatingStars(
-                                          userId: widget.passedUserUid),
-                                    )
-                                  ],
+                                Container(
+                                  width: 100,
+                                  child: ProfileRatingStars(
+                                    userId: widget.passedUserUid,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
                                 ),
                                 Text(
                                   snapshot.data.location,
@@ -214,7 +209,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                           ),
                           Expanded(
                             child: DefaultTabController(
-                              length: 4,
+                              length: 3,
                               child: Scaffold(
                                 appBar: AppBar(
                                   toolbarHeight: 50,
@@ -249,13 +244,6 @@ class _UserProfileViewState extends State<UserProfileView> {
                                           color: Theme.of(context).primaryColor,
                                         ),
                                       ),
-                                      Tab(
-                                        child: FaIcon(
-                                          FontAwesomeIcons.star,
-                                          size: 16,
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                      ),
                                     ],
                                   ),
                                   elevation: 0,
@@ -279,16 +267,6 @@ class _UserProfileViewState extends State<UserProfileView> {
                                       child: Center(
                                         child: Text(
                                           'Liked gigs gies here',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      child: Center(
-                                        child: Text(
-                                          'Rating goes here',
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyText1,
