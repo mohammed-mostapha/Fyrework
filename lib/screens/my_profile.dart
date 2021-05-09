@@ -99,217 +99,212 @@ class _MyProfileViewState extends State<MyProfileView> {
             FocusScope.of(context).unfocus();
           },
           child: Scaffold(
-              appBar: AppBar(
-                elevation: 0.0,
-                automaticallyImplyLeading: false,
-                titleSpacing: 0,
-                leadingWidth: 0,
-                leading: Container(
-                  width: 0,
-                  height: 0,
-                ),
-                title: Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                      child: Text(
-                        MyUser.username,
-                        style: Theme.of(context).textTheme.bodyText1,
-                      ),
-                    ),
-                  ],
-                ),
+            appBar: AppBar(
+              elevation: 0.0,
+              automaticallyImplyLeading: false,
+              titleSpacing: 0,
+              leadingWidth: 0,
+              leading: Container(
+                width: 0,
+                height: 0,
               ),
-              endDrawer: myProfileDrawer(),
-              body: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            CachedNetworkImage(
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                width: 90.0,
-                                height: 90.0,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      image: imageProvider, fit: BoxFit.cover),
-                                ),
-                              ),
-                              imageUrl: MyUser.userAvatarUrl,
-                              placeholder: (context, url) =>
-                                  CircularProgressIndicator(),
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
-                            ),
-                            SizedBox(
-                              height: 50,
-                              child: Column(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Center(
-                                      child: Text(
-                                        "Open",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Center(
-                                      child: Text(
-                                        MyUser.openGigsByGigId != null
-                                            ? '${MyUser.openGigsByGigId.length}'
-                                            : '0',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 50,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Center(
-                                      child: Text(
-                                        "Completed",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Center(
-                                      child: Text(
-                                        MyUser.completedGigsByGigId != null
-                                            ? '${MyUser.completedGigsByGigId.length}'
-                                            : '0',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              MyUser.name,
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              width: 100,
-                              // height: 20,
-                              child: ProfileRatingStars(userId: MyUser.uid),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              MyUser.location,
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: DefaultTabController(
-                          length: 3,
-                          child: Scaffold(
-                            appBar: AppBar(
-                              toolbarHeight: 50,
-                              primary: false,
-                              leading: Container(width: 0, height: 0),
-                              title: Container(width: 0, height: 0),
-                              bottom: TabBar(
-                                indicatorColor: Theme.of(context).primaryColor,
-                                tabs: [
-                                  Tab(
-                                      child: SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: SvgPicture.asset(
-                                      grid,
-                                      semanticsLabel: 'grid',
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  )),
-                                  Tab(
-                                    child: FaIcon(
-                                      FontAwesomeIcons.checkCircle,
-                                      size: 16,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                  Tab(
-                                    child: FaIcon(
-                                      FontAwesomeIcons.thumbsUp,
-                                      size: 16,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              elevation: 0,
-                              backgroundColor:
-                                  Theme.of(context).scaffoldBackgroundColor,
-                            ),
-                            // backgroundColor: FyreworkrColors.fyreworkBlack),
-                            body: TabBarView(
-                              children: [
-                                userOpenGigs(),
-                                Container(
-                                  child: Center(
-                                      child: Text(
-                                    'Done goes here',
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
-                                  )),
-                                ),
-                                Container(
-                                  child: Center(
-                                    child: Text(
-                                      'Liked gigs gies here',
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                    ),
-                                  ),
-                                ),
-                              ],
+              title: Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                    child: Text(
+                      MyUser.username,
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            endDrawer: myProfileDrawer(),
+            body: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CachedNetworkImage(
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 90.0,
+                            height: 90.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.cover),
                             ),
                           ),
+                          imageUrl: MyUser.userAvatarUrl,
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                        ),
+                        SizedBox(
+                          height: 50,
+                          child: Column(
+                            children: <Widget>[
+                              Expanded(
+                                child: Center(
+                                  child: Text(
+                                    "Open",
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Center(
+                                  child: Text(
+                                    MyUser.openGigsByGigId != null
+                                        ? '${MyUser.openGigsByGigId.length}'
+                                        : '0',
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 50,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                child: Center(
+                                  child: Text(
+                                    "Completed",
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Center(
+                                  child: Text(
+                                    MyUser.completedGigsByGigId != null
+                                        ? '${MyUser.completedGigsByGigId.length}'
+                                        : '0',
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          MyUser.name,
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          width: 100,
+                          // height: 20,
+                          child: ProfileRatingStars(userId: MyUser.uid),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          MyUser.location,
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: DefaultTabController(
+                      length: 3,
+                      child: Scaffold(
+                        appBar: AppBar(
+                          toolbarHeight: 50,
+                          primary: false,
+                          leading: Container(width: 0, height: 0),
+                          title: Container(width: 0, height: 0),
+                          bottom: TabBar(
+                            indicatorColor: Theme.of(context).primaryColor,
+                            tabs: [
+                              Tab(
+                                  child: SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: SvgPicture.asset(
+                                  grid,
+                                  semanticsLabel: 'grid',
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              )),
+                              Tab(
+                                child: FaIcon(
+                                  FontAwesomeIcons.checkCircle,
+                                  size: 16,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                              Tab(
+                                child: FaIcon(
+                                  FontAwesomeIcons.thumbsUp,
+                                  size: 16,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          elevation: 0,
+                          backgroundColor:
+                              Theme.of(context).scaffoldBackgroundColor,
+                        ),
+                        // backgroundColor: FyreworkrColors.fyreworkBlack),
+                        body: TabBarView(
+                          children: [
+                            userOpenGigs(),
+                            Container(
+                              child: Center(
+                                  child: Text(
+                                'Done goes here',
+                                style: Theme.of(context).textTheme.bodyText1,
+                              )),
+                            ),
+                            Container(
+                              child: Center(
+                                child: Text(
+                                  'Liked gigs gies here',
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ))),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );

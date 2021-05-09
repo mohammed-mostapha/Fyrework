@@ -69,14 +69,10 @@ class _ProfileRatingStarsState extends State<ProfileRatingStars> {
             AsyncSnapshot<QuerySnapshot> userRatingSnapshot) {
           switch (userRatingSnapshot.connectionState) {
             case ConnectionState.none:
-              return Container(
-                width: 20,
-                height: 20,
-                child: Center(
-                  child: CircularProgressIndicator(
-                    valueColor: new AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).primaryColor,
-                    ),
+              return Center(
+                child: CircularProgressIndicator(
+                  valueColor: new AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).primaryColor,
                   ),
                 ),
               );
@@ -88,6 +84,9 @@ class _ProfileRatingStarsState extends State<ProfileRatingStars> {
                 return _buildProfileRatingStars();
               } else if (userRatingSnapshot.hasData) {
                 if (userRatingSnapshot.data != null) {
+                  if (!(userRatingSnapshot.data.docs.length > 0)) {
+                    return _buildProfileRatingStars();
+                  }
                   List userRatingDocumentSnapshotsList = [];
                   List<QueryDocumentSnapshot> userRatingDocumentSnapshots =
                       userRatingSnapshot.data.docs;
@@ -107,13 +106,13 @@ class _ProfileRatingStarsState extends State<ProfileRatingStars> {
                   print('documentsNo sum: $userRatingSum');
 
                   int estimatedUserRating =
-                      (userRatingSum / userRatingDocumentSnapshotsList.length)
-                          .toInt();
+                      (userRatingSum ~/ userRatingDocumentSnapshotsList.length);
+                  // .toInt();
                   print('estimatedUserRating = $estimatedUserRating');
 
                   _userProfileRatingCount = estimatedUserRating;
                 } else {
-                  _buildProfileRatingStars();
+                  return _buildProfileRatingStars();
                 }
               }
               return _buildProfileRatingStars();

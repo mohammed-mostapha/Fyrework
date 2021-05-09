@@ -12,7 +12,7 @@ class MyUserController {
 
 //fetch user id from firebase
   getCurrentUserFromFirebase(String uid) async {
-    //assing myUserData from cloud to my local user object
+    //passing myUserData from cloud to my local user object
     await FirestoreService().getCurrentUserData(uid);
   }
 }
