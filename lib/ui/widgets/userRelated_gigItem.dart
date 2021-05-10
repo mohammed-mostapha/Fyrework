@@ -110,7 +110,6 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
       'assets/svgs/flaticon/release_escrow_payment.svg';
 
   bool liked = false;
-  bool showLikeOverlay = false;
   AnimationController _likeAnimationController;
 
   // List<String> gigMediaFilesDownloadedUrls = List<String>();
@@ -134,7 +133,8 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
         _likeAnimationController.reverse();
       });
     });
-    FirestoreService().updateGigAddRemoveLike(widget.gigId.gigId, liked);
+    FirestoreService().updateGigAddRemoveLike(
+        gigId: widget.gigId, userId: MyUser.uid, likedOrNot: liked);
   }
 
   _commentButtonPressed() {
@@ -151,32 +151,6 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                   passedGigCurrency: widget.gigCurrency,
                   passedGigBudget: widget.gigBudget,
                 )));
-  }
-
-  _doubleTappedLike() {
-    if (liked == false && showLikeOverlay == false) {
-      setState(() {
-        liked = true;
-        showLikeOverlay = true;
-        _likeAnimationController.forward().then((value) {
-          _likeAnimationController.reverse();
-        });
-        if (showLikeOverlay) {
-          Timer(const Duration(milliseconds: 500), () {
-            setState(() {
-              showLikeOverlay = false;
-            });
-          });
-        }
-
-        FirestoreService().updateGigAddRemoveLike(widget.gigId.gigId, liked);
-      });
-    }
-    showLikeOverlay = true;
-    _likeAnimationController.forward().then((value) {
-      _likeAnimationController.reverse();
-      showLikeOverlay = false;
-    });
   }
 
   showUserProfile() {
@@ -597,20 +571,12 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
             ),
           ),
           GestureDetector(
-            onDoubleTap: () => _doubleTappedLike(),
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
                 GigItemMediaPreviewer(
                   receivedGigMediaFilesUrls: widget.gigMediaFilesDownloadUrls,
                 ),
-                showLikeOverlay
-                    ? Icon(
-                        Icons.favorite,
-                        size: 120.0,
-                        color: Colors.white,
-                      )
-                    : Container()
               ],
             ),
           ),

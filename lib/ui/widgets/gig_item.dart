@@ -47,6 +47,8 @@ class GigItem extends StatefulWidget {
   final paymentReleased;
   final markedAsComplete;
   final clientLeftReview;
+  final likesCount;
+  final likersByUserId;
 
   GigItem({
     Key key,
@@ -79,6 +81,8 @@ class GigItem extends StatefulWidget {
     this.paymentReleased,
     this.markedAsComplete,
     this.clientLeftReview,
+    this.likesCount,
+    this.likersByUserId,
   }) : super(key: key);
 
   @override
@@ -109,7 +113,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
       'assets/svgs/flaticon/release_escrow_payment.svg';
 
   bool liked = false;
-  bool showLikeOverlay = false;
   AnimationController _likeAnimationController;
 
   // List<String> gigMediaFilesDownloadedUrls = List<String>();
@@ -133,7 +136,11 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
         _likeAnimationController.reverse();
       });
     });
-    FirestoreService().updateGigAddRemoveLike(widget.gigId, liked);
+    FirestoreService().updateGigAddRemoveLike(
+      gigId: widget.gigId,
+      userId: MyUser.uid,
+      likedOrNot: liked,
+    );
   }
 
   _commentButtonPressed() {
@@ -664,9 +671,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                 ),
                 Row(
                   children: <Widget>[
-                    widget.gigLikes != null &&
-                            widget.gigLikes != 0 &&
-                            widget.gigLikes > 0
+                    widget.gigLikes != null && widget.gigLikes > 0
                         ? Flexible(
                             child: Text('${widget.gigLikes}' + ' ' + 'likes',
                                 style: Theme.of(context).textTheme.bodyText1))

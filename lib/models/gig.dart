@@ -25,6 +25,8 @@ class Gig {
   final bool markedAsComplete;
   final bool clientLeftReview;
   final List gigActions;
+  final int likesCount;
+  final List likersByUserId;
   Gig({
     this.appointed = false,
     this.gigId,
@@ -52,6 +54,8 @@ class Gig {
     this.markedAsComplete,
     this.clientLeftReview,
     this.gigActions,
+    this.likesCount = 0,
+    this.likersByUserId,
   });
 
   Map<String, dynamic> toMap() {
@@ -82,6 +86,8 @@ class Gig {
       'paymentReleased': paymentReleased,
       'markedAsComplete': markedAsComplete,
       'clientLeftReview': clientLeftReview,
+      'likesCount': likesCount,
+      'likersByUserId': [],
     };
   }
 
@@ -115,6 +121,8 @@ class Gig {
       paymentReleased: map['paymentReleased'],
       markedAsComplete: map['markedAsComplete'],
       clientLeftReview: map['clientLeftReview'],
+      likesCount: map['likesCount'],
+      likersByUserId: map['likersByUserId'],
     );
   }
 }

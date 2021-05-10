@@ -174,11 +174,15 @@ class FirestoreService {
     }
   }
 
-  Future updateGigAddRemoveLike(String gigId, bool likedOrNot) async {
+  Future updateGigAddRemoveLike(
+      {String gigId, String userId, bool likedOrNot}) async {
     try {
-      await _gigsCollectionReference
-          .doc(gigId)
-          .update({'gigLikes': FieldValue.increment(likedOrNot ? 1 : -1)});
+      await _gigsCollectionReference.doc(gigId).update({
+        'likesCount': FieldValue.increment(likedOrNot ? 1 : -1),
+        'likersByUserId': likedOrNot
+            ? FieldValue.arrayUnion([userId])
+            : FieldValue.arrayRemove([userId])
+      });
     } catch (e) {
       // TODO: Find or create a way to repeat error handling without so much repeated code
       if (e is PlatformException) {

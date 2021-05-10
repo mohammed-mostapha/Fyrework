@@ -130,6 +130,8 @@ class _AllGigsViewState extends State<AllGigsView> {
                                       getDocData['markedAsComplete'],
                                   clientLeftReview:
                                       getDocData['clientLeftReview'],
+                                  likesCount: getDocData['likesCount'],
+                                  likersByUserId: getDocData['likersByUserId'],
                                 )
                               : Container(
                                   width: 0,
