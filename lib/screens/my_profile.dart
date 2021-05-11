@@ -679,8 +679,8 @@ class _MyProfileViewState extends State<MyProfileView> {
   }
 
   userOpenGigs() {
-    return FutureBuilder<QuerySnapshot>(
-      future: DatabaseService().myOpenGigsByGigOwnerId(MyUser.uid),
+    return StreamBuilder<QuerySnapshot>(
+      stream: DatabaseService().myOpenGigsByGigOwnerId(MyUser.uid),
       builder: (context, snapshot) {
         // print('snapshot.data: ${snapshot.data.documents.length}');
         return snapshot.hasError
@@ -733,6 +733,8 @@ class _MyProfileViewState extends State<MyProfileView> {
                               paymentReleased: getDocData['paymentReleased'],
                               markedAsComplete: getDocData['markedAsComplete'],
                               clientLeftReview: getDocData['clientLeftReview'],
+                              likesCount: getDocData['likesCount'],
+                              likersByUserId: getDocData['likersByUserId'],
                             ),
                           );
                         })

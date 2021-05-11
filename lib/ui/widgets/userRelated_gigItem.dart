@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:core';
 
 import 'package:Fyrework/models/myUser.dart';
@@ -111,10 +110,7 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
   final String releaseEscrowPaymentIcon =
       'assets/svgs/flaticon/release_escrow_payment.svg';
 
-  bool liked = false;
   AnimationController _likeAnimationController;
-
-  // List<String> gigMediaFilesDownloadedUrls = List<String>();
 
   void initState() {
     super.initState();
@@ -126,17 +122,6 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
       lowerBound: 1.0,
       upperBound: 1.25,
     );
-  }
-
-  _likedPressed() {
-    setState(() {
-      liked = !liked;
-      _likeAnimationController.forward().then((value) {
-        _likeAnimationController.reverse();
-      });
-    });
-    FirestoreService().updateGigAddRemoveLike(
-        gigId: widget.gigId, userId: MyUser.uid, likedOrNot: liked);
   }
 
   _commentButtonPressed() {
@@ -175,6 +160,21 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
         darkModeOn ? fyreworkLightTheme() : fyreworkDarkTheme();
 
     bool gigHasLikes = widget.likesCount > 0 ? true : false;
+    bool liked = widget.likersByUserId.contains(MyUser.uid) ? true : false;
+
+    _likedPressed() {
+      setState(() {
+        liked = !liked;
+        _likeAnimationController.forward().then((value) {
+          _likeAnimationController.reverse();
+        });
+      });
+      FirestoreService().updateGigAddRemoveLike(
+        gigId: widget.gigId,
+        userId: MyUser.uid,
+        likedOrNot: liked,
+      );
+    }
 
     myGig = widget.gigOwnerId == MyUser.uid ? true : false;
     appointed = widget.appointed;
@@ -242,7 +242,7 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
           child: SvgPicture.asset(
             liked ? heartSolid : heart,
             semanticsLabel: 'Like',
-            color: liked ? Colors.red[400] : Theme.of(context).primaryColor,
+            color: liked ? Colors.red[300] : Theme.of(context).primaryColor,
           ),
         ),
         onTap: () => _likedPressed(),

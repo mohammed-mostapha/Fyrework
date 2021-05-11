@@ -98,7 +98,10 @@ class DatabaseService {
   // filter all gigs
   Stream<QuerySnapshot> filterAllGigs(String query) {
     return query.isEmpty
-        ? _gigsCollection.orderBy('createdAt', descending: true).snapshots()
+        ? _gigsCollection
+            .where('hidden', isEqualTo: false)
+            .orderBy('createdAt', descending: true)
+            .snapshots()
         : _gigsCollection
             .where('hidden', isEqualTo: false)
             .where('gigHashtags', arrayContains: query)
@@ -109,6 +112,7 @@ class DatabaseService {
   // listening to client gigs
   Stream<QuerySnapshot> listenToCilentGigs() {
     return _gigsCollection
+        .where('hidden', isEqualTo: false)
         .where('gigValue', isEqualTo: 'I need a provider')
         .orderBy('createdAt', descending: true)
         .snapshots();
@@ -117,23 +121,24 @@ class DatabaseService {
   // listening to provider gigs
   Stream<QuerySnapshot> listenToProviderGigs() {
     return _gigsCollection
+        .where('hidden', isEqualTo: false)
         .where('gigValue', isEqualTo: 'Gig I can do')
         .orderBy('createdAt', descending: true)
         .snapshots();
   }
 
   //fetch an individual gig
-  Stream<DocumentSnapshot> listenToAnIndividualGig(gigId) {
-    // return _gigsCollection.where('gigId', isEqualTo: gigId).snapshots();
-    return _gigsCollection.doc(gigId).snapshots();
-  }
+  // Stream<DocumentSnapshot> listenToAnIndividualGig(gigId) {
+  //   // return _gigsCollection.where('gigId', isEqualTo: gigId).snapshots();
+  //   return _gigsCollection.doc(gigId).snapshots();
+  // }
 
   Stream<QuerySnapshot> userOpenGigsByGigOwnerId(String userId) {
     return _gigsCollection.where('gigOwnerId', isEqualTo: userId).snapshots();
   }
 
-  Future<QuerySnapshot> myOpenGigsByGigOwnerId(String userId) {
-    return _gigsCollection.where('gigOwnerId', isEqualTo: userId).get();
+  Stream<QuerySnapshot> myOpenGigsByGigOwnerId(String userId) {
+    return _gigsCollection.where('gigOwnerId', isEqualTo: userId).snapshots();
   }
 
   Stream<QuerySnapshot> userOpenGigsByAppointedUserId(String userId) {

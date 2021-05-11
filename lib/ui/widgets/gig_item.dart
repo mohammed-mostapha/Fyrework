@@ -186,9 +186,8 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
     ThemeData themeOfOppositeContext =
         darkModeOn ? fyreworkLightTheme() : fyreworkDarkTheme();
 
-    bool liked = widget.likersByUserId.contains(MyUser.uid) ? true : false;
-
     bool gigHasLikes = widget.likesCount > 0 ? true : false;
+    bool liked = widget.likersByUserId.contains(MyUser.uid) ? true : false;
 
     _likedPressed() {
       setState(() {

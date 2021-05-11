@@ -60,7 +60,6 @@ class ClientGigsView extends StatelessWidget {
                             clientLeftReview: getDocData['clientLeftReview'],
                             likesCount: getDocData['likesCount'],
                             likersByUserId: getDocData['likersByUserId'],
-
                             // onDeleteItem: () => model.deleteGig(index),
                           ),
                         );

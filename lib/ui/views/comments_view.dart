@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/ui/widgets/comment_item.dart';
 
@@ -23,6 +22,7 @@ class CommentsView extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           print('look at this error: ${snapshot.error}');
+          return Center(child: Text(''));
         }
         if (!snapshot.hasData) {
           return Center(child: Text(''));
@@ -75,6 +75,11 @@ class CommentsView extends StatelessWidget {
                 );
               });
         }
+        return Center(
+            child: Text(
+          'No comments yet...',
+          style: Theme.of(context).textTheme.bodyText1,
+        ));
       },
     );
   }
