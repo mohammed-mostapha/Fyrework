@@ -16,7 +16,6 @@ class Gig {
   String gigValue;
   final String adultContentText;
   final bool adultContentBool;
-  final int gigLikes;
   final String appointedUserId;
   final String appointedusername;
   final List appliersOrHirersByUserId;
@@ -43,7 +42,6 @@ class Gig {
     this.gigCurrency,
     this.gigBudget,
     this.gigValue,
-    this.gigLikes,
     this.adultContentText,
     this.adultContentBool,
     this.appointedUserId,
@@ -77,7 +75,6 @@ class Gig {
       'gigValue': gigValue,
       'adultContentText': adultContentText,
       'adultContentBool': adultContentBool,
-      'gigLikes': gigLikes,
       'appointedUserId': appointedUserId,
       'appointedusername': appointedusername,
       'appliersOrHirersByUserId': [],
@@ -112,7 +109,6 @@ class Gig {
       gigValue: map['gigValue'],
       adultContentText: map['adultContentText'],
       adultContentBool: map['adultContentBool'],
-      gigLikes: map['gigLikes'],
       appointedUserId: map['appointedUserId'],
       appointedusername: map['appointedusername'],
       appliersOrHirersByUserId: map['appliersOrHirersByUserId'],

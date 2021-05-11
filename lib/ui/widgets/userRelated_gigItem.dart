@@ -39,7 +39,6 @@ class UserRelatedGigItem extends StatefulWidget {
   final gigCurrency;
   final gigBudget;
   final gigValue;
-  final gigLikes;
   final appointedUserId;
   final adultContentText;
   final adultContentBool;
@@ -48,6 +47,8 @@ class UserRelatedGigItem extends StatefulWidget {
   final paymentReleased;
   final markedAsComplete;
   final clientLeftReview;
+  final likesCount;
+  final likersByUserId;
   UserRelatedGigItem({
     Key key,
     this.index,
@@ -70,7 +71,6 @@ class UserRelatedGigItem extends StatefulWidget {
     this.gigCurrency,
     this.gigBudget,
     this.gigValue,
-    this.gigLikes,
     this.appointedUserId,
     this.adultContentText,
     this.adultContentBool,
@@ -79,6 +79,8 @@ class UserRelatedGigItem extends StatefulWidget {
     this.paymentReleased,
     this.markedAsComplete,
     this.clientLeftReview,
+    this.likesCount,
+    this.likersByUserId,
   }) : super(key: key);
 
   @override
@@ -171,6 +173,8 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
     bool darkModeOn = brightness == Brightness.dark;
     ThemeData themeOfOppositeContext =
         darkModeOn ? fyreworkLightTheme() : fyreworkDarkTheme();
+
+    bool gigHasLikes = widget.likesCount > 0 ? true : false;
 
     myGig = widget.gigOwnerId == MyUser.uid ? true : false;
     appointed = widget.appointed;
@@ -631,16 +635,13 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                 ),
                 Row(
                   children: <Widget>[
-                    widget.gigLikes != null &&
-                            widget.gigLikes != 0 &&
-                            widget.gigLikes > 0
+                    gigHasLikes
                         ? Flexible(
                             child: Text(
-                            '${widget.gigLikes}' + ' ' + 'likes',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ))
+                                (widget.likesCount > 1)
+                                    ? '${widget.likesCount}' + ' ' + 'likes'
+                                    : '${widget.likesCount}' + ' ' + 'like',
+                                style: Theme.of(context).textTheme.bodyText1))
                         : Container(
                             width: 0,
                             height: 0,

@@ -346,7 +346,6 @@ class _UserProfileViewState extends State<UserProfileView> {
                               gigCurrency: getDocData['gigCurrency'],
                               gigBudget: getDocData['gigBudget'],
                               gigValue: getDocData['gigValue'],
-                              gigLikes: getDocData['gigLikes'],
                               adultContentText: getDocData['adultContentText'],
                               adultContentBool: getDocData['adultContentBool'],
                               appointedUserId: getDocData['appointedUserId'],
@@ -355,6 +354,8 @@ class _UserProfileViewState extends State<UserProfileView> {
                               paymentReleased: getDocData['paymentReleased'],
                               markedAsComplete: getDocData['markedAsComplete'],
                               clientLeftReview: getDocData['clientLeftReview'],
+                              likesCount: getDocData['likesCount'],
+                              likersByUserId: getDocData['likersByUserId'],
                             ),
                           );
                         })

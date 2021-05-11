@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:core';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/services/database.dart';
@@ -38,7 +37,6 @@ class GigItem extends StatefulWidget {
   final gigCurrency;
   final gigBudget;
   final gigValue;
-  final gigLikes;
   final appointedUserId;
   final adultContentText;
   final adultContentBool;
@@ -72,7 +70,6 @@ class GigItem extends StatefulWidget {
     this.gigCurrency,
     this.gigBudget,
     this.gigValue,
-    this.gigLikes,
     this.appointedUserId,
     this.adultContentText,
     this.adultContentBool,
@@ -112,7 +109,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
   final String releaseEscrowPaymentIcon =
       'assets/svgs/flaticon/release_escrow_payment.svg';
 
-  bool liked = false;
   AnimationController _likeAnimationController;
 
   // List<String> gigMediaFilesDownloadedUrls = List<String>();
@@ -126,20 +122,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
       value: 1.0,
       lowerBound: 1.0,
       upperBound: 1.25,
-    );
-  }
-
-  _likedPressed() {
-    setState(() {
-      liked = !liked;
-      _likeAnimationController.forward().then((value) {
-        _likeAnimationController.reverse();
-      });
-    });
-    FirestoreService().updateGigAddRemoveLike(
-      gigId: widget.gigId,
-      userId: MyUser.uid,
-      likedOrNot: liked,
     );
   }
 
@@ -203,6 +185,24 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
     bool darkModeOn = brightness == Brightness.dark;
     ThemeData themeOfOppositeContext =
         darkModeOn ? fyreworkLightTheme() : fyreworkDarkTheme();
+
+    bool liked = widget.likersByUserId.contains(MyUser.uid) ? true : false;
+
+    bool gigHasLikes = widget.likesCount > 0 ? true : false;
+
+    _likedPressed() {
+      setState(() {
+        liked = !liked;
+        _likeAnimationController.forward().then((value) {
+          _likeAnimationController.reverse();
+        });
+      });
+      FirestoreService().updateGigAddRemoveLike(
+        gigId: widget.gigId,
+        userId: MyUser.uid,
+        likedOrNot: liked,
+      );
+    }
 
     myGig = widget.gigOwnerId == MyUser.uid ? true : false;
     appointed = widget.appointed;
@@ -671,9 +671,12 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                 ),
                 Row(
                   children: <Widget>[
-                    widget.gigLikes != null && widget.gigLikes > 0
+                    gigHasLikes
                         ? Flexible(
-                            child: Text('${widget.gigLikes}' + ' ' + 'likes',
+                            child: Text(
+                                (widget.likesCount > 1)
+                                    ? '${widget.likesCount}' + ' ' + 'likes'
+                                    : '${widget.likesCount}' + ' ' + 'like',
                                 style: Theme.of(context).textTheme.bodyText1))
                         : Container(
                             width: 0,

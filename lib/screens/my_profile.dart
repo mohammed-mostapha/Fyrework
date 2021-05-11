@@ -725,7 +725,6 @@ class _MyProfileViewState extends State<MyProfileView> {
                               gigCurrency: getDocData['gigCurrency'],
                               gigBudget: getDocData['gigBudget'],
                               gigValue: getDocData['gigValue'],
-                              gigLikes: getDocData['gigLikes'],
                               adultContentText: getDocData['adultContentText'],
                               adultContentBool: getDocData['adultContentBool'],
                               appointedUserId: getDocData['appointedUserId'],

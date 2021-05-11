@@ -32,9 +32,12 @@ class ProviderGigsView extends StatelessWidget {
                         return GestureDetector(
                           // onTap: () => model.editGig(index),
                           child: GigItem(
+                            index: index,
                             appointed: getDocData['appointed'],
                             appointedusername:
                                 getDocData['appointedUserFullName'],
+                            appliersOrHirersByUserId:
+                                getDocData['appliersOrHirersByUserId'],
                             gigId: getDocData['gigId'],
                             currentUserId: currentUserId,
                             gigOwnerId: getDocData['gigOwnerId'],
@@ -47,16 +50,19 @@ class ProviderGigsView extends StatelessWidget {
                             gigMediaFilesDownloadUrls:
                                 getDocData['gigMediaFilesDownloadUrls'],
                             gigPost: getDocData['gigPost'],
-                            gigDeadline:
-                                getDocData['gigDeadlineInUnixMilliseconds'],
                             gigCurrency: getDocData['gigCurrency'],
                             gigBudget: getDocData['gigBudget'],
                             gigValue: getDocData['gigValue'],
-                            gigLikes: getDocData['gigLikes'],
                             adultContentText: getDocData['adultContentText'],
                             adultContentBool: getDocData['adultContentBool'],
                             appointedUserId: getDocData['appointedUserId'],
                             hidden: getDocData['hidden'],
+                            gigActions: getDocData['gigActions'],
+                            paymentReleased: getDocData['paymentReleased'],
+                            markedAsComplete: getDocData['markedAsComplete'],
+                            clientLeftReview: getDocData['clientLeftReview'],
+                            likesCount: getDocData['likesCount'],
+                            likersByUserId: getDocData['likersByUserId'],
 
                             // onDeleteItem: () => model.deleteGig(index),
                           ),

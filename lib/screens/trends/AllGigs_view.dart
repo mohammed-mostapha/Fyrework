@@ -115,7 +115,6 @@ class _AllGigsViewState extends State<AllGigsView> {
                                   gigCurrency: getDocData['gigCurrency'],
                                   gigBudget: getDocData['gigBudget'],
                                   gigValue: getDocData['gigValue'],
-                                  gigLikes: getDocData['gigLikes'],
                                   adultContentText:
                                       getDocData['adultContentText'],
                                   adultContentBool:
