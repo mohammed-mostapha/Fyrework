@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:499632944046:android:9fda39b66d2fbe7d5fce3f",
         "android_client_info": {
-          "package_name": "com.fyre.work"
+          "package_name": "com.fyrework.app"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "499632944046-r5mq59iq8gqnf4p3tukv9k5fq36t0f1k.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.fyre.work",
+            "package_name": "com.fyrework.app",
             "certificate_hash": "9aa9238e0ee6777b743bc4edbf07da78b23bb737"
           }
         },

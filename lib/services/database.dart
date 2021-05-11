@@ -141,6 +141,13 @@ class DatabaseService {
     return _gigsCollection.where('gigOwnerId', isEqualTo: userId).snapshots();
   }
 
+  Stream<QuerySnapshot> myCompletedGigsByGigOwnerId(String userId) {
+    return _gigsCollection
+        .where('gigOwnerId', isEqualTo: userId)
+        .where('markedAsComplete', isEqualTo: true)
+        .snapshots();
+  }
+
   Stream<QuerySnapshot> userOpenGigsByAppointedUserId(String userId) {
     return _gigsCollection
         .where('appointedUserId', isEqualTo: userId)
