@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:core';
+import 'package:Fyrework/screens/my_profile.dart';
 import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/ui/shared/constants.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
@@ -147,15 +148,23 @@ class _CommentItemState extends State<CommentItem>
   }
 
   showUserProfile({@required String userId}) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => UserProfileView(
-                  // passedUserUid: widget.commentOwnerId,
-                  passedUserUid: userId,
-                  fromComment: true,
-                  fromGig: false,
-                )));
+    userId != MyUser.uid
+        ? Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => UserProfileView(
+                      // passedUserUid: widget.commentOwnerId,
+                      passedUserUid: userId,
+                      fromComment: true,
+                      fromGig: false,
+                    )))
+        : Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MyProfileView(
+                    // passedUserUid: widget.commentOwnerId,
+
+                    )));
   }
 
   alertUserToSelectRating() {

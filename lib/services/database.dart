@@ -133,24 +133,32 @@ class DatabaseService {
   //   return _gigsCollection.doc(gigId).snapshots();
   // }
 
-  Stream<QuerySnapshot> userOpenGigsByGigOwnerId(String userId) {
-    return _gigsCollection.where('gigOwnerId', isEqualTo: userId).snapshots();
-  }
-
-  Stream<QuerySnapshot> myOpenGigsByGigOwnerId(String userId) {
-    return _gigsCollection.where('gigOwnerId', isEqualTo: userId).snapshots();
-  }
-
-  Stream<QuerySnapshot> myCompletedGigsByGigOwnerId(String userId) {
+  Stream<QuerySnapshot> openGigsByGigOwnerId(String userId) {
     return _gigsCollection
+        .where('hidden', isEqualTo: false)
+        .where('gigOwnerId', isEqualTo: userId)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> openGigsByAppointedUserId(String userId) {
+    return _gigsCollection
+        .where('hidden', isEqualTo: false)
+        .where('appointedUserId', isEqualTo: userId)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> completedGigsByGigOwnerId(String userId) {
+    return _gigsCollection
+        .where('hidden', isEqualTo: false)
         .where('gigOwnerId', isEqualTo: userId)
         .where('markedAsComplete', isEqualTo: true)
         .snapshots();
   }
 
-  Stream<QuerySnapshot> userOpenGigsByAppointedUserId(String userId) {
+  Stream<QuerySnapshot> likedGigsByLikersByUserId(String userId) {
     return _gigsCollection
-        .where('appointedUserId', isEqualTo: userId)
+        .where('hidden', isEqualTo: false)
+        .where('likersByUserId', arrayContains: userId)
         .snapshots();
   }
 

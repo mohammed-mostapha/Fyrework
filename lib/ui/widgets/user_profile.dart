@@ -300,9 +300,8 @@ class _UserProfileViewState extends State<UserProfileView> {
   userOpenGigs() {
     return StreamBuilder<QuerySnapshot>(
       stream: widget.fromGig
-          ? DatabaseService().userOpenGigsByGigOwnerId(widget.passedUserUid)
-          : DatabaseService()
-              .userOpenGigsByAppointedUserId(widget.passedUserUid),
+          ? DatabaseService().openGigsByGigOwnerId(widget.passedUserUid)
+          : DatabaseService().openGigsByAppointedUserId(widget.passedUserUid),
       builder: (context, snapshot) {
         return snapshot.hasError
             ? Center(

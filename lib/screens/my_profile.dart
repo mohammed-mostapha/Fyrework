@@ -680,7 +680,7 @@ class _MyProfileViewState extends State<MyProfileView> {
 
   userOpenGigs() {
     return StreamBuilder<QuerySnapshot>(
-      stream: DatabaseService().myOpenGigsByGigOwnerId(MyUser.uid),
+      stream: DatabaseService().openGigsByGigOwnerId(MyUser.uid),
       builder: (context, snapshot) {
         // print('snapshot.data: ${snapshot.data.documents.length}');
         return snapshot.hasError
