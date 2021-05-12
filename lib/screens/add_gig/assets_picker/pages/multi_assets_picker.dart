@@ -347,7 +347,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
         widget.gigMeidaFilesDownloadUrls.add(storageResult);
       }
 
-      CreateGigViewModel().addGig(
+      CreateGigViewModel().createGig(
         appointed: widget.appointed,
         gigId: widget.gigId,
         userId: widget.userId,
@@ -387,11 +387,6 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
   }
 
   Widget get gigPreview {
-    // if (widget.gigDeadLine != null) {
-    //   formattedGigDeadline = DateFormat.yMMMd()
-    //       .format(DateTime.fromMillisecondsSinceEpoch(widget.gigDeadLine));
-    // }
-
     return Container(
       child: Padding(
         padding: const EdgeInsets.all(10),

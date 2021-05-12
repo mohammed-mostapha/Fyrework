@@ -36,7 +36,7 @@ class FirestoreService {
     }
   }
 
-  Future addGig(List gigHashtags, Gig gig) async {
+  Future createGig(List gigHashtags, Gig gig) async {
     var gigId;
     String userId = gig.gigOwnerId;
 
@@ -47,7 +47,11 @@ class FirestoreService {
         DocumentReference gigRef = _gigsCollectionReference.doc(gigId);
         gigRef.update({'gigId': gigRef.id});
       });
-      await DatabaseService().updateOpenGigsByGigId(userId, gigId);
+      await DatabaseService()
+          .updateOpenGigsByGigId(userId: userId, gigId: gigId);
+
+      await DatabaseService()
+          .addUserIdToGigRelatedUsersArray(gigId: gigId, userId: userId);
 
       // only add gigHashtags that dont already exist in popularHashtags cloud firestore collection
       QuerySnapshot popularHashtagsDocuments =
@@ -98,26 +102,6 @@ class FirestoreService {
     }
   }
 
-  // Future addGigCompletedCommentTemplate(
-  //   Comment comment,
-  //   String gigIdHoldingComment,
-  // ) async {
-  //   try {
-  //     Map<String, dynamic> commentData = comment.toMap();
-  //     DocumentReference commentRef =
-  //         await _commentsCollectionReference.add(commentData).then((comment) {
-  //       comment.update({'commentId': comment.id});
-  //     });
-  //   } catch (e) {
-  //     // TODO: Find or create a way to repeat error handling without so much repeated code
-  //     if (e is PlatformException) {
-  //       return e.message;
-  //     }
-
-  //     return e.toString();
-  //   }
-  // }
-
   Stream listenToAllGigsRealTime() {
     // Register the handler for when the gigs data changes
     _gigsCollectionReference.snapshots().listen((gigsSnapshot) {
@@ -132,26 +116,6 @@ class FirestoreService {
     });
     return _gigsController.stream;
   }
-
-  // Stream listenToCommentsRealTime(String gigIdCommentsIdentifier) {
-  //   // Register the handler for when the comments data changes
-  //   _commentsCollectionReference.snapshots().listen((commentsSnapshot) {
-  //     if (commentsSnapshot.documents.isNotEmpty) {
-  //       var commentsByGigId = commentsSnapshot.documents
-  //           .where((element) =>
-  //               element.documentID.contains(gigIdCommentsIdentifier))
-  //           .map((snapshot) =>
-  //               Comment.fromMap(snapshot.data, snapshot.documentID))
-  //           .where((mappedItem) =>
-  //               mappedItem.gigIdHoldingComment == gigIdCommentsIdentifier)
-  //           .toList();
-
-  //       _commentsController.add(commentsByGigId);
-  //     }
-  //   });
-
-  //   return _commentsController.stream;
-  // }
 
   Future deleteGig(String commentId) async {
     await _gigsCollectionReference.doc(commentId).delete();
@@ -200,7 +164,10 @@ class FirestoreService {
           await _usersCollectionReference.doc(appointedUserId).get();
       var appointedUsername = appointedUser.data()['username'];
 
-      await DatabaseService().updateOpenGigsByGigId(appointedUserId, gigId);
+      await DatabaseService()
+          .updateOpenGigsByGigId(userId: appointedUserId, gigId: gigId);
+      await DatabaseService().addUserIdToGigRelatedUsersArray(
+          gigId: gigId, userId: appointedUserId);
 
       await _gigsCollectionReference.doc(gigId).update({
         'appointed': true,

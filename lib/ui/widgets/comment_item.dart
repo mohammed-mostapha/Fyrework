@@ -153,18 +153,12 @@ class _CommentItemState extends State<CommentItem>
             context,
             MaterialPageRoute(
                 builder: (context) => UserProfileView(
-                      // passedUserUid: widget.commentOwnerId,
                       passedUserUid: userId,
                       fromComment: true,
                       fromGig: false,
                     )))
         : Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MyProfileView(
-                    // passedUserUid: widget.commentOwnerId,
-
-                    )));
+            context, MaterialPageRoute(builder: (context) => MyProfileView()));
   }
 
   alertUserToSelectRating() {
@@ -541,75 +535,6 @@ class _CommentItemState extends State<CommentItem>
                                   ),
                                 ],
                               )
-                        //  Row(
-                        //     mainAxisAlignment: MainAxisAlignment.end,
-                        //     children: [
-                        //       Container(
-                        //         decoration: BoxDecoration(
-                        //             border: Border.all(
-                        //                 width: 1,
-                        //                 color: Theme.of(context).hintColor),
-                        //             borderRadius: BorderRadius.circular(5)),
-                        //         child: Padding(
-                        //           padding: const EdgeInsets.all(8.0),
-                        //           child: Wrap(
-                        //             direction: Axis.horizontal,
-                        //             alignment: WrapAlignment.start,
-                        //             children: [
-                        //               Text(
-                        //                 'You rated ',
-                        //                 style: Theme.of(context)
-                        //                     .textTheme
-                        //                     .bodyText1
-                        //                     .copyWith(
-                        //                       color: myComment
-                        //                           ? Theme.of(context)
-                        //                               .accentColor
-                        //                           : Theme.of(context)
-                        //                               .primaryColor,
-                        //                     ),
-                        //               ),
-                        //               GestureDetector(
-                        //                 child: Text(
-                        //                   "${widget.appointedUsername}\'s ",
-                        //                   style: Theme.of(context)
-                        //                       .textTheme
-                        //                       .bodyText1
-                        //                       .copyWith(
-                        //                           color: myComment
-                        //                               ? Theme.of(context)
-                        //                                   .accentColor
-                        //                               : Theme.of(context)
-                        //                                   .primaryColor,
-                        //                           fontWeight:
-                        //                               FontWeight.bold),
-                        //                 ),
-                        //                 onTap: () {
-                        //                   showUserProfile(
-                        //                       userId:
-                        //                           widget.appointedUserId);
-                        //                 },
-                        //               ),
-                        //               Text(
-                        //                 "work with ${widget.ratingCount} star(s)",
-                        //                 style: Theme.of(context)
-                        //                     .textTheme
-                        //                     .bodyText1
-                        //                     .copyWith(
-                        //                       color: myComment
-                        //                           ? Theme.of(context)
-                        //                               .accentColor
-                        //                           : Theme.of(context)
-                        //                               .primaryColor,
-                        //                     ),
-                        //               ),
-                        //             ],
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   )
-
                         : appointedUser
                             ? Row(
                                 mainAxisAlignment: MainAxisAlignment.center,

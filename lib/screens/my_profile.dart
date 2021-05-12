@@ -709,6 +709,8 @@ class _MyProfileViewState extends State<MyProfileView> {
                                   getDocData['appointedUserFullName'],
                               appliersOrHirersByUserId:
                                   getDocData['appliersOrHirersByUserId'],
+                              gigRelatedUsersByUserId:
+                                  getDocData['gigRelatedUsersByUserId'],
                               gigId: getDocData['gigId'],
                               currentUserId: currentUserId,
                               gigOwnerId: getDocData['gigOwnerId'],

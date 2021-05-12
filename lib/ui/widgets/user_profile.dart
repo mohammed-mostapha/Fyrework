@@ -11,13 +11,11 @@ import 'package:Fyrework/ui/widgets/userRelated_gigItem.dart';
 
 class UserProfileView extends StatefulWidget {
   final String passedUserUid;
-  // final String passedUsername;
   bool fromGig = false;
   bool fromComment = false;
   UserProfileView({
     Key key,
     @required this.passedUserUid,
-    // @required this.passedUsername,
     @required this.fromGig,
     @required this.fromComment,
   }) : super(key: key);
@@ -162,7 +160,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                                             snapshot.data
                                                         .completedGigsByGigId !=
                                                     null
-                                                ? '${MyUser.completedGigsByGigId.length}'
+                                                ? '${snapshot.data.completedGigsByGigId.length}'
                                                 : '0',
                                             style: Theme.of(context)
                                                 .textTheme
@@ -329,6 +327,8 @@ class _UserProfileViewState extends State<UserProfileView> {
                                   getDocData['appointedUserFullName'],
                               appliersOrHirersByUserId:
                                   getDocData['appliersOrHirersByUserId'],
+                              gigRelatedUsersByUserId:
+                                  getDocData['gigRelatedUsersByUserId'],
                               gigId: getDocData['gigId'],
                               currentUserId: currentUserId,
                               gigOwnerId: getDocData['gigOwnerId'],

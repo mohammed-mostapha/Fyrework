@@ -19,6 +19,7 @@ class Gig {
   final String appointedUserId;
   final String appointedusername;
   final List appliersOrHirersByUserId;
+  final List gigRelatedUsersByUserId;
   final bool hidden;
   final bool paymentReleased;
   final bool markedAsComplete;
@@ -47,10 +48,11 @@ class Gig {
     this.appointedUserId,
     this.appointedusername,
     this.appliersOrHirersByUserId,
-    this.hidden,
-    this.paymentReleased,
-    this.markedAsComplete,
-    this.clientLeftReview,
+    this.gigRelatedUsersByUserId,
+    this.hidden = false,
+    this.paymentReleased = false,
+    this.markedAsComplete = false,
+    this.clientLeftReview = false,
     this.gigActions,
     this.likesCount = 0,
     this.likersByUserId,
@@ -78,8 +80,9 @@ class Gig {
       'appointedUserId': appointedUserId,
       'appointedusername': appointedusername,
       'appliersOrHirersByUserId': [],
+      'gigRelatedUsersByUserId': [],
       'hidden': hidden,
-      'gigActions': gigActions,
+      'gigActions': [],
       'paymentReleased': paymentReleased,
       'markedAsComplete': markedAsComplete,
       'clientLeftReview': clientLeftReview,
@@ -112,6 +115,7 @@ class Gig {
       appointedUserId: map['appointedUserId'],
       appointedusername: map['appointedusername'],
       appliersOrHirersByUserId: map['appliersOrHirersByUserId'],
+      gigRelatedUsersByUserId: map['gigRelatedUsersByUserId'],
       hidden: map['hidden'],
       gigActions: map['gigActions'],
       paymentReleased: map['paymentReleased'],

@@ -10,11 +10,7 @@ class CreateGigViewModel {
   final FirestoreService _firestoreService = locator<FirestoreService>();
   final NavigationService _navigationService = locator<NavigationService>();
 
-  Gig _edittingGig;
-
-  bool get _editting => _edittingGig != null;
-
-  Future addGig({
+  Future createGig({
     bool appointed,
     String gigId,
     @required String userId,
@@ -33,9 +29,8 @@ class CreateGigViewModel {
     bool adultContentBool,
   }) async {
     var gigAdded;
-    var updatedOngoingGigsByGigId;
 
-    gigAdded = await _firestoreService.addGig(
+    gigAdded = await _firestoreService.createGig(
       gigHashtags,
       Gig(
         appointed: appointed,
@@ -55,11 +50,6 @@ class CreateGigViewModel {
         gigValue: gigValue,
         adultContentText: adultContentText,
         adultContentBool: adultContentBool,
-        hidden: false,
-        paymentReleased: false,
-        markedAsComplete: false,
-        clientLeftReview: false,
-        gigActions: [],
       ),
     );
 

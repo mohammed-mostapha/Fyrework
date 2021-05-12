@@ -21,6 +21,7 @@ class GigItem extends StatefulWidget {
   final appointed;
   final appointedusername;
   final appliersOrHirersByUserId;
+  final gigRelatedUsersByUserId;
   final gigId;
   final currentUserId;
   final gigOwnerId;
@@ -54,6 +55,7 @@ class GigItem extends StatefulWidget {
     this.appointed,
     this.appointedusername,
     this.appliersOrHirersByUserId,
+    this.gigRelatedUsersByUserId,
     this.gigId,
     this.currentUserId,
     this.gigOwnerId,

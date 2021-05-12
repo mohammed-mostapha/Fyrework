@@ -127,12 +127,6 @@ class DatabaseService {
         .snapshots();
   }
 
-  //fetch an individual gig
-  // Stream<DocumentSnapshot> listenToAnIndividualGig(gigId) {
-  //   // return _gigsCollection.where('gigId', isEqualTo: gigId).snapshots();
-  //   return _gigsCollection.doc(gigId).snapshots();
-  // }
-
   Stream<QuerySnapshot> openGigsByGigOwnerId(String userId) {
     return _gigsCollection
         .where('hidden', isEqualTo: false)
@@ -260,12 +254,16 @@ class DatabaseService {
     }
   }
 
-  Future updateOpenGigsByGigId(String uid, String gigId) async {
-    return await _usersCollection.doc(uid).update({
-      "openGigsByGigId": FieldValue.arrayUnion(
-        [gigId],
-      ),
+  Future updateOpenGigsByGigId({String userId, String gigId}) async {
+    return await _usersCollection.doc(userId).update({
+      "openGigsByGigId": FieldValue.arrayUnion([gigId]),
       "lengthOfOpenGigsByGigId": FieldValue.increment(1),
+    });
+  }
+
+  Future addUserIdToGigRelatedUsersArray({String gigId, String userId}) async {
+    return await _gigsCollection.doc(gigId).update({
+      'gigRelatedUsersByUserId': FieldValue.arrayUnion([userId]),
     });
   }
 
