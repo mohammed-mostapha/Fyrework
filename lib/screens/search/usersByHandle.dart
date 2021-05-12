@@ -18,8 +18,6 @@ class UsersSearchByHandle extends StatelessWidget {
           MaterialPageRoute(
               builder: (context) => UserProfileView(
                     passedUserUid: userId,
-                    fromComment: false,
-                    fromGig: true,
                   )));
     }
 

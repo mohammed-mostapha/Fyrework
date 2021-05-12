@@ -127,32 +127,29 @@ class DatabaseService {
         .snapshots();
   }
 
-  Stream<QuerySnapshot> openGigsByGigOwnerId(String userId) {
+  Stream<QuerySnapshot> openGigsByGigRelatedUsers({String userId}) {
     return _gigsCollection
         .where('hidden', isEqualTo: false)
-        .where('gigOwnerId', isEqualTo: userId)
+        .where('gigRelatedUsersByUserId', arrayContains: userId)
+        .where('markedAsComplete', isEqualTo: false)
+        .orderBy('createdAt', descending: true)
         .snapshots();
   }
 
-  Stream<QuerySnapshot> openGigsByAppointedUserId(String userId) {
+  Stream<QuerySnapshot> completedGigsByGigRelatedUsers({String userId}) {
     return _gigsCollection
         .where('hidden', isEqualTo: false)
-        .where('appointedUserId', isEqualTo: userId)
-        .snapshots();
-  }
-
-  Stream<QuerySnapshot> completedGigsByGigOwnerId(String userId) {
-    return _gigsCollection
-        .where('hidden', isEqualTo: false)
-        .where('gigOwnerId', isEqualTo: userId)
+        .where('gigRelatedUsersByUserId', arrayContains: userId)
         .where('markedAsComplete', isEqualTo: true)
+        .orderBy('createdAt', descending: true)
         .snapshots();
   }
 
-  Stream<QuerySnapshot> likedGigsByLikersByUserId(String userId) {
+  Stream<QuerySnapshot> likedGigsByLikersByUserId({String userId}) {
     return _gigsCollection
         .where('hidden', isEqualTo: false)
         .where('likersByUserId', arrayContains: userId)
+        .orderBy('createdAt', descending: true)
         .snapshots();
   }
 
@@ -339,6 +336,11 @@ class DatabaseService {
   }) async {
     FirebaseFirestore db = FirebaseFirestore.instanceFor(app: fyreworkApp);
     var batch = db.batch();
+
+    // for the gig
+    batch.update(_gigsCollection.doc(gigId), {
+      'markedAsComplete': true,
+    });
 
     //for the gigOwner
     batch.update(_usersCollection.doc(gigOwnerId), {

@@ -164,7 +164,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                                 child: Center(
                                   child: Text(
                                     MyUser.openGigsByGigId != null
-                                        ? '${MyUser.openGigsByGigId.length}'
+                                        ? '${MyUser.lengthOfOpenGigsByGigId}'
                                         : '0',
                                     style:
                                         Theme.of(context).textTheme.bodyText1,
@@ -192,7 +192,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                                 child: Center(
                                   child: Text(
                                     MyUser.completedGigsByGigId != null
-                                        ? '${MyUser.completedGigsByGigId.length}'
+                                        ? '${MyUser.lengthOfCompletedGigsByGigId}'
                                         : '0',
                                     style:
                                         Theme.of(context).textTheme.bodyText1,
@@ -281,21 +281,8 @@ class _MyProfileViewState extends State<MyProfileView> {
                         body: TabBarView(
                           children: [
                             userOpenGigs(),
-                            Container(
-                              child: Center(
-                                  child: Text(
-                                'Done goes here',
-                                style: Theme.of(context).textTheme.bodyText1,
-                              )),
-                            ),
-                            Container(
-                              child: Center(
-                                child: Text(
-                                  'Liked gigs gies here',
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                ),
-                              ),
-                            ),
+                            userCompletedGigs(),
+                            userLikedGigs(),
                           ],
                         ),
                       ),
@@ -680,7 +667,7 @@ class _MyProfileViewState extends State<MyProfileView> {
 
   userOpenGigs() {
     return StreamBuilder<QuerySnapshot>(
-      stream: DatabaseService().openGigsByGigOwnerId(MyUser.uid),
+      stream: DatabaseService().openGigsByGigRelatedUsers(userId: MyUser.uid),
       builder: (context, snapshot) {
         // print('snapshot.data: ${snapshot.data.documents.length}');
         return snapshot.hasError
@@ -741,9 +728,167 @@ class _MyProfileViewState extends State<MyProfileView> {
                           );
                         })
                     : Center(
+                        child: Container(
+                        width: MediaQuery.of(context).size.width / 2,
                         child: Text(
-                        "You have not posted any gigs yet",
-                        style: Theme.of(context).textTheme.bodyText1,
+                          "You have no open gigs",
+                          style: Theme.of(context).textTheme.bodyText1,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ));
+      },
+    );
+  }
+
+  userCompletedGigs() {
+    return StreamBuilder<QuerySnapshot>(
+      stream:
+          DatabaseService().completedGigsByGigRelatedUsers(userId: MyUser.uid),
+      builder: (context, snapshot) {
+        // print('snapshot.data: ${snapshot.data.documents.length}');
+        return snapshot.hasError
+            ? Center(
+                child: Text(
+                "Gigs are not available right now",
+                style: Theme.of(context).textTheme.bodyText1,
+              ))
+            : !snapshot.hasData
+                ? Text(
+                    "Gigs are not available right now",
+                    style: Theme.of(context).textTheme.bodyText1,
+                  )
+                : snapshot.data.docs.length > 0
+                    ? ListView.builder(
+                        itemCount: snapshot.data.docs.length,
+                        itemBuilder: (context, index) {
+                          DocumentSnapshot data = snapshot.data.docs[index];
+                          Map getDocData = data.data();
+                          return GestureDetector(
+                            // onTap: () => model.editGig(index),
+                            child: UserRelatedGigItem(
+                              index: index,
+                              appointed: getDocData['appointed'],
+                              appointedusername:
+                                  getDocData['appointedUserFullName'],
+                              appliersOrHirersByUserId:
+                                  getDocData['appliersOrHirersByUserId'],
+                              gigRelatedUsersByUserId:
+                                  getDocData['gigRelatedUsersByUserId'],
+                              gigId: getDocData['gigId'],
+                              currentUserId: currentUserId,
+                              gigOwnerId: getDocData['gigOwnerId'],
+                              gigOwnerAvatarUrl:
+                                  getDocData['gigOwnerAvatarUrl'],
+                              gigOwnerUsername: getDocData['gigOwnerUsername'],
+                              createdAt: getDocData['createdAt'],
+                              gigOwnerLocation: getDocData['gigOwnerLocation'],
+                              gigLocation: getDocData['gigLocation'],
+                              gigHashtags: getDocData['gigHashtags'],
+                              gigMediaFilesDownloadUrls:
+                                  getDocData['gigMediaFilesDownloadUrls'],
+                              gigPost: getDocData['gigPost'],
+                              gigCurrency: getDocData['gigCurrency'],
+                              gigBudget: getDocData['gigBudget'],
+                              gigValue: getDocData['gigValue'],
+                              adultContentText: getDocData['adultContentText'],
+                              adultContentBool: getDocData['adultContentBool'],
+                              appointedUserId: getDocData['appointedUserId'],
+                              hidden: getDocData['hidden'],
+                              gigActions: getDocData['gigActions'],
+                              paymentReleased: getDocData['paymentReleased'],
+                              markedAsComplete: getDocData['markedAsComplete'],
+                              clientLeftReview: getDocData['clientLeftReview'],
+                              likesCount: getDocData['likesCount'],
+                              likersByUserId: getDocData['likersByUserId'],
+                            ),
+                          );
+                        })
+                    : Center(
+                        child: Container(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: Text(
+                          "You have no completed gigs",
+                          style: Theme.of(context).textTheme.bodyText1,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ));
+      },
+    );
+  }
+
+  userLikedGigs() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: DatabaseService().likedGigsByLikersByUserId(userId: MyUser.uid),
+      builder: (context, snapshot) {
+        // print('snapshot.data: ${snapshot.data.documents.length}');
+        return snapshot.hasError
+            ? Center(
+                child: Text(
+                "Gigs are not available right now",
+                style: Theme.of(context).textTheme.bodyText1,
+              ))
+            : !snapshot.hasData
+                ? Text(
+                    "Gigs are not available right now",
+                    style: Theme.of(context).textTheme.bodyText1,
+                  )
+                : snapshot.data.docs.length > 0
+                    ? ListView.builder(
+                        itemCount: snapshot.data.docs.length,
+                        itemBuilder: (context, index) {
+                          DocumentSnapshot data = snapshot.data.docs[index];
+                          Map getDocData = data.data();
+                          return GestureDetector(
+                            // onTap: () => model.editGig(index),
+                            child: UserRelatedGigItem(
+                              index: index,
+                              appointed: getDocData['appointed'],
+                              appointedusername:
+                                  getDocData['appointedUserFullName'],
+                              appliersOrHirersByUserId:
+                                  getDocData['appliersOrHirersByUserId'],
+                              gigRelatedUsersByUserId:
+                                  getDocData['gigRelatedUsersByUserId'],
+                              gigId: getDocData['gigId'],
+                              currentUserId: currentUserId,
+                              gigOwnerId: getDocData['gigOwnerId'],
+                              gigOwnerAvatarUrl:
+                                  getDocData['gigOwnerAvatarUrl'],
+                              gigOwnerUsername: getDocData['gigOwnerUsername'],
+                              createdAt: getDocData['createdAt'],
+                              gigOwnerLocation: getDocData['gigOwnerLocation'],
+                              gigLocation: getDocData['gigLocation'],
+                              gigHashtags: getDocData['gigHashtags'],
+                              gigMediaFilesDownloadUrls:
+                                  getDocData['gigMediaFilesDownloadUrls'],
+                              gigPost: getDocData['gigPost'],
+                              gigCurrency: getDocData['gigCurrency'],
+                              gigBudget: getDocData['gigBudget'],
+                              gigValue: getDocData['gigValue'],
+                              adultContentText: getDocData['adultContentText'],
+                              adultContentBool: getDocData['adultContentBool'],
+                              appointedUserId: getDocData['appointedUserId'],
+                              hidden: getDocData['hidden'],
+                              gigActions: getDocData['gigActions'],
+                              paymentReleased: getDocData['paymentReleased'],
+                              markedAsComplete: getDocData['markedAsComplete'],
+                              clientLeftReview: getDocData['clientLeftReview'],
+                              likesCount: getDocData['likesCount'],
+                              likersByUserId: getDocData['likersByUserId'],
+                            ),
+                          );
+                        })
+                    : Center(
+                        child: Container(
+                        width: MediaQuery.of(context).size.width / 2,
+                        child: Text(
+                          "You have no liked gigs",
+                          style: Theme.of(context).textTheme.bodyText1,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ));
       },
     );

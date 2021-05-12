@@ -175,9 +175,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
         MaterialPageRoute(
             builder: (context) => UserProfileView(
                   passedUserUid: widget.gigOwnerId,
-                  // passedUsername: widget.gigOwnerUsername,
-                  fromComment: false,
-                  fromGig: true,
                 )));
   }
 

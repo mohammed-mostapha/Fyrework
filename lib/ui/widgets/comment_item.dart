@@ -154,8 +154,6 @@ class _CommentItemState extends State<CommentItem>
             MaterialPageRoute(
                 builder: (context) => UserProfileView(
                       passedUserUid: userId,
-                      fromComment: true,
-                      fromGig: false,
                     )))
         : Navigator.push(
             context, MaterialPageRoute(builder: (context) => MyProfileView()));

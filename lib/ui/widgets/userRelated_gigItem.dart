@@ -148,9 +148,6 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
         MaterialPageRoute(
             builder: (context) => UserProfileView(
                   passedUserUid: widget.gigOwnerId,
-                  // passedUsername: widget.gigOwnerUsername,
-                  fromComment: false,
-                  fromGig: true,
                 )));
   }
 
