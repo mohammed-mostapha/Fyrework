@@ -86,8 +86,8 @@ class DatabaseService {
   }
 
   // get user doc stream
-  Stream<OtherUser> fetchUserData(String id) {
-    return _usersCollection.doc(id).snapshots().map(_userDataFromSnapshot);
+  Stream<OtherUser> fetchUserData({String userId}) {
+    return _usersCollection.doc(userId).snapshots().map(_userDataFromSnapshot);
   }
 
   // fetch users in search by query(username)

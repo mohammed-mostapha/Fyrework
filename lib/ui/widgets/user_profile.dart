@@ -31,7 +31,8 @@ class _UserProfileViewState extends State<UserProfileView> {
       color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
         child: StreamBuilder(
-            stream: DatabaseService().fetchUserData(widget.passedUserUid),
+            stream:
+                DatabaseService().fetchUserData(userId: widget.passedUserUid),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Container(
@@ -46,8 +47,9 @@ class _UserProfileViewState extends State<UserProfileView> {
                 return Container(
                   child: Center(
                       child: Text(
-                    'Profile no longer exists',
+                    'Profile not available',
                     style: Theme.of(context).textTheme.bodyText1,
+                    textAlign: TextAlign.center,
                   )),
                 );
               }
@@ -55,8 +57,9 @@ class _UserProfileViewState extends State<UserProfileView> {
                 return Container(
                   child: Center(
                       child: Text(
-                    'Profile no longer exists',
+                    'Profile not available',
                     style: Theme.of(context).textTheme.bodyText1,
+                    textAlign: TextAlign.center,
                   )),
                 );
               } else {
@@ -121,17 +124,32 @@ class _UserProfileViewState extends State<UserProfileView> {
                                         ),
                                       ),
                                       Expanded(
-                                        child: Center(
-                                          child: Text(
-                                            snapshot.data.openGigsByGigId !=
-                                                    null
-                                                ? '${snapshot.data.lengthOfOpenGigsByGigId}'
-                                                : '0',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1,
-                                          ),
-                                        ),
+                                        child: snapshot.data != null
+                                            ? Center(
+                                                child: Text(
+                                                  snapshot.data
+                                                              .openGigsByGigId !=
+                                                          null
+                                                      ? '${snapshot.data.lengthOfOpenGigsByGigId}'
+                                                      : '0',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText1,
+                                                ),
+                                              )
+                                            : Container(
+                                                width: 20,
+                                                height: 20,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  strokeWidth: 1,
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                              Color>(
+                                                          Theme.of(context)
+                                                              .primaryColor),
+                                                ),
+                                              ),
                                       ),
                                     ],
                                   ),
@@ -153,18 +171,32 @@ class _UserProfileViewState extends State<UserProfileView> {
                                         ),
                                       ),
                                       Expanded(
-                                        child: Center(
-                                          child: Text(
-                                            snapshot.data
-                                                        .completedGigsByGigId !=
-                                                    null
-                                                ? '${snapshot.data.lengthOfCompletedGigsByGigId}'
-                                                : '0',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1,
-                                          ),
-                                        ),
+                                        child: snapshot.data != null
+                                            ? Center(
+                                                child: Text(
+                                                  snapshot.data
+                                                              .completedGigsByGigId !=
+                                                          null
+                                                      ? '${snapshot.data.lengthOfCompletedGigsByGigId}'
+                                                      : '0',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText1,
+                                                ),
+                                              )
+                                            : Container(
+                                                width: 20,
+                                                height: 20,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  strokeWidth: 1,
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                              Color>(
+                                                          Theme.of(context)
+                                                              .primaryColor),
+                                                ),
+                                              ),
                                       ),
                                     ],
                                   ),
@@ -264,8 +296,9 @@ class _UserProfileViewState extends State<UserProfileView> {
                   return Container(
                     child: Center(
                         child: Text(
-                      'Profile no longer exists',
+                      'Profile not available',
                       style: Theme.of(context).textTheme.bodyText1,
+                      textAlign: TextAlign.center,
                     )),
                   );
                 }

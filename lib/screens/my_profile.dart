@@ -128,81 +128,119 @@ class _MyProfileViewState extends State<MyProfileView> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CachedNetworkImage(
-                          imageBuilder: (context, imageProvider) => Container(
-                            width: 90.0,
-                            height: 90.0,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  image: imageProvider, fit: BoxFit.cover),
+                    child: StreamBuilder(
+                      stream:
+                          DatabaseService().fetchUserData(userId: MyUser.uid),
+                      builder: (context, snapshot) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CachedNetworkImage(
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                width: 90.0,
+                                height: 90.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image: imageProvider, fit: BoxFit.cover),
+                                ),
+                              ),
+                              imageUrl: MyUser.userAvatarUrl,
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
                             ),
-                          ),
-                          imageUrl: MyUser.userAvatarUrl,
-                          placeholder: (context, url) =>
-                              CircularProgressIndicator(),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error),
-                        ),
-                        SizedBox(
-                          height: 50,
-                          child: Column(
-                            children: <Widget>[
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    "Open",
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
+                            SizedBox(
+                              height: 50,
+                              child: Column(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        "Open",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    MyUser.openGigsByGigId != null
-                                        ? '${MyUser.lengthOfOpenGigsByGigId}'
-                                        : '0',
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
+                                  Expanded(
+                                    child: snapshot.data != null
+                                        ? Center(
+                                            child: Text(
+                                              snapshot.data.openGigsByGigId !=
+                                                      null
+                                                  ? '${snapshot.data.lengthOfOpenGigsByGigId}'
+                                                  : '0',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1,
+                                            ),
+                                          )
+                                        : Container(
+                                            width: 20,
+                                            height: 20,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 1,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      Theme.of(context)
+                                                          .primaryColor),
+                                            ),
+                                          ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 50,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    "Completed",
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
+                            ),
+                            SizedBox(
+                              height: 50,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        "Completed",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    MyUser.completedGigsByGigId != null
-                                        ? '${MyUser.lengthOfCompletedGigsByGigId}'
-                                        : '0',
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
+                                  Expanded(
+                                    child: snapshot.data != null
+                                        ? Center(
+                                            child: Text(
+                                              snapshot.data
+                                                          .completedGigsByGigId !=
+                                                      null
+                                                  ? '${snapshot.data.lengthOfCompletedGigsByGigId}'
+                                                  : '0',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1,
+                                            ),
+                                          )
+                                        : Container(
+                                            width: 20,
+                                            height: 20,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 1,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      Theme.of(context)
+                                                          .primaryColor),
+                                            ),
+                                          ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                      ],
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ),
                   SizedBox(

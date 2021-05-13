@@ -97,18 +97,14 @@ class _ProfileRatingStarsState extends State<ProfileRatingStars> {
                           .add(element.data()['userRating']);
                     }
                   });
-                  print(
-                      'documentsNo: ${userRatingDocumentSnapshotsList.length}');
 
                   int userRatingSum = userRatingDocumentSnapshotsList.reduce(
                     (a, b) => a + b,
                   );
-                  print('documentsNo sum: $userRatingSum');
 
                   int estimatedUserRating =
                       (userRatingSum ~/ userRatingDocumentSnapshotsList.length);
                   // .toInt();
-                  print('estimatedUserRating = $estimatedUserRating');
 
                   _userProfileRatingCount = estimatedUserRating;
                 } else {
