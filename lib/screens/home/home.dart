@@ -1,3 +1,4 @@
+import 'package:Fyrework/services/mobileAds_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:Fyrework/models/myUser.dart';
@@ -5,8 +6,10 @@ import 'package:Fyrework/screens/add_gig/addGigDetails.dart';
 import 'package:Fyrework/screens/my_profile.dart';
 import 'package:Fyrework/screens/trends/trends.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:Fyrework/screens/trends/queryStringProvider.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   final int passedSelectedIndex;
@@ -23,6 +26,8 @@ class _HomeState extends State<Home> {
   final String add_filled = 'assets/svgs/flaticon/add_filled.svg';
   final String search_thin = 'assets/svgs/flaticon/search_thin.svg';
   final String search_thick = 'assets/svgs/flaticon/search_thick.svg';
+
+  BannerAd firstBannerAd;
 
   int passedSelectedIndex;
   _HomeState(this.passedSelectedIndex);
@@ -41,15 +46,25 @@ class _HomeState extends State<Home> {
 
   int _selectedIndex = 0;
 
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addPostFrameCallback(() {
-  //     _selectedIndex = passedSelectedIndex;
-  //     Future.delayed(Duration(seconds: 0), () {
-  //       _pageController.jumpToPage(_selectedIndex);
-  //     });
-  //   }());
-  // }
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final mobileAdState = Provider.of<MobileAdsState>(context);
+    mobileAdState.adStateInitialization.then((status) {
+      setState(() {
+        firstBannerAd = BannerAd(
+          size: AdSize.banner,
+          adUnitId: mobileAdState.testBannerAdUnit,
+          request: AdRequest(),
+          listener: mobileAdState.adListener,
+        )..load();
+      });
+    });
+  }
 
   void _onPageChanged(int currentIndex) {
     if (this.mounted) {
@@ -63,19 +78,32 @@ class _HomeState extends State<Home> {
     _pageController.jumpToPage(selectedIndex);
   }
 
-  // final AuthService _auth = AuthService();
-
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
         child: Scaffold(
-          body: PageView(
-            controller: _pageController,
-            children: _screens,
-            onPageChanged: _onPageChanged,
-            physics: NeverScrollableScrollPhysics(),
+          body: Column(
+            children: [
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  children: _screens,
+                  onPageChanged: _onPageChanged,
+                  physics: NeverScrollableScrollPhysics(),
+                ),
+              ),
+              if (firstBannerAd == null)
+                SizedBox(
+                  height: 50,
+                )
+              else
+                Container(
+                  height: 50,
+                  child: AdWidget(ad: firstBannerAd),
+                ),
+            ],
           ),
           bottomNavigationBar: Container(
             decoration: BoxDecoration(

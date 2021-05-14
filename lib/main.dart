@@ -1,4 +1,5 @@
 import 'package:Fyrework/services/connectivity_provider.dart';
+import 'package:Fyrework/services/mobileAds_provider.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/widgets/network_sensor.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,6 +12,7 @@ import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:Fyrework/ui/views/sign_up_view.dart';
 import 'package:Fyrework/view_controllers/myUser_controller.dart';
 import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'locator.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -22,6 +24,9 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final initMobileAdsFuture = MobileAds.instance.initialize();
+  final mobileAdsState = MobileAdsState(initMobileAdsFuture);
+
   await Firebase.initializeApp();
 
   var initializaitonSettingsAndroid =
@@ -44,7 +49,8 @@ void main() async {
   setupLocator();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
-    runApp(new MyApp());
+    runApp(Provider.value(
+        value: mobileAdsState, builder: (context, child) => MyApp()));
   });
   //
   // runApp(MyApp());

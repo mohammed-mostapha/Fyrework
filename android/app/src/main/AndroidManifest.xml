@@ -60,6 +60,11 @@
             </intent-filter>
         </receiver>
         <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
+
+         <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-8121485142260780~4041272813"/>
+
     </application>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.VIBRATE" />
