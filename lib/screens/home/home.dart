@@ -1,3 +1,4 @@
+import 'package:Fyrework/screens/advertisements/addAdvert.dart';
 import 'package:Fyrework/services/mobileAds_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,7 @@ import 'package:Fyrework/screens/add_gig/addGigDetails.dart';
 import 'package:Fyrework/screens/my_profile.dart';
 import 'package:Fyrework/screens/trends/trends.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:Fyrework/screens/trends/queryStringProvider.dart';
 import 'package:provider/provider.dart';
@@ -26,8 +27,11 @@ class _HomeState extends State<Home> {
   final String add_filled = 'assets/svgs/flaticon/add_filled.svg';
   final String search_thin = 'assets/svgs/flaticon/search_thin.svg';
   final String search_thick = 'assets/svgs/flaticon/search_thick.svg';
+  final String advertisement = 'assets/svgs/flaticon/advertisement.svg';
+  final String advertisement_solid =
+      'assets/svgs/flaticon/advertisement_solid.svg';
 
-  BannerAd firstBannerAd;
+  // BannerAd firstBannerAd;
 
   int passedSelectedIndex;
   _HomeState(this.passedSelectedIndex);
@@ -40,7 +44,7 @@ class _HomeState extends State<Home> {
       child: Trends(),
     ),
     AddGigDetails(),
-    AddGigDetails(),
+    AddAdvert(),
     MyProfileView(),
   ];
 
@@ -50,21 +54,21 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final mobileAdState = Provider.of<MobileAdsState>(context);
-    mobileAdState.adStateInitialization.then((status) {
-      setState(() {
-        firstBannerAd = BannerAd(
-          size: AdSize.banner,
-          adUnitId: mobileAdState.testBannerAdUnit,
-          request: AdRequest(),
-          listener: mobileAdState.adListener,
-        )..load();
-      });
-    });
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   final mobileAdState = Provider.of<MobileAdsState>(context);
+  //   mobileAdState.adStateInitialization.then((status) {
+  //     setState(() {
+  //       firstBannerAd = BannerAd(
+  //         size: AdSize.banner,
+  //         adUnitId: mobileAdState.testBannerAdUnit,
+  //         request: AdRequest(),
+  //         listener: mobileAdState.adListener,
+  //       )..load();
+  //     });
+  //   });
+  // }
 
   void _onPageChanged(int currentIndex) {
     if (this.mounted) {
@@ -94,15 +98,15 @@ class _HomeState extends State<Home> {
                   physics: NeverScrollableScrollPhysics(),
                 ),
               ),
-              if (firstBannerAd == null)
-                SizedBox(
-                  height: 50,
-                )
-              else
-                Container(
-                  height: 50,
-                  child: AdWidget(ad: firstBannerAd),
-                ),
+              // if (firstBannerAd == null)
+              //   SizedBox(
+              //     height: 50,
+              //   )
+              // else
+              //   Container(
+              //     height: 50,
+              //     child: AdWidget(ad: firstBannerAd),
+              //   ),
             ],
           ),
           bottomNavigationBar: Container(
@@ -146,7 +150,7 @@ class _HomeState extends State<Home> {
                     width: 20,
                     height: 20,
                     child: SvgPicture.asset(
-                      _selectedIndex == 2 ? search_thick : search_thin,
+                      _selectedIndex == 2 ? advertisement_solid : advertisement,
                       semanticsLabel: 'search',
                       color: Theme.of(context).primaryColor,
                     ),

@@ -60,6 +60,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   List _fetchedHandles = List();
   bool handleDuplicated = false;
 
+  String avatarPlaceholder = "assets/images/avatar-placeholder.png";
+
   FocusNode handleFocus = FocusNode();
 
   _SignUpViewState({this.authFormType});
@@ -542,7 +544,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             radius: 70.0,
             backgroundColor: Theme.of(context).primaryColor,
             backgroundImage: _profileImage == null
-                ? AssetImage("assets/images/avatar-placeholder.png")
+                ? avatarPlaceholder
                 : FileImage(File(_profileImage.path)),
           ),
         ),
