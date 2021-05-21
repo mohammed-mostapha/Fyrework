@@ -44,6 +44,7 @@ class _AddAdvertState extends State<AddAdvert> {
   List _myFavoriteHashtags = List();
 
   TextEditingController _myFavoriteHashtagsController = TextEditingController();
+  TextEditingController _advertTextController = TextEditingController();
   ScrollController scrollController = ScrollController();
 
   String _gigLocation;
@@ -55,6 +56,7 @@ class _AddAdvertState extends State<AddAdvert> {
   String _adultContentText;
   bool _adultContentBool = false;
   bool _appointed = false;
+  String _superImposedText;
 
   String clientSideWarning;
 
@@ -334,6 +336,7 @@ class _AddAdvertState extends State<AddAdvert> {
                       children: [
                         Expanded(
                           child: TextFormField(
+                            controller: _advertTextController,
                             style: Theme.of(context).textTheme.bodyText1,
                             decoration:
                                 signUpInputDecoration(context, 'Advert Text'),
@@ -343,6 +346,34 @@ class _AddAdvertState extends State<AddAdvert> {
                             validator: (value) => value.isEmpty ? '' : null,
                             onSaved: (value) => _gigPost = value,
                             maxLines: null,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                          child: GestureDetector(
+                            child: Text(
+                              'Use',
+                              style: TextStyle(
+                                shadows: [
+                                  Shadow(
+                                      color: Theme.of(context).primaryColor,
+                                      offset: Offset(0, -2.5))
+                                ],
+                                fontSize: 14,
+                                color: Colors.transparent,
+                                decoration: TextDecoration.underline,
+                                decorationThickness: 2,
+                                decorationColor: Theme.of(context).primaryColor,
+                                decorationStyle: TextDecorationStyle.dotted,
+                              ),
+                            ),
+                            onTap: () {
+                              //assign the text to the _superImposed variable with setState()
+                              setState(() {
+                                _superImposedText = _advertTextController.text;
+                                _advertTextController.clear();
+                              });
+                            },
                           ),
                         ),
                       ],
@@ -357,21 +388,92 @@ class _AddAdvertState extends State<AddAdvert> {
                         color: Theme.of(context).inputDecorationTheme.fillColor,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Center(
-                        child: GestureDetector(
-                          child: Container(
-                            width: 100,
-                            height: 100,
-                            child: SvgPicture.asset(
-                              _addPhoto,
-                              semanticsLabel: 'grid',
-                              color: Theme.of(context).primaryColor,
+                      child: Stack(children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  _superImposedText == null ||
+                                          _superImposedText == ''
+                                      ? ''
+                                      : '$_superImposedText',
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Center(
+                          child: GestureDetector(
+                            child: Container(
+                              width: 100,
+                              height: 100,
+                              child: SvgPicture.asset(
+                                _addPhoto,
+                                semanticsLabel: 'add_photo',
+                                color: Theme.of(context).primaryColor,
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                      ]),
                     ),
-                  )
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      width: 1,
+                                      color: Theme.of(context).primaryColor),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(2))),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  'Change image',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .copyWith(
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                ),
+                              ),
+                            ),
+                            onTap: () {}),
+                        GestureDetector(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      width: 1,
+                                      color: Theme.of(context).primaryColor),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(2))),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  'Proceed',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .copyWith(
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                ),
+                              ),
+                            ),
+                            onTap: () {}),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
