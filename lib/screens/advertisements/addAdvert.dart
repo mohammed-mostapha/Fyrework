@@ -1,17 +1,19 @@
+import 'dart:io';
+
+import 'package:Fyrework/screens/add_gig/assets_picker/constants/picker_model.dart';
+import 'package:Fyrework/screens/add_gig/assets_picker/src/widget/asset_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:Fyrework/models/myUser.dart';
-import 'package:Fyrework/screens/add_gig/assets_picker/pages/multi_assets_picker.dart';
 import 'package:Fyrework/screens/add_gig/sizeConfig.dart';
 import 'package:Fyrework/services/places_autocomplete.dart';
 import 'package:Fyrework/ui/shared/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:Fyrework/models/gig.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:sliding_card/sliding_card.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:Fyrework/services/popularHashtags.dart';
 import 'package:geocoding/geocoding.dart';
 
@@ -24,15 +26,12 @@ class AddAdvert extends StatefulWidget {
   _AddAdvertState createState() => _AddAdvertState();
 }
 
-TextEditingController locationController = TextEditingController();
-SlidingCardController slidingCardController;
 TextEditingController typeAheadController = TextEditingController();
 
 class _AddAdvertState extends State<AddAdvert> {
   @override
   void initState() {
     super.initState();
-    slidingCardController = SlidingCardController();
   }
 
   String _userId = MyUser.uid;
@@ -57,10 +56,12 @@ class _AddAdvertState extends State<AddAdvert> {
   bool _adultContentBool = false;
   bool _appointed = false;
   String _superImposedText;
-
   String clientSideWarning;
-
   String _addPhoto = 'assets/svgs/flaticon/add_photo.svg';
+  List<AssetEntity> selectedAdvertImagesList;
+  File extractedAdvertImageFromList;
+  final int maxAssetsCount = 1;
+  File _advertImage;
 
   List<String> _currencies = <String>[
     'AUD',
@@ -97,40 +98,6 @@ class _AddAdvertState extends State<AddAdvert> {
     ),
   );
 
-  Future saveFormValuesAndPickMediaFiles() async {
-    _userProfilePictureDownloadUrl = MyUser.userAvatarUrl;
-    if (AppointmentCard.gigValue == null) {
-      Scaffold.of(context).showSnackBar(_gigValueSnackBar);
-    } else if (AppointmentCard.gigValue != null &&
-        _createGigFormKey.currentState.validate()) {
-      _gigLocation = PlacesAutocomplete.placesAutoCompleteController.text;
-      _createGigFormKey.currentState.save();
-
-      var proceedToMultiAssetPicker = new MaterialPageRoute(
-        builder: (BuildContext context) => MultiAssetsPicker(
-          appointed: _appointed,
-          userId: _userId,
-          userProfilePictureDownloadUrl: _userProfilePictureDownloadUrl,
-          username: _username,
-          userLocation: _userLocation,
-          gigLocation: _gigLocation,
-          gigHashtags: _myFavoriteHashtags,
-          gigPost: _gigPost,
-          gigDeadLine: AppointmentCard.gigDeadline != null
-              // ? (AppointmentCard.gigDeadline.toUtc().millisecondsSinceEpoch)
-              ? DateFormat('yyy-MM-dd').format(AppointmentCard.gigDeadline)
-              : null,
-          gigCurrency: _gigCurrency,
-          gigBudget: _gigBudget,
-          adultContentText: _adultContentText,
-          adultContentBool: _adultContentBool,
-          gigValue: AppointmentCard.gigValue,
-        ),
-      );
-      Navigator.of(context).push(proceedToMultiAssetPicker);
-    }
-  }
-
   getUserLocation() async {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
@@ -147,32 +114,58 @@ class _AddAdvertState extends State<AddAdvert> {
     });
   }
 
+  List<PickMethodModel> get pickMethods => <PickMethodModel>[
+        PickMethodModel(
+          // icon: '📹',
+          // name: 'Common picker',
+          // description: 'Pick images and videos.',
+          method: (
+            BuildContext context,
+            List<AssetEntity> assets,
+          ) async {
+            return await AssetPicker.pickAssets(
+              context,
+              maxAssets: maxAssetsCount,
+              selectedAssets: assets,
+              requestType: RequestType.image,
+            );
+          },
+        ),
+      ];
+
+  selectAdvertImage() async {
+    (BuildContext context, int index) async {
+      final PickMethodModel model = pickMethods[index];
+
+      final List<AssetEntity> retrievedAssets = await model.method(
+        context,
+        selectedAdvertImagesList,
+      );
+      if (retrievedAssets != null &&
+          retrievedAssets != selectedAdvertImagesList) {
+        selectedAdvertImagesList = retrievedAssets;
+        () async {
+          extractedAdvertImageFromList =
+              await selectedAdvertImagesList.first.originFile;
+          if (mounted) {
+            setState(() {});
+            _advertImage = extractedAdvertImageFromList;
+          }
+        }();
+      }
+    }(context, 0);
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: Colors.grey[50],
-        // iconTheme: IconThemeData(
-        //     color: Theme.of(context).primaryColor //change your color here
-        //     ),
-        actions: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 10, 15, 10),
-            child: OutlineButton(
-              borderSide: BorderSide(color: Theme.of(context).primaryColor),
-              child: Text('Next', style: Theme.of(context).textTheme.bodyText1),
-              onPressed: () async {
-                await saveFormValuesAndPickMediaFiles();
-              },
-            ),
-          ),
-        ],
         title: Padding(
           padding: const EdgeInsets.all(0),
           child: Text(
-            'Create Gig',
+            'Create Advert',
             style: Theme.of(context).textTheme.headline1,
           ),
         ),
@@ -388,38 +381,57 @@ class _AddAdvertState extends State<AddAdvert> {
                         color: Theme.of(context).inputDecorationTheme.fillColor,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Stack(children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  _superImposedText == null ||
-                                          _superImposedText == ''
-                                      ? ''
-                                      : '$_superImposedText',
-                                  style: Theme.of(context).textTheme.bodyText1,
+                      child: Stack(
+                        children: [
+                          _advertImage == null
+                              ? Center(
+                                  child: GestureDetector(
+                                    child: SizedBox(
+                                      width: 100,
+                                      height: 100,
+                                      child: SvgPicture.asset(
+                                        _addPhoto,
+                                        semanticsLabel: 'add_photo',
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      selectAdvertImage();
+                                    },
+                                  ),
+                                )
+                              : Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: FileImage(
+                                        File(_advertImage.path),
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Center(
-                          child: GestureDetector(
-                            child: Container(
-                              width: 100,
-                              height: 100,
-                              child: SvgPicture.asset(
-                                _addPhoto,
-                                semanticsLabel: 'add_photo',
-                                color: Theme.of(context).primaryColor,
-                              ),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    _superImposedText == null ||
+                                            _superImposedText == ''
+                                        ? ''
+                                        : '$_superImposedText',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(fontSize: 20),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                      ]),
+                        ],
+                      ),
                     ),
                   ),
                   Padding(
@@ -428,49 +440,53 @@ class _AddAdvertState extends State<AddAdvert> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GestureDetector(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 1,
-                                      color: Theme.of(context).primaryColor),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(2))),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  'Change image',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1
-                                      .copyWith(
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 1,
+                                    color: Theme.of(context).primaryColor),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(2))),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Change image',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .copyWith(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
                               ),
                             ),
-                            onTap: () {}),
+                          ),
+                          onTap: () {
+                            selectAdvertImage();
+                          },
+                        ),
                         GestureDetector(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 1,
-                                      color: Theme.of(context).primaryColor),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(2))),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  'Proceed',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1
-                                      .copyWith(
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 1,
+                                    color: Theme.of(context).primaryColor),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(2))),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Next',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .copyWith(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
                               ),
                             ),
-                            onTap: () {}),
+                          ),
+                          onTap: () {},
+                        ),
                       ],
                     ),
                   ),
@@ -535,200 +551,8 @@ class _AddAdvertState extends State<AddAdvert> {
 
   @override
   void dispose() {
-    // Additional disposal code
-    // _gigLocationController.dispose();
-    // typeAheadController.dispose();
-    super.dispose();
-  }
-}
-
-//Appointment card
-class AppointmentCard extends StatefulWidget {
-  AppointmentCard({
-    Key key,
-    this.slidingCardController,
-    @required this.onCardTapped,
-  }) : super(key: key);
-
-  final SlidingCardController slidingCardController;
-  final Function onCardTapped;
-
-  static String gigValue;
-  static DateTime gigDeadline = new DateTime.now().add(Duration(days: 30));
-
-  @override
-  _AppointmentCardState createState() => _AppointmentCardState();
-}
-
-class _AppointmentCardState extends State<AppointmentCard> {
-  TextEditingController _deadLineController = new TextEditingController();
-
-  DateTime _initialDeadline = new DateTime.now().add(Duration(days: 30));
-
-  Future<Null> _selectedDate(BuildContext context) async {
-    final DateTime _selectedDeadline = await showDatePicker(
-      context: context,
-      initialDate: _initialDeadline,
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2022),
-      builder: (BuildContext context, Widget child) {
-        return Theme(
-          data: ThemeData.dark().copyWith(
-            primaryColor: Theme.of(context).primaryColor, //Head background
-            // accentColor: Colors.white //selection color
-          ),
-          child: child,
-        );
-      },
-    );
-    if (_selectedDeadline != null) {
-      setState(() {
-        AppointmentCard.gigDeadline = _selectedDeadline;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: MediaQuery.of(context).orientation == Orientation.landscape
-          ? EdgeInsets.only(bottom: 30)
-          : EdgeInsets.zero,
-      child: SlidingCard(
-        slimeCardElevation: 0,
-        // slidingAnimationReverseCurve: Curves.bounceInOut,
-        cardsGap: SizeConfig.safeBlockVertical,
-        controller: widget.slidingCardController,
-        slidingCardWidth: SizeConfig.horizontalBloc * 90,
-        visibleCardHeight: SizeConfig.safeBlockVertical * 17,
-        hiddenCardHeight: SizeConfig.safeBlockVertical * 15,
-        frontCardWidget: Container(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Container(
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                            width: 0.5, color: Theme.of(context).primaryColor),
-                      ),
-                      width: 20,
-                      child: Radio(
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        value: 'I need a provider',
-                        groupValue: AppointmentCard.gigValue,
-                        activeColor: Theme.of(context).primaryColor,
-                        onChanged: (T) {
-                          widget.onCardTapped();
-                          setState(() {
-                            AppointmentCard.gigValue = T;
-                            // AppointmentCard.gigDeadline = _formattedDate;
-                            AppointmentCard.gigDeadline =
-                                new DateTime.now().add(Duration(days: 30));
-
-                            // Gig().gigValue = gigValue;
-                          });
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text('I need a provider',
-                        style: Theme.of(context).textTheme.caption),
-                  ],
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width / 3,
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                            width: 0.5, color: Theme.of(context).primaryColor),
-                      ),
-                      width: 20,
-                      child: Radio(
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          value: 'Gig I can do',
-                          groupValue: AppointmentCard.gigValue,
-                          activeColor: Theme.of(context).primaryColor,
-                          onChanged: (T) {
-                            widget.slidingCardController.collapseCard();
-                            setState(() {
-                              AppointmentCard.gigValue = T;
-                              AppointmentCard.gigDeadline = null;
-
-                              // Gig().gigValue = gigValue;
-                            });
-                          }),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text('Gig I can do',
-                        style: Theme.of(context).textTheme.caption),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        backCardWidget: Container(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.40,
-                  child: ButtonTheme(
-                    padding: EdgeInsets.all(0),
-                    child: AppointmentCard.gigDeadline != null
-                        ? GestureDetector(
-                            onTap: () {
-                              _selectedDate(context);
-                            },
-                            child: Text(
-                                DateFormat('yyyy-MM-dd')
-                                    .format(AppointmentCard.gigDeadline),
-                                style: Theme.of(context).textTheme.bodyText1),
-                          )
-                        : Container(),
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width / 3,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Text(
-                      'Deadline',
-                      style: Theme.of(context).textTheme.caption,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    // Additional disposal code
-    AppointmentCard.gigValue = null;
-    AppointmentCard.gigDeadline = null;
-
+    _advertTextController.clear();
+    _advertImage = null;
     super.dispose();
   }
 }

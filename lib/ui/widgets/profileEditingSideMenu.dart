@@ -91,7 +91,7 @@ class _ProfileEditingSideMenuState extends State<ProfileEditingSideMenu> {
         ),
       ];
 
-  navigateToSelectProfilePicture() async {
+  selectProfilePicture() async {
     (BuildContext context, int index) async {
       final PickMethodModel model = pickMethods[index];
 
@@ -99,8 +99,7 @@ class _ProfileEditingSideMenuState extends State<ProfileEditingSideMenu> {
         context,
         selectedProfilePictureList,
       );
-      print(
-          'this is the type you are searching for: ${retrievedAssets.runtimeType}');
+
       if (retrievedAssets != null &&
           retrievedAssets != selectedProfilePictureList) {
         selectedProfilePictureList = retrievedAssets;
@@ -388,7 +387,7 @@ class _ProfileEditingSideMenuState extends State<ProfileEditingSideMenu> {
                         size: 25,
                       ),
                       onTap: () {
-                        navigateToSelectProfilePicture();
+                        selectProfilePicture();
                       },
                     )
                   ],
