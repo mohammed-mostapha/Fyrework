@@ -89,6 +89,7 @@ dependencies:
   async: ^2.4.2
   get_it: ^5.0.6
   provider_architecture: ^1.1.1+1
+  screenshot: ^0.3.0
 
 
 

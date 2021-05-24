@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:Fyrework/screens/add_gig/assets_picker/constants/picker_model.dart';
 import 'package:Fyrework/screens/add_gig/assets_picker/src/widget/asset_picker.dart';
+import 'package:Fyrework/screens/advertisements/advert_payment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
@@ -17,6 +19,7 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:Fyrework/services/popularHashtags.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:screenshot/screenshot.dart';
 
 class AddAdvert extends StatefulWidget {
   // final gigHashtagsController = TextEditingController();
@@ -26,8 +29,6 @@ class AddAdvert extends StatefulWidget {
   @override
   _AddAdvertState createState() => _AddAdvertState();
 }
-
-TextEditingController typeAheadController = TextEditingController();
 
 class _AddAdvertState extends State<AddAdvert> {
   @override
@@ -43,9 +44,11 @@ class _AddAdvertState extends State<AddAdvert> {
   final _createGigFormKey = GlobalKey<FormState>();
   List _myFavoriteHashtags = List();
 
+  // TextEditingController _typeAheadController = TextEditingController();
+  ScreenshotController _advertScreenshotController = ScreenshotController();
   TextEditingController _myFavoriteHashtagsController = TextEditingController();
   TextEditingController _advertTextController = TextEditingController();
-  ScrollController scrollController = ScrollController();
+  ScrollController _scrollController = ScrollController();
 
   String _gigLocation;
 
@@ -66,6 +69,7 @@ class _AddAdvertState extends State<AddAdvert> {
   File _advertImage;
   Color pickerColor = Color(0xff443a49);
   Color advertTextColor;
+  Uint8List _advertScreenshot;
 
   List<String> _currencies = <String>[
     'AUD',
@@ -233,6 +237,7 @@ class _AddAdvertState extends State<AddAdvert> {
               style: Theme.of(context).textTheme.headline1,
             ),
           ),
+          elevation: 0.0,
         ),
         body: Container(
           // color: Colors.grey[50],
@@ -241,7 +246,7 @@ class _AddAdvertState extends State<AddAdvert> {
             // autovalidate: true,
             // color: Colors.white,
             child: SingleChildScrollView(
-              controller: scrollController,
+              controller: _scrollController,
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
@@ -274,7 +279,6 @@ class _AddAdvertState extends State<AddAdvert> {
                                           setState(() {
                                             _myFavoriteHashtags.removeWhere(
                                                 (item) => item == e);
-                                            print(_myFavoriteHashtags.length);
                                           });
                                         },
                                         deleteIconColor:
@@ -451,61 +455,67 @@ class _AddAdvertState extends State<AddAdvert> {
                               Theme.of(context).inputDecorationTheme.fillColor,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Stack(
-                          children: [
-                            _advertImage == null
-                                ? Center(
-                                    child: GestureDetector(
-                                      child: SizedBox(
-                                        width: 100,
-                                        height: 100,
-                                        child: SvgPicture.asset(
-                                          _addPhoto,
-                                          semanticsLabel: 'add_photo',
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                      ),
-                                      onTap: () {
-                                        selectAdvertImage();
-                                      },
-                                    ),
-                                  )
-                                : Container(
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: FileImage(
-                                          File(_advertImage.path),
-                                        ),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      _superImposedText == null ||
-                                              _superImposedText == ''
-                                          ? ''
-                                          : '$_superImposedText',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1
-                                          .copyWith(
-                                            fontSize: 20,
-                                            color: advertTextColor == null
-                                                ? Theme.of(context).primaryColor
-                                                : advertTextColor,
+                        child: Screenshot(
+                          controller: _advertScreenshotController,
+                          child: Stack(
+                            children: [
+                              _advertImage == null
+                                  ? Center(
+                                      child: GestureDetector(
+                                        child: SizedBox(
+                                          width: 100,
+                                          height: 100,
+                                          child: SvgPicture.asset(
+                                            _addPhoto,
+                                            semanticsLabel: 'add_photo',
+                                            color:
+                                                Theme.of(context).primaryColor,
                                           ),
+                                        ),
+                                        onTap: () {
+                                          selectAdvertImage();
+                                        },
+                                      ),
+                                    )
+                                  : Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        image: DecorationImage(
+                                          image: FileImage(
+                                            File(_advertImage.path),
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ],
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        _superImposedText == null ||
+                                                _superImposedText == ''
+                                            ? ''
+                                            : '$_superImposedText',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .copyWith(
+                                              fontSize: 20,
+                                              color: advertTextColor == null
+                                                  ? Theme.of(context)
+                                                      .primaryColor
+                                                  : advertTextColor,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -580,7 +590,30 @@ class _AddAdvertState extends State<AddAdvert> {
                                 ),
                               ),
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              _advertScreenshotController
+                                  .capture(delay: Duration(milliseconds: 10))
+                                  .then((Uint8List image) {
+                                //Capture Done
+                                setState(() {
+                                  _advertScreenshot = image;
+                                });
+                              }).catchError((onError) {
+                                print(onError);
+                              }).then(
+                                (value) => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AdvertPayment(
+                                      receivedAdvertScreenshot:
+                                          _advertScreenshot,
+                                      receivedAdvertHashtags:
+                                          _myFavoriteHashtags,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -597,7 +630,7 @@ class _AddAdvertState extends State<AddAdvert> {
 
   Widget clientSideAlert() {
     if (clientSideWarning != null) {
-      scrollController.animateTo(0,
+      _scrollController.animateTo(0,
           duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       return Container(
         color: Theme.of(context).primaryColor,
