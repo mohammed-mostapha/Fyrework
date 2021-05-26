@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'package:Fyrework/models/myUser.dart';
+import 'package:Fyrework/screens/my_profile.dart';
 import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
@@ -169,13 +170,20 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
   //   });
   // }
 
-  showUserProfile() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => UserProfileView(
-                  passedUserUid: widget.gigOwnerId,
-                )));
+  showUserProfile({@required String userId}) {
+    userId != MyUser.uid
+        ? Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => UserProfileView(
+                      passedUserUid: userId,
+                    )))
+        : Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MyProfileView(),
+            ),
+          );
   }
 
   @override
@@ -462,7 +470,9 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                             ),
                           ),
                         ),
-                        onTap: showUserProfile,
+                        onTap: () {
+                          showUserProfile(userId: widget.gigOwnerId);
+                        },
                       ),
                       (myGig && !widget.appointed)
                           ? PopupMenuButton(

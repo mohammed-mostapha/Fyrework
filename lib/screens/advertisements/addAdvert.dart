@@ -22,7 +22,12 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:screenshot/screenshot.dart';
 
 class AddAdvert extends StatefulWidget {
-  // final gigHashtagsController = TextEditingController();
+  static ScreenshotController advertScreenshotController =
+      ScreenshotController();
+  static TextEditingController myFavoriteHashtagsController =
+      TextEditingController();
+  static TextEditingController advertTextController = TextEditingController();
+
   final Gig edittingGig;
   AddAdvert({Key key, this.edittingGig, Gig edittinGig}) : super(key: key);
 
@@ -45,9 +50,7 @@ class _AddAdvertState extends State<AddAdvert> {
   List _myFavoriteHashtags = List();
 
   // TextEditingController _typeAheadController = TextEditingController();
-  ScreenshotController _advertScreenshotController = ScreenshotController();
-  TextEditingController _myFavoriteHashtagsController = TextEditingController();
-  TextEditingController _advertTextController = TextEditingController();
+
   ScrollController _scrollController = ScrollController();
 
   String _gigLocation;
@@ -70,34 +73,6 @@ class _AddAdvertState extends State<AddAdvert> {
   Color pickerColor = Color(0xff443a49);
   Color advertTextColor;
   Uint8List _advertScreenshot;
-
-  List<String> _currencies = <String>[
-    'AUD',
-    'BRL',
-    'CAD',
-    'CZK',
-    'DKK',
-    'EUR',
-    'HKD',
-    'HUF',
-    'ILS',
-    'JPY',
-    'MYR',
-    'MXN',
-    'NOK',
-    'NZD',
-    'PHP',
-    'PLN',
-    'GBP',
-    'RUB',
-    'SGD',
-    'SEK',
-    'CHF',
-    'TWD',
-    'THB',
-    'TRY',
-    'USD',
-  ];
 
   final _gigValueSnackBar = SnackBar(
     content: Text(
@@ -296,7 +271,8 @@ class _AddAdvertState extends State<AddAdvert> {
                                 _myFavoriteHashtags.length < 1 ? '' : null,
                             // onSaved: (value) => _myHashtag = value,
                             textFieldConfiguration: TextFieldConfiguration(
-                              controller: _myFavoriteHashtagsController,
+                              controller:
+                                  AddAdvert.myFavoriteHashtagsController,
                               style: Theme.of(context).textTheme.bodyText1,
                               inputFormatters: [
                                 new LengthLimitingTextInputFormatter(20),
@@ -331,13 +307,14 @@ class _AddAdvertState extends State<AddAdvert> {
                                   clientSideWarning =
                                       'Duplicate #Hashtags are not allowed';
                                 });
-                                _myFavoriteHashtagsController.clear();
+                                AddAdvert.myFavoriteHashtagsController.clear();
                               } else if (!_myFavoriteHashtags
                                       .contains(suggestion) &&
                                   _myFavoriteHashtags.length < 20) {
                                 setState(() {
                                   _myFavoriteHashtags.add(suggestion);
-                                  _myFavoriteHashtagsController.clear();
+                                  AddAdvert.myFavoriteHashtagsController
+                                      .clear();
                                 });
                               }
                             },
@@ -367,24 +344,29 @@ class _AddAdvertState extends State<AddAdvert> {
                                 setState(() {
                                   clientSideWarning =
                                       'Only 20 #Hashtags allowed';
-                                  _myFavoriteHashtagsController.clear();
+                                  AddAdvert.myFavoriteHashtagsController
+                                      .clear();
                                 });
-                              } else if (_myFavoriteHashtags.contains(
-                                  '#' + _myFavoriteHashtagsController.text)) {
+                              } else if (_myFavoriteHashtags.contains('#' +
+                                  AddAdvert
+                                      .myFavoriteHashtagsController.text)) {
                                 setState(() {
                                   clientSideWarning =
                                       'Duplicate #Hashtags are not allowed';
                                 });
-                                _myFavoriteHashtagsController.clear();
-                              } else if (_myFavoriteHashtagsController
+                                AddAdvert.myFavoriteHashtagsController.clear();
+                              } else if (AddAdvert.myFavoriteHashtagsController
                                       .text.isNotEmpty &&
                                   !_myFavoriteHashtags.contains('#' +
-                                      _myFavoriteHashtagsController.text) &&
+                                      AddAdvert
+                                          .myFavoriteHashtagsController.text) &&
                                   _myFavoriteHashtags.length < 20) {
                                 setState(() {
-                                  _myFavoriteHashtags.add(
-                                      '#' + _myFavoriteHashtagsController.text);
-                                  _myFavoriteHashtagsController.clear();
+                                  _myFavoriteHashtags.add('#' +
+                                      AddAdvert
+                                          .myFavoriteHashtagsController.text);
+                                  AddAdvert.myFavoriteHashtagsController
+                                      .clear();
                                   FocusScope.of(context).unfocus();
                                   print(_myFavoriteHashtags);
                                 });
@@ -400,7 +382,7 @@ class _AddAdvertState extends State<AddAdvert> {
                         children: [
                           Expanded(
                             child: TextFormField(
-                              controller: _advertTextController,
+                              controller: AddAdvert.advertTextController,
                               style: Theme.of(context).textTheme.bodyText1,
                               decoration:
                                   signUpInputDecoration(context, 'Advert Text'),
@@ -436,8 +418,8 @@ class _AddAdvertState extends State<AddAdvert> {
                                 //assign the text to the _superImposed variable with setState()
                                 setState(() {
                                   _superImposedText =
-                                      _advertTextController.text;
-                                  _advertTextController.clear();
+                                      AddAdvert.advertTextController.text;
+                                  AddAdvert.advertTextController.clear();
                                 });
                               },
                             ),
@@ -456,7 +438,7 @@ class _AddAdvertState extends State<AddAdvert> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Screenshot(
-                          controller: _advertScreenshotController,
+                          controller: AddAdvert.advertScreenshotController,
                           child: Stack(
                             children: [
                               _advertImage == null
@@ -527,45 +509,53 @@ class _AddAdvertState extends State<AddAdvert> {
                           Container(
                             child: Row(
                               children: [
-                                GestureDetector(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              width: 1,
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(2))),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          'Change image',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1
-                                              .copyWith(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                              ),
+                                _advertImage != null
+                                    ? GestureDetector(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  width: 1,
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(2))),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              'Change image',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1
+                                                  .copyWith(
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                  ),
+                                            ),
+                                          ),
                                         ),
+                                        onTap: selectAdvertImage)
+                                    : Container(
+                                        width: 0,
+                                        height: 0,
                                       ),
-                                    ),
-                                    onTap: selectAdvertImage),
                                 SizedBox(
                                   width: 20,
                                 ),
-                                GestureDetector(
-                                  child: SizedBox(
-                                    width: 35,
-                                    height: 35,
-                                    child: SvgPicture.asset(
-                                      colorPalette,
-                                      semanticsLabel: 'color picker',
-                                      // color: Theme.of(context).accentColor,
-                                    ),
-                                  ),
-                                  onTap: selectAdvertTextColor,
-                                )
+                                (_superImposedText == null ||
+                                        _superImposedText == '')
+                                    ? Container(width: 0, height: 0)
+                                    : GestureDetector(
+                                        child: SizedBox(
+                                          width: 35,
+                                          height: 35,
+                                          child: SvgPicture.asset(
+                                            colorPalette,
+                                            semanticsLabel: 'color picker',
+                                            // color: Theme.of(context).accentColor,
+                                          ),
+                                        ),
+                                        onTap: selectAdvertTextColor,
+                                      )
                               ],
                             ),
                           ),
@@ -591,7 +581,7 @@ class _AddAdvertState extends State<AddAdvert> {
                               ),
                             ),
                             onTap: () {
-                              _advertScreenshotController
+                              AddAdvert.advertScreenshotController
                                   .capture(delay: Duration(milliseconds: 10))
                                   .then((Uint8List image) {
                                 //Capture Done
@@ -680,7 +670,7 @@ class _AddAdvertState extends State<AddAdvert> {
 
   @override
   void dispose() {
-    _advertTextController.clear();
+    AddAdvert.advertTextController.clear();
     _advertImage = null;
     super.dispose();
   }

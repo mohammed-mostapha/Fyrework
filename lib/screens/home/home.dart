@@ -22,21 +22,23 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final String home_outlined = 'assets/svgs/flaticon/home_outlined.svg';
-  final String home_filled = 'assets/svgs/flaticon/home_filled.svg';
+  final String home_solid = 'assets/svgs/flaticon/home_solid.svg';
   final String add_outlined = 'assets/svgs/flaticon/add_outlined.svg';
-  final String add_filled = 'assets/svgs/flaticon/add_filled.svg';
+  final String add_solid = 'assets/svgs/flaticon/add_solid.svg';
   final String search_thin = 'assets/svgs/flaticon/search_thin.svg';
   final String search_thick = 'assets/svgs/flaticon/search_thick.svg';
-  final String advertisement = 'assets/svgs/flaticon/advertisement.svg';
-  final String advertisement_solid =
-      'assets/svgs/flaticon/advertisement_solid.svg';
+  final String megaphone_outlined =
+      'assets/svgs/flaticon/megaphone_outlined.svg';
+  final String megaphone_solid = 'assets/svgs/flaticon/megaphone_solid.svg';
+  final String adverts_outlined = 'assets/svgs/flaticon/adverts_outlined.svg';
+  final String adverts_solid = 'assets/svgs/flaticon/adverts_solid.svg';
 
   // BannerAd firstBannerAd;
 
   int passedSelectedIndex;
   _HomeState(this.passedSelectedIndex);
 
-  PageController _pageController = PageController();
+  PageController _pageController = PageController(keepPage: false);
 
   List<Widget> _screens = [
     ChangeNotifierProvider(
@@ -44,6 +46,7 @@ class _HomeState extends State<Home> {
       child: Trends(),
     ),
     AddGigDetails(),
+    AddAdvert(),
     AddAdvert(),
     MyProfileView(),
   ];
@@ -70,16 +73,18 @@ class _HomeState extends State<Home> {
   //   });
   // }
 
-  void _onPageChanged(int currentIndex) {
-    if (this.mounted) {
-      setState(() {
-        _selectedIndex = currentIndex;
-      });
-    }
-  }
+  // void _onPageChanged(int currentIndex) {}
 
   void _onItemTapped(int selectedIndex) {
-    _pageController.jumpToPage(selectedIndex);
+    if (this.mounted) {
+      setState(() {
+        _selectedIndex = selectedIndex;
+      });
+      FocusScope.of(context).requestFocus(new FocusNode());
+      AddAdvert.advertTextController.clear();
+      AddAdvert.myFavoriteHashtagsController.clear();
+      _pageController.jumpToPage(selectedIndex);
+    }
   }
 
   @override
@@ -94,7 +99,7 @@ class _HomeState extends State<Home> {
                 child: PageView(
                   controller: _pageController,
                   children: _screens,
-                  onPageChanged: _onPageChanged,
+                  // onPageChanged: _onPageChanged,
                   physics: NeverScrollableScrollPhysics(),
                 ),
               ),
@@ -126,7 +131,7 @@ class _HomeState extends State<Home> {
                     width: 20,
                     height: 20,
                     child: SvgPicture.asset(
-                      _selectedIndex == 0 ? home_filled : home_outlined,
+                      _selectedIndex == 0 ? home_solid : home_outlined,
                       semanticsLabel: 'home',
                       color: Theme.of(context).primaryColor,
                     ),
@@ -138,7 +143,7 @@ class _HomeState extends State<Home> {
                     width: 20,
                     height: 20,
                     child: SvgPicture.asset(
-                      _selectedIndex == 1 ? add_filled : add_outlined,
+                      _selectedIndex == 1 ? add_solid : add_outlined,
                       semanticsLabel: 'add',
                       color: Theme.of(context).primaryColor,
                     ),
@@ -147,15 +152,29 @@ class _HomeState extends State<Home> {
                 ),
                 BottomNavigationBarItem(
                   icon: SizedBox(
-                    width: 20,
-                    height: 20,
+                    width: 23,
+                    height: 23,
                     child: SvgPicture.asset(
-                      _selectedIndex == 2 ? advertisement_solid : advertisement,
+                      _selectedIndex == 2
+                          ? megaphone_solid
+                          : megaphone_outlined,
                       semanticsLabel: 'search',
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
                   label: 'search',
+                ),
+                BottomNavigationBarItem(
+                  icon: SizedBox(
+                    width: 23,
+                    height: 23,
+                    child: SvgPicture.asset(
+                      _selectedIndex == 3 ? adverts_solid : adverts_outlined,
+                      semanticsLabel: 'home',
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  label: 'home',
                 ),
                 BottomNavigationBarItem(
                   icon: SizedBox(
@@ -176,7 +195,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                   label: 'account',
-                )
+                ),
               ],
             ),
           ),

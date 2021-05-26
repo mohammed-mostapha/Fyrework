@@ -156,7 +156,11 @@ class _CommentItemState extends State<CommentItem>
                       passedUserUid: userId,
                     )))
         : Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MyProfileView()));
+            context,
+            MaterialPageRoute(
+              builder: (context) => MyProfileView(),
+            ),
+          );
   }
 
   alertUserToSelectRating() {
