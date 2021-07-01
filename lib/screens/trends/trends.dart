@@ -150,8 +150,14 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
               create: (context) => GigIndexProvider(),
               child: AllGigsView(),
             ),
-            ClientGigsView(),
-            ProviderGigsView(),
+            ChangeNotifierProvider(
+              create: (context) => GigIndexProvider(),
+              child: ClientGigsView(),
+            ),
+            ChangeNotifierProvider(
+              create: (context) => GigIndexProvider(),
+              child: ProviderGigsView(),
+            ),
           ],
         ),
       ),

@@ -96,36 +96,64 @@ class DatabaseService {
   }
 
   // filter all gigs
-  Stream<QuerySnapshot> filterAllGigs(String query) {
+  Future<QuerySnapshot> filterAllGigs(String query) {
     return query.isEmpty
         ? _gigsCollection
             .where('hidden', isEqualTo: false)
             .orderBy('createdAt', descending: true)
-            .snapshots()
+            .get()
         : _gigsCollection
             .where('hidden', isEqualTo: false)
             .where('gigHashtags', arrayContains: query)
             .orderBy('createdAt', descending: true)
-            .snapshots();
+            .get();
+  }
+  // filter all gigs
+  Future<QuerySnapshot> filterCilentGigs(String query) {
+    return query.isEmpty
+        ? _gigsCollection
+            .where('hidden', isEqualTo: false)
+            .orderBy('createdAt', descending: true)
+            .get()
+        : _gigsCollection
+            .where('hidden', isEqualTo: false)
+            .where('gigValue', isEqualTo: 'I need a provider')
+            .where('gigHashtags', arrayContains: query)
+            .orderBy('createdAt', descending: true)
+            .get();
+  }
+  // filter all gigs
+  Future<QuerySnapshot> filterProviderGigs(String query) {
+    return query.isEmpty
+        ? _gigsCollection
+            .where('hidden', isEqualTo: false)
+            .orderBy('createdAt', descending: true)
+            .get()
+        : _gigsCollection
+            .where('hidden', isEqualTo: false)
+            .where('gigValue', isEqualTo: 'Gig I can do')
+            .where('gigHashtags', arrayContains: query)
+            .orderBy('createdAt', descending: true)
+            .get();
   }
 
-  // listening to client gigs
-  Stream<QuerySnapshot> listenToCilentGigs() {
-    return _gigsCollection
-        .where('hidden', isEqualTo: false)
-        .where('gigValue', isEqualTo: 'I need a provider')
-        .orderBy('createdAt', descending: true)
-        .snapshots();
-  }
+  // // listening to client gigs
+  // Future<QuerySnapshot> listenToCilentGigs() {
+  //   return _gigsCollection
+  //       .where('hidden', isEqualTo: false)
+  //       .where('gigValue', isEqualTo: 'I need a provider')
+  //       .orderBy('createdAt', descending: true)
+  //       .get();
+  // }
 
   // listening to provider gigs
-  Stream<QuerySnapshot> listenToProviderGigs() {
-    return _gigsCollection
-        .where('hidden', isEqualTo: false)
-        .where('gigValue', isEqualTo: 'Gig I can do')
-        .orderBy('createdAt', descending: true)
-        .snapshots();
-  }
+  // Future<QuerySnapshot> listenToProviderGigs() {
+  //   return _gigsCollection
+  //       .where('hidden', isEqualTo: false)
+  //       .where('gigValue', isEqualTo: 'Gig I can do')
+  //       .orderBy('createdAt', descending: true)
+  //       .get();
+  // }
 
   Stream<QuerySnapshot> openGigsByGigRelatedUsers({String userId}) {
     return _gigsCollection
