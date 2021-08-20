@@ -623,7 +623,7 @@ class _AddAdvertState extends State<AddAdvert> {
       _scrollController.animateTo(0,
           duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       return Container(
-        color: Theme.of(context).primaryColor,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Theme.of(context).primaryColor,),
         width: double.infinity,
         padding: EdgeInsets.all(8.0),
         child: Row(

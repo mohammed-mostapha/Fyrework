@@ -1,10 +1,12 @@
 import 'dart:typed_data';
-
+import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/services/payment.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class AdvertPayment extends StatefulWidget {
   final Uint8List receivedAdvertScreenshot;
-  List receivedAdvertHashtags;
+  final List receivedAdvertHashtags;
   AdvertPayment({
     @required this.receivedAdvertScreenshot,
     @required this.receivedAdvertHashtags,
@@ -14,9 +16,15 @@ class AdvertPayment extends StatefulWidget {
 }
 
 class _AdvertPaymentState extends State<AdvertPayment> {
+  @override
+  void initState() {
+    super.initState();
+    StripeServices.init();
+  }
+
   ScrollController _scrollController = ScrollController();
-  // List _advertHashtags = List();
   String clientSideWarning;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,25 +38,26 @@ class _AdvertPaymentState extends State<AdvertPayment> {
         ),
         elevation: 0.0,
       ),
-      body: Container(
-        child: Form(
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  clientSideAlert(),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Container(
-                      width: double.infinity,
-                      child: Wrap(
-                        children: widget.receivedAdvertHashtags
-                            .map((e) => Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 2.5, 2.5),
-                                  child: Chip(
+      body: Builder(
+        builder: (context) => Container(
+          child: Form(
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    clientSideAlert(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Container(
+                        width: double.infinity,
+                        child: Wrap(
+                          children: widget.receivedAdvertHashtags
+                              .map((e) => Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        0, 0, 2.5, 2.5),
+                                    child: Chip(
                                       materialTapTargetSize:
                                           MaterialTapTargetSize.shrinkWrap,
                                       backgroundColor:
@@ -62,36 +71,55 @@ class _AdvertPaymentState extends State<AdvertPayment> {
                                                 color: Theme.of(context)
                                                     .accentColor),
                                       ),
-                                      onDeleted: () {
-                                        setState(() {
-                                          widget.receivedAdvertHashtags
-                                              .removeWhere((item) => item == e);
-                                        });
-                                      },
-                                      deleteIconColor:
-                                          Theme.of(context).accentColor),
-                                ))
-                            .toList(),
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
                       ),
                     ),
-                  ),
-                  widget.receivedAdvertScreenshot != null
-                      ? Container(
-                          width: double.infinity,
-                          height: MediaQuery.of(context).size.height / 2,
-                          child: Image.memory(
-                            // File(widget.receivedAdvertScreenshot.path),
-                            widget.receivedAdvertScreenshot,
-                          ),
-                        )
-                      : Container(
-                          child: Center(
-                          child: Text(
-                            'Try again',
-                            style: Theme.of(context).textTheme.bodyText1,
-                          ),
-                        ))
-                ],
+                    widget.receivedAdvertScreenshot != null
+                        ? Container(
+                            width: double.infinity,
+                            height: MediaQuery.of(context).size.height / 2,
+                            child: Image.memory(
+                              // File(widget.receivedAdvertScreenshot.path),
+                              widget.receivedAdvertScreenshot,
+                            ),
+                          )
+                        : Container(
+                            child: Center(
+                            child: Text(
+                              'Try again',
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+                          )),
+                    ElevatedButton(
+                        onPressed: () async {
+                          EasyLoading.show();
+                          var response = await StripeServices.payWithCard(
+                              amount: 500.toString(), currency: 'usd');
+                          Scaffold.of(context).showSnackBar(
+                              SnackBar(content: Text(response.message)));
+                          for (var i = 0; i < widget.receivedAdvertHashtags.length; i++) {
+                            await DatabaseService().fetchOrCreateGigsForAdverts(
+                                widget.receivedAdvertHashtags[i]);
+                          }
+                          EasyLoading.dismiss();
+                        },
+                        child: Text('Stripe Pay \$5.00'),
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                Theme.of(context).primaryColor))),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    Text(
+                      'You advert will go under the selected hashtags at the top',
+                      style: Theme.of(context).textTheme.headline1,
+                      textAlign: TextAlign.center,
+                    )
+                  ],
+                ),
               ),
             ),
           ),

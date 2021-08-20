@@ -108,7 +108,8 @@ class DatabaseService {
             .orderBy('createdAt', descending: true)
             .get();
   }
-  // filter all gigs
+
+  // filter client gigs
   Future<QuerySnapshot> filterCilentGigs(String query) {
     return query.isEmpty
         ? _gigsCollection
@@ -122,7 +123,8 @@ class DatabaseService {
             .orderBy('createdAt', descending: true)
             .get();
   }
-  // filter all gigs
+
+  // filter provider gigs
   Future<QuerySnapshot> filterProviderGigs(String query) {
     return query.isEmpty
         ? _gigsCollection
@@ -135,6 +137,17 @@ class DatabaseService {
             .where('gigHashtags', arrayContains: query)
             .orderBy('createdAt', descending: true)
             .get();
+  }
+
+  Future<QuerySnapshot> fetchOrCreateGigsForAdverts(
+      String receivedAdvertHashtag) {
+    print('count me receivedHashtag: $receivedAdvertHashtag');
+    print('count me');
+    return _gigsCollection
+        .where('hidden', isEqualTo: false)
+        .where('gigHashtags', arrayContains: receivedAdvertHashtag)
+        .orderBy('createdAt', descending: true)
+        .get();
   }
 
   // // listening to client gigs
@@ -154,6 +167,13 @@ class DatabaseService {
   //       .orderBy('createdAt', descending: true)
   //       .get();
   // }
+
+  Future<QuerySnapshot> fetchGigsByOwnerId({String userId}) {
+    return _gigsCollection
+        .where('hidden', isEqualTo: false)
+        .where('gigOwnerId', isEqualTo: userId)
+        .get();
+  }
 
   Stream<QuerySnapshot> openGigsByGigRelatedUsers({String userId}) {
     return _gigsCollection

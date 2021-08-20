@@ -544,7 +544,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             radius: 70.0,
             backgroundColor: Theme.of(context).primaryColor,
             backgroundImage: _profileImage == null
-                ? avatarPlaceholder
+                ? AssetImage(avatarPlaceholder)
                 : FileImage(File(_profileImage.path)),
           ),
         ),
@@ -575,7 +575,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       scrollController.animateTo(0,
           duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       return Container(
-        color: Theme.of(context).primaryColor,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Theme.of(context).primaryColor,),
         width: double.infinity,
         padding: EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
@@ -627,7 +627,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       scrollController.animateTo(0,
           duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       return Container(
-        color: Theme.of(context).primaryColor,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Theme.of(context).primaryColor,),
         width: double.infinity,
         padding: EdgeInsets.all(8.0),
         child: Row(
