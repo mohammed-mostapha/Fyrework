@@ -21,10 +21,10 @@ class ClientGigsView extends StatefulWidget {
 
 class _ClientGigsViewState extends State<ClientGigsView> {
   final String currentUserId = MyUser.uid;
-   RefreshController _refreshController =
+  RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
-void _onRefresh() async {
+  void _onRefresh() async {
     await Future.delayed(Duration(milliseconds: 1000));
     if (mounted) setState(() {});
     _refreshController.refreshCompleted();
@@ -58,23 +58,21 @@ void _onRefresh() async {
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     //start
-                         return SmartRefresher(
-                      enablePullDown: true, 
-                      child: ListView.builder(
-                          itemBuilder: (context, index) {
-                            return Center(child: Text(''));
-                          }),
-
+                    return SmartRefresher(
+                      enablePullDown: true,
+                      child: ListView.builder(itemBuilder: (context, index) {
+                        return Center(child: Text(''));
+                      }),
                       controller: _refreshController,
                       onRefresh: _onRefresh,
                       onLoading: _onLoading,
                     );
                     //end
-                    
+
                   } else if (snapshot.data.docs.length > 0) {
                     print('smartRefresher: you should see gigs now');
                     return SmartRefresher(
-                      enablePullDown: true, 
+                      enablePullDown: true,
                       child: ListView.builder(
                           addAutomaticKeepAlives: false,
                           cacheExtent: 100.0,
@@ -134,20 +132,17 @@ void _onRefresh() async {
                                     height: 0,
                                   );
                           }),
-
                       controller: _refreshController,
                       onRefresh: _onRefresh,
                       onLoading: _onLoading,
                     );
                   } else {
-                     //start
-                         return SmartRefresher(
+                    //start
+                    return SmartRefresher(
                       enablePullDown: true,
-                      child: ListView.builder(
-                          itemBuilder: (context, index) {
-                            return Center(child: Text(''));
-                          }),
-
+                      child: ListView.builder(itemBuilder: (context, index) {
+                        return Center(child: Text(''));
+                      }),
                       controller: _refreshController,
                       onRefresh: _onRefresh,
                       onLoading: _onLoading,
@@ -192,14 +187,6 @@ void _onRefresh() async {
     var platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: iOSPlatformSChannelSpecifics,
-    );
-
-    await flutterLocalNotificationsPlugin.schedule(
-      1,
-      'Fyrework',
-      'You have a new notification',
-      scheduleNotificationDateTime,
-      platformChannelSpecifics,
     );
   }
 }

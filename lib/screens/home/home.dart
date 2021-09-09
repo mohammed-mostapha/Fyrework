@@ -1,6 +1,7 @@
 import 'package:Fyrework/screens/advertisements/addAdvert.dart';
-import 'package:Fyrework/services/mobileAds_provider.dart';
+import 'package:Fyrework/services/firestore_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/screens/add_gig/addGigDetails.dart';
@@ -10,7 +11,7 @@ import 'package:flutter_svg/svg.dart';
 // import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:Fyrework/screens/trends/queryStringProvider.dart';
-import 'package:provider/provider.dart';
+import 'package:Fyrework/services/local_notification_service.dart';
 
 class Home extends StatefulWidget {
   final int passedSelectedIndex;
@@ -21,6 +22,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final String home_outlined = 'assets/svgs/flaticon/home_outlined.svg';
   final String home_solid = 'assets/svgs/flaticon/home_solid.svg';
   final String add_outlined = 'assets/svgs/flaticon/add_outlined.svg';
@@ -55,8 +57,16 @@ class _HomeState extends State<Home> {
 
   void initState() {
     super.initState();
+    _getDeviceToken();
+    localNotificationService.initialize(context);
   }
 
+  _getDeviceToken() {
+    _firebaseMessaging.getToken().then((deviceToken) {
+      print('Device token: $deviceToken');
+      FirestoreService().saveDeviceToken(deviceToken);
+    });
+  }
   // @override
   // void didChangeDependencies() {
   //   super.didChangeDependencies();
@@ -103,15 +113,6 @@ class _HomeState extends State<Home> {
                   physics: NeverScrollableScrollPhysics(),
                 ),
               ),
-              // if (firstBannerAd == null)
-              //   SizedBox(
-              //     height: 50,
-              //   )
-              // else
-              //   Container(
-              //     height: 50,
-              //     child: AdWidget(ad: firstBannerAd),
-              //   ),
             ],
           ),
           bottomNavigationBar: Container(

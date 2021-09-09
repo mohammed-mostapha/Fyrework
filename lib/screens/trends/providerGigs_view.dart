@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-
 class ProviderGigsView extends StatefulWidget {
   ProviderGigsView({Key key}) : super(key: key);
 
@@ -20,7 +19,7 @@ class ProviderGigsView extends StatefulWidget {
 
 class _ProviderGigsViewState extends State<ProviderGigsView> {
   final String currentUserId = MyUser.uid;
-    RefreshController _refreshController =
+  RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
   void _onRefresh() async {
@@ -38,7 +37,7 @@ class _ProviderGigsViewState extends State<ProviderGigsView> {
     print('smartRefresher: loadComplete');
   }
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return Container(
       child: Consumer2<QueryStringProvider, GigIndexProvider>(
@@ -56,19 +55,17 @@ class _ProviderGigsViewState extends State<ProviderGigsView> {
                     .filterProviderGigs(QueryStringProvider.getQueryString()),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                         return SmartRefresher(
-                      enablePullDown: true, 
-                      child: ListView.builder(
-                          itemBuilder: (context, index) {
-                            return Center(child: Text(''));
-                          }),
-
+                    return SmartRefresher(
+                      enablePullDown: true,
+                      child: ListView.builder(itemBuilder: (context, index) {
+                        return Center(child: Text(''));
+                      }),
                       controller: _refreshController,
                       onRefresh: _onRefresh,
                       onLoading: _onLoading,
                     );
                     //end
-                    
+
                   } else if (snapshot.data.docs.length > 0) {
                     print('smartRefresher: you should see gigs now');
                     return SmartRefresher(
@@ -132,20 +129,17 @@ class _ProviderGigsViewState extends State<ProviderGigsView> {
                                     height: 0,
                                   );
                           }),
-
                       controller: _refreshController,
                       onRefresh: _onRefresh,
                       onLoading: _onLoading,
                     );
                   } else {
-                     //start
-                         return SmartRefresher(
+                    //start
+                    return SmartRefresher(
                       enablePullDown: true,
-                      child: ListView.builder(
-                          itemBuilder: (context, index) {
-                            return Center(child: Text(''));
-                          }),
-
+                      child: ListView.builder(itemBuilder: (context, index) {
+                        return Center(child: Text(''));
+                      }),
                       controller: _refreshController,
                       onRefresh: _onRefresh,
                       onLoading: _onLoading,
@@ -190,14 +184,6 @@ class _ProviderGigsViewState extends State<ProviderGigsView> {
     var platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: iOSPlatformSChannelSpecifics,
-    );
-
-    await flutterLocalNotificationsPlugin.schedule(
-      1,
-      'Fyrework',
-      'You have a new notification',
-      scheduleNotificationDateTime,
-      platformChannelSpecifics,
     );
   }
 }

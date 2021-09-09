@@ -1,8 +1,10 @@
 import 'package:Fyrework/services/connectivity_provider.dart';
+import 'package:Fyrework/services/firestore_service.dart';
 import 'package:Fyrework/services/mobileAds_provider.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/widgets/network_sensor.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:Fyrework/app_localizations.dart';
 import 'package:Fyrework/screens/authenticate/app_start.dart';
@@ -17,34 +19,13 @@ import 'package:provider/provider.dart';
 import 'locator.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+import 'package:Fyrework/services/local_notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final initMobileAdsFuture = MobileAds.instance.initialize();
   final mobileAdsState = MobileAdsState(initMobileAdsFuture);
-
   await Firebase.initializeApp();
-
-  var initializaitonSettingsAndroid =
-      AndroidInitializationSettings('ic_notification');
-  var initializaitonSettingsIOS = IOSInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-      onDidReceiveLocalNotification:
-          (int id, String title, String body, String payload) async {});
-  var initializationSettings = InitializationSettings(
-      android: initializaitonSettingsAndroid, iOS: initializaitonSettingsIOS);
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-      onSelectNotification: (String payload) async {
-    if (payload != null) {
-      debugPrint('notification payload $payload');
-    }
-  });
 
   setupLocator();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
@@ -52,9 +33,6 @@ void main() async {
     runApp(Provider.value(
         value: mobileAdsState, builder: (context, child) => MyApp()));
   });
-  //
-  // runApp(MyApp());
-  // runApp(HomeController());
   configLoading();
 }
 
@@ -64,9 +42,43 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+  @override
+  void initState() {
+    super.initState();
+    _configureFirebaseListeners();
+    // localNotificationService.initialize(context);
+  }
+
+  _configureFirebaseListeners() {
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('onMessage: $message');
+        localNotificationService.display(message);
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('onResulme: $message');
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('onLaunch: $message');
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // routes: <String, WidgetBuilder>{
+      //   '/home': (BuildContext context) => HomeController(),
+      //   '/signUp': (BuildContext context) => SignUpView(
+      //         authFormType: AuthFormType.signUp,
+      //       ),
+      //   '/signIn': (BuildContext context) => SignUpView(
+      //         authFormType: AuthFormType.signIn,
+      //       ),
+      //   '/addGig': (BuildContext context) => Home(passedSelectedIndex: 1),
+      // },
       debugShowCheckedModeBanner: false,
       home: HomeController(),
     );
@@ -90,6 +102,16 @@ void configLoading() {
     ..dismissOnTap = false;
 }
 
+/////////
+//////
+///
+///
+///
+///
+//////////////
+//////////////////
+/// HomeController();
+
 class HomeController extends StatefulWidget {
   @override
   _HomeControllerState createState() => _HomeControllerState();
@@ -99,10 +121,14 @@ bool isAuthenticated = false;
 
 class _HomeControllerState extends State<HomeController> {
   AuthService authService = locator.get<AuthService>();
+  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   @override
   void initState() {
     super.initState();
     checkAuthenticity();
+    // _getDeviceToken();
+    // _configureFirebaseListeners();
+    // localNotificationService.initialize(context);
   }
 
   Future checkAuthenticity() async {
@@ -122,6 +148,32 @@ class _HomeControllerState extends State<HomeController> {
       }
     });
   }
+
+  // _getDeviceToken() {
+  //   _firebaseMessaging.getToken().then((deviceToken) {
+  //     print('Device token: $deviceToken');
+  //   });
+  // }
+
+  // _configureFirebaseListeners() {
+  //   _firebaseMessaging.configure(
+  //     onMessage: (Map<String, dynamic> message) async {
+  //       print('onMessage: $message');
+  //       // _setMessage(message);
+  //       localNotificationService.display(message);
+  //     },
+  //     onResume: (Map<String, dynamic> message) async {
+  //       print('onResulme: $message');
+  //       // _setMessage(message);
+  //       // localNotificationService.display(message);
+  //     },
+  //     onLaunch: (Map<String, dynamic> message) async {
+  //       print('onLaunch: $message');
+  //       // _setMessage(message);
+  //       // localNotificationService.display(message);
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {

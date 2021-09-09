@@ -18,9 +18,27 @@ class FirestoreService {
       FirebaseFirestore.instance.collection('comments');
   final CollectionReference _popularHashtagsCollectionReference =
       FirebaseFirestore.instance.collection('popularHashtags');
+  final CollectionReference _devicesTokensCollectionReference =
+      FirebaseFirestore.instance.collection('devicesTokens');
 
   final StreamController<List<Gig>> _gigsController =
       StreamController<List<Gig>>.broadcast();
+
+  Future saveDeviceToken(String deviceToken) async {
+    try {
+      final deviceTokenSnapshot = await _devicesTokensCollectionReference
+          .where('deviceToken', isEqualTo: deviceToken)
+          .get();
+      if (!(deviceTokenSnapshot.docs.length > 0)) {
+        _devicesTokensCollectionReference.add({
+          'deviceToken': deviceToken,
+        });
+      }
+    } catch (e) {
+      print(e);
+      return;
+    }
+  }
 
   Future getCurrentUserData(String uid) async {
     try {
