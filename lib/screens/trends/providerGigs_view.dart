@@ -50,8 +50,8 @@ class _ProviderGigsViewState extends State<ProviderGigsView> {
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
               ),
-              FutureBuilder<QuerySnapshot>(
-                future: DatabaseService()
+              StreamBuilder<QuerySnapshot>(
+                stream: DatabaseService()
                     .filterProviderGigs(QueryStringProvider.getQueryString()),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {

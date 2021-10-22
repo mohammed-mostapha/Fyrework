@@ -1,5 +1,4 @@
 import 'package:Fyrework/services/connectivity_provider.dart';
-import 'package:Fyrework/services/firestore_service.dart';
 import 'package:Fyrework/services/mobileAds_provider.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/widgets/network_sensor.dart';
@@ -101,16 +100,6 @@ void configLoading() {
     ..userInteractions = false
     ..dismissOnTap = false;
 }
-
-/////////
-//////
-///
-///
-///
-///
-//////////////
-//////////////////
-/// HomeController();
 
 class HomeController extends StatefulWidget {
   @override

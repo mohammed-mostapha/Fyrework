@@ -65,11 +65,13 @@ class _NetworkSensorState extends State<NetworkSensor> {
         }
 
         return Container(
-          child: Center(
-              child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).accentColor))),
-        );
+            // child: Center(
+            //   child: CircularProgressIndicator(
+            //     valueColor:
+            //         AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
+            //   ),
+            // ),
+            );
       },
     );
   }

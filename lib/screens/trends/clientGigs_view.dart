@@ -52,9 +52,10 @@ class _ClientGigsViewState extends State<ClientGigsView> {
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
               ),
-              FutureBuilder<QuerySnapshot>(
-                future: DatabaseService()
-                    .filterCilentGigs(QueryStringProvider.getQueryString()),
+              StreamBuilder<QuerySnapshot>(
+                stream: DatabaseService().filterCilentGigs(
+                  QueryStringProvider.getQueryString(),
+                ),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     //start

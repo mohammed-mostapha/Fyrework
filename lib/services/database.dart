@@ -96,47 +96,47 @@ class DatabaseService {
   }
 
   // filter all gigs
-  Future<QuerySnapshot> filterAllGigs(String query) {
+  Stream<QuerySnapshot> filterAllGigs(String query) {
     return query.isEmpty
         ? _gigsCollection
             .where('hidden', isEqualTo: false)
             .orderBy('createdAt', descending: true)
-            .get()
+            .snapshots()
         : _gigsCollection
             .where('hidden', isEqualTo: false)
             .where('gigHashtags', arrayContains: query)
             .orderBy('createdAt', descending: true)
-            .get();
+            .snapshots();
   }
 
   // filter client gigs
-  Future<QuerySnapshot> filterCilentGigs(String query) {
+  Stream<QuerySnapshot> filterCilentGigs(String query) {
     return query.isEmpty
         ? _gigsCollection
             .where('hidden', isEqualTo: false)
             .orderBy('createdAt', descending: true)
-            .get()
+            .snapshots()
         : _gigsCollection
             .where('hidden', isEqualTo: false)
             .where('gigValue', isEqualTo: 'I need a provider')
             .where('gigHashtags', arrayContains: query)
             .orderBy('createdAt', descending: true)
-            .get();
+            .snapshots();
   }
 
   // filter provider gigs
-  Future<QuerySnapshot> filterProviderGigs(String query) {
+  Stream<QuerySnapshot> filterProviderGigs(String query) {
     return query.isEmpty
         ? _gigsCollection
             .where('hidden', isEqualTo: false)
             .orderBy('createdAt', descending: true)
-            .get()
+            .snapshots()
         : _gigsCollection
             .where('hidden', isEqualTo: false)
             .where('gigValue', isEqualTo: 'Gig I can do')
             .where('gigHashtags', arrayContains: query)
             .orderBy('createdAt', descending: true)
-            .get();
+            .snapshots();
   }
 
   Future<QuerySnapshot> fetchOrCreateGigsForAdverts(
@@ -168,7 +168,8 @@ class DatabaseService {
   //       .get();
   // }
 
-  Future<QuerySnapshot> fetchGigsByOwnerId({String userId}) {
+  Future<QuerySnapshot> fetchGigsByOwnerId({String userId}) async {
+    await Future.delayed(Duration(milliseconds: 1000));
     return _gigsCollection
         .where('hidden', isEqualTo: false)
         .where('gigOwnerId', isEqualTo: userId)

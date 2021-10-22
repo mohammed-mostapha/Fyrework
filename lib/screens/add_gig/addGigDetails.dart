@@ -441,12 +441,12 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                     ),
                                   ),
                                   Container(
-                                    decoration: BoxDecoration(
-                                      border: Border(
-                                        bottom: BorderSide(
-                                            color: Colors.black26, width: 0.5),
-                                      ),
-                                    ),
+                                    // decoration: BoxDecoration(
+                                    //   border: Border(
+                                    //     bottom: BorderSide(
+                                    //         color: Colors.black26, width: 0.5),
+                                    //   ),
+                                    // ),
                                     child: Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           0, 10, 10, 10),
@@ -468,11 +468,11 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                   ),
                                   Container(
                                     // height: 100,
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                            bottom: BorderSide(
-                                                color: Colors.black26,
-                                                width: 0.5))),
+                                    // decoration: BoxDecoration(
+                                    //     border: Border(
+                                    //         bottom: BorderSide(
+                                    //             color: Colors.black26,
+                                    //             width: 0.5))),
                                     child: Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           0, 10, 10, 10),
@@ -638,8 +638,10 @@ class _AddGigDetailsState extends State<AddGigDetails> {
           }
           return Center(
             child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).primaryColor)),
+              valueColor:
+                  AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+              strokeWidth: 2.0,
+            ),
           );
         });
   }
@@ -782,10 +784,12 @@ class _AppointmentCardState extends State<AppointmentCard> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: MediaQuery.of(context).orientation == Orientation.landscape
-          ? EdgeInsets.only(bottom: 30)
-          : EdgeInsets.zero,
+      padding: EdgeInsets.zero,
+      // padding: MediaQuery.of(context).orientation == Orientation.landscape
+      //     ? EdgeInsets.only(bottom: 30)
+      //     : EdgeInsets.zero,
       child: SlidingCard(
+        showColors: false,
         slimeCardElevation: 0,
         // slidingAnimationReverseCurve: Curves.bounceInOut,
         cardsGap: SizeConfig.safeBlockVertical,
@@ -794,7 +798,13 @@ class _AppointmentCardState extends State<AppointmentCard> {
         visibleCardHeight: SizeConfig.safeBlockVertical * 17,
         hiddenCardHeight: SizeConfig.safeBlockVertical * 15,
         frontCardWidget: Container(
-          color: Theme.of(context).scaffoldBackgroundColor,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              width: 0.0,
+            ),
+            color: Theme.of(context).scaffoldBackgroundColor,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -805,7 +815,9 @@ class _AppointmentCardState extends State<AppointmentCard> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                            width: 0.5, color: Theme.of(context).primaryColor),
+                          width: 0.5,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
                       width: 20,
                       child: Radio(
@@ -842,7 +854,9 @@ class _AppointmentCardState extends State<AppointmentCard> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                            width: 0.5, color: Theme.of(context).primaryColor),
+                          width: 0.5,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
                       width: 20,
                       child: Radio(
@@ -873,7 +887,13 @@ class _AppointmentCardState extends State<AppointmentCard> {
           ),
         ),
         backCardWidget: Container(
-          color: Theme.of(context).scaffoldBackgroundColor,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              width: 0.0,
+            ),
+            color: Theme.of(context).scaffoldBackgroundColor,
+          ),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
             child: Row(

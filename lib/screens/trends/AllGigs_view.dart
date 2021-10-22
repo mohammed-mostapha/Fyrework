@@ -92,15 +92,18 @@ class _AllGigsViewState extends State<AllGigsView> {
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
               ),
-              FutureBuilder<QuerySnapshot>(
-                future: DatabaseService()
-                    .filterAllGigs(QueryStringProvider.getQueryString()),
+              StreamBuilder<QuerySnapshot>(
+                stream: DatabaseService().filterAllGigs(
+                  QueryStringProvider.getQueryString(),
+                ),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return SmartRefresher(
                       enablePullDown: true,
                       child: ListView.builder(itemBuilder: (context, index) {
-                        return Center(child: Text(''));
+                        return Center(
+                          child: Text(''),
+                        );
                       }),
                       controller: _refreshController,
                       onRefresh: _onRefresh,
@@ -111,7 +114,20 @@ class _AllGigsViewState extends State<AllGigsView> {
                   } else if (snapshot.data.docs.length > 0) {
                     print('smartRefresher: you should see gigs right now');
                     return SmartRefresher(
-                      header: WaterDropHeader(),
+                      header: WaterDropHeader(
+                        refresh: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Theme.of(context).primaryColor,
+                            ),
+                            strokeWidth: 2.0,
+                          ),
+                        ),
+                        complete: Container(),
+                        completeDuration: Duration(microseconds: 100),
+                      ),
                       enablePullDown: true,
                       child: ListView.builder(
                           addAutomaticKeepAlives: false,

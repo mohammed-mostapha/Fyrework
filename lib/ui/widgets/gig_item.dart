@@ -197,8 +197,8 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
     bool liked = widget.likersByUserId.contains(MyUser.uid) ? true : false;
 
     _likedPressed() {
+      liked = !liked;
       setState(() {
-        liked = !liked;
         _likeAnimationController.forward().then((value) {
           _likeAnimationController.reverse();
         });
