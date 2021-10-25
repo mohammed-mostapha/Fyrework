@@ -323,7 +323,9 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
           onPressed: () async {
             Navigator.of(context, rootNavigator: true).pop();
             EasyLoading.show();
-            await DatabaseService().deleteMyGigByGigId(gigId: widget.gigId);
+            await DatabaseService().deleteMyGigByGigId(
+              gigId: widget.gigId,
+            );
 
             EasyLoading.showSuccess('');
 

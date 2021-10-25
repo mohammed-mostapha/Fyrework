@@ -172,7 +172,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                                             child: Text(
                                               snapshot.data.openGigsByGigId !=
                                                       null
-                                                  ? '${snapshot.data.lengthOfOpenGigsByGigId}'
+                                                  ? '${snapshot.data.openGigsByGigId.length}'
                                                   : '0',
                                               style: Theme.of(context)
                                                   .textTheme

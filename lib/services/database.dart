@@ -1,3 +1,4 @@
+import 'package:Fyrework/models/myUser.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -263,7 +264,11 @@ class DatabaseService {
     @required String gigId,
   }) async {
     try {
-      return await _gigsCollection.doc(gigId).update(<String, dynamic>{
+      await _usersCollection.doc(MyUser.uid).update(<String, dynamic>{
+        'openGigsByGigId': FieldValue.arrayRemove([gigId])
+      });
+
+      await _gigsCollection.doc(gigId).update(<String, dynamic>{
         'hidden': true,
       });
     } catch (e) {
