@@ -21,7 +21,7 @@ class AddCommentViewModel {
     @required String commentOwnerId,
     @required String commentOwnerAvatarUrl,
     @required String commentOwnerUsername,
-    @required String commentBody,
+    @required dynamic commentBody,
     @required bool isPrivateComment,
     @required bool proposal,
     @required bool approved,
@@ -37,7 +37,6 @@ class AddCommentViewModel {
     bool leftReview,
   }) async {
     var result;
-    // if (!_editting) {
     result = await _firestoreService.addComment(
         Comment(
           gigIdHoldingComment: gigIdHoldingComment,
@@ -66,27 +65,5 @@ class AddCommentViewModel {
           leftReview: leftReview,
         ),
         gigIdHoldingComment);
-    // } else {
-    //   result = await _firestoreService.updateComment(
-    //     Comment(
-    //       gigIdHoldingComment: gigIdHoldingComment,
-    //       gigOwnerId: gigOwnerId,
-    //       commentId: commentId,
-    //       commentOwnerId: commentOwnerId,
-    //       commentOwnerAvatarUrl: commentOwnerAvatarUrl,
-    //       commentOwnerUsername: commentOwnerUsername,
-    //       commentBody: commentBody,
-    //       // commentTime: commentTime,
-    //       isPrivateComment: isPrivateComment,
-    //       proposal: proposal,
-    //       approved: approved,
-    //       rejected: rejected,
-    //       gigCurrency: gigCurrency,
-    //       offeredBudget: offeredBudget,
-    //       preferredPaymentMethod: preferredPaymentMethod,
-    //       containMediaFile: containMediaFile,
-    //     ),
-    //   );
-    // }
   }
 }

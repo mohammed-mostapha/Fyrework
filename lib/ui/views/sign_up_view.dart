@@ -106,8 +106,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   // bool _shouldAddHashtag = false;
   List _openGigsByGigId = List();
   List _completedGigsByGigId = List();
-  int _lengthOfOpenGigsByGigId = 0;
-  int _lengthOfCompletedGigsByGigId = 0;
   final TextEditingController phoneNumberController = TextEditingController();
   TextEditingController _ageOfUserController = TextEditingController();
   TextEditingController _myFavoriteHashtagsController = TextEditingController();
@@ -259,8 +257,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                 if (!isNullOrEmpty(_myUploadedAvatarUrl)) {
                   print(
                       "creates user document _openGigsByGigId: $_openGigsByGigId");
-                  print(
-                      "creates user document _lengthOfOpenGigsByGigId: $_lengthOfOpenGigsByGigId");
                   // create a new document for the user with the uid in users collection
                   await DatabaseService().setUserData(
                     id: signUpUid,
@@ -272,9 +268,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                     location: location,
                     isMinor: _isMinor,
                     openGigsByGigId: _openGigsByGigId,
-                    lengthOfOpenGigsByGigId: _lengthOfOpenGigsByGigId,
                     completedGigsByGigId: _completedGigsByGigId,
-                    lengthOfCompletedGigsByGigId: _lengthOfCompletedGigsByGigId,
                   );
 
                   print('see this: created user document in users collection');
@@ -408,8 +402,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
       final List<AssetEntity> retrievedAssets =
           await model.method(context, selectedProfilePictureList);
-      print(
-          'this is the type you are searching for: ${retrievedAssets.runtimeType}');
+
       if (retrievedAssets != null &&
           retrievedAssets != selectedProfilePictureList) {
         selectedProfilePictureList = retrievedAssets;
@@ -575,7 +568,10 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       scrollController.animateTo(0,
           duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       return Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Theme.of(context).primaryColor,),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Theme.of(context).primaryColor,
+        ),
         width: double.infinity,
         padding: EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
@@ -627,7 +623,10 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       scrollController.animateTo(0,
           duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       return Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Theme.of(context).primaryColor,),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Theme.of(context).primaryColor,
+        ),
         width: double.infinity,
         padding: EdgeInsets.all(8.0),
         child: Row(

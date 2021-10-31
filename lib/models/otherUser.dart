@@ -10,25 +10,21 @@ class OtherUser {
   final String location;
   final String phoneNumber;
   final dynamic openGigsByGigId;
-  final int lengthOfOpenGigsByGigId;
   final dynamic completedGigsByGigId;
-  final int lengthOfCompletedGigsByGigId;
-
-  OtherUser(
-      {this.uid,
-      this.favoriteHashtags,
-      this.name,
-      this.username,
-      this.email,
-      this.userAvatarUrl,
-      this.userLocation,
-      this.isMinor,
-      this.location,
-      this.phoneNumber,
-      this.openGigsByGigId,
-      this.lengthOfOpenGigsByGigId,
-      this.completedGigsByGigId,
-      this.lengthOfCompletedGigsByGigId});
+  OtherUser({
+    this.uid,
+    this.favoriteHashtags,
+    this.name,
+    this.username,
+    this.email,
+    this.userAvatarUrl,
+    this.userLocation,
+    this.isMinor,
+    this.location,
+    this.phoneNumber,
+    this.openGigsByGigId,
+    this.completedGigsByGigId,
+  });
 
   // OtherUser.fromData(Map<String, dynamic> data)
   //     : uid = data['id'],

@@ -934,9 +934,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                           backgroundColor:
                                                               fyreworkLightTheme()
                                                                   .accentColor,
-                                                          //  Theme
-                                                          //         .of(context)
-                                                          //     .scaffoldBackgroundColor,
                                                           context: context,
                                                           builder: (BuildContext
                                                               context) {
@@ -949,24 +946,15 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                     return Container(
                                                                       height:
                                                                           250,
-                                                                      child: StatefulBuilder(builder: (BuildContext
-                                                                              context,
-                                                                          StateSetter
-                                                                              setModalState) {
+                                                                      child: StatefulBuilder(
+                                                                          builder:
+                                                                              (
+                                                                        BuildContext
+                                                                            context,
+                                                                        StateSetter
+                                                                            setModalState,
+                                                                      ) {
                                                                         return Container(
-                                                                          // decoration:
-                                                                          //     BoxDecoration(
-                                                                          //   border:
-                                                                          //       Border.all(
-                                                                          //     width: 1,
-                                                                          //     color: Theme.of(context).primaryColor,
-                                                                          //   ),
-                                                                          //   borderRadius:
-                                                                          //       BorderRadius.only(
-                                                                          //     topLeft: const Radius.circular(50),
-                                                                          //     topRight: const Radius.circular(50),
-                                                                          //   ),
-                                                                          // ),
                                                                           child:
                                                                               Padding(
                                                                             padding:
@@ -978,6 +966,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                                 ? WorkerActions(
                                                                                     passedGigId: widget.passedGigId,
                                                                                     passedGigOwnerId: widget.passedGigOwnerId,
+                                                                                    passedGigOwnerUsername: widget.passGigOwnerUsername,
                                                                                   )
                                                                                 : ClientActions(
                                                                                     passedGigId: widget.passedGigId,

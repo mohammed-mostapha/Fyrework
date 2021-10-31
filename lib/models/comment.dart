@@ -8,7 +8,7 @@ class Comment {
   final String commentOwnerId;
   final String commentOwnerAvatarUrl;
   final String commentOwnerUsername;
-  final String commentBody;
+  final dynamic commentBody;
   dynamic createdAt;
   final bool isPrivateComment;
   final bool proposal;

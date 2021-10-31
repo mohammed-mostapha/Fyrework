@@ -34,9 +34,7 @@ class DatabaseService {
     @required String location,
     @required bool isMinor,
     @required List openGigsByGigId,
-    @required int lengthOfOpenGigsByGigId,
     @required List completedGigsByGigId,
-    @required int lengthOfCompletedGigsByGigId,
   }) async {
     return await _usersCollection.doc(id).set({
       'id': id,
@@ -49,9 +47,7 @@ class DatabaseService {
       'phoneNumber': null,
       'isMinor?': isMinor,
       'openGigsByGigId': openGigsByGigId,
-      'lengthOfOpenGigsByGigId': lengthOfOpenGigsByGigId,
       'completedGigsByGigId': completedGigsByGigId,
-      'lengthOfCompletedGigsByGigId': lengthOfCompletedGigsByGigId,
     }).then(
       (value) => _usersCollection
           .doc(id)
@@ -75,10 +71,7 @@ class DatabaseService {
       location: snapshot.data()['location'],
       phoneNumber: snapshot.data()['phoneNumber'],
       openGigsByGigId: snapshot.data()['openGigsByGigId'],
-      lengthOfOpenGigsByGigId: snapshot.data()['lengthOfOpenGigsByGigId'],
       completedGigsByGigId: snapshot.data()['completedGigsByGigId'],
-      lengthOfCompletedGigsByGigId:
-          snapshot.data()['lengthOfCompletedGigsByGigId'],
     );
   }
 
@@ -308,7 +301,6 @@ class DatabaseService {
   Future updateOpenGigsByGigId({String userId, String gigId}) async {
     return await _usersCollection.doc(userId).update({
       "openGigsByGigId": FieldValue.arrayUnion([gigId]),
-      "lengthOfOpenGigsByGigId": FieldValue.increment(1),
     });
   }
 
@@ -399,17 +391,13 @@ class DatabaseService {
     //for the gigOwner
     batch.update(_usersCollection.doc(gigOwnerId), {
       'openGigsByGigId': FieldValue.arrayRemove([gigId]),
-      'lengthOfOpenGigsByGigId': FieldValue.increment(-1),
       'completedGigsByGigId': FieldValue.arrayUnion([gigId]),
-      'lengthOfCompletedGigsByGigId': FieldValue.increment(1),
     });
 
     //for the appointedUser
     batch.update(_usersCollection.doc(appointedUserId), {
       'openGigsByGigId': FieldValue.arrayRemove([gigId]),
-      'lengthOfOpenGigsByGigId': FieldValue.increment(-1),
       'completedGigsByGigId': FieldValue.arrayUnion([gigId]),
-      'lengthOfCompletedGigsByGigId': FieldValue.increment(1),
     });
 
     //execute batch writes

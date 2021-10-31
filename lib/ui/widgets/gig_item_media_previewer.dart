@@ -1,3 +1,5 @@
+import 'package:Fyrework/ui/widgets/workstreamFiles_viewer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:video_player/video_player.dart';
@@ -72,9 +74,36 @@ class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
                     padding: const EdgeInsets.symmetric(horizontal: 5),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20),
-                      child: Image.network(
-                        url,
-                        fit: BoxFit.cover,
+                      // child: Image.network(
+                      //   url,
+                      //   fit: BoxFit.cover,
+                      // ),
+                      child: InkResponse(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return WorkstreamFilesViewer(
+                                  initialPage: 0,
+                                  workstreamFilesUrls:
+                                      receivedGigMediaFilesUrls,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        child: CachedNetworkImage(
+                          imageUrl: url,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).accentColor,
+                              ),
+                              strokeWidth: 2.0,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),

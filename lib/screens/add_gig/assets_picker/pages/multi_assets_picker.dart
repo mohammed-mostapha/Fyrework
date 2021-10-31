@@ -1,20 +1,17 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:Fyrework/services/bunny_service.dart';
-import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Fyrework/screens/home/home.dart';
 import 'package:Fyrework/services/database.dart';
-import 'package:Fyrework/services/storage_repo.dart';
 import 'package:Fyrework/viewmodels/create_gig_view_model.dart';
 import 'package:path/path.dart' as fileName;
 import '../src/wechat_assets_picker.dart';
 import '../constants/picker_model.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// import 'dart:math' as math;
 import 'package:intl/intl.dart';
 
 class MultiAssetsPicker extends StatefulWidget {
@@ -345,7 +342,8 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
         //   mediaFileToUpload: gigMediaFiles[i],
         // );
 
-        uploadResult = await BunnyService().uploadFileToBunny(gigMediaFiles[i]);
+        uploadResult = await BunnyService().uploadFileToBunny(
+            fileToUpload: gigMediaFiles[i], storageZonePath: 'gigMediaFiles');
 
         //adding each downloadUrl to downloadUrls list
         widget.gigMeidaFilesDownloadUrls.add(uploadResult);

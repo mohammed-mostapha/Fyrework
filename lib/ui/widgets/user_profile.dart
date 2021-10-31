@@ -130,7 +130,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                                                   snapshot.data
                                                               .openGigsByGigId !=
                                                           null
-                                                      ? '${snapshot.data.lengthOfOpenGigsByGigId}'
+                                                      ? '${snapshot.data.openGigsByGigId.length}'
                                                       : '0',
                                                   style: Theme.of(context)
                                                       .textTheme
@@ -177,7 +177,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                                                   snapshot.data
                                                               .completedGigsByGigId !=
                                                           null
-                                                      ? '${snapshot.data.lengthOfCompletedGigsByGigId}'
+                                                      ? '${snapshot.data.completedGigsByGigId.length}'
                                                       : '0',
                                                   style: Theme.of(context)
                                                       .textTheme

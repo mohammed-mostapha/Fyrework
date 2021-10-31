@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:Fyrework/models/myUser.dart';
+import 'package:Fyrework/screens/add_gig/assets_picker/constants/picker_model.dart';
+import 'package:Fyrework/screens/add_gig/assets_picker/src/widget/asset_picker.dart';
+import 'package:Fyrework/services/bunny_service.dart';
 import 'package:Fyrework/viewmodels/add_comment_view_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -9,15 +12,19 @@ import 'package:flutter_svg/svg.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as extractedFileName;
 import 'package:http/http.dart' as http;
+import 'package:photo_manager/photo_manager.dart';
 
 class WorkstreamFiles extends StatefulWidget {
   final String passedGigId;
   final String passedGigOwnerId;
+  final String passedGigOwnerUsername;
+  List<String> multipleWorkStreamFiles;
 
   WorkstreamFiles({
     Key key,
     @required this.passedGigId,
     @required this.passedGigOwnerId,
+    @required this.passedGigOwnerUsername,
   });
 
   @override
@@ -37,6 +44,9 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
   List<String> _multipleFilesExtensions;
   FileType _pickType;
   bool _multiPick = false;
+  List<AssetEntity> selectedWorkStreamFilesList;
+  File assetEntityToFile;
+  final int maxAssetsCount = 5;
 
   final String document = 'assets/svgs/flaticon/document.svg';
   final String image = 'assets/svgs/flaticon/image.svg';
@@ -45,16 +55,18 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<UploadTask> _storageUploadTasks = <UploadTask>[];
+  List urlsForFirestoreDB = [];
 
   String myUsername = MyUser.username;
   String myUserId = MyUser.uid;
   String myUserAvatarUrl = MyUser.userAvatarUrl;
 
   addWorkstreamFileAsComment(
-      {bool persistentPrivateComment, String commentBody}) {
+      {bool persistentPrivateComment, dynamic commentBody}) {
     AddCommentViewModel().addComment(
       gigIdHoldingComment: widget.passedGigId,
       gigOwnerId: widget.passedGigOwnerId,
+      gigOwnerUsername: widget.passedGigOwnerUsername,
       commentOwnerUsername: myUsername,
       commentBody: commentBody,
       commentOwnerId: myUserId,
@@ -67,37 +79,30 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
       gigCurrency: null,
       offeredBudget: null,
       containMediaFile: true,
+      isGigCompleted: false,
     );
+    urlsForFirestoreDB = [];
   }
+
+  List<PickMethodModel> get pickMethods => <PickMethodModel>[
+        PickMethodModel(
+          method: (
+            BuildContext context,
+            List<AssetEntity> assets,
+          ) async {
+            return await AssetPicker.pickAssets(
+              context,
+              maxAssets: maxAssetsCount,
+              selectedAssets: assets,
+              requestType: RequestType.image,
+            );
+          },
+        ),
+      ];
 
   openFileExplorer() async {
     try {
-      if (_multiPick) {
-        FilePickerResult result =
-            await FilePicker.platform.pickFiles(allowMultiple: true);
-
-        if (result != null) {
-          _multipleFilesPaths = result.paths.map((path) => File(path)).toList();
-          for (var i = 0; i < _multipleFilesPaths.length; i++) {
-            _fileName = extractedFileName.basename(_multipleFilesPaths[i].path);
-            _filePath = File(_multipleFilesPaths[i].path);
-            uploadWorkstreamFiles(_fileName, _filePath.path);
-          }
-        } else {
-          // User canceled the picker
-        }
-      } else {
-        ///////////////////////////////////////
-        FilePickerResult result = await FilePicker.platform.pickFiles();
-        if (result != null) {
-          _fileName = extractedFileName.basename(result.paths.single);
-          _filePath = File(result.files.single.path);
-          uploadWorkstreamFiles(_fileName, _filePath.path);
-        } else {
-          // User canceled the picker
-        }
-      }
-      // uploadToFirebase();
+      await navigateToSelectWorkstreamFiles(isMultiPick: _multiPick);
     } on PlatformException catch (e) {
       print('Unsupported Operation' + e.toString());
     }
@@ -106,78 +111,86 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
     }
   }
 
-  uploadWorkstreamFiles(String fileName, String filePath) async {
-    print('coming from UploadWorkStreamFiles');
-    _fileExtension = fileName.toString().split('.').last;
-    Reference storageReference =
-        FirebaseStorage.instance.ref().child('gigs/workstreamFiles/$fileName');
-    UploadTask uploadTask = storageReference.putFile(
-      File(filePath),
-      SettableMetadata(contentType: '$_pickType/$_fileExtension'),
-    );
+  navigateToSelectWorkstreamFiles({bool isMultiPick}) async {
+    (BuildContext context, int index) async {
+      final PickMethodModel model = pickMethods[index];
 
-    TaskSnapshot uploadTaskCompleted = await uploadTask;
-    String uploadTaskDownloadUrl =
-        await uploadTaskCompleted.ref.getDownloadURL();
+      final List<AssetEntity> retrievedAssets =
+          await model.method(context, selectedWorkStreamFilesList);
 
-    // String workstreamFileDownloadUrl =
-    // await uploadTask.lastSnapshot.ref.getDownloadURL();
+      if (retrievedAssets != null &&
+          retrievedAssets != selectedWorkStreamFilesList) {
+        selectedWorkStreamFilesList = retrievedAssets;
 
-    // setState(() {
-    //   _storageUploadTasks.add(uploadTask);
-    //     print('coming from length: ${_storageUploadTasks.length}');
-    // });
-    addWorkstreamFileAsComment(
-        persistentPrivateComment: true, commentBody: uploadTaskDownloadUrl);
+        await uploadWorkstreamFiles(
+          storageZonePath: 'workstreamFiles',
+          multipleFiles: isMultiPick ? true : false,
+        );
+
+        selectedWorkStreamFilesList = null;
+      }
+    }(context, 0);
+    setState(() {
+      _multiPick = false;
+    });
   }
 
-  // downloadWorkstreamFile(Reference ref) async {
-  //   final String workstreamFileName = await ref.name;
-  //   // final String workstreamFilePath = await ref.getPath();
+  Future<dynamic> uploadWorkstreamFiles({
+    String fileName,
+    String filePath,
+    String storageZonePath,
+    bool multipleFiles,
+  }) async {
+    String uploadResult;
+    File fileToUPload;
 
-  //   final String workstreamFileUrl = await ref.getDownloadURL();
-  //   final http.Response workstreamFile = await http.get(workstreamFileUrl);
-  //   final Directory systemTempDir = Directory.systemTemp;
-  //   // final File tempFile = File('${systemTempDir.path}/tmp.jpg'); //adjust this
-  //   final File tempFile = File('${systemTempDir.path}/$workstreamFileName');
-  //   if (tempFile.existsSync()) {
-  //     await tempFile.delete();
-  //   }
-  //   await tempFile.create();
-  //   final DownloadTask writeFileTask = ref.writeToFile(tempFile);
-  //   final int byteCount = (await writeFileTask.future).totalByteCount;
-  //   var bodyBytes = workstreamFile.bodyBytes;
+    if (multipleFiles) {
+      for (var i = 0; i < selectedWorkStreamFilesList.length; i++) {
+        assetEntityToFile = await selectedWorkStreamFilesList[i].file;
+        _fileName = extractedFileName.basename(assetEntityToFile.path);
+        _filePath = File(assetEntityToFile.path);
+        fileToUPload = _filePath;
+        ////////////
+        uploadResult = await BunnyService().uploadFileToBunny(
+          fileToUpload: fileToUPload,
+          storageZonePath: storageZonePath,
+        );
 
-  //   print(
-  //       'Success\nDownloaded $workstreamFileName\nUrl: $workstreamFileUrl\nBytes Count: $byteCount');
-  //   _scaffoldKey.currentState.showSnackBar(SnackBar(
-  //     backgroundColor: Colors.white,
-  //     content: Image.memory(
-  //       bodyBytes,
-  //       fit: BoxFit.fill,
-  //     ),
-  //   ));
-  // }
+        urlsForFirestoreDB.add(uploadResult);
+      }
+
+      // uploadResult = await BunnyService().uploadFileToBunny(
+      //   fileToUpload: fileToUPload,
+      //   storageZonePath: storageZonePath,
+      // );
+
+      return addWorkstreamFileAsComment(
+        persistentPrivateComment: true,
+        commentBody: urlsForFirestoreDB,
+      );
+      ////////////////////////////
+      ///////////////////////////
+    } else {
+      assetEntityToFile = await selectedWorkStreamFilesList.first.file;
+      _fileName = extractedFileName.basename(assetEntityToFile.path);
+      _filePath = File(assetEntityToFile.path);
+      fileToUPload = _filePath;
+
+      uploadResult = await BunnyService().uploadFileToBunny(
+        fileToUpload: fileToUPload,
+        storageZonePath: storageZonePath,
+      );
+      urlsForFirestoreDB.add(uploadResult);
+
+      return addWorkstreamFileAsComment(
+        persistentPrivateComment: true,
+        commentBody: urlsForFirestoreDB,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> workstreamFilesList = <Widget>[];
-
-    // _storageUploadTasks.forEach((StorageUploadTask task) {
-    //   final Widget tile = UploadTaskListTile(
-    //     task: task,
-    //     onDismissed: () {
-    //       setState(() {
-    //         _storageUploadTasks.remove(task);
-    //       });
-    //     },
-    //     onDownload: () {
-    //       downloadWorkstreamFile(task.lastSnapshot.ref);
-    //     },
-    //   );
-    //   workstreamFilesList.add(tile);
-    // });
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
@@ -361,6 +374,11 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
             ),
           )),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
 

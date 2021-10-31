@@ -5,6 +5,8 @@ import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/ui/shared/constants.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
+import 'package:Fyrework/ui/widgets/workstreamFiles_viewer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_switch/custom_switch.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,7 @@ import 'package:video_player/video_player.dart';
 
 import 'chewie_list_item.dart';
 import 'client_worker_rating.dart';
+import 'package:photo_view/photo_view.dart';
 
 class CommentItem extends StatefulWidget {
   // final passedCurrentUserId;
@@ -214,17 +217,18 @@ class _CommentItemState extends State<CommentItem>
         widget.createdAt != null ? widget.createdAt.toDate() : DateTime.now();
 
     if (widget.containMediaFile == true) {
-      if (widget.commentBody.contains("jpeg") ||
-          widget.commentBody.contains("jpg") ||
-          widget.commentBody.contains("PNG") ||
-          widget.commentBody.contains("WBMP") ||
-          widget.commentBody.contains("SVG")) {
+      String workStreamFileUrl = widget.commentBody.toString().split('/').last;
+      if (workStreamFileUrl.contains("jpeg") ||
+          workStreamFileUrl.contains("jpg") ||
+          workStreamFileUrl.contains("PNG") ||
+          workStreamFileUrl.contains("WBMP") ||
+          workStreamFileUrl.contains("SVG")) {
         imageMediaFile = true;
         videoMediaFile = false;
-      } else if (widget.commentBody.contains("mp4") ||
-          widget.commentBody.contains("m4v") ||
-          widget.commentBody.contains("mov") ||
-          widget.commentBody.contains("avi")) {
+      } else if (workStreamFileUrl.contains("mp4") ||
+          workStreamFileUrl.contains("m4v") ||
+          workStreamFileUrl.contains("mov") ||
+          workStreamFileUrl.contains("avi")) {
         videoMediaFile = true;
         imageMediaFile = false;
       }
@@ -348,7 +352,6 @@ class _CommentItemState extends State<CommentItem>
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Text(widget.commentBody),
                 widget.isGigCompleted
                     ? myGig || myComment
                         ? widget.leftReview != true
@@ -589,21 +592,237 @@ class _CommentItemState extends State<CommentItem>
                         : imageMediaFile
                             ? Container(
                                 width: 300,
-                                height: 200,
-                                child: ClipRRect(
+                                height: 300,
+                                padding: EdgeInsets.all(2.5),
+                                decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(
-                                    widget.commentBody,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ))
+                                  color: myComment
+                                      ? Theme.of(context).accentColor
+                                      : Theme.of(context).primaryColor,
+                                ),
+                                child: !(widget.commentBody.length > 1)
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: InkResponse(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                                return WorkstreamFilesViewer(
+                                                  initialPage: 0,
+                                                  workstreamFilesUrls:
+                                                      widget.commentBody,
+                                                );
+                                              }),
+                                            );
+                                          },
+                                          child: CachedNetworkImage(
+                                            placeholder: (context, url) =>
+                                                Center(
+                                              child: CircularProgressIndicator(
+                                                valueColor:
+                                                    AlwaysStoppedAnimation<
+                                                        Color>(
+                                                  myComment
+                                                      ? Theme.of(context)
+                                                          .accentColor
+                                                      : Theme.of(context)
+                                                          .primaryColor,
+                                                ),
+                                                strokeWidth: 2.0,
+                                              ),
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Icon(Icons.error),
+                                            imageUrl: widget.commentBody[0],
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      )
+                                    : GridView.builder(
+                                        primary: true,
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          crossAxisSpacing: 2.5,
+                                          mainAxisSpacing: 2.5,
+                                          // childAspectRatio:
+                                          //     MediaQuery.of(context)
+                                          //             .size
+                                          //             .width /
+                                          //         (MediaQuery.of(context)
+                                          //                 .size
+                                          //                 .height /
+                                          //             2),
+                                        ),
+                                        itemCount: widget.commentBody.length,
+                                        itemBuilder: (context, index) =>
+                                            index == 3
+                                                ? Container(
+                                                    child: Container(
+                                                      width: double.infinity,
+                                                      child: InkResponse(
+                                                        onTap: () {
+                                                          Navigator.of(context)
+                                                              .push(
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                              return WorkstreamFilesViewer(
+                                                                initialPage:
+                                                                    index,
+                                                                workstreamFilesUrls:
+                                                                    widget
+                                                                        .commentBody,
+                                                              );
+                                                            }),
+                                                          );
+                                                        },
+                                                        child: Stack(
+                                                            children: <Widget>[
+                                                              Container(
+                                                                width: double
+                                                                    .infinity,
+                                                                child:
+                                                                    ColorFiltered(
+                                                                  colorFilter:
+                                                                      ColorFilter
+                                                                          .mode(
+                                                                    Colors.grey,
+                                                                    BlendMode
+                                                                        .saturation,
+                                                                  ),
+                                                                  child:
+                                                                      CachedNetworkImage(
+                                                                    placeholder:
+                                                                        (context,
+                                                                                url) =>
+                                                                            Center(
+                                                                      child:
+                                                                          CircularProgressIndicator(
+                                                                        valueColor:
+                                                                            AlwaysStoppedAnimation<Color>(
+                                                                          myComment
+                                                                              ? Theme.of(context).accentColor
+                                                                              : Theme.of(context).primaryColor,
+                                                                        ),
+                                                                        strokeWidth:
+                                                                            2.0,
+                                                                      ),
+                                                                    ),
+                                                                    errorWidget: (context,
+                                                                            url,
+                                                                            error) =>
+                                                                        Icon(Icons
+                                                                            .error),
+                                                                    imageUrl: widget
+                                                                            .commentBody[
+                                                                        index],
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Center(
+                                                                child: Text(
+                                                                  '+ ${widget.commentBody.length - 4}',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          30),
+                                                                ),
+                                                              )
+                                                            ]),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Container(
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      child: InkResponse(
+                                                        onTap: () {
+                                                          print(widget
+                                                              .commentBody
+                                                              .length);
+                                                          Navigator.of(context)
+                                                              .push(
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                              return WorkstreamFilesViewer(
+                                                                initialPage:
+                                                                    index,
+                                                                workstreamFilesUrls:
+                                                                    widget
+                                                                        .commentBody,
+                                                              );
+                                                            }),
+                                                          );
+                                                        },
+                                                        child:
+                                                            CachedNetworkImage(
+                                                          placeholder:
+                                                              (context, url) =>
+                                                                  Center(
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              valueColor:
+                                                                  AlwaysStoppedAnimation<
+                                                                      Color>(
+                                                                myComment
+                                                                    ? Theme.of(
+                                                                            context)
+                                                                        .accentColor
+                                                                    : Theme.of(
+                                                                            context)
+                                                                        .primaryColor,
+                                                              ),
+                                                              strokeWidth: 2.0,
+                                                            ),
+                                                          ),
+                                                          errorWidget: (context,
+                                                                  url, error) =>
+                                                              Icon(Icons.error),
+                                                          imageUrl: widget
+                                                                  .commentBody[
+                                                              index],
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                      ),
+                              )
                             : Container(
                                 width: double.infinity,
                                 height: 200,
-                                child: ChewieListItem(
-                                  videoPlayerController:
-                                      VideoPlayerController.network(
-                                          widget.commentBody),
+                                child: GridView.builder(
+                                  primary: true,
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 5.0,
+                                    mainAxisSpacing: 5.0,
+                                    childAspectRatio: MediaQuery.of(context)
+                                            .size
+                                            .width /
+                                        (MediaQuery.of(context).size.height /
+                                            3),
+                                  ),
+                                  itemCount: widget.commentBody.length,
+                                  itemBuilder: (context, index) =>
+                                      ChewieListItem(
+                                    videoPlayerController:
+                                        VideoPlayerController.network(
+                                      widget.commentBody[index],
+                                    ),
+                                  ),
                                 ),
                               ),
                 Container(height: 5),

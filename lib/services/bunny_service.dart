@@ -3,9 +3,12 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class BunnyService {
-  Future uploadFileToBunny(File fileToUpload) async {
+  Future<String> uploadFileToBunny({
+    File fileToUpload,
+    String storageZonePath,
+  }) async {
     String storageZoneName = 'fyrework';
-    String path = 'gigMediaFiles';
+    String path = storageZonePath;
     String fileName = (fileToUpload.path.split('/').last) +
         DateTime.now().millisecondsSinceEpoch.toString();
     try {
@@ -31,6 +34,7 @@ class BunnyService {
       }
 
       String downloadUrl = 'https://$storageZoneName.b-cdn.net/$path/$fileName';
+
       return downloadUrl;
     } catch (e) {
       print(e);

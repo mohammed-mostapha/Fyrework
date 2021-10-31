@@ -10,9 +10,7 @@ class MyUser {
   static String location;
   static String phoneNumber;
   static dynamic openGigsByGigId;
-  static int lengthOfOpenGigsByGigId;
   static dynamic completedGigsByGigId;
-  static int lengthOfCompletedGigsByGigId;
 
   MyUser();
   MyUser.fromData(Map<String, dynamic> data) {
@@ -27,9 +25,7 @@ class MyUser {
     location = data['location'];
     phoneNumber = data['phoneNumber'];
     openGigsByGigId = data['openGigsByGigId'];
-    lengthOfOpenGigsByGigId = data['lengthOfOpenGigsByGigId'];
     completedGigsByGigId = data['completedGigsByGigId'];
-    lengthOfCompletedGigsByGigId = data['lengthOfCompletedGigsByGigId'];
   }
 
   MyUser.clearData() {
@@ -44,9 +40,7 @@ class MyUser {
     location = null;
     phoneNumber = null;
     openGigsByGigId = null;
-    lengthOfOpenGigsByGigId = null;
     completedGigsByGigId = null;
-    lengthOfCompletedGigsByGigId = null;
   }
 
   bool checkUserDataNullability() {

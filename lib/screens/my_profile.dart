@@ -216,7 +216,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                                               snapshot.data
                                                           .completedGigsByGigId !=
                                                       null
-                                                  ? '${snapshot.data.lengthOfCompletedGigsByGigId}'
+                                                  ? '${snapshot.data.completedGigsByGigId.length}'
                                                   : '0',
                                               style: Theme.of(context)
                                                   .textTheme
