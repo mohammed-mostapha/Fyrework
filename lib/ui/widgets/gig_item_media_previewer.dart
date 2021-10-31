@@ -98,7 +98,7 @@ class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
                           placeholder: (context, url) => Center(
                             child: CircularProgressIndicator(
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                Theme.of(context).accentColor,
+                                Theme.of(context).primaryColor,
                               ),
                               strokeWidth: 2.0,
                             ),

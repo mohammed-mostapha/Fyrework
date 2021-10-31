@@ -662,79 +662,86 @@ class _CommentItemState extends State<CommentItem>
                                         itemBuilder: (context, index) =>
                                             index == 3
                                                 ? Container(
-                                                    child: Container(
-                                                      width: double.infinity,
-                                                      child: InkResponse(
-                                                        onTap: () {
-                                                          Navigator.of(context)
-                                                              .push(
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) {
-                                                              return WorkstreamFilesViewer(
-                                                                initialPage:
-                                                                    index,
-                                                                workstreamFilesUrls:
-                                                                    widget
-                                                                        .commentBody,
-                                                              );
-                                                            }),
-                                                          );
-                                                        },
-                                                        child: Stack(
-                                                            children: <Widget>[
-                                                              Container(
-                                                                width: double
-                                                                    .infinity,
-                                                                child:
-                                                                    ColorFiltered(
-                                                                  colorFilter:
-                                                                      ColorFilter
-                                                                          .mode(
-                                                                    Colors.grey,
-                                                                    BlendMode
-                                                                        .saturation,
-                                                                  ),
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      child: Container(
+                                                        width: double.infinity,
+                                                        child: InkResponse(
+                                                          onTap: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .push(
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) {
+                                                                return WorkstreamFilesViewer(
+                                                                  initialPage:
+                                                                      index,
+                                                                  workstreamFilesUrls:
+                                                                      widget
+                                                                          .commentBody,
+                                                                );
+                                                              }),
+                                                            );
+                                                          },
+                                                          child: Stack(
+                                                              children: <
+                                                                  Widget>[
+                                                                Container(
+                                                                  width: double
+                                                                      .infinity,
                                                                   child:
-                                                                      CachedNetworkImage(
-                                                                    placeholder:
-                                                                        (context,
-                                                                                url) =>
-                                                                            Center(
-                                                                      child:
-                                                                          CircularProgressIndicator(
-                                                                        valueColor:
-                                                                            AlwaysStoppedAnimation<Color>(
-                                                                          myComment
-                                                                              ? Theme.of(context).accentColor
-                                                                              : Theme.of(context).primaryColor,
-                                                                        ),
-                                                                        strokeWidth:
-                                                                            2.0,
-                                                                      ),
+                                                                      ColorFiltered(
+                                                                    colorFilter:
+                                                                        ColorFilter
+                                                                            .mode(
+                                                                      Colors
+                                                                          .grey,
+                                                                      BlendMode
+                                                                          .saturation,
                                                                     ),
-                                                                    errorWidget: (context,
-                                                                            url,
-                                                                            error) =>
-                                                                        Icon(Icons
-                                                                            .error),
-                                                                    imageUrl: widget
-                                                                            .commentBody[
-                                                                        index],
-                                                                    fit: BoxFit
-                                                                        .cover,
+                                                                    child:
+                                                                        CachedNetworkImage(
+                                                                      placeholder:
+                                                                          (context, url) =>
+                                                                              Center(
+                                                                        child:
+                                                                            CircularProgressIndicator(
+                                                                          valueColor:
+                                                                              AlwaysStoppedAnimation<Color>(
+                                                                            myComment
+                                                                                ? Theme.of(context).accentColor
+                                                                                : Theme.of(context).primaryColor,
+                                                                          ),
+                                                                          strokeWidth:
+                                                                              2.0,
+                                                                        ),
+                                                                      ),
+                                                                      errorWidget: (context,
+                                                                              url,
+                                                                              error) =>
+                                                                          Icon(Icons
+                                                                              .error),
+                                                                      imageUrl:
+                                                                          widget
+                                                                              .commentBody[index],
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    ),
                                                                   ),
                                                                 ),
-                                                              ),
-                                                              Center(
-                                                                child: Text(
-                                                                  '+ ${widget.commentBody.length - 4}',
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          30),
-                                                                ),
-                                                              )
-                                                            ]),
+                                                                Center(
+                                                                  child: Text(
+                                                                    '+ ${widget.commentBody.length - 4}',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            30),
+                                                                  ),
+                                                                )
+                                                              ]),
+                                                        ),
                                                       ),
                                                     ),
                                                   )
