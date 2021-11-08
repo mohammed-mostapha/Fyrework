@@ -309,7 +309,10 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                 .copyWith(color: Theme.of(context).accentColor),
           ),
           onPressed: () {
-            Navigator.of(context, rootNavigator: true).pop();
+            Navigator.of(
+              context,
+              rootNavigator: true,
+            ).pop();
           },
         ),
         FlatButton(
@@ -321,7 +324,10 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                 .copyWith(color: Theme.of(context).accentColor),
           ),
           onPressed: () async {
-            Navigator.of(context, rootNavigator: true).pop();
+            Navigator.of(
+              context,
+              rootNavigator: true,
+            ).pop();
             EasyLoading.show();
             await DatabaseService().deleteMyGigByGigId(
               gigId: widget.gigId,
@@ -489,12 +495,13 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                                               vertical: 8.0),
                                           child: Container(
                                             decoration: BoxDecoration(
-                                                color: themeOfOppositeContext
-                                                    .inputDecorationTheme
-                                                    .fillColor,
-                                                border: Border(),
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
+                                              color: themeOfOppositeContext
+                                                  .inputDecorationTheme
+                                                  .fillColor,
+                                              border: Border(),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
                                             child: ListTile(
                                               leading: SizedBox(
                                                 width: 20,

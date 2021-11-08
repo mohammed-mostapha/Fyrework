@@ -261,6 +261,10 @@ class DatabaseService {
         'openGigsByGigId': FieldValue.arrayRemove([gigId])
       });
 
+      await _usersCollection.doc(MyUser.uid).update(<String, dynamic>{
+        'deletedGigsByGigId': FieldValue.arrayUnion([gigId])
+      });
+
       await _gigsCollection.doc(gigId).update(<String, dynamic>{
         'hidden': true,
       });
