@@ -514,6 +514,18 @@ class _CommentItemState extends State<CommentItem>
                               )
                             : Column(
                                 children: [
+                                  Text(
+                                    'You have been rated with ',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
                                   ClientWorkerRating(
                                     onRatingSelected: (rating) {
                                       setState(() {
@@ -540,7 +552,8 @@ class _CommentItemState extends State<CommentItem>
                                   ),
                                 ],
                               )
-                        : appointedUser
+                        : (appointedUser && !widget.leftReview ||
+                                appointedUser && widget.leftReview == null)
                             ? Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -565,10 +578,38 @@ class _CommentItemState extends State<CommentItem>
                                   ),
                                 ],
                               )
-                            : Container(
-                                width: 0,
-                                height: 0,
-                              )
+                            : (appointedUser && widget.leftReview == true)
+                                ? Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Text(
+                                            'You have been rated with',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1,
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          ClientWorkerRating(
+                                            onRatingSelected: (rating) {
+                                              setState(() {
+                                                initialRating = rating;
+                                              });
+                                            },
+                                            passedRatingCount:
+                                                widget.ratingCount,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                : Container(
+                                    width: 0,
+                                    height: 0,
+                                  )
                     : widget.containMediaFile != true
                         ? Container(
                             child: ExpandableText(
@@ -1401,11 +1442,14 @@ class RejectedLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          border: Border.all(
-            width: 2,
-            color: Colors.red,
-          ),
-          borderRadius: BorderRadius.all(Radius.circular(2))),
+        border: Border.all(
+          width: 2,
+          color: Colors.red,
+        ),
+        borderRadius: BorderRadius.all(
+          Radius.circular(2),
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
