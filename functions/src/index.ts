@@ -1,5 +1,6 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
+// import {firebaseConfig} from "firebase-functions";
 
 admin.initializeApp();
 
@@ -10,17 +11,23 @@ const fcm = admin.messaging();
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
 //
-export const helloWorld = functions.https.onRequest((request, response) => {
-  functions.logger.info("Hello logs!", {structuredData: true});
-  response.send("Hello from Firebase!");
-});
+// export const helloWorld = functions.https.onRequest((request, response) => {
+//   functions.logger.info("Hello logs!", {structuredData: true});
+//   response.send("Hello from Firebase!");
+// });
 
-export const sendToDevice = functions.firestore.document("gigs/{gigId}")
+export const notifyAllAboutAGig = functions.firestore.document("gigs/{gigId}")
     .onCreate(async (snapshot) => {
-      const querySnapshot = await db.collection("devicesTokens").get();
+      const gigId = snapshot.id;
+      // const createdAt = new Date(admin.firestore.Timestamp.now().seconds*1000).toLocaleDateString();
+      // const createdAt = new Date(admin.firestore.Timestamp.now().seconds*1000).toUTCString();
+      const createdAt = admin.firestore.FieldValue.serverTimestamp();
+      const deToQuSn = await db.collection("devicesTokens").get();
+      const notifications = db.collection("notifications");
       const devicesTokens: string | any[] = [];
 
-      querySnapshot.forEach(async (deviceTokenDoc) => {
+      deToQuSn.forEach(async (deviceTokenDoc) => {
+        // need to exlude the gigOwner by id
         devicesTokens.push(deviceTokenDoc.data().deviceToken);
       });
 
@@ -29,7 +36,19 @@ export const sendToDevice = functions.firestore.document("gigs/{gigId}")
           title: " New Gig Created ",
           body: "Check whats going on there!",
           click_action: "FLUTTER_NOTIFICATION_CLICK",
+          gigId: gigId,
         },
       };
+
+      const notificationContents = {
+        title: " New Gig Created ",
+        body: "Check whats going on there!",
+        click_action: "FLUTTER_NOTIFICATION_CLICK",
+        gigId: gigId,
+        createdAt: createdAt,
+        seen: false,
+      };
+
+      await notifications.add(notificationContents);
       return fcm.sendToDevice(devicesTokens, payload);
     });
