@@ -41,14 +41,19 @@ export const notifyAllAboutAGig = functions.firestore.document("gigs/{gigId}")
       };
 
       const notificationContents = {
-        title: " New Gig Created ",
-        body: "Check whats going on there!",
+        notificationTitle: "New Gig Created",
+        notificationBody: "Check whats going on there!",
         click_action: "FLUTTER_NOTIFICATION_CLICK",
+        notificationId: "",
         gigId: gigId,
         createdAt: createdAt,
         seen: false,
+        generalNotification: true,
       };
 
-      await notifications.add(notificationContents);
+      await notifications.add(notificationContents).then((notification) => {
+        const notificationId = notification.id;
+        notifications.doc(notificationId).update({"notificationId": notificationId});
+      });
       return fcm.sendToDevice(devicesTokens, payload);
     });

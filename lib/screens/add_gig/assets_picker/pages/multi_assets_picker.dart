@@ -438,7 +438,6 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                     onTap: () async {
                       EasyLoading.show();
                       await prepareGigMediaFilesAndPublish();
-
                       EasyLoading.dismiss();
                     },
                   ),

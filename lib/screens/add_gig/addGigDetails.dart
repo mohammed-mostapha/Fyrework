@@ -179,9 +179,12 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                             padding: EdgeInsets.fromLTRB(0, 10, 15, 10),
                             child: OutlineButton(
                               borderSide: BorderSide(
-                                  color: Theme.of(context).primaryColor),
-                              child: Text('Next',
-                                  style: Theme.of(context).textTheme.bodyText1),
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              child: Text(
+                                'Next',
+                                style: Theme.of(context).textTheme.bodyText1,
+                              ),
                               onPressed: () async {
                                 await saveFormValuesAndPickMediaFiles();
                               },
@@ -618,10 +621,11 @@ class _AddGigDetailsState extends State<AddGigDetails> {
                                         ),
                                         Flexible(
                                           child: Text(
-                                              "Adult content that should not be visible to minors.",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline6),
+                                            "Adult content that should not be visible to minors.",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6,
+                                          ),
                                         ),
                                       ],
                                     ),

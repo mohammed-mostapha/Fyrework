@@ -35,6 +35,7 @@ class CommentItem extends StatefulWidget {
   final commentOwnerUsername;
   final commentBody;
   final gigCurrency;
+  final gigValue;
   final createdAt;
   final isPrivateComment;
   final proposal;
@@ -63,6 +64,7 @@ class CommentItem extends StatefulWidget {
     this.commentOwnerUsername,
     this.commentBody,
     this.gigCurrency,
+    this.gigValue,
     this.createdAt,
     this.isPrivateComment,
     this.proposal,
@@ -95,6 +97,8 @@ class _CommentItemState extends State<CommentItem>
   bool myGig;
   bool myComment;
   bool appointedUser;
+  bool worker;
+  bool client;
   bool imageMediaFile;
   bool videoMediaFile;
   Timer _timer;
@@ -207,10 +211,13 @@ class _CommentItemState extends State<CommentItem>
 
   @override
   Widget build(BuildContext context) {
+    print(widget.gigValue);
     var brightness = MediaQuery.of(context).platformBrightness;
     bool darkModeOn = brightness == Brightness.dark;
 
     myGig = widget.gigOwnerId == MyUser.uid ? true : false;
+    worker = widget.gigValue == 'Gig I can do' ? true : false;
+    client = widget.gigValue != 'Gig I can do' ? true : false;
     myComment = widget.commentOwnerId == MyUser.uid ? true : false;
     appointedUser = widget.appointedUserId == MyUser.uid ? true : false;
     createdAtDateTime =
@@ -958,7 +965,7 @@ class _CommentItemState extends State<CommentItem>
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Text(
-                                              'Approve',
+                                              worker ? 'Accept' : 'Approve',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyText1
@@ -973,7 +980,7 @@ class _CommentItemState extends State<CommentItem>
                                           ),
                                         ),
                                         onTap: () {
-                                          FirestoreService().appointedGigToUser(
+                                          FirestoreService().appointGigToUser(
                                             gigId: widget.gigIdHoldingComment,
                                             appointedUserId:
                                                 widget.commentOwnerId,

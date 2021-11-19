@@ -8,12 +8,12 @@ class CommentsView extends StatelessWidget {
   final String gigIdCommentsIdentifier;
   final String gigOwnerId;
   // final String passedCurrentUserId
-  const CommentsView(
-      {Key key,
-      @required this.gigIdCommentsIdentifier,
-      @required this.isGigAppointed,
-      this.gigOwnerId})
-      : super(key: key);
+  const CommentsView({
+    Key key,
+    @required this.gigIdCommentsIdentifier,
+    @required this.isGigAppointed,
+    this.gigOwnerId,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,12 +52,13 @@ class CommentsView extends StatelessWidget {
                     commentOwnerUsername: getDocData['commentOwnerUsername'],
                     commentBody: getDocData['commentBody'],
                     gigCurrency: getDocData['gigCurrency'],
+                    gigValue: getDocData['gigValue'],
+                    offeredBudget: getDocData['offeredBudget'],
                     createdAt: getDocData['createdAt'],
                     isPrivateComment: getDocData['isPrivateComment'],
                     proposal: getDocData['proposal'],
                     approved: getDocData['approved'],
                     rejected: getDocData['rejected'],
-                    offeredBudget: getDocData['offeredBudget'],
                     preferredPaymentMethod:
                         getDocData['preferredPaymentMethod'],
                     workstreamFileUrl: getDocData['workstreamFileUrl'],

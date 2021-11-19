@@ -21,6 +21,9 @@ class GigItem extends StatefulWidget {
   final index;
   final appointed;
   final appointedusername;
+  final appointedUserId;
+  final hirerUserId;
+  final hirerUsername;
   final appliersOrHirersByUserId;
   final gigRelatedUsersByUserId;
   final gigId;
@@ -39,7 +42,6 @@ class GigItem extends StatefulWidget {
   final gigCurrency;
   final gigBudget;
   final gigValue;
-  final appointedUserId;
   final adultContentText;
   final adultContentBool;
   final hidden;
@@ -55,6 +57,9 @@ class GigItem extends StatefulWidget {
     this.index,
     this.appointed,
     this.appointedusername,
+    this.appointedUserId,
+    this.hirerUserId,
+    this.hirerUsername,
     this.appliersOrHirersByUserId,
     this.gigRelatedUsersByUserId,
     this.gigId,
@@ -73,7 +78,6 @@ class GigItem extends StatefulWidget {
     this.gigCurrency,
     this.gigBudget,
     this.gigValue,
-    this.appointedUserId,
     this.adultContentText,
     this.adultContentBool,
     this.hidden,

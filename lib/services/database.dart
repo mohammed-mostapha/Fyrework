@@ -23,6 +23,8 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('popularHashtags');
   final CollectionReference _takenHandles =
       FirebaseFirestore.instance.collection('takenHandles');
+  final CollectionReference _notifications =
+      FirebaseFirestore.instance.collection('notifications');
 
   Future setUserData({
     @required String id,
@@ -201,6 +203,27 @@ class DatabaseService {
         .where('gigIdHoldingComment', isEqualTo: gigIdCommentsIdentifier)
         .orderBy('createdAt', descending: false)
         .snapshots();
+  }
+
+  Stream<QuerySnapshot> unseenNotificationsCount() {
+    return _notifications
+        .where('seen', isEqualTo: false)
+        .orderBy('createdAt', descending: false)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> fetchAllNotifications() {
+    return _notifications.orderBy('createdAt', descending: false).snapshots();
+  }
+
+  Future markNotificationAsSeen({String notificationId}) {
+    return _notifications.doc(notificationId).update({
+      'seen': true,
+    });
+  }
+
+  Stream<QuerySnapshot> fetchIndividualGig({@required String gigId}) {
+    return _gigsCollection.where('gigId', isEqualTo: gigId).snapshots();
   }
 
   //update profile picture only

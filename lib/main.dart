@@ -1,5 +1,7 @@
+import 'package:Fyrework/screens/add_gig/addGigDetails.dart';
 import 'package:Fyrework/services/connectivity_provider.dart';
 import 'package:Fyrework/services/mobileAds_provider.dart';
+import 'package:Fyrework/services/navigation_service.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/widgets/network_sensor.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,6 +14,7 @@ import 'package:Fyrework/services/auth_service.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:Fyrework/ui/views/sign_up_view.dart';
 import 'package:Fyrework/view_controllers/myUser_controller.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +22,7 @@ import 'locator.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:Fyrework/services/local_notification_service.dart';
+import 'package:Fyrework/locator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,28 +45,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-
   @override
   void initState() {
     super.initState();
-    _configureFirebaseListeners();
     // localNotificationService.initialize(context);
-  }
-
-  _configureFirebaseListeners() {
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print('onMessage: $message');
-        localNotificationService.display(message);
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print('onResulme: $message');
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print('onLaunch: $message');
-      },
-    );
   }
 
   @override
@@ -101,6 +87,14 @@ void configLoading() {
     ..dismissOnTap = false;
 }
 
+//////////////////////////////////////////
+///
+///
+///
+///
+///
+///
+
 class HomeController extends StatefulWidget {
   @override
   _HomeControllerState createState() => _HomeControllerState();
@@ -109,15 +103,47 @@ class HomeController extends StatefulWidget {
 bool isAuthenticated = false;
 
 class _HomeControllerState extends State<HomeController> {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   AuthService authService = locator.get<AuthService>();
-  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
   @override
   void initState() {
     super.initState();
     checkAuthenticity();
-    // _getDeviceToken();
-    // _configureFirebaseListeners();
-    // localNotificationService.initialize(context);
+    _configureFirebaseListeners();
+  }
+
+  _configureFirebaseListeners() {
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        // localNotificationService.display(message);
+      },
+      onResume: (Map<String, dynamic> message) async {
+        // print('onResulme: $message');
+        localNotificationService.display(message);
+        _serializeAndNavigate(message);
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        // localNotificationService.display(message);
+        _serializeAndNavigate(message);
+      },
+    );
+  }
+
+  void _serializeAndNavigate(Map<String, dynamic> message) {
+    var notificationData = message['data'];
+    var route = notificationData['route'];
+
+    // if (route != null) {
+    //   if (route == 'AddGigDetails') {
+    //     Navigator.push(
+    //       context,
+    //       MaterialPageRoute(
+    //         builder: (context) => AddGigDetails(),
+    //       ),
+    //     );
+    //   }
+    // }
   }
 
   Future checkAuthenticity() async {
@@ -137,32 +163,6 @@ class _HomeControllerState extends State<HomeController> {
       }
     });
   }
-
-  // _getDeviceToken() {
-  //   _firebaseMessaging.getToken().then((deviceToken) {
-  //     print('Device token: $deviceToken');
-  //   });
-  // }
-
-  // _configureFirebaseListeners() {
-  //   _firebaseMessaging.configure(
-  //     onMessage: (Map<String, dynamic> message) async {
-  //       print('onMessage: $message');
-  //       // _setMessage(message);
-  //       localNotificationService.display(message);
-  //     },
-  //     onResume: (Map<String, dynamic> message) async {
-  //       print('onResulme: $message');
-  //       // _setMessage(message);
-  //       // localNotificationService.display(message);
-  //     },
-  //     onLaunch: (Map<String, dynamic> message) async {
-  //       print('onLaunch: $message');
-  //       // _setMessage(message);
-  //       // localNotificationService.display(message);
-  //     },
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {

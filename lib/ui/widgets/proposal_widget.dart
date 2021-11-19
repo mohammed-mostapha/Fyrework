@@ -72,6 +72,7 @@ class _ProposalWidgetState extends State<ProposalWidget> {
         rejected: rejected,
         gigCurrency: widget.passedGigCurrency,
         offeredBudget: _offeredBudgetController.text,
+        gigValue: widget.passedGigValue,
         preferredPaymentMethod: preferredPaymentMethod,
         isGigCompleted: false,
         containMediaFile: false,
@@ -171,7 +172,9 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                                 width: 10,
                               ),
                               Text(
-                                'Request PayPal escrow deposit',
+                                widget.passedGigValue == 'Gig I can do'
+                                    ? 'Pay by Paypal'
+                                    : 'Request PayPal escrow deposit',
                                 style: Theme.of(context).textTheme.bodyText1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -231,7 +234,9 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                                 width: 10,
                               ),
                               Text(
-                                'Get paid by cash',
+                                widget.passedGigValue == 'Gig I can do'
+                                    ? 'Pay by cash'
+                                    : 'Get paid by cash',
                                 style: Theme.of(context).textTheme.bodyText1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -421,7 +426,7 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                       ),
                       child: Center(
                         child: Text(
-                            widget.passedGigValue == 'Gigs I can do'
+                            widget.passedGigValue == 'Gig I can do'
                                 ? 'Hire'
                                 : 'Apply',
                             style: Theme.of(context).textTheme.bodyText1),

@@ -16,6 +16,7 @@ class Comment {
   final bool rejected;
   final String gigCurrency;
   final String offeredBudget;
+  final String gigValue;
   final String preferredPaymentMethod;
   final String workstreamFileUrl;
   final bool containMediaFile;
@@ -42,6 +43,7 @@ class Comment {
     this.rejected,
     this.gigCurrency,
     this.offeredBudget,
+    this.gigValue,
     this.preferredPaymentMethod,
     this.workstreamFileUrl,
     this.containMediaFile,
@@ -70,6 +72,7 @@ class Comment {
       'rejected': rejected,
       'gigCurrency': gigCurrency,
       'offeredBudget': offeredBudget,
+      'gigValue': gigValue,
       'preferredPaymentMethod': preferredPaymentMethod,
       'workstreamFileUrl': workstreamFileUrl,
       'containMediaFile': containMediaFile,
@@ -101,6 +104,7 @@ class Comment {
       rejected: map['rejected'],
       gigCurrency: map['gigCurrency'],
       offeredBudget: map['offeredBudget'],
+      gigValue: map['gigValue'],
       preferredPaymentMethod: map['preferredPaymentMethod'],
       workstreamFileUrl: map['workstreamFileUrl'],
       containMediaFile: map['containMediaFile'],

@@ -189,19 +189,14 @@ class _ClientActionsState extends State<ClientActions> {
                                       ),
                                     ),
                                     onTap: () async {
-                                      await DatabaseService()
-                                          .convertOpenGigToCompletedGig(
-                                        gigId: widget.passedGigId,
-                                        gigOwnerId: widget.passedGigOwnerId,
-                                        appointedUserId: appointedUserId,
-                                      );
                                       await AddCommentViewModel().addComment(
                                         gigIdHoldingComment: widget.passedGigId,
                                         gigOwnerId: widget.passedGigOwnerId,
                                         gigOwnerUsername:
                                             widget.pasedGigOwnerUsername,
                                         commentOwnerUsername: username,
-                                        commentBody: 'wating client review',
+                                        commentBody:
+                                            'Your review will appear here...',
                                         commentOwnerId: userId,
                                         commentOwnerAvatarUrl:
                                             userProfilePictureUrl,
@@ -224,6 +219,13 @@ class _ClientActionsState extends State<ClientActions> {
                                         action: 'marked as completed',
                                         userAvatarUrl: MyUser.userAvatarUrl,
                                         gigActionOwner: "client",
+                                      );
+
+                                      await DatabaseService()
+                                          .convertOpenGigToCompletedGig(
+                                        gigId: widget.passedGigId,
+                                        gigOwnerId: widget.passedGigOwnerId,
+                                        appointedUserId: appointedUserId,
                                       );
                                     },
                                   ),

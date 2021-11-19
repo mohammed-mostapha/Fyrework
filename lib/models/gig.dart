@@ -18,6 +18,8 @@ class Gig {
   final bool adultContentBool;
   final String appointedUserId;
   final String appointedusername;
+  final String hirerUserId;
+  final String hirerUsername;
   final List appliersOrHirersByUserId;
   final List gigRelatedUsersByUserId;
   final bool hidden;
@@ -47,6 +49,8 @@ class Gig {
     this.adultContentBool,
     this.appointedUserId,
     this.appointedusername,
+    this.hirerUserId,
+    this.hirerUsername,
     this.appliersOrHirersByUserId,
     this.gigRelatedUsersByUserId,
     this.hidden = false,
@@ -79,6 +83,8 @@ class Gig {
       'adultContentBool': adultContentBool,
       'appointedUserId': appointedUserId,
       'appointedusername': appointedusername,
+      'hirerUserId': hirerUserId,
+      'hirerUsername': hirerUsername,
       'appliersOrHirersByUserId': [],
       'gigRelatedUsersByUserId': [],
       'hidden': hidden,
@@ -114,6 +120,8 @@ class Gig {
       adultContentBool: map['adultContentBool'],
       appointedUserId: map['appointedUserId'],
       appointedusername: map['appointedusername'],
+      hirerUserId: map['hirerUserId'],
+      hirerUsername: map['hirerUsername'],
       appliersOrHirersByUserId: map['appliersOrHirersByUserId'],
       gigRelatedUsersByUserId: map['gigRelatedUsersByUserId'],
       hidden: map['hidden'],

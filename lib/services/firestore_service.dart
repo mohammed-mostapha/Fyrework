@@ -175,7 +175,7 @@ class FirestoreService {
     }
   }
 
-  Future appointedGigToUser(
+  Future appointGigToUser(
       {String gigId, String appointedUserId, String commentId}) async {
     try {
       var appointedUser =

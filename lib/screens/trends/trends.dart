@@ -1,7 +1,9 @@
+import 'package:Fyrework/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:Fyrework/screens/trends/appbar_textfield.dart';
 import 'package:Fyrework/screens/trends/providerGigs_view.dart';
 import 'package:Fyrework/screens/trends/AllGigs_view.dart';
+import '../NotificationsScreen.dart';
 import 'clientGigs_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Fyrework/ui/widgets/badgeIcon.dart';
@@ -47,30 +49,44 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
               padding: EdgeInsets.fromLTRB(15, 10, 0, 0),
               width: 50,
               child: StreamBuilder(
-                  // stream: 'notifications stream',
-                  builder: (_, snapshot) => GestureDetector(
-                        child: BadgeIcon(
-                          icon: SizedBox(
-                            width: 20,
-                            height: 40,
-                            child: SvgPicture.asset(
-                              bell,
-                              semanticsLabel: 'bell_notifications',
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                          badgeCount: 999,
-                          badgeColor: Theme.of(context).primaryColor,
-                          badgeCountColor: Theme.of(context).primaryColor,
-                          badgeTextStyle: TextStyle(
-                            fontSize:
-                                Theme.of(context).textTheme.bodyText2.fontSize,
-                            // color: Theme.of(context).primaryColor,
-                            color: Theme.of(context).accentColor,
+                  stream: DatabaseService().unseenNotificationsCount(),
+                  builder: (_, notificationsSnapshot) {
+                    var unseenCount = !(notificationsSnapshot.hasData)
+                        ? 0
+                        : !(notificationsSnapshot.data.docs.length > 0)
+                            ? 0
+                            : notificationsSnapshot.data.docs.length;
+                    return GestureDetector(
+                      child: BadgeIcon(
+                        icon: SizedBox(
+                          width: 20,
+                          height: 40,
+                          child: SvgPicture.asset(
+                            bell,
+                            semanticsLabel: 'bell_notifications',
+                            color: Theme.of(context).primaryColor,
                           ),
                         ),
-                        onTap: () {},
-                      )),
+                        badgeCount: unseenCount,
+                        badgeColor: Theme.of(context).primaryColor,
+                        badgeCountColor: Theme.of(context).primaryColor,
+                        badgeTextStyle: TextStyle(
+                          fontSize:
+                              Theme.of(context).textTheme.bodyText2.fontSize,
+                          // color: Theme.of(context).primaryColor,
+                          color: Theme.of(context).accentColor,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NotificationsScreen(),
+                          ),
+                        );
+                      },
+                    );
+                  }),
             ),
             searchContainerColor: Theme.of(context).accentColor,
             iconTheme: IconThemeData(color: Theme.of(context).primaryColor),

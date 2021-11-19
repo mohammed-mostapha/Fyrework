@@ -141,8 +141,12 @@ class _AllGigsViewState extends State<AllGigsView> {
                                 ? GigItem(
                                     index: index,
                                     appointed: getDocData['appointed'],
+                                    appointedUserId:
+                                        getDocData['appointedUserId'],
                                     appointedusername:
                                         getDocData['appointedUserFullName'],
+                                    hirerUserId: getDocData['hirerUserId'],
+                                    hirerUsername: getDocData['hirerUsername'],
                                     appliersOrHirersByUserId:
                                         getDocData['appliersOrHirersByUserId'],
                                     gigRelatedUsersByUserId:
@@ -169,8 +173,6 @@ class _AllGigsViewState extends State<AllGigsView> {
                                         getDocData['adultContentText'],
                                     adultContentBool:
                                         getDocData['adultContentBool'],
-                                    appointedUserId:
-                                        getDocData['appointedUserId'],
                                     hidden: getDocData['hidden'],
                                     gigActions: getDocData['gigActions'],
                                     paymentReleased:

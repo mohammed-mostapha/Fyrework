@@ -9,10 +9,6 @@ class AddCommentViewModel {
   final FirestoreService _firestoreService = locator<FirestoreService>();
   final NavigationService _navigationService = locator<NavigationService>();
 
-  Comment _edittingcomment;
-
-  bool get _editting => _edittingcomment != null;
-
   Future addComment({
     @required String gigIdHoldingComment,
     @required String gigOwnerId,
@@ -28,6 +24,7 @@ class AddCommentViewModel {
     @required bool rejected,
     String gigCurrency,
     String offeredBudget,
+    @required String gigValue,
     String preferredPaymentMethod,
     @required bool isGigCompleted,
     @required bool containMediaFile,
@@ -55,6 +52,7 @@ class AddCommentViewModel {
           rejected: rejected,
           gigCurrency: gigCurrency,
           offeredBudget: offeredBudget,
+          gigValue: gigValue,
           preferredPaymentMethod: preferredPaymentMethod,
           containMediaFile: containMediaFile,
           commentPrivacyToggle: isPrivateComment,

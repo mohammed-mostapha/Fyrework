@@ -34,7 +34,6 @@ class AddCommentsView extends StatefulWidget {
     @required this.passedCurrentUserId,
     @required this.passedGigValue,
     @required this.passedGigCurrency,
-    // @required this.passedGigCurrency,
     @required this.passedGigBudget,
   }) : super(key: key);
   @override
@@ -119,6 +118,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
         rejected: rejected,
         gigCurrency: widget.passedGigCurrency,
         offeredBudget: offeredBudget,
+        gigValue: widget.passedGigValue,
         containMediaFile: containMediaFile,
         isGigCompleted: false,
       );
@@ -142,8 +142,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
 
     myGig = widget.passedGigOwnerId == MyUser.uid ? true : false;
     gigICanDo = widget.passedGigValue == 'Gig I can do' ? true : false;
-    worker = (!myGig && !gigICanDo || myGig && gigICanDo) ? true : false;
-    client = (myGig && !gigICanDo || !myGig && gigICanDo) ? true : false;
+    worker = (!myGig && gigICanDo || myGig && gigICanDo) ? true : false;
+    client = (myGig && !gigICanDo || !myGig && !gigICanDo) ? true : false;
     // _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
 
     // hirer = (myGig && !gigICanDo || !myGig && gigICanDo) ? true : false;
@@ -173,7 +173,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
               }
 
               if (!snapshot.data.exists) {
-                Future.delayed(Duration(milliseconds: 2000)).then((_) {
+                Future.delayed(Duration(milliseconds: 1000)).then((_) {
                   Navigator.pop(context);
                 });
                 return Container(
@@ -607,6 +607,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                           .isNotEmpty) {
                                                         await AddCommentViewModel()
                                                             .addComment(
+                                                          gigValue: widget
+                                                              .passedGigValue,
                                                           gigIdHoldingComment:
                                                               widget
                                                                   .passedGigId,
@@ -734,6 +736,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                             passedGigId: widget.passedGigId,
                                             passedGigOwnerId:
                                                 widget.passedGigOwnerId,
+                                            passedGigOwnerUsername:
+                                                widget.passGigOwnerUsername,
                                           ),
                                         ),
                                         Container(
@@ -781,6 +785,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                   .isNotEmpty) {
                                                                 await AddCommentViewModel()
                                                                     .addComment(
+                                                                  gigValue: widget
+                                                                      .passedGigValue,
                                                                   gigIdHoldingComment:
                                                                       widget
                                                                           .passedGigId,
