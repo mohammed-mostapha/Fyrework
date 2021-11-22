@@ -54,6 +54,8 @@ class _ProviderGigsViewState extends State<ProviderGigsView> {
                 stream: DatabaseService()
                     .filterProviderGigs(QueryStringProvider.getQueryString()),
                 builder: (context, snapshot) {
+                  String queryString = QueryStringProvider.getQueryString();
+
                   if (!snapshot.hasData) {
                     return SmartRefresher(
                       enablePullDown: true,
@@ -66,7 +68,84 @@ class _ProviderGigsViewState extends State<ProviderGigsView> {
                     );
                     //end
 
-                  } else if (snapshot.data.docs.length > 0) {
+                  } else if (snapshot.data.docs.length > 0 &&
+                      queryString != '') {
+                    print('smartRefresher: you should see gigs now');
+                    return SmartRefresher(
+                      enablePullDown: true,
+                      child: ListView.builder(
+                          addAutomaticKeepAlives: false,
+                          cacheExtent: 100.0,
+                          itemCount: snapshot.data.docs.length,
+                          itemBuilder: (context, index) {
+                            DocumentSnapshot data = snapshot.data.docs[index];
+                            Map getDocData = data.data();
+
+                            return (getDocData['hidden'] != true &&
+                                    getDocData['gigOwnerUsername']
+                                        .toString()
+                                        .contains(
+                                          queryString
+                                                  .substring(0, 1)
+                                                  .toUpperCase() +
+                                              queryString.substring(1),
+                                        ))
+                                ? GigItem(
+                                    index: index,
+                                    appointed: getDocData['appointed'],
+                                    appointedusername:
+                                        getDocData['appointedUserFullName'],
+                                    appliersOrHirersByUserId:
+                                        getDocData['appliersOrHirersByUserId'],
+                                    gigRelatedUsersByUserId:
+                                        getDocData['gigRelatedUsersByUserId'],
+                                    gigId: getDocData['gigId'],
+                                    currentUserId: currentUserId,
+                                    gigOwnerId: getDocData['gigOwnerId'],
+                                    gigOwnerAvatarUrl:
+                                        getDocData['gigOwnerAvatarUrl'],
+                                    gigOwnerUsername:
+                                        getDocData['gigOwnerUsername'],
+                                    createdAt: getDocData['createdAt'],
+                                    gigOwnerLocation:
+                                        getDocData['gigOwnerLocation'],
+                                    gigLocation: getDocData['gigLocation'],
+                                    gigHashtags: getDocData['gigHashtags'],
+                                    gigMediaFilesDownloadUrls:
+                                        getDocData['gigMediaFilesDownloadUrls'],
+                                    gigPost: getDocData['gigPost'],
+                                    gigCurrency: getDocData['gigCurrency'],
+                                    gigBudget: getDocData['gigBudget'],
+                                    gigValue: getDocData['gigValue'],
+                                    adultContentText:
+                                        getDocData['adultContentText'],
+                                    adultContentBool:
+                                        getDocData['adultContentBool'],
+                                    appointedUserId:
+                                        getDocData['appointedUserId'],
+                                    hidden: getDocData['hidden'],
+                                    gigActions: getDocData['gigActions'],
+                                    paymentReleased:
+                                        getDocData['paymentReleased'],
+                                    markedAsComplete:
+                                        getDocData['markedAsComplete'],
+                                    clientLeftReview:
+                                        getDocData['clientLeftReview'],
+                                    likesCount: getDocData['likesCount'],
+                                    likersByUserId:
+                                        getDocData['likersByUserId'],
+                                  )
+                                : Container(
+                                    width: 0,
+                                    height: 0,
+                                  );
+                          }),
+                      controller: _refreshController,
+                      onRefresh: _onRefresh,
+                      onLoading: _onLoading,
+                    );
+                  } else if (snapshot.data.docs.length > 0 &&
+                      queryString == '') {
                     print('smartRefresher: you should see gigs now');
                     return SmartRefresher(
                       enablePullDown: true,

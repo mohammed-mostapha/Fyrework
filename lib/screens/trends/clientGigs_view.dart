@@ -24,6 +24,9 @@ class _ClientGigsViewState extends State<ClientGigsView> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
+  var filteredClientGigsSet = [];
+  var tempClientGigSearch = [];
+
   void _onRefresh() async {
     await Future.delayed(Duration(milliseconds: 1000));
     if (mounted) setState(() {});
@@ -57,6 +60,8 @@ class _ClientGigsViewState extends State<ClientGigsView> {
                   QueryStringProvider.getQueryString(),
                 ),
                 builder: (context, snapshot) {
+                  String queryString = QueryStringProvider.getQueryString();
+
                   if (!snapshot.hasData) {
                     //start
                     return SmartRefresher(
@@ -70,8 +75,8 @@ class _ClientGigsViewState extends State<ClientGigsView> {
                     );
                     //end
 
-                  } else if (snapshot.data.docs.length > 0) {
-                    print('smartRefresher: you should see gigs now');
+                  } else if (snapshot.data.docs.length > 0 &&
+                      queryString == '') {
                     return SmartRefresher(
                       enablePullDown: true,
                       child: ListView.builder(
@@ -83,6 +88,81 @@ class _ClientGigsViewState extends State<ClientGigsView> {
                             Map getDocData = data.data();
 
                             return getDocData['hidden'] != true
+                                ? GigItem(
+                                    index: index,
+                                    appointed: getDocData['appointed'],
+                                    appointedusername:
+                                        getDocData['appointedUserFullName'],
+                                    appliersOrHirersByUserId:
+                                        getDocData['appliersOrHirersByUserId'],
+                                    gigRelatedUsersByUserId:
+                                        getDocData['gigRelatedUsersByUserId'],
+                                    gigId: getDocData['gigId'],
+                                    currentUserId: currentUserId,
+                                    gigOwnerId: getDocData['gigOwnerId'],
+                                    gigOwnerAvatarUrl:
+                                        getDocData['gigOwnerAvatarUrl'],
+                                    gigOwnerUsername:
+                                        getDocData['gigOwnerUsername'],
+                                    createdAt: getDocData['createdAt'],
+                                    gigOwnerLocation:
+                                        getDocData['gigOwnerLocation'],
+                                    gigLocation: getDocData['gigLocation'],
+                                    gigHashtags: getDocData['gigHashtags'],
+                                    gigMediaFilesDownloadUrls:
+                                        getDocData['gigMediaFilesDownloadUrls'],
+                                    gigPost: getDocData['gigPost'],
+                                    gigCurrency: getDocData['gigCurrency'],
+                                    gigBudget: getDocData['gigBudget'],
+                                    gigValue: getDocData['gigValue'],
+                                    adultContentText:
+                                        getDocData['adultContentText'],
+                                    adultContentBool:
+                                        getDocData['adultContentBool'],
+                                    appointedUserId:
+                                        getDocData['appointedUserId'],
+                                    hidden: getDocData['hidden'],
+                                    gigActions: getDocData['gigActions'],
+                                    paymentReleased:
+                                        getDocData['paymentReleased'],
+                                    markedAsComplete:
+                                        getDocData['markedAsComplete'],
+                                    clientLeftReview:
+                                        getDocData['clientLeftReview'],
+                                    likesCount: getDocData['likesCount'],
+                                    likersByUserId:
+                                        getDocData['likersByUserId'],
+                                  )
+                                : Container(
+                                    width: 0,
+                                    height: 0,
+                                  );
+                          }),
+                      controller: _refreshController,
+                      onRefresh: _onRefresh,
+                      onLoading: _onLoading,
+                    );
+                  } else if (snapshot.data.docs.length > 0 &&
+                      queryString != '') {
+                    return SmartRefresher(
+                      enablePullDown: true,
+                      child: ListView.builder(
+                          addAutomaticKeepAlives: false,
+                          cacheExtent: 100.0,
+                          itemCount: snapshot.data.docs.length,
+                          itemBuilder: (context, index) {
+                            DocumentSnapshot data = snapshot.data.docs[index];
+                            Map getDocData = data.data();
+
+                            return (getDocData['hidden'] != true &&
+                                    getDocData['gigLocation']
+                                        .toString()
+                                        .contains(
+                                          queryString
+                                                  .substring(0, 1)
+                                                  .toUpperCase() +
+                                              queryString.substring(1),
+                                        ))
                                 ? GigItem(
                                     index: index,
                                     appointed: getDocData['appointed'],

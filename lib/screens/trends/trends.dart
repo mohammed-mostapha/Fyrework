@@ -89,7 +89,9 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
                   }),
             ),
             searchContainerColor: Theme.of(context).accentColor,
-            iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
+            iconTheme: IconThemeData(
+              color: Theme.of(context).primaryColor,
+            ),
             title: Container(
               padding: EdgeInsets.only(top: 10),
               child: Row(
