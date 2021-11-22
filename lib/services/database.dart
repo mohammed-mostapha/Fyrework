@@ -152,24 +152,6 @@ class DatabaseService {
         .get();
   }
 
-  // // listening to client gigs
-  // Future<QuerySnapshot> listenToCilentGigs() {
-  //   return _gigsCollection
-  //       .where('hidden', isEqualTo: false)
-  //       .where('gigValue', isEqualTo: 'I need a provider')
-  //       .orderBy('createdAt', descending: true)
-  //       .get();
-  // }
-
-  // listening to provider gigs
-  // Future<QuerySnapshot> listenToProviderGigs() {
-  //   return _gigsCollection
-  //       .where('hidden', isEqualTo: false)
-  //       .where('gigValue', isEqualTo: 'Gig I can do')
-  //       .orderBy('createdAt', descending: true)
-  //       .get();
-  // }
-
   Future<QuerySnapshot> fetchGigsByOwnerId({String userId}) async {
     await Future.delayed(Duration(milliseconds: 1000));
     return _gigsCollection
