@@ -116,7 +116,7 @@ class _HomeControllerState extends State<HomeController> {
   _configureFirebaseListeners() {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
-        // localNotificationService.display(message);
+        localNotificationService.display(message);
       },
       onResume: (Map<String, dynamic> message) async {
         // print('onResulme: $message');

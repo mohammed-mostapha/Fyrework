@@ -43,9 +43,9 @@ class localNotificationService {
           importance: Importance.max,
           priority: Priority.high,
           playSound: true,
-          sound: RawResourceAndroidNotificationSound(
-            'ios_notification_sound.mp3',
-          ),
+          // sound: RawResourceAndroidNotificationSound(
+          //   'ios_notification_sound.mp3',
+          // ),
         ),
       );
       await _notificationsPlugin.show(

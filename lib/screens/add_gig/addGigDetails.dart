@@ -866,7 +866,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
                       child: Radio(
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
-                          value: 'Gig I can do',
+                          value: 'Gig i can do',
                           groupValue: AppointmentCard.gigValue,
                           activeColor: Theme.of(context).primaryColor,
                           onChanged: (T) {
@@ -882,7 +882,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
                     SizedBox(
                       width: 5,
                     ),
-                    Text('Gig I can do',
+                    Text('Gig i can do',
                         style: Theme.of(context).textTheme.caption),
                   ],
                 ),

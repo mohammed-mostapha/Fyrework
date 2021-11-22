@@ -107,17 +107,21 @@ class DatabaseService {
 
   // filter client gigs
   Stream<QuerySnapshot> filterCilentGigs(String query) {
-    return query.isEmpty
-        ? _gigsCollection
-            .where('hidden', isEqualTo: false)
-            .orderBy('createdAt', descending: true)
-            .snapshots()
-        : _gigsCollection
-            .where('hidden', isEqualTo: false)
-            .where('gigValue', isEqualTo: 'I need a provider')
-            .where('gigHashtags', arrayContains: query)
-            .orderBy('createdAt', descending: true)
-            .snapshots();
+    if (query.isEmpty) {
+      return _gigsCollection
+          .where('hidden', isEqualTo: false)
+          .where('gigValue', isEqualTo: 'I need a provider')
+          .orderBy('createdAt', descending: true)
+          .snapshots();
+    } else {
+      return _gigsCollection
+          .where('hidden', isEqualTo: false)
+          .where(
+            'gigLocationIndex',
+            isEqualTo: query.substring(0, 1).toUpperCase(),
+          )
+          .snapshots();
+    }
   }
 
   // filter provider gigs
@@ -125,13 +129,15 @@ class DatabaseService {
     return query.isEmpty
         ? _gigsCollection
             .where('hidden', isEqualTo: false)
+            .where('gigValue', isEqualTo: 'Gig i can do')
             .orderBy('createdAt', descending: true)
             .snapshots()
         : _gigsCollection
             .where('hidden', isEqualTo: false)
-            .where('gigValue', isEqualTo: 'Gig I can do')
-            .where('gigHashtags', arrayContains: query)
-            .orderBy('createdAt', descending: true)
+            .where(
+              'gigOwnerUsernameIndex',
+              isEqualTo: query.substring(0, 1).toUpperCase(),
+            )
             .snapshots();
   }
 
@@ -208,12 +214,12 @@ class DatabaseService {
   Stream<QuerySnapshot> unseenNotificationsCount() {
     return _notifications
         .where('seen', isEqualTo: false)
-        .orderBy('createdAt', descending: false)
+        .orderBy('createdAt', descending: true)
         .snapshots();
   }
 
   Stream<QuerySnapshot> fetchAllNotifications() {
-    return _notifications.orderBy('createdAt', descending: false).snapshots();
+    return _notifications.orderBy('createdAt', descending: true).snapshots();
   }
 
   Future markNotificationAsSeen({String notificationId}) {
