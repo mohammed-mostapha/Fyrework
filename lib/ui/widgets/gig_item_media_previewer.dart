@@ -53,7 +53,7 @@ class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
               height: preferredHeight != null
                   ? preferredHeight
                   : MediaQuery.of(context).size.height / 2,
-              viewportFraction: 0.95,
+              viewportFraction: 1,
               initialPage: 0,
               enableInfiniteScroll:
                   receivedGigMediaFilesUrls.length > 1 ? true : false,
@@ -70,38 +70,34 @@ class _GigItemMediaPreviewerState extends State<GigItemMediaPreviewer> {
                   url.contains("PNG")) {
                 return Container(
                   width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      // child: Image.network(
-                      //   url,
-                      //   fit: BoxFit.cover,
-                      // ),
-                      child: InkResponse(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return WorkstreamFilesViewer(
-                                  initialPage: 0,
-                                  workstreamFilesUrls:
-                                      receivedGigMediaFilesUrls,
-                                );
-                              },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    // child: Image.network(
+                    //   url,
+                    //   fit: BoxFit.cover,
+                    // ),
+                    child: InkResponse(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return WorkstreamFilesViewer(
+                                initialPage: 0,
+                                workstreamFilesUrls: receivedGigMediaFilesUrls,
+                              );
+                            },
+                          ),
+                        );
+                      },
+                      child: CachedNetworkImage(
+                        imageUrl: url,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Theme.of(context).primaryColor,
                             ),
-                          );
-                        },
-                        child: CachedNetworkImage(
-                          imageUrl: url,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Theme.of(context).primaryColor,
-                              ),
-                              strokeWidth: 2.0,
-                            ),
+                            strokeWidth: 2.0,
                           ),
                         ),
                       ),

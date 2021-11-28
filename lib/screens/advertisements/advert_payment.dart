@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:Fyrework/services/database.dart';
-import 'package:Fyrework/services/payment.dart';
+import 'package:Fyrework/services/stripe_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -94,22 +94,27 @@ class _AdvertPaymentState extends State<AdvertPayment> {
                             ),
                           )),
                     ElevatedButton(
-                        onPressed: () async {
-                          EasyLoading.show();
-                          var response = await StripeServices.payWithCard(
-                              amount: 500.toString(), currency: 'usd');
-                          Scaffold.of(context).showSnackBar(
-                              SnackBar(content: Text(response.message)));
-                          for (var i = 0; i < widget.receivedAdvertHashtags.length; i++) {
-                            await DatabaseService().fetchOrCreateGigsForAdverts(
-                                widget.receivedAdvertHashtags[i]);
-                          }
-                          EasyLoading.dismiss();
-                        },
-                        child: Text('Stripe Pay \$5.00'),
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Theme.of(context).primaryColor))),
+                      onPressed: () async {
+                        EasyLoading.show();
+                        var response = await StripeServices.payWithCard(
+                            amount: 500.toString(), currency: 'usd');
+                        Scaffold.of(context).showSnackBar(
+                            SnackBar(content: Text(response.message)));
+                        for (var i = 0;
+                            i < widget.receivedAdvertHashtags.length;
+                            i++) {
+                          await DatabaseService().fetchOrCreateGigsForAdverts(
+                            widget.receivedAdvertHashtags[i],
+                          );
+                        }
+                        EasyLoading.dismiss();
+                      },
+                      child: Text('Stripe Pay \$5.00'),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context).primaryColor),
+                      ),
+                    ),
                     SizedBox(
                       height: 50,
                     ),

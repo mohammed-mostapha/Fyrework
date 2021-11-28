@@ -97,7 +97,7 @@ class SlidePageTransitionBuilder<T> extends PageRoute<T> {
                 child: child,
               ),
               CameraPicker(
-                isAllowRecording: false,
+                isAllowRecording: true,
               ),
             ],
           ),

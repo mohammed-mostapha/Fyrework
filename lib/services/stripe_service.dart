@@ -28,13 +28,16 @@ class StripeServices {
 
   static init() {
     StripePayment.setOptions(StripeOptions(
-        publishableKey: 'pk_test_3cXl3FkRpnNrY7ZWuuNRq8Rn00QX5CW6FW',
-        androidPayMode: 'test',
-        merchantId: 'test'));
+      publishableKey: 'pk_test_3cXl3FkRpnNrY7ZWuuNRq8Rn00QX5CW6FW',
+      androidPayMode: 'test',
+      merchantId: 'test',
+    ));
   }
 
   static Future<Map<String, dynamic>> createPaymentIntent(
-      String amount, String currency) async {
+    String amount,
+    String currency,
+  ) async {
     try {
       Map<String, dynamic> body = {
         'amount': amount,
@@ -57,25 +60,32 @@ class StripeServices {
           CardFormPaymentRequest());
       var paymentIntent =
           await StripeServices.createPaymentIntent(amount, currency);
-      var response = await StripePayment.confirmPaymentIntent(PaymentIntent(
+      var response = await StripePayment.confirmPaymentIntent(
+        PaymentIntent(
           clientSecret: paymentIntent['client_secret'],
-          paymentMethodId: paymentMethod.id));
+          paymentMethodId: paymentMethod.id,
+        ),
+      );
 
       if (response.status == 'succeeded') {
-        
         return StripeTransactionResponse(
-            message: 'Transaction successful, preparing your advert', success: true);
+          message: 'Transaction successful, preparing your advert',
+          success: true,
+        );
       } else {
         return StripeTransactionResponse(
-            message: 'Transaction failed', success: false);
+          message: 'Transaction failed',
+          success: false,
+        );
       }
     } on PlatformException catch (error) {
       return StripeServices.getErrorAndAnalyze(error);
-    }
-    catch (error) {
+    } catch (error) {
       return StripeTransactionResponse(
-          message: 'Transaction failed', success: false);
-    } 
+        message: 'Transaction failed',
+        success: false,
+      );
+    }
   }
 
   static getErrorAndAnalyze(error) {
@@ -83,6 +93,9 @@ class StripeServices {
     if (error.code == 'cancelled') {
       message = 'Transaction canceled';
     }
-    return StripeTransactionResponse(message: message, success: false);
+    return StripeTransactionResponse(
+      message: message,
+      success: false,
+    );
   }
 }

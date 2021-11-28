@@ -476,8 +476,10 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
               ),
               selectedAssetsWidget,
               SizedBox(height: 10.0),
-              Text('${widget.gigPost}',
-                  style: Theme.of(context).textTheme.bodyText1),
+              Text(
+                '${widget.gigPost}',
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
               SizedBox(
                 height: 10.0,
               ),

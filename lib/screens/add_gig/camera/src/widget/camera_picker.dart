@@ -31,7 +31,7 @@ class CameraPicker extends StatefulWidget {
     Key key,
     // this.isAllowRecording = false,
     @required this.isAllowRecording,
-    this.maximumRecordingDuration = const Duration(seconds: 60),
+    this.maximumRecordingDuration = const Duration(seconds: 30),
     this.theme,
     CameraPickerTextDelegate textDelegate,
   }) : super(key: key) {
@@ -61,7 +61,7 @@ class CameraPicker extends StatefulWidget {
   static Future<AssetEntity> pickFromCamera(
     BuildContext context, {
     bool isAllowRecording = true,
-    Duration maximumRecordingDuration = const Duration(seconds: 60),
+    Duration maximumRecordingDuration = const Duration(seconds: 30),
     ThemeData theme,
     CameraPickerTextDelegate textDelegate,
   }) async {
@@ -71,7 +71,6 @@ class CameraPicker extends StatefulWidget {
     ).push<AssetEntity>(
       SlidePageTransitionBuilder<AssetEntity>(
         builder: CameraPicker(
-          // isAllowRecording: isAllowRecording,
           isAllowRecording: isAllowRecording,
           theme: theme,
           textDelegate: textDelegate,
@@ -485,8 +484,12 @@ class CameraPickerState extends State<CameraPicker> {
         );
         if (entity != null) {
           Navigator.of(context).pop();
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => MultiAssetsPicker()));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MultiAssetsPicker(),
+            ),
+          );
         } else {
           takenVideoFilePath = null;
           if (mounted) {
