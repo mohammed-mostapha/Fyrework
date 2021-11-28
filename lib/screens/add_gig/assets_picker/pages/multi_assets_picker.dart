@@ -3,16 +3,12 @@ import 'dart:async';
 import 'package:Fyrework/services/bunny_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:Fyrework/screens/home/home.dart';
 import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/viewmodels/create_gig_view_model.dart';
 import 'package:path/path.dart' as fileName;
 import '../src/wechat_assets_picker.dart';
 import '../constants/picker_model.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 
 class MultiAssetsPicker extends StatefulWidget {
   final bool appointed;
@@ -31,6 +27,7 @@ class MultiAssetsPicker extends StatefulWidget {
   final String adultContentText;
   final bool adultContentBool;
   final String gigValue;
+  List<AssetEntity> assets = <AssetEntity>[];
 
   MultiAssetsPicker({
     Key key,
@@ -49,6 +46,7 @@ class MultiAssetsPicker extends StatefulWidget {
     this.adultContentText,
     this.adultContentBool,
     this.gigValue,
+    this.assets,
   }) : super(key: key);
 
   @override
@@ -61,30 +59,30 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
 
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final List<AssetEntity> result = await PickMethodModel(
-        method: (
-          BuildContext context,
-          List<AssetEntity> assets,
-        ) async {
-          return await AssetPicker.pickAssets(
-            context,
-            maxAssets: maxAssetsCount,
-            selectedAssets: assets,
-            requestType: RequestType.common,
-          );
-        },
-      ).method(context, assets);
-      if (result != null && result != assets) {
-        assets = List<AssetEntity>.from(result);
-        if (mounted) {
-          setState(() {
-            // choosedAssets = !choosedAssets;
-            print('count: ${result.length}');
-          });
-        }
-      }
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //   final List<AssetEntity> result = await PickMethodModel(
+    //     method: (
+    //       BuildContext context,
+    //       List<AssetEntity> assets,
+    //     ) async {
+    //       return await AssetPicker.pickAssets(
+    //         context,
+    //         maxAssets: maxAssetsCount,
+    //         selectedAssets: assets,
+    //         requestType: RequestType.common,
+    //       );
+    //     },
+    //   ).method(context, assets);
+    //   if (result != null && result != assets) {
+    //     assets = List<AssetEntity>.from(result);
+    //     if (mounted) {
+    //       setState(() {
+    //         // choosedAssets = !choosedAssets;
+    //         print('count: ${result.length}');
+    //       });
+    //     }
+    //   }
+    // });
   }
 
   String id;
@@ -100,7 +98,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
 
   bool isDisplayingDetail = true;
 
-  int get assetsLength => assets.length;
+  int get assetsLength => widget.assets.length;
 
   // ThemeData get currentTheme => context.themeData;
 
@@ -219,7 +217,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
   }
 
   Widget _selectedAssetWidget(int index) {
-    final AssetEntity asset = assets.elementAt(index);
+    final AssetEntity asset = widget.assets.elementAt(index);
     return GestureDetector(
       onTap: isDisplayingDetail
           ? () async {
@@ -227,7 +225,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                   await AssetPickerViewer.pushToViewer(
                 context,
                 currentIndex: index,
-                assets: assets,
+                assets: widget.assets,
                 themeData: AssetPicker.themeData(Colors.transparent),
               );
               if (result != assets && result != null) {
@@ -251,7 +249,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          assets.remove(assets.elementAt(index));
+          widget.assets.remove(widget.assets.elementAt(index));
           if (assetsLength == 0) {
             isDisplayingDetail = false;
           }
@@ -271,18 +269,21 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
     );
   }
 
-  Widget get selectedAssetsWidget => AnimatedContainer(
-        duration: kThemeChangeDuration,
-        curve: Curves.easeInOut,
-        height: assets.isNotEmpty
-            ? isDisplayingDetail
-                ? 250.0
-                : 80.0
-            : 40.0,
-        child: Column(
-          children: <Widget>[
-            selectedAssetsListView,
-          ],
+  Widget get selectedAssetsWidget => Container(
+        height: 100,
+        child: AnimatedContainer(
+          duration: kThemeChangeDuration,
+          curve: Curves.easeInOut,
+          height: assets.isNotEmpty
+              ? isDisplayingDetail
+                  ? 250.0
+                  : 80.0
+              : 40.0,
+          child: Column(
+            children: <Widget>[
+              selectedAssetsListView,
+            ],
+          ),
         ),
       );
 
@@ -388,195 +389,196 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
     super.dispose();
   }
 
-  Widget get gigPreview {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                            width: 1,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(2))),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Back',
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  GestureDetector(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                            width: 1,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(2))),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Publish',
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                      ),
-                    ),
-                    onTap: () async {
-                      EasyLoading.show();
-                      await prepareGigMediaFilesAndPublish();
-                      EasyLoading.dismiss();
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              Wrap(
-                children: widget.gigHashtags
-                    .map((e) => Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 2.5, 2.5),
-                          child: Chip(
-                            materialTapTargetSize:
-                                MaterialTapTargetSize.shrinkWrap,
-                            backgroundColor: Theme.of(context).primaryColor,
-                            label: Text(
-                              '$e',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1
-                                  .copyWith(
-                                      color: Theme.of(context).accentColor),
-                            ),
-                            onDeleted: () {
-                              setState(() {
-                                widget.gigHashtags
-                                    .removeWhere((item) => item == e);
-                                print(widget.gigHashtags.length);
-                              });
-                            },
-                            deleteIconColor: Theme.of(context).accentColor,
-                          ),
-                        ))
-                    .toList(),
-              ),
-              selectedAssetsWidget,
-              SizedBox(height: 10.0),
-              Text(
-                '${widget.gigPost}',
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              Row(
-                mainAxisAlignment: widget.gigDeadLine != null
-                    ? MainAxisAlignment.spaceBetween
-                    : MainAxisAlignment.start,
-                children: <Widget>[
-                  widget.gigDeadLine != null
-                      ? Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: 16,
-                              height: 16,
-                              child: SvgPicture.asset(
-                                hourglassStart,
-                                semanticsLabel: 'hourglass-start',
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                            Container(
-                              width: 5.0,
-                              height: 0,
-                            ),
-                            Container(
-                              // child: Text('$formattedGigDeadline',
-                              child: Text(widget.gigDeadLine,
-                                  style: Theme.of(context).textTheme.bodyText1),
-                            ),
-                          ],
-                        )
-                      : Container(
-                          width: 0,
-                          height: 0,
-                        ),
-                  SizedBox(height: 5),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        child: Text(
-                          '${widget.gigCurrency}',
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                      ),
-                      Container(
-                        width: 2.5,
-                        height: 0,
-                      ),
-                      Container(
-                        child: Text(
-                          '${widget.gigBudget}',
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              widget.adultContentBool
-                  ? Container(
-                      alignment: Alignment.centerLeft,
-                      child: Column(
-                        children: [
-                          SizedBox(height: 10),
-                          Row(
-                            children: [
-                              FaIcon(
-                                FontAwesomeIcons.asterisk,
-                                size: 8,
-                              ),
-                              Container(
-                                width: 5.0,
-                                height: 0,
-                              ),
-                              Expanded(
-                                child: Text(
-                                  "${widget.adultContentText}",
-                                  style: TextStyle(
-                                    fontSize: 8,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    )
-                  : Container(
-                      width: 0,
-                      height: 0,
-                    ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget get gigPreview {
+  //   return Container(
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(10),
+  //       child: SingleChildScrollView(
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: <Widget>[
+  //             Row(
+  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //               children: [
+  //                 GestureDetector(
+  //                   child: Container(
+  //                     decoration: BoxDecoration(
+  //                         border: Border.all(
+  //                           width: 1,
+  //                           color: Theme.of(context).primaryColor,
+  //                         ),
+  //                         borderRadius: BorderRadius.all(Radius.circular(2))),
+  //                     child: Padding(
+  //                       padding: const EdgeInsets.all(8.0),
+  //                       child: Text(
+  //                         'Back',
+  //                         style: Theme.of(context).textTheme.bodyText1,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   onTap: () {
+  //                     Navigator.of(context).pop();
+  //                   },
+  //                 ),
+  //                 GestureDetector(
+  //                   child: Container(
+  //                     decoration: BoxDecoration(
+  //                         border: Border.all(
+  //                           width: 1,
+  //                           color: Theme.of(context).primaryColor,
+  //                         ),
+  //                         borderRadius: BorderRadius.all(Radius.circular(2))),
+  //                     child: Padding(
+  //                       padding: const EdgeInsets.all(8.0),
+  //                       child: Text(
+  //                         'Publish',
+  //                         style: Theme.of(context).textTheme.bodyText1,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   onTap: () async {
+  //                     EasyLoading.show();
+  //                     await prepareGigMediaFilesAndPublish();
+
+  //                     EasyLoading.dismiss();
+  //                   },
+  //                 ),
+  //               ],
+  //             ),
+  //             SizedBox(
+  //               height: 25,
+  //             ),
+  //             Wrap(
+  //               children: widget.gigHashtags
+  //                   .map((e) => Padding(
+  //                         padding: const EdgeInsets.fromLTRB(0, 0, 2.5, 2.5),
+  //                         child: Chip(
+  //                           materialTapTargetSize:
+  //                               MaterialTapTargetSize.shrinkWrap,
+  //                           backgroundColor: Theme.of(context).primaryColor,
+  //                           label: Text(
+  //                             '$e',
+  //                             style: Theme.of(context)
+  //                                 .textTheme
+  //                                 .bodyText1
+  //                                 .copyWith(
+  //                                     color: Theme.of(context).accentColor),
+  //                           ),
+  //                           onDeleted: () {
+  //                             setState(() {
+  //                               widget.gigHashtags
+  //                                   .removeWhere((item) => item == e);
+  //                               print(widget.gigHashtags.length);
+  //                             });
+  //                           },
+  //                           deleteIconColor: Theme.of(context).accentColor,
+  //                         ),
+  //                       ))
+  //                   .toList(),
+  //             ),
+  //             selectedAssetsWidget,
+  //             SizedBox(height: 10.0),
+  //             Text('${widget.gigPost}',
+  //                 style: Theme.of(context).textTheme.bodyText1),
+  //             SizedBox(
+  //               height: 10.0,
+  //             ),
+  //             Row(
+  //               mainAxisAlignment: widget.gigDeadLine != null
+  //                   ? MainAxisAlignment.spaceBetween
+  //                   : MainAxisAlignment.start,
+  //               children: <Widget>[
+  //                 widget.gigDeadLine != null
+  //                     ? Row(
+  //                         children: <Widget>[
+  //                           SizedBox(
+  //                             width: 16,
+  //                             height: 16,
+  //                             child: SvgPicture.asset(
+  //                               hourglassStart,
+  //                               semanticsLabel: 'hourglass-start',
+  //                               color: Theme.of(context).primaryColor,
+  //                             ),
+  //                           ),
+  //                           Container(
+  //                             width: 5.0,
+  //                             height: 0,
+  //                           ),
+  //                           Container(
+  //                             // child: Text('$formattedGigDeadline',
+  //                             child: Text(
+  //                               widget.gigDeadLine,
+  //                               style: Theme.of(context).textTheme.bodyText1,
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       )
+  //                     : Container(
+  //                         width: 0,
+  //                         height: 0,
+  //                       ),
+  //                 SizedBox(height: 5),
+  //                 Row(
+  //                   children: <Widget>[
+  //                     Container(
+  //                       child: Text(
+  //                         '${widget.gigCurrency}',
+  //                         style: Theme.of(context).textTheme.bodyText1,
+  //                       ),
+  //                     ),
+  //                     Container(
+  //                       width: 2.5,
+  //                       height: 0,
+  //                     ),
+  //                     Container(
+  //                       child: Text(
+  //                         '${widget.gigBudget}',
+  //                         style: Theme.of(context).textTheme.bodyText1,
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ],
+  //             ),
+  //             widget.adultContentBool
+  //                 ? Container(
+  //                     alignment: Alignment.centerLeft,
+  //                     child: Column(
+  //                       children: [
+  //                         SizedBox(height: 10),
+  //                         Row(
+  //                           children: [
+  //                             FaIcon(
+  //                               FontAwesomeIcons.asterisk,
+  //                               size: 8,
+  //                             ),
+  //                             Container(
+  //                               width: 5.0,
+  //                               height: 0,
+  //                             ),
+  //                             Expanded(
+  //                               child: Text(
+  //                                 "${widget.adultContentText}",
+  //                                 style: TextStyle(
+  //                                   fontSize: 8,
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           ],
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   )
+  //                 : Container(
+  //                     width: 0,
+  //                     height: 0,
+  //                   ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -585,7 +587,12 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
       child: SafeArea(
         child: Scaffold(
           // body: pickAssetsCommon(),
-          body: gigPreview,
+          // body: gigPreview,
+          body: Column(
+            children: [
+              selectedAssetsWidget,
+            ],
+          ),
         ),
       ),
     );

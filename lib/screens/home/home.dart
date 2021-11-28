@@ -1,3 +1,4 @@
+import 'package:Fyrework/screens/add_gig/assets_picker/pages/multi_assets_picker_first.dart';
 import 'package:Fyrework/screens/advertisements/addAdvert.dart';
 import 'package:Fyrework/services/firestore_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -47,7 +48,8 @@ class _HomeState extends State<Home> {
       create: (context) => QueryStringProvider(),
       child: Trends(),
     ),
-    AddGigDetails(),
+    // AddGigDetails(),
+    MultiAssetsPickerFirst(),
     AddAdvert(),
     AddAdvert(),
     MyProfileView(),

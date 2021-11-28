@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:Fyrework/screens/add_gig/addGigDetailsSecond.dart';
+import 'package:Fyrework/screens/add_gig/assets_picker/pages/multi_assets_picker.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
@@ -218,6 +220,8 @@ class _CameraPickerViewerState extends State<CameraPickerViewer> {
       }
 
       saveFuture.then((AssetEntity entity) {
+        List<AssetEntity> listOfEntities = <AssetEntity>[];
+        listOfEntities.add(entity);
         if (Platform.isAndroid) {
           // if (!DeviceUtils.isLowerThanAndroidQ && previewFile.existsSync()) {
           if (previewFile.existsSync()) {
@@ -232,6 +236,12 @@ class _CameraPickerViewerState extends State<CameraPickerViewer> {
             'this is the type of entity from the camera_picker_viewer: ${entity.runtimeType}');
 
         Navigator.of(context).pop(entity);
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (_) => AddGigDetailsSecond(selectedAssets: listOfEntities),
+        //   ),
+        // );
       });
     } catch (e) {
       print('Error when creating entity: $e');

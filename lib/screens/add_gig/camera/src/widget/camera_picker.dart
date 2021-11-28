@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:Fyrework/screens/add_gig/addGigDetailsSecond.dart';
+import 'package:Fyrework/screens/add_gig/assets_picker/pages/multi_assets_picker_first.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -31,7 +33,7 @@ class CameraPicker extends StatefulWidget {
     Key key,
     // this.isAllowRecording = false,
     @required this.isAllowRecording,
-    this.maximumRecordingDuration = const Duration(seconds: 30),
+    this.maximumRecordingDuration = const Duration(seconds: 60),
     this.theme,
     CameraPickerTextDelegate textDelegate,
   }) : super(key: key) {
@@ -61,7 +63,7 @@ class CameraPicker extends StatefulWidget {
   static Future<AssetEntity> pickFromCamera(
     BuildContext context, {
     bool isAllowRecording = true,
-    Duration maximumRecordingDuration = const Duration(seconds: 30),
+    Duration maximumRecordingDuration = const Duration(seconds: 60),
     ThemeData theme,
     CameraPickerTextDelegate textDelegate,
   }) async {
@@ -71,6 +73,7 @@ class CameraPicker extends StatefulWidget {
     ).push<AssetEntity>(
       SlidePageTransitionBuilder<AssetEntity>(
         builder: CameraPicker(
+          // isAllowRecording: isAllowRecording,
           isAllowRecording: isAllowRecording,
           theme: theme,
           textDelegate: textDelegate,
@@ -483,11 +486,14 @@ class CameraPickerState extends State<CameraPicker> {
           theme: theme,
         );
         if (entity != null) {
+          List<AssetEntity> assetsFromCamera = List();
+          assetsFromCamera.add(entity);
           Navigator.of(context).pop();
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => MultiAssetsPicker(),
+              builder: (_) =>
+                  AddGigDetailsSecond(selectedAssets: assetsFromCamera),
             ),
           );
         } else {
