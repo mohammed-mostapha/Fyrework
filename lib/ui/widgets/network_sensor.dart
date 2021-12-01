@@ -44,7 +44,7 @@ class _NetworkSensorState extends State<NetworkSensor> {
                     ? Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(
-                          color: themeOfContext.primaryColor,
+                          // color: themeOfContext.primaryColor,
                           width: MediaQuery.of(context).size.width,
                           height: 30,
                           child: Center(

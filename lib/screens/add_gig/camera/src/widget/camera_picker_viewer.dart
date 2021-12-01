@@ -1,8 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:Fyrework/screens/add_gig/addGigDetailsSecond.dart';
-import 'package:Fyrework/screens/add_gig/assets_picker/pages/multi_assets_picker.dart';
+import 'package:Fyrework/screens/add_gig/addGigDetails.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';

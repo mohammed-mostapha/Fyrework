@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:Fyrework/screens/add_gig/addGigDetails.dart';
 import 'package:Fyrework/services/bunny_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Fyrework/screens/home/home.dart';
 import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/viewmodels/create_gig_view_model.dart';
-import 'package:path/path.dart' as fileName;
 import '../src/wechat_assets_picker.dart';
 import '../constants/picker_model.dart';
 
@@ -27,7 +27,6 @@ class MultiAssetsPicker extends StatefulWidget {
   final String adultContentText;
   final bool adultContentBool;
   final String gigValue;
-  List<AssetEntity> assets = <AssetEntity>[];
 
   MultiAssetsPicker({
     Key key,
@@ -46,7 +45,6 @@ class MultiAssetsPicker extends StatefulWidget {
     this.adultContentText,
     this.adultContentBool,
     this.gigValue,
-    this.assets,
   }) : super(key: key);
 
   @override
@@ -59,30 +57,42 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
 
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((_) async {
-    //   final List<AssetEntity> result = await PickMethodModel(
-    //     method: (
-    //       BuildContext context,
-    //       List<AssetEntity> assets,
-    //     ) async {
-    //       return await AssetPicker.pickAssets(
-    //         context,
-    //         maxAssets: maxAssetsCount,
-    //         selectedAssets: assets,
-    //         requestType: RequestType.common,
-    //       );
-    //     },
-    //   ).method(context, assets);
-    //   if (result != null && result != assets) {
-    //     assets = List<AssetEntity>.from(result);
-    //     if (mounted) {
-    //       setState(() {
-    //         // choosedAssets = !choosedAssets;
-    //         print('count: ${result.length}');
-    //       });
-    //     }
-    //   }
-    // });
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final List<AssetEntity> result = await PickMethodModel(
+        method: (
+          BuildContext context,
+          List<AssetEntity> assets,
+        ) async {
+          return await AssetPicker.pickAssets(
+            context,
+            maxAssets: maxAssetsCount,
+            selectedAssets: assets,
+            requestType: RequestType.common,
+          );
+        },
+      ).method(context, assets);
+      if (result != null && result != assets) {
+        assets = List<AssetEntity>.from(result);
+        if (mounted) {
+          // setState(() {
+          //   // choosedAssets = !choosedAssets;
+          //   print('count: ${result.length}');
+          // });
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (_) => MultiAssetsPicker(assets: assets),
+          //   ),
+          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => AddGigDetails(selectedAssets: assets),
+            ),
+          );
+        }
+      }
+    });
   }
 
   String id;
@@ -98,7 +108,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
 
   bool isDisplayingDetail = true;
 
-  int get assetsLength => widget.assets.length;
+  int get assetsLength => assets.length;
 
   // ThemeData get currentTheme => context.themeData;
 
@@ -217,7 +227,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
   }
 
   Widget _selectedAssetWidget(int index) {
-    final AssetEntity asset = widget.assets.elementAt(index);
+    final AssetEntity asset = assets.elementAt(index);
     return GestureDetector(
       onTap: isDisplayingDetail
           ? () async {
@@ -225,7 +235,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
                   await AssetPickerViewer.pushToViewer(
                 context,
                 currentIndex: index,
-                assets: widget.assets,
+                assets: assets,
                 themeData: AssetPicker.themeData(Colors.transparent),
               );
               if (result != assets && result != null) {
@@ -249,7 +259,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          widget.assets.remove(widget.assets.elementAt(index));
+          assets.remove(assets.elementAt(index));
           if (assetsLength == 0) {
             isDisplayingDetail = false;
           }
@@ -269,21 +279,18 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
     );
   }
 
-  Widget get selectedAssetsWidget => Container(
-        height: 100,
-        child: AnimatedContainer(
-          duration: kThemeChangeDuration,
-          curve: Curves.easeInOut,
-          height: assets.isNotEmpty
-              ? isDisplayingDetail
-                  ? 250.0
-                  : 80.0
-              : 40.0,
-          child: Column(
-            children: <Widget>[
-              selectedAssetsListView,
-            ],
-          ),
+  Widget get selectedAssetsWidget => AnimatedContainer(
+        duration: kThemeChangeDuration,
+        curve: Curves.easeInOut,
+        height: assets.isNotEmpty
+            ? isDisplayingDetail
+                ? 250.0
+                : 80.0
+            : 40.0,
+        child: Column(
+          children: <Widget>[
+            selectedAssetsListView,
+          ],
         ),
       );
 
@@ -320,12 +327,12 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
         ),
       );
 
-  Future prepareGigMediaFilesAndPublish() async {
-    Future<List<File>> assignAssetsToGigMediaFiles = assigingLists();
-    await assignAssetsToGigMediaFiles;
-    await uploadMediaFiles();
-    clearGigMediaFiles();
-  }
+  // Future prepareGigMediaFilesAndPublish() async {
+  //   Future<List<File>> assignAssetsToGigMediaFiles = assigingLists();
+  //   await assignAssetsToGigMediaFiles;
+  //   await uploadMediaFiles();
+  //   clearGigMediaFiles();
+  // }
 
   Future<List<File>> assigingLists() async {
     for (final mediaFile in assets) {
@@ -506,10 +513,8 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
   //                           ),
   //                           Container(
   //                             // child: Text('$formattedGigDeadline',
-  //                             child: Text(
-  //                               widget.gigDeadLine,
-  //                               style: Theme.of(context).textTheme.bodyText1,
-  //                             ),
+  //                             child: Text(widget.gigDeadLine,
+  //                                 style: Theme.of(context).textTheme.bodyText1),
   //                           ),
   //                         ],
   //                       )
@@ -587,12 +592,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
       child: SafeArea(
         child: Scaffold(
           // body: pickAssetsCommon(),
-          // body: gigPreview,
-          body: Column(
-            children: [
-              selectedAssetsWidget,
-            ],
-          ),
+          body: Container(),
         ),
       ),
     );

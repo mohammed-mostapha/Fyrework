@@ -34,7 +34,7 @@ void main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(Provider.value(
-        value: mobileAdsState, builder: (context, child) => MyApp()));
+        value: mobileAdsState, builder: (context, child) => HomeController()));
   });
   configLoading();
 }
@@ -171,54 +171,54 @@ class _HomeControllerState extends State<HomeController> {
     // ThemeData themeOfContext =
     //     darkModeOn ? fyreworkDarkTheme() : fyreworkLightTheme();
 
-    return ChangeNotifierProvider(
-      create: (context) => ConnectivityProvider(),
-      child: NetworkSensor(
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          routes: <String, WidgetBuilder>{
-            '/home': (BuildContext context) => HomeController(),
-            '/signUp': (BuildContext context) => SignUpView(
-                  authFormType: AuthFormType.signUp,
-                ),
-            '/signIn': (BuildContext context) => SignUpView(
-                  authFormType: AuthFormType.signIn,
-                ),
-            '/addGig': (BuildContext context) => Home(passedSelectedIndex: 1),
-          },
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      routes: <String, WidgetBuilder>{
+        '/home': (BuildContext context) => HomeController(),
+        '/signUp': (BuildContext context) => SignUpView(
+              authFormType: AuthFormType.signUp,
+            ),
+        '/signIn': (BuildContext context) => SignUpView(
+              authFormType: AuthFormType.signIn,
+            ),
+        '/addGig': (BuildContext context) => Home(passedSelectedIndex: 1),
+      },
 
-          themeMode: ThemeMode.system,
-          theme: fyreworkLightTheme(),
-          darkTheme: fyreworkDarkTheme(),
-          builder: EasyLoading.init(),
-          supportedLocales: [
-            Locale('en', 'US'),
-            Locale('fr', 'FR'),
-            Locale('de', 'DE'),
-            Locale('is', 'IS'),
-          ],
-          // these delegates make sure that the localiztion data for the proper language is loaded
-          localizationsDelegates: [
-            // A class which loads the translation from JSON files
-            AppLocalizations.delegate,
-            //Built-in localization of basic text for Material widgets
-            GlobalMaterialLocalizations.delegate,
-            // Built-in localization for text direction LTR/RTL
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          // Returns a locale which will be used by the app
-          localeResolutionCallback: (locale, supportedLocales) {
-            for (var supportedLocale in supportedLocales) {
-              if (supportedLocale.languageCode == locale?.languageCode ||
-                  supportedLocale.countryCode == locale?.countryCode) {
-                return supportedLocale;
-              }
-            }
-            // If the locale of the device is not supported, use the first one from the list (English, in this case).
-            return supportedLocales.first;
-          },
-
-          home: isAuthenticated ? Home(passedSelectedIndex: 0) : StartPage(),
+      themeMode: ThemeMode.system,
+      theme: fyreworkLightTheme(),
+      darkTheme: fyreworkDarkTheme(),
+      builder: EasyLoading.init(),
+      supportedLocales: [
+        Locale('en', 'US'),
+        Locale('fr', 'FR'),
+        Locale('de', 'DE'),
+        Locale('is', 'IS'),
+      ],
+      // these delegates make sure that the localiztion data for the proper language is loaded
+      localizationsDelegates: [
+        // A class which loads the translation from JSON files
+        AppLocalizations.delegate,
+        //Built-in localization of basic text for Material widgets
+        GlobalMaterialLocalizations.delegate,
+        // Built-in localization for text direction LTR/RTL
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      // Returns a locale which will be used by the app
+      localeResolutionCallback: (locale, supportedLocales) {
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale?.languageCode ||
+              supportedLocale.countryCode == locale?.countryCode) {
+            return supportedLocale;
+          }
+        }
+        // If the locale of the device is not supported, use the first one from the list (English, in this case).
+        return supportedLocales.first;
+      },
+      home: ChangeNotifierProvider(
+        create: (context) => ConnectivityProvider(),
+        child: NetworkSensor(
+          child: isAuthenticated ? Home(passedSelectedIndex: 0) : StartPage(),
+          // home: isAuthenticated ? Home(passedSelectedIndex: 0) : StartPage(),
         ),
       ),
     );

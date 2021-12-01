@@ -573,6 +573,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           color: Theme.of(context).primaryColor,
         ),
         width: double.infinity,
+        height: 50,
         padding: EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
           children: <Widget>[
@@ -597,6 +598,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: IconButton(
+                padding: EdgeInsets.zero,
                 icon: Icon(
                   Icons.close,
                   color: Theme.of(context).hintColor,
@@ -628,6 +630,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
           color: Theme.of(context).primaryColor,
         ),
         width: double.infinity,
+        height: 50,
         padding: EdgeInsets.all(8.0),
         child: Row(
           children: <Widget>[
@@ -652,6 +655,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: IconButton(
+                padding: EdgeInsets.zero,
                 icon: Icon(
                   Icons.close,
                   color: Colors.white,
