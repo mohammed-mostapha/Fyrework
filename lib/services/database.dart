@@ -193,22 +193,22 @@ class DatabaseService {
         .snapshots();
   }
 
-  Stream<QuerySnapshot> unseenNotificationsCount() {
-    return _notifications
-        .where('seen', isEqualTo: false)
-        .orderBy('createdAt', descending: true)
-        .snapshots();
-  }
+  // Stream<QuerySnapshot> unseenNotificationsCount() {
+  //   return _notifications
+  //       .where('seen', isEqualTo: false)
+  //       .orderBy('createdAt', descending: true)
+  //       .snapshots();
+  // }
 
   Stream<QuerySnapshot> fetchAllNotifications() {
     return _notifications.orderBy('createdAt', descending: true).snapshots();
   }
 
-  Future markNotificationAsSeen({String notificationId}) {
-    return _notifications.doc(notificationId).update({
-      'seen': true,
-    });
-  }
+  // Future markNotificationAsSeen({String notificationId}) {
+  //   return _notifications.doc(notificationId).update({
+  //     'seen': true,
+  //   });
+  // }
 
   Stream<QuerySnapshot> fetchIndividualGig({@required String gigId}) {
     return _gigsCollection.where('gigId', isEqualTo: gigId).snapshots();

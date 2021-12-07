@@ -2,8 +2,10 @@ import 'dart:core';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/screens/my_profile.dart';
 import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/services/realtime_database.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
@@ -200,18 +202,30 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
     bool gigHasLikes = widget.likesCount > 0 ? true : false;
     bool liked = widget.likersByUserId.contains(MyUser.uid) ? true : false;
 
-    _likedPressed() {
+    Future _likedPressed() async {
       liked = !liked;
       setState(() {
         _likeAnimationController.forward().then((value) {
           _likeAnimationController.reverse();
         });
       });
-      FirestoreService().updateGigAddRemoveLike(
-        gigId: widget.gigId,
-        userId: MyUser.uid,
-        likedOrNot: liked,
-      );
+      try {
+        await FirestoreService().updateGigAddRemoveLike(
+          gigId: widget.gigId,
+          userId: MyUser.uid,
+          likedOrNot: liked,
+        );
+
+        await RealTimeDatabase().addLikeNotification(
+          gigId: widget.gigId,
+          gigOwnerId: widget.gigOwnerId,
+          likerId: MyUser.uid,
+          likerUsername: MyUser.username,
+          likerUserAvatarUrl: MyUser.userAvatarUrl,
+        );
+      } catch (e) {
+        print(e);
+      }
     }
 
     myGig = widget.gigOwnerId == MyUser.uid ? true : false;
@@ -792,7 +806,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                         children: [
                           Text(
                             timeAgo.format(widget.createdAt.toDate()),
-                            style: Theme.of(context).textTheme.bodyText2,
+                            style: Theme.of(context).textTheme.bodyText1,
                           ),
                         ],
                       )

@@ -97,18 +97,18 @@ class _NotificationItemState extends State<NotificationItem> {
           ),
         ),
       ),
-      onTap: () async {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Individual_gig_item(
-              gigId: widget.gigId,
-            ),
-          ),
-        );
-        await DatabaseService()
-            .markNotificationAsSeen(notificationId: widget.notificationId);
-      },
+      // onTap: () async {
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => Individual_gig_item(
+      //         gigId: widget.gigId,
+      //       ),
+      //     ),
+      //   );
+      //   await DatabaseService()
+      //       .markNotificationAsSeen(notificationId: widget.notificationId);
+      // },
     );
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class BadgeIcon extends StatelessWidget {
   BadgeIcon(
       {this.icon,
-      this.badgeCount = 0,
+      this.badgeCount,
       this.showIfZero = false,
       this.badgeColor,
       this.badgeCountColor,
