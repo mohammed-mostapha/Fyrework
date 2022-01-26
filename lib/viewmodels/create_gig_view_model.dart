@@ -1,6 +1,5 @@
 import 'package:Fyrework/locator.dart';
 import 'package:Fyrework/models/gig.dart';
-import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/services/navigation_service.dart';
 import 'package:Fyrework/services/firestore_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

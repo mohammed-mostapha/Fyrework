@@ -168,7 +168,7 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
           _likeAnimationController.reverse();
         });
       });
-      FirestoreService().updateGigAddRemoveLike(
+      FirestoreService().updateGigAddOrRemoveLike(
         gigId: widget.gigId,
         userId: MyUser.uid,
         likedOrNot: liked,

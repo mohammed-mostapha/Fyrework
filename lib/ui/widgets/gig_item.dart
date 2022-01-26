@@ -200,29 +200,31 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
         darkModeOn ? fyreworkLightTheme() : fyreworkDarkTheme();
 
     bool gigHasLikes = widget.likesCount > 0 ? true : false;
-    bool liked = widget.likersByUserId.contains(MyUser.uid) ? true : false;
+    bool hasLiked = widget.likersByUserId.contains(MyUser.uid) ? true : false;
 
     Future _likedPressed() async {
-      liked = !liked;
+      hasLiked = !hasLiked;
       setState(() {
         _likeAnimationController.forward().then((value) {
           _likeAnimationController.reverse();
         });
       });
       try {
-        await FirestoreService().updateGigAddRemoveLike(
+        await FirestoreService().updateGigAddOrRemoveLike(
           gigId: widget.gigId,
           userId: MyUser.uid,
-          likedOrNot: liked,
+          likedOrNot: hasLiked,
         );
-
-        await RealTimeDatabase().addLikeNotification(
-          gigId: widget.gigId,
-          gigOwnerId: widget.gigOwnerId,
-          likerId: MyUser.uid,
-          likerUsername: MyUser.username,
-          likerUserAvatarUrl: MyUser.userAvatarUrl,
-        );
+        print('hasLikedBefore: $hasLiked');
+        if (hasLiked) {
+          await RealTimeDatabase().addLikeNotification(
+            gigId: widget.gigId,
+            gigOwnerId: widget.gigOwnerId,
+            likerId: MyUser.uid,
+            likerUsername: MyUser.username,
+            likerUserAvatarUrl: MyUser.userAvatarUrl,
+          );
+        }
       } catch (e) {
         print(e);
       }
@@ -292,9 +294,9 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
           width: 25,
           height: 25,
           child: SvgPicture.asset(
-            liked ? heartSolid : heart,
+            hasLiked ? heartSolid : heart,
             semanticsLabel: 'Like',
-            color: liked ? Colors.red[300] : Theme.of(context).primaryColor,
+            color: hasLiked ? Colors.red[300] : Theme.of(context).primaryColor,
           ),
         ),
         onTap: () => _likedPressed(),
@@ -629,20 +631,12 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
             ),
           ),
           GestureDetector(
-            // onDoubleTap: () => _doubleTappedLike(),
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
                 GigItemMediaPreviewer(
                   receivedGigMediaFilesUrls: widget.gigMediaFilesDownloadUrls,
                 ),
-                // showLikeOverlay
-                //     ? Icon(
-                //         Icons.favorite,
-                //         size: 120.0,
-                //         color: Colors.white,
-                //       )
-                //     : Container()
               ],
             ),
           ),

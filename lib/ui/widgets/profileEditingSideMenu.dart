@@ -141,18 +141,24 @@ class _ProfileEditingSideMenuState extends State<ProfileEditingSideMenu> {
         if (validate() && _myNewProfileImage != null) {
           EasyLoading.show();
           //deleting current profile picture
-          await StorageRepo().deleteProfilePicture(MyUser.userAvatarUrl);
+          await StorageRepo().deleteMyAvatar(
+            userAvatarUrl: MyUser.userAvatarUrl,
+          );
 
           // then upload the new pic
-          _updatedProfileAvatar = await locator
-              .get<StorageRepo>()
-              .uploadProfilePicture(
-                  profilePictureToUpload: _myNewProfileImage,
-                  userId: MyUser.uid);
+          _updatedProfileAvatar =
+              await locator.get<StorageRepo>().uploadMyAvatar(
+                    profilePictureToUPload: _myNewProfileImage,
+                    userId: MyUser.uid,
+                    storageZonePath: 'profilePictures',
+                  );
 
-          await DatabaseService()
-              .updateMyProfilePicture(MyUser.uid, _updatedProfileAvatar);
+          await DatabaseService().updateMyAvatar(
+            uid: MyUser.uid,
+            updatedProfileAvatar: _updatedProfileAvatar,
+          );
           await DatabaseService().addToPopularHashtags(_myFavoriteHashtagsList);
+          MyUserController().getCurrentUserFromFirebase(MyUser.uid);
           EasyLoading.dismiss().then(
             (value) => EasyLoading.showSuccess(''),
           );
@@ -161,7 +167,9 @@ class _ProfileEditingSideMenuState extends State<ProfileEditingSideMenu> {
         if (validate()) {
           EasyLoading.show();
           await DatabaseService().updateMyProfileData(
-            uid: MyUser.uid, myNewFavoriteHashtag: _myFavoriteHashtagsList,
+            uid: MyUser.uid,
+            myNewAvatar: _updatedProfileAvatar,
+            myNewFavoriteHashtag: _myFavoriteHashtagsList,
             myNewUsername: _myNewUsername.text,
             myNewName: _myNewName.text,
             myNewEmailaddress: _myNewEmailaddress.text,
@@ -169,7 +177,9 @@ class _ProfileEditingSideMenuState extends State<ProfileEditingSideMenu> {
             // // _myNewPhoneNumberController.text,
             // _phoneNumberToVerify,
           );
-          await DatabaseService().addToPopularHashtags(_myFavoriteHashtagsList);
+          // await DatabaseService().addToPopularHashtags(_myFavoriteHashtagsList);
+          await MyUserController().getCurrentUserFromFirebase(MyUser.uid);
+          setState(() {});
           EasyLoading.dismiss().then(
             (value) => EasyLoading.showSuccess(''),
           );
@@ -351,22 +361,38 @@ class _ProfileEditingSideMenuState extends State<ProfileEditingSideMenu> {
                 child: Row(
                   children: <Widget>[
                     _myNewProfileImage == null
-                        ? CachedNetworkImage(
-                            imageBuilder: (context, imageProvider) => Container(
-                              width: 50.0,
-                              height: 50.0,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                    image: imageProvider, fit: BoxFit.cover),
-                              ),
-                            ),
-                            imageUrl: MyUser.userAvatarUrl,
-                            placeholder: (context, url) =>
-                                CircularProgressIndicator(),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                          )
+                        ? MyUser.userAvatarUrl == null
+                            ? Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                      'assets/images/avatar-placeholder.png',
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : CachedNetworkImage(
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  width: 50.0,
+                                  height: 50.0,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                imageUrl: MyUser.userAvatarUrl,
+                                placeholder: (context, url) =>
+                                    CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
+                              )
                         : Container(
                             width: 50,
                             height: 50,

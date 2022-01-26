@@ -1,7 +1,5 @@
-import 'package:Fyrework/screens/add_gig/addGigDetails.dart';
 import 'package:Fyrework/services/connectivity_provider.dart';
 import 'package:Fyrework/services/mobileAds_provider.dart';
-import 'package:Fyrework/services/navigation_service.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/widgets/network_sensor.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -14,7 +12,6 @@ import 'package:Fyrework/services/auth_service.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:Fyrework/ui/views/sign_up_view.dart';
 import 'package:Fyrework/view_controllers/myUser_controller.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';

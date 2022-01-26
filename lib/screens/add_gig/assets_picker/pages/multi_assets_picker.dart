@@ -350,7 +350,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
         //   mediaFileToUpload: gigMediaFiles[i],
         // );
 
-        uploadResult = await BunnyService().uploadFileToBunny(
+        uploadResult = await BunnyService().uploadMediaFileToBunny(
             fileToUpload: gigMediaFiles[i], storageZonePath: 'gigMediaFiles');
 
         //adding each downloadUrl to downloadUrls list

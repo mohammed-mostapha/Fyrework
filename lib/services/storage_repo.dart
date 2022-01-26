@@ -1,48 +1,32 @@
 import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
+import 'package:Fyrework/services/bunny_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:Fyrework/locator.dart';
-// import 'package:myApp/services/auth_service.dart';
 
 class StorageRepo {
-  FirebaseStorage usersProfilePicsStorage =
-      FirebaseStorage.instanceFor(bucket: "gs://fyrework-63dd9.appspot.com");
-  FirebaseStorage gigMediaFilesStorage =
-      FirebaseStorage.instanceFor(bucket: "gs://fyrework-63dd9.appspot.com");
-
-  // AuthService _authService = locator.get<AuthService>();
-
   //uploading and getting downloadURl of users profiles pics
-  Future<String> uploadProfilePicture(
-      {@required File profilePictureToUpload, @required String userId}) async {
-    // var userId = await _authService.getCurrentUID();
-
-    var usersProfilePicsStorageRef =
-        usersProfilePicsStorage.ref().child("users/profile_pictures/$userId");
-
-    var uploadProfilePicture =
-        usersProfilePicsStorageRef.putFile(profilePictureToUpload);
-
-    var completedTask = await uploadProfilePicture;
-
-    String profilePictureDownloadUrl = await completedTask.ref.getDownloadURL();
-
-    return profilePictureDownloadUrl;
+  Future uploadMyAvatar({
+    @required File profilePictureToUPload,
+    @required String userId,
+    @required String storageZonePath,
+  }) async {
+    String myUploadedAvatarUrl = await BunnyService().uploadAvatarToBunny(
+      fileToUpload: profilePictureToUPload,
+      userId: userId,
+      storageZonePath: storageZonePath,
+    );
+    print('uploaded your avatar');
+    return myUploadedAvatarUrl;
   }
 
-  Future<dynamic> getUserProfilePictureDownloadUrl(String uid) {
-    var usersProfilePicsStorageRef =
-        usersProfilePicsStorage.ref().child("users/profile_pictures/$uid");
-    return usersProfilePicsStorageRef.getDownloadURL();
-  }
-
-  //deleting user profile picture
-  Future<dynamic> deleteProfilePicture(String url) async {
-    print('print url: $url');
-    Reference profilePictureToDelete = await usersProfilePicsStorage.ref(url);
-    await profilePictureToDelete.delete();
+  // delete user profile picture
+  Future deleteMyAvatar({
+    @required String userAvatarUrl,
+  }) async {
+    await BunnyService().deleteAvatarFromBunny(
+      userAvatarUrl: userAvatarUrl,
+    );
+    print('deleted your avatar');
   }
 
   //uploading gig media files

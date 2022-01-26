@@ -44,7 +44,6 @@ class FirestoreService {
     try {
       var userData = await _usersCollectionReference.doc(uid).get();
       MyUser.fromData(userData.data());
-      print('see this: loaded userData from cloud to local stoge');
     } catch (e) {
       if (e is PlatformException) {
         return e.message;
@@ -78,7 +77,7 @@ class FirestoreService {
       popularHashtagsDocuments.docs.forEach((document) {
         popularHashtagsValues.add("${document.data()['hashtag']}");
       });
-      print('popularHashtagsValues: $popularHashtagsValues');
+
       for (int count = 0; count < gigHashtags.length; count++) {
         if (!popularHashtagsValues.contains(gigHashtags[count])) {
           _popularHashtagsCollectionReference
@@ -156,7 +155,7 @@ class FirestoreService {
     }
   }
 
-  Future updateGigAddRemoveLike(
+  Future updateGigAddOrRemoveLike(
       {String gigId, String userId, bool likedOrNot}) async {
     try {
       await _gigsCollectionReference.doc(gigId).update({

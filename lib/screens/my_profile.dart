@@ -135,23 +135,37 @@ class _MyProfileViewState extends State<MyProfileView> {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            CachedNetworkImage(
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                width: 90.0,
-                                height: 90.0,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      image: imageProvider, fit: BoxFit.cover),
-                                ),
-                              ),
-                              imageUrl: MyUser.userAvatarUrl,
-                              placeholder: (context, url) =>
-                                  CircularProgressIndicator(),
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
-                            ),
+                            MyUser.userAvatarUrl == null
+                                ? Container(
+                                    width: 90,
+                                    height: 90,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                          'assets/images/avatar-placeholder.png',
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : CachedNetworkImage(
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
+                                      width: 90.0,
+                                      height: 90.0,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover),
+                                      ),
+                                    ),
+                                    imageUrl: MyUser.userAvatarUrl,
+                                    placeholder: (context, url) =>
+                                        CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.error),
+                                  ),
                             SizedBox(
                               height: 50,
                               child: Column(
@@ -407,9 +421,11 @@ class _MyProfileViewState extends State<MyProfileView> {
             ),
             onTap: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ProfileEditingSideMenu()));
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileEditingSideMenu(),
+                ),
+              );
             }),
         GestureDetector(
           child: ListTile(

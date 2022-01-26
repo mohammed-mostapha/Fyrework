@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/screens/home/home.dart';
+import 'package:Fyrework/services/bunny_service.dart';
 import 'package:Fyrework/services/database.dart';
 import 'package:Fyrework/services/storage_repo.dart';
 import 'package:Fyrework/view_controllers/myUser_controller.dart';
@@ -149,15 +150,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
         await FirebaseAuth.instance.fetchSignInMethodsForEmail(email));
   }
 
-  Future uploadMyAvatar(
-      {@required File profilePictureToUPload, @required String userId}) async {
-    var myUploadedAvatarUrl = await locator
-        .get<StorageRepo>()
-        .uploadProfilePicture(
-            profilePictureToUpload: profilePictureToUPload, userId: userId);
-    return myUploadedAvatarUrl;
-  }
-
   bool isNullOrEmpty(Object o) => o == null || o == "";
 
   void submitSignupSigninResetForm() async {
@@ -248,12 +240,13 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
 
               if (signUp != null) {
                 signUpUid = signUp.user.uid;
-                print('see this: created signUpId');
 
-                _myUploadedAvatarUrl = await uploadMyAvatar(
-                  profilePictureToUPload: _profileImage,
-                  userId: signUpUid,
-                );
+                _myUploadedAvatarUrl =
+                    await locator.get<StorageRepo>().uploadMyAvatar(
+                          profilePictureToUPload: _profileImage,
+                          userId: signUpUid,
+                          storageZonePath: 'profilePictures',
+                        );
                 if (!isNullOrEmpty(_myUploadedAvatarUrl)) {
                   print(
                       "creates user document _openGigsByGigId: $_openGigsByGigId");
@@ -271,30 +264,19 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                     completedGigsByGigId: _completedGigsByGigId,
                   );
 
-                  print('see this: created user document in users collection');
-
                   await DatabaseService()
                       .addToPopularHashtags(_myFavoriteHashtags);
-
-                  print('see this: added to popularHashtags');
 
                   await DatabaseService()
                       .addToTakenHandles(_myHandleController.text);
 
-                  print('see this: added to taken Handles');
-
                   await MyUserController()
                       .getCurrentUserFromFirebase(signUpUid);
-                  print('see this: loaded userData from cloud');
 
                   bool userDataContainsNull =
                       MyUser().checkUserDataNullability();
 
-                  print(
-                      'see this: userDataContainsNull: $userDataContainsNull');
-
                   if (!userDataContainsNull) {
-                    print('see this: all userData is positive');
                     PlacesAutocomplete.placesAutoCompleteController.clear();
 
                     Navigator.of(context).pushAndRemoveUntil(
@@ -305,7 +287,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                         ModalRoute.withName('/'));
                     EasyLoading.dismiss();
                   } else {
-                    print('see this: couldnot load userData to locale storage');
                     //rescue to let user sign in to fetch his data again
                     setState(() {
                       switchFormState('signIn');

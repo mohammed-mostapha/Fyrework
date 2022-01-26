@@ -215,10 +215,10 @@ class DatabaseService {
   }
 
   //update profile picture only
-  Future updateMyProfilePicture(
+  Future updateMyAvatar({
     String uid,
     String updatedProfileAvatar,
-  ) async {
+  }) async {
     try {
       return await _usersCollection.doc(uid).update(
         <String, dynamic>{
@@ -231,6 +231,7 @@ class DatabaseService {
         return e.message;
       }
     }
+    print('updated your avatar');
   }
   // end update profile picture only
 
@@ -289,6 +290,7 @@ class DatabaseService {
 
   Future updateMyProfileData({
     String uid,
+    String myNewAvatar,
     List<String> myNewFavoriteHashtag,
     String myNewUsername,
     String myNewName,
@@ -298,6 +300,7 @@ class DatabaseService {
   }) async {
     try {
       return await _usersCollection.doc(uid).update(<String, dynamic>{
+        'userAvatarUrl': myNewAvatar,
         'favoriteHashtags': myNewFavoriteHashtag,
         'username': myNewUsername,
         'name': myNewName,

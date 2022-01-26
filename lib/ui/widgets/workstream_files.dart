@@ -151,7 +151,7 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
         _filePath = File(assetEntityToFile.path);
         fileToUPload = _filePath;
         ////////////
-        uploadResult = await BunnyService().uploadFileToBunny(
+        uploadResult = await BunnyService().uploadMediaFileToBunny(
           fileToUpload: fileToUPload,
           storageZonePath: storageZonePath,
         );
@@ -176,7 +176,7 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
       _filePath = File(assetEntityToFile.path);
       fileToUPload = _filePath;
 
-      uploadResult = await BunnyService().uploadFileToBunny(
+      uploadResult = await BunnyService().uploadMediaFileToBunny(
         fileToUpload: fileToUPload,
         storageZonePath: storageZonePath,
       );

@@ -19,18 +19,45 @@ class RealTimeDatabase {
     @required likerUserAvatarUrl,
   }) {
     if (likerId == gigOwnerId) {
-      //
+      return null;
     } else {
       var gigOwnerRef = rTDB.child('/users/$gigOwnerId');
 
-      gigOwnerRef.update({
+      return gigOwnerRef.update({
         "$uuid": {
           "notificationId": "$uuid",
           "gigId": gigId,
-          "likerId": likerId,
-          "likerUsername": likerUsername,
-          "likerUserAvatarUrl": likerUserAvatarUrl,
+          "userId": likerId,
+          "username": likerUsername,
+          "userAvatarUrl": likerUserAvatarUrl,
           "body": "$likerUsername liked your gig",
+          "seen": false,
+          "createdAt": DateTime.now().millisecondsSinceEpoch,
+        }
+      });
+    }
+  }
+
+  Future addCommentNotification(
+      {@required gigId,
+      @required gigOwnerId,
+      @required commenterId,
+      @required commenterUsername,
+      @required commenterUserAvatarUrl,
+      @required commentBody}) {
+    if (commenterId == gigOwnerId) {
+      return null;
+    } else {
+      var gigOwnerRef = rTDB.child('/users/$gigOwnerId');
+
+      return gigOwnerRef.update({
+        "$uuid": {
+          "notificationId": "$uuid",
+          "gigId": gigId,
+          "userId": commenterId,
+          "username": commenterUsername,
+          "userAvatarUrl": commenterUserAvatarUrl,
+          "body": "$commenterUsername commented on your gig",
           "seen": false,
           "createdAt": DateTime.now().millisecondsSinceEpoch,
         }

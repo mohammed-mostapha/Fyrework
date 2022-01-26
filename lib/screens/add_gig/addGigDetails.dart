@@ -330,8 +330,10 @@ class _AddGigDetailsState extends State<AddGigDetails> {
     String uploadResult;
     if (gigMediaFiles != null) {
       for (var i = 0; i < gigMediaFiles.length; i++) {
-        uploadResult = await BunnyService().uploadFileToBunny(
-            fileToUpload: gigMediaFiles[i], storageZonePath: 'gigMediaFiles');
+        uploadResult = await BunnyService().uploadMediaFileToBunny(
+          fileToUpload: gigMediaFiles[i],
+          storageZonePath: 'gigMediaFiles',
+        );
 
         //adding each downloadUrl to downloadUrls list
         _gigMeidaFilesDownloadUrls.add(uploadResult);

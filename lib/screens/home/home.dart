@@ -183,19 +183,31 @@ class _HomeState extends State<Home> {
                   icon: SizedBox(
                     width: 20,
                     height: 20,
-                    child: CachedNetworkImage(
-                      imageBuilder: (context, imageProvider) => Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              image: imageProvider, fit: BoxFit.cover),
-                        ),
-                      ),
-                      imageUrl: MyUser.userAvatarUrl,
-                      placeholder: (context, url) =>
-                          CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                    ),
+                    child: MyUser.userAvatarUrl == null
+                        ? Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: AssetImage(
+                                  'assets/images/avatar-placeholder.png',
+                                ),
+                              ),
+                            ),
+                          )
+                        : CachedNetworkImage(
+                            imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    image: imageProvider, fit: BoxFit.cover),
+                              ),
+                            ),
+                            imageUrl: MyUser.userAvatarUrl,
+                            placeholder: (context, url) =>
+                                CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                          ),
                   ),
                   label: 'account',
                 ),

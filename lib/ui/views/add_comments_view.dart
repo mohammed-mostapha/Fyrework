@@ -1,4 +1,5 @@
 import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/services/realtime_database.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -101,33 +102,29 @@ class _AddCommentsViewState extends State<AddCommentsView>
   String username = MyUser.username;
   dynamic userProfilePictureUrl = MyUser.userAvatarUrl;
 
-  addComment({@required bool containMediaFile}) {
-    if (_addCommentsController.text.isNotEmpty) {
-      AddCommentViewModel().addComment(
-        gigIdHoldingComment: widget.passedGigId,
-        gigOwnerId: widget.passedGigOwnerId,
-        gigOwnerUsername: widget.passGigOwnerUsername,
-        commentOwnerUsername: username,
-        commentBody: _addCommentsController.text,
-        commentOwnerId: userId,
-        commentOwnerAvatarUrl: userProfilePictureUrl,
-        commentId: '',
-        isPrivateComment: isPrivateComment,
-        proposal: proposal,
-        approved: approved,
-        rejected: rejected,
-        gigCurrency: widget.passedGigCurrency,
-        offeredBudget: offeredBudget,
-        gigValue: widget.passedGigValue,
-        containMediaFile: containMediaFile,
-        isGigCompleted: false,
-      );
-      _addCommentsController.clear();
-      _addProposalController.clear();
-      _offeredBudgetController.clear();
-    } else {
-      //
-    }
+  Future addComment({@required bool containMediaFile}) {
+    return AddCommentViewModel().addComment(
+      gigIdHoldingComment: widget.passedGigId,
+      gigOwnerId: widget.passedGigOwnerId,
+      gigOwnerUsername: widget.passGigOwnerUsername,
+      commentOwnerUsername: username,
+      commentBody: _addCommentsController.text,
+      commentOwnerId: userId,
+      commentOwnerAvatarUrl: userProfilePictureUrl,
+      commentId: '',
+      isPrivateComment: isPrivateComment,
+      proposal: proposal,
+      approved: approved,
+      rejected: rejected,
+      gigCurrency: widget.passedGigCurrency,
+      offeredBudget: offeredBudget,
+      gigValue: widget.passedGigValue,
+      containMediaFile: containMediaFile,
+      isGigCompleted: false,
+    );
+    _addCommentsController.clear();
+    _addProposalController.clear();
+    _offeredBudgetController.clear();
   }
 
   @override
@@ -694,8 +691,25 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                         width: 5,
                                       ),
                                       GestureDetector(
-                                        onTap: () {
-                                          addComment(containMediaFile: false);
+                                        onTap: () async {
+                                          if (_addCommentsController
+                                              .text.isNotEmpty) {
+                                            await addComment(
+                                                containMediaFile: false);
+                                            await RealTimeDatabase()
+                                                .addCommentNotification(
+                                              gigId: widget.passedGigId,
+                                              gigOwnerId:
+                                                  widget.passedGigOwnerId,
+                                              commenterId: MyUser.uid,
+                                              commenterUsername:
+                                                  MyUser.username,
+                                              commenterUserAvatarUrl:
+                                                  MyUser.userAvatarUrl,
+                                              commentBody:
+                                                  _addCommentsController.text,
+                                            );
+                                          }
                                         },
                                         child: Container(
                                           width: 48,

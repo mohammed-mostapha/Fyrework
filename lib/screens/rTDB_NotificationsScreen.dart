@@ -160,7 +160,7 @@ class _RTDBNotificationsScreenState extends State<RTDBNotificationsScreen> {
                           backgroundColor: Theme.of(context).primaryColor,
                           backgroundImage: NetworkImage(
                             // likerUserAvatarUrl,
-                            _notification['likerUserAvatarUrl'],
+                            _notification['userAvatarUrl'],
                           ),
                         ),
                       ),
