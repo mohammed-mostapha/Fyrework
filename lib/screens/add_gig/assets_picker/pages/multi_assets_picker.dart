@@ -88,8 +88,6 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
   String id;
   final db = FirebaseFirestore.instance;
 
-  // bool choosedAssets = false;
-
   List<File> gigMediaFiles = List();
 
   final int maxAssetsCount = 5;
@@ -99,8 +97,6 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
   bool isDisplayingDetail = true;
 
   int get assetsLength => assets.length;
-
-  // ThemeData get currentTheme => context.themeData;
 
   Future<void> selectAssets(PickMethodModel model) async {
     final List<AssetEntity> result = await model.method(context, assets);
@@ -253,10 +249,6 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
           itemCount: assetsLength,
           itemBuilder: (BuildContext _, int index) {
             return Padding(
-              // padding: const EdgeInsets.symmetric(
-              //   // horizontal: 8.0,
-              //   vertical: 16.0,
-              // ),
               padding: EdgeInsets.fromLTRB(0, 16, 4, 16),
               child: AspectRatio(
                 aspectRatio: 1.0,
@@ -333,195 +325,6 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
     // Additional disposal code
     super.dispose();
   }
-
-  // Widget get gigPreview {
-  //   return Container(
-  //     child: Padding(
-  //       padding: const EdgeInsets.all(10),
-  //       child: SingleChildScrollView(
-  //         child: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: <Widget>[
-  //             Row(
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 GestureDetector(
-  //                   child: Container(
-  //                     decoration: BoxDecoration(
-  //                         border: Border.all(
-  //                           width: 1,
-  //                           color: Theme.of(context).primaryColor,
-  //                         ),
-  //                         borderRadius: BorderRadius.all(Radius.circular(2))),
-  //                     child: Padding(
-  //                       padding: const EdgeInsets.all(8.0),
-  //                       child: Text(
-  //                         'Back',
-  //                         style: Theme.of(context).textTheme.bodyText1,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                   onTap: () {
-  //                     Navigator.of(context).pop();
-  //                   },
-  //                 ),
-  //                 GestureDetector(
-  //                   child: Container(
-  //                     decoration: BoxDecoration(
-  //                         border: Border.all(
-  //                           width: 1,
-  //                           color: Theme.of(context).primaryColor,
-  //                         ),
-  //                         borderRadius: BorderRadius.all(Radius.circular(2))),
-  //                     child: Padding(
-  //                       padding: const EdgeInsets.all(8.0),
-  //                       child: Text(
-  //                         'Publish',
-  //                         style: Theme.of(context).textTheme.bodyText1,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                   onTap: () async {
-  //                     EasyLoading.show();
-  //                     await prepareGigMediaFilesAndPublish();
-
-  //                     EasyLoading.dismiss();
-  //                   },
-  //                 ),
-  //               ],
-  //             ),
-  //             SizedBox(
-  //               height: 25,
-  //             ),
-  //             Wrap(
-  //               children: widget.gigHashtags
-  //                   .map((e) => Padding(
-  //                         padding: const EdgeInsets.fromLTRB(0, 0, 2.5, 2.5),
-  //                         child: Chip(
-  //                           materialTapTargetSize:
-  //                               MaterialTapTargetSize.shrinkWrap,
-  //                           backgroundColor: Theme.of(context).primaryColor,
-  //                           label: Text(
-  //                             '$e',
-  //                             style: Theme.of(context)
-  //                                 .textTheme
-  //                                 .bodyText1
-  //                                 .copyWith(
-  //                                     color: Theme.of(context).accentColor),
-  //                           ),
-  //                           onDeleted: () {
-  //                             setState(() {
-  //                               widget.gigHashtags
-  //                                   .removeWhere((item) => item == e);
-  //                               print(widget.gigHashtags.length);
-  //                             });
-  //                           },
-  //                           deleteIconColor: Theme.of(context).accentColor,
-  //                         ),
-  //                       ))
-  //                   .toList(),
-  //             ),
-  //             selectedAssetsWidget,
-  //             SizedBox(height: 10.0),
-  //             Text('${widget.gigPost}',
-  //                 style: Theme.of(context).textTheme.bodyText1),
-  //             SizedBox(
-  //               height: 10.0,
-  //             ),
-  //             Row(
-  //               mainAxisAlignment: widget.gigDeadLine != null
-  //                   ? MainAxisAlignment.spaceBetween
-  //                   : MainAxisAlignment.start,
-  //               children: <Widget>[
-  //                 widget.gigDeadLine != null
-  //                     ? Row(
-  //                         children: <Widget>[
-  //                           SizedBox(
-  //                             width: 16,
-  //                             height: 16,
-  //                             child: SvgPicture.asset(
-  //                               hourglassStart,
-  //                               semanticsLabel: 'hourglass-start',
-  //                               color: Theme.of(context).primaryColor,
-  //                             ),
-  //                           ),
-  //                           Container(
-  //                             width: 5.0,
-  //                             height: 0,
-  //                           ),
-  //                           Container(
-  //                             // child: Text('$formattedGigDeadline',
-  //                             child: Text(widget.gigDeadLine,
-  //                                 style: Theme.of(context).textTheme.bodyText1),
-  //                           ),
-  //                         ],
-  //                       )
-  //                     : Container(
-  //                         width: 0,
-  //                         height: 0,
-  //                       ),
-  //                 SizedBox(height: 5),
-  //                 Row(
-  //                   children: <Widget>[
-  //                     Container(
-  //                       child: Text(
-  //                         '${widget.gigCurrency}',
-  //                         style: Theme.of(context).textTheme.bodyText1,
-  //                       ),
-  //                     ),
-  //                     Container(
-  //                       width: 2.5,
-  //                       height: 0,
-  //                     ),
-  //                     Container(
-  //                       child: Text(
-  //                         '${widget.gigBudget}',
-  //                         style: Theme.of(context).textTheme.bodyText1,
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ],
-  //             ),
-  //             widget.adultContentBool
-  //                 ? Container(
-  //                     alignment: Alignment.centerLeft,
-  //                     child: Column(
-  //                       children: [
-  //                         SizedBox(height: 10),
-  //                         Row(
-  //                           children: [
-  //                             FaIcon(
-  //                               FontAwesomeIcons.asterisk,
-  //                               size: 8,
-  //                             ),
-  //                             Container(
-  //                               width: 5.0,
-  //                               height: 0,
-  //                             ),
-  //                             Expanded(
-  //                               child: Text(
-  //                                 "${widget.adultContentText}",
-  //                                 style: TextStyle(
-  //                                   fontSize: 8,
-  //                                 ),
-  //                               ),
-  //                             ),
-  //                           ],
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   )
-  //                 : Container(
-  //                     width: 0,
-  //                     height: 0,
-  //                   ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {

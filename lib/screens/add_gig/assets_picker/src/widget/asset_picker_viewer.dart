@@ -1,7 +1,3 @@
-///
-/// [Author] Alex (https://github.com/AlexVincent525)
-/// [Date] 2020/3/31 16:27
-///
 import 'dart:async';
 import 'dart:io';
 
@@ -165,7 +161,6 @@ class AssetPickerViewerState extends State<AssetPickerViewer>
   @override
   void initState() {
     super.initState();
-    // TODO(Alex): Currently hide status bar will cause the viewport shaking. So commented out.
 
     /// Hide system status bar automatically on iOS.
     /// 在iOS设备上自动隐藏状态栏
@@ -458,11 +453,6 @@ class AssetPickerViewerState extends State<AssetPickerViewer>
   /// Preview item widget for audio.
   /// 音频的底部预览部件
   Widget _audioPreviewItem(AssetEntity asset) {
-    // return ColoredBox(
-    // color: context.themeData.dividerColor,
-    // child: Center(child: Icon(Icons.audiotrack)),
-    // );
-    // }
     return Container(
       width: 0,
       height: 0,

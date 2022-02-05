@@ -1,7 +1,3 @@
-///
-/// [Author] Alex (https://github.com/AlexV525)
-/// [Date] 2020/7/17 10:09
-///
 import 'dart:io';
 
 import 'package:device_info/device_info.dart';

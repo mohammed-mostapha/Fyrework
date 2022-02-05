@@ -1,14 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
-
-import 'package:Fyrework/screens/add_gig/addGigDetails.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:flutter/material.dart';
-import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:video_player/video_player.dart';
-
 import '../constants/constants.dart';
-
 import 'camera_picker.dart';
 import 'package:Fyrework/screens/add_gig/screens.dart';
 

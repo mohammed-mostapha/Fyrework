@@ -14,7 +14,6 @@ import 'package:Fyrework/screens/add_gig/assets_picker/constants/picker_model.da
 import 'package:Fyrework/screens/add_gig/assets_picker/src/widget/asset_picker.dart';
 import 'package:Fyrework/services/auth_service.dart';
 import 'package:Fyrework/services/popularHashtags.dart';
-import 'package:Fyrework/services/takenHandles.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:Fyrework/services/places_autocomplete.dart';
@@ -907,9 +906,8 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                       suggestionsCallback: (pattern) async {
                         _fetchedHandles.clear();
                         print('fetchedHandles: $_fetchedHandles');
-                        _fetchedHandles =
-                            await TakenHandlesService.fetchTakenHandles(
-                                pattern);
+                        _fetchedHandles = await FirestoreDatabase()
+                            .fetchTakenHandles(pattern);
                         print('fetchedHandles: $_fetchedHandles');
                         if (_fetchedHandles
                             .contains(_myHandleController.text)) {

@@ -1,7 +1,3 @@
-///
-/// [Author] Alex (https://github.com/AlexV525)
-/// [Date] 2020/7/15 21:13
-///
 import 'dart:async';
 import 'dart:math' as math;
 

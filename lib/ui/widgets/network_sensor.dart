@@ -1,5 +1,4 @@
 import 'package:Fyrework/services/connectivity_provider.dart';
-import 'package:Fyrework/services/connectivity_status.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:flutter/material.dart';

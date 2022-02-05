@@ -1161,6 +1161,7 @@ class AssetPicker extends StatelessWidget {
     return WillPopScope(
       onWillPop: () {
         Navigator.of(context).pop();
+        return;
       },
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: overlayStyle,

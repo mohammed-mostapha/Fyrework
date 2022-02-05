@@ -8,10 +8,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
-
 import '../constants/constants.dart';
 import '../widget/circular_progress_bar.dart';
-
 import 'builder/slide_page_transition_builder.dart';
 import 'camera_picker_viewer.dart';
 import 'package:Fyrework/screens/add_gig/screens.dart';
@@ -244,7 +242,6 @@ class CameraPickerState extends State<CameraPicker> {
     super.initState();
     _theme = widget.theme ?? CameraPicker.themeData(C.themeColor);
 
-    // TODO(Alex): Currently hide status bar will cause the viewport shaking on Android.
     /// Hide system status bar automatically on iOS.
     /// 在iOS设备上自动隐藏状态栏
     if (Platform.isIOS) {

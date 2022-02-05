@@ -1,7 +1,3 @@
-///
-/// [Author] Alex (https://github.com/AlexVincent525)
-/// [Date] 2019-11-19 10:06
-///
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
