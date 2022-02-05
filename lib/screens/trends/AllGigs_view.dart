@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:Fyrework/main.dart';
 import 'package:Fyrework/models/myUser.dart';
-import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:Fyrework/ui/widgets/gig_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -93,7 +92,7 @@ class _AllGigsViewState extends State<AllGigsView> {
                 ),
               ),
               StreamBuilder<QuerySnapshot>(
-                stream: DatabaseService().filterAllGigs(
+                stream: FirestoreDatabase().filterAllGigs(
                   QueryStringProvider.getQueryString(),
                 ),
                 builder: (context, snapshot) {

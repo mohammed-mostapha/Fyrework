@@ -2,8 +2,7 @@ import 'dart:io';
 
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/screens/home/home.dart';
-import 'package:Fyrework/services/bunny_service.dart';
-import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:Fyrework/services/storage_repo.dart';
 import 'package:Fyrework/view_controllers/myUser_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -251,7 +250,7 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                   print(
                       "creates user document _openGigsByGigId: $_openGigsByGigId");
                   // create a new document for the user with the uid in users collection
-                  await DatabaseService().setUserData(
+                  await FirestoreDatabase().setUserData(
                     id: signUpUid,
                     myFavoriteHashtags: _myFavoriteHashtags,
                     name: _name,
@@ -264,10 +263,10 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
                     completedGigsByGigId: _completedGigsByGigId,
                   );
 
-                  await DatabaseService()
+                  await FirestoreDatabase()
                       .addToPopularHashtags(_myFavoriteHashtags);
 
-                  await DatabaseService()
+                  await FirestoreDatabase()
                       .addToTakenHandles(_myHandleController.text);
 
                   await MyUserController()
@@ -1250,7 +1249,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
   List<Widget> buildButtons() {
     String _switchButtonText, _newformState, _submitButtonText;
     bool _showForgotPassword = false;
-    bool _showSocial = true;
 
     if (authFormType == AuthFormType.signIn) {
       _submitButtonText = 'Sign In';
@@ -1261,7 +1259,6 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
       _submitButtonText = 'Submit';
       _switchButtonText = 'cancel';
       _newformState = 'signIn';
-      _showSocial = false;
     } else {
       _submitButtonText = 'Sign Up';
       _switchButtonText = 'Have an account? Sign In';

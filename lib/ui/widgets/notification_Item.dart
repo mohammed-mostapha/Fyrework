@@ -1,12 +1,5 @@
-import 'package:Fyrework/screens/add_gig/addGigDetails.dart';
-import 'package:Fyrework/screens/trends/AllGigs_view.dart';
-import 'package:Fyrework/screens/trends/gigIndexProvider.dart';
-import 'package:Fyrework/screens/trends/trends.dart';
-import 'package:Fyrework/services/database.dart';
-import 'package:Fyrework/ui/widgets/individual_gig_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 class NotificationItem extends StatefulWidget {

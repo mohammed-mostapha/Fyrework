@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:Fyrework/ui/widgets/comment_item.dart';
 
 class CommentsView extends StatelessWidget {
   final bool isGigAppointed;
   final String gigIdCommentsIdentifier;
   final String gigOwnerId;
-  // final String passedCurrentUserId
   const CommentsView({
     Key key,
     @required this.gigIdCommentsIdentifier,
@@ -18,7 +17,7 @@ class CommentsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: DatabaseService().gigRelatedComments(gigIdCommentsIdentifier),
+      stream: FirestoreDatabase().gigRelatedComments(gigIdCommentsIdentifier),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           print('look at this error: ${snapshot.error}');

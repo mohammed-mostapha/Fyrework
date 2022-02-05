@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:core';
 import 'package:Fyrework/screens/home/home.dart';
-import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:Fyrework/services/places_autocomplete.dart';
 import 'package:Fyrework/services/popularHashtags.dart';
 import 'package:Fyrework/ui/shared/constants.dart';
@@ -177,7 +177,7 @@ class _EditYourGigState extends State<EditYourGig> {
       _editedGigLocation = PlacesAutocomplete.placesAutoCompleteController.text;
       _editYourGigFormKey.currentState.save();
 
-      await DatabaseService().updateMyGigByGigId(
+      await FirestoreDatabase().updateMyGigByGigId(
         gigId: widget.gigId,
         editedGigLocation: _editedGigLocation,
         editedGigDeadline: _editedGigDeadline,
@@ -244,7 +244,6 @@ class _EditYourGigState extends State<EditYourGig> {
     timeAgo.setLocaleMessages('ro_short', timeAgo.RoShortMessages());
     timeAgo.setLocaleMessages('sv', timeAgo.SvMessages());
     timeAgo.setLocaleMessages('sv_short', timeAgo.SvShortMessages());
-    var locale = 'en';
 
     return SafeArea(
       child: Scaffold(

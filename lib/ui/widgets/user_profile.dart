@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:Fyrework/ui/views/sign_up_view.dart';
 import 'package:Fyrework/ui/widgets/userRelated_gigItem.dart';
 
@@ -32,7 +32,7 @@ class _UserProfileViewState extends State<UserProfileView> {
       child: SafeArea(
         child: StreamBuilder(
             stream:
-                DatabaseService().fetchUserData(userId: widget.passedUserUid),
+                FirestoreDatabase().fetchUserData(userId: widget.passedUserUid),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Container(
@@ -310,7 +310,7 @@ class _UserProfileViewState extends State<UserProfileView> {
 
   userOpenGigs() {
     return StreamBuilder<QuerySnapshot>(
-      stream: DatabaseService()
+      stream: FirestoreDatabase()
           .openGigsByGigRelatedUsers(userId: widget.passedUserUid),
       builder: (context, snapshot) {
         return snapshot.hasError
@@ -387,7 +387,7 @@ class _UserProfileViewState extends State<UserProfileView> {
 
   userCompletedGigs() {
     return StreamBuilder<QuerySnapshot>(
-      stream: DatabaseService()
+      stream: FirestoreDatabase()
           .completedGigsByGigRelatedUsers(userId: widget.passedUserUid),
       builder: (context, snapshot) {
         // print('snapshot.data: ${snapshot.data.documents.length}');
@@ -464,7 +464,7 @@ class _UserProfileViewState extends State<UserProfileView> {
 
   userLikedGigs() {
     return StreamBuilder<QuerySnapshot>(
-      stream: DatabaseService()
+      stream: FirestoreDatabase()
           .likedGigsByLikersByUserId(userId: widget.passedUserUid),
       builder: (context, snapshot) {
         // print('snapshot.data: ${snapshot.data.documents.length}');

@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:Fyrework/models/comment.dart';
+import 'package:Fyrework/models/gig.dart';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -5,10 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:Fyrework/models/otherUser.dart';
 
-class DatabaseService {
-  // final String uid;
-
-  // DatabaseService({this.uid});
+class FirestoreDatabase {
   //db reference
   FirebaseApp fyreworkApp = Firebase.app();
 
@@ -19,12 +20,14 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('gigs');
   final CollectionReference _commentsCollection =
       FirebaseFirestore.instance.collection('comments');
-  final CollectionReference _popularHashtags =
+  final CollectionReference _popularHashtagsCollection =
       FirebaseFirestore.instance.collection('popularHashtags');
   final CollectionReference _takenHandles =
       FirebaseFirestore.instance.collection('takenHandles');
   final CollectionReference _notifications =
       FirebaseFirestore.instance.collection('notifications');
+  final CollectionReference _devicesTokensCollectionReference =
+      FirebaseFirestore.instance.collection('devicesTokens');
 
   Future setUserData({
     @required String id,
@@ -193,22 +196,9 @@ class DatabaseService {
         .snapshots();
   }
 
-  // Stream<QuerySnapshot> unseenNotificationsCount() {
-  //   return _notifications
-  //       .where('seen', isEqualTo: false)
-  //       .orderBy('createdAt', descending: true)
-  //       .snapshots();
-  // }
-
   Stream<QuerySnapshot> fetchAllNotifications() {
     return _notifications.orderBy('createdAt', descending: true).snapshots();
   }
-
-  // Future markNotificationAsSeen({String notificationId}) {
-  //   return _notifications.doc(notificationId).update({
-  //     'seen': true,
-  //   });
-  // }
 
   Stream<QuerySnapshot> fetchIndividualGig({@required String gigId}) {
     return _gigsCollection.where('gigId', isEqualTo: gigId).snapshots();
@@ -330,12 +320,12 @@ class DatabaseService {
 
   //add user favorite hashtags to popular hashtags collection
   Future addToPopularHashtags(List favoriteHashtags) async {
-    QuerySnapshot querySnapshot = await _popularHashtags.get();
+    QuerySnapshot querySnapshot = await _popularHashtagsCollection.get();
     List allPopularHashtags =
         querySnapshot.docs.map((doc) => doc.data()['hashtag']).toList();
     for (String favoriteHashtag in favoriteHashtags) {
       if (!allPopularHashtags.contains(favoriteHashtag)) {
-        _popularHashtags.add({'hashtag': favoriteHashtag});
+        _popularHashtagsCollection.add({'hashtag': favoriteHashtag});
       }
     }
   }
@@ -343,7 +333,7 @@ class DatabaseService {
   //fetch popular hashtags
   Future fetchPopularHashtags(String query) async {
     List filteredHashtags = List();
-    QuerySnapshot querySnapshot = await _popularHashtags.get();
+    QuerySnapshot querySnapshot = await _popularHashtagsCollection.get();
     List fetchedHashtags =
         querySnapshot.docs.map((doc) => doc.data()['hashtag']).toList();
     fetchedHashtags.forEach((element) {
@@ -386,10 +376,6 @@ class DatabaseService {
       "createdAt": FieldValue.serverTimestamp(),
       "gigActionOwner": gigActionOwner
     });
-
-    // updateData({
-    //   "gigActions": FieldValue.arrayUnion([action, userAvatarUrl]),
-    // });
   }
 
   //converting open gigs to completed gigs for both gigOwner & appointedUser
@@ -460,5 +446,222 @@ class DatabaseService {
       {@required String gigId}) async {
     DocumentSnapshot appointedUser = await _gigsCollection.doc(gigId).get();
     return appointedUser;
+  }
+
+  final StreamController<List<Gig>> _gigsController =
+      StreamController<List<Gig>>.broadcast();
+
+  Future saveDeviceToken(String deviceToken) async {
+    try {
+      final deviceTokenSnapshot = await _devicesTokensCollectionReference
+          .where('deviceToken', isEqualTo: deviceToken)
+          .get();
+      if (!(deviceTokenSnapshot.docs.length > 0)) {
+        _devicesTokensCollectionReference.add({
+          'deviceToken': deviceToken,
+        });
+      }
+    } catch (e) {
+      print(e);
+      return;
+    }
+  }
+
+  Future getCurrentUserData(String uid) async {
+    try {
+      var userData = await _usersCollection.doc(uid).get();
+      MyUser.fromData(userData.data());
+    } catch (e) {
+      if (e is PlatformException) {
+        return e.message;
+      }
+
+      return e.toString();
+    }
+  }
+
+  Future createGig(List gigHashtags, Gig gig) async {
+    var gigId;
+    String userId = gig.gigOwnerId;
+
+    try {
+      // await _gigCollectionReference.add(gig.toMap());
+      await _gigsCollection.add(gig.toMap()).then((gig) {
+        gigId = gig.id;
+        DocumentReference gigRef = _gigsCollection.doc(gigId);
+        gigRef.update({'gigId': gigRef.id});
+      });
+      await FirestoreDatabase()
+          .updateOpenGigsByGigId(userId: userId, gigId: gigId);
+
+      await FirestoreDatabase()
+          .addUserIdToGigRelatedUsersArray(gigId: gigId, userId: userId);
+
+      // only add gigHashtags that dont exist in popularHashtags cloud firestore collection
+      QuerySnapshot popularHashtagsDocuments =
+          await _popularHashtagsCollection.get();
+      List<String> popularHashtagsValues = List();
+      popularHashtagsDocuments.docs.forEach((document) {
+        popularHashtagsValues.add("${document.data()['hashtag']}");
+      });
+
+      for (int count = 0; count < gigHashtags.length; count++) {
+        if (!popularHashtagsValues.contains(gigHashtags[count])) {
+          _popularHashtagsCollection.doc().set({'hashtag': gigHashtags[count]});
+        }
+      }
+    } catch (e) {
+      if (e is PlatformException) {
+        // return e.message;
+      }
+      // return e.toString();
+    }
+  }
+
+  Future addComment(
+    Comment comment,
+    String gigIdHoldingComment,
+  ) async {
+    try {
+      Map<String, dynamic> commentData = comment.toMap();
+      return await _commentsCollection.add(commentData).then((comment) {
+        comment.update({'commentId': comment.id});
+      });
+    } catch (e) {
+      if (e is PlatformException) {
+        return e.message;
+      }
+
+      return e.toString();
+    }
+  }
+
+  Stream listenToAllGigsRealTime() {
+    // Register the handler for when the gigs data changes
+    _gigsCollection.snapshots().listen((gigsSnapshot) {
+      if (gigsSnapshot.docs.isNotEmpty) {
+        var gigs = gigsSnapshot.docs
+            .map((snapshot) => Gig.fromMap(snapshot.data(), snapshot.id))
+            .where((mappedItem) => mappedItem.gigHashtags != null)
+            .toList();
+        // Add the posts onto the controller
+        _gigsController.add(gigs);
+      }
+    });
+    return _gigsController.stream;
+  }
+
+  Future deleteGig(String commentId) async {
+    await _gigsCollection.doc(commentId).delete();
+  }
+
+  Future deleteComment(String commentId) async {
+    await _commentsCollection.doc(commentId).delete();
+  }
+
+  Future updateGig(Gig gig) async {
+    try {
+      await _gigsCollection.doc(gig.gigId).update(gig.toMap());
+    } catch (e) {
+      if (e is PlatformException) {
+        return e.message;
+      }
+
+      return e.toString();
+    }
+  }
+
+  Future updateGigAddOrRemoveLike(
+      {String gigId, String userId, bool likedOrNot}) async {
+    try {
+      await _gigsCollection.doc(gigId).update({
+        'likesCount': FieldValue.increment(likedOrNot ? 1 : -1),
+        'likersByUserId': likedOrNot
+            ? FieldValue.arrayUnion([userId])
+            : FieldValue.arrayRemove([userId])
+      });
+    } catch (e) {
+      if (e is PlatformException) {
+        return e.message;
+      }
+
+      return e.toString();
+    }
+  }
+
+  Future appointGigToUser(
+      {String gigId, String appointedUserId, String commentId}) async {
+    try {
+      var appointedUser = await _usersCollection.doc(appointedUserId).get();
+      var appointedUsername = appointedUser.data()['username'];
+
+      await FirestoreDatabase()
+          .updateOpenGigsByGigId(userId: appointedUserId, gigId: gigId);
+      await FirestoreDatabase().addUserIdToGigRelatedUsersArray(
+          gigId: gigId, userId: appointedUserId);
+
+      await _gigsCollection.doc(gigId).update({
+        'appointed': true,
+        'appointedUserId': appointedUserId,
+        'appointedUsername': appointedUsername
+      });
+
+      await _commentsCollection.doc(commentId).update({
+        'approved': true,
+        'appointedUserId': appointedUserId,
+        'appointedUsername': appointedUsername,
+      }).then((value) async {
+        await _commentsCollection
+            .where('approved', isEqualTo: false)
+            .get()
+            .then((querySnapshots) {
+          querySnapshots.docs.forEach((document) {
+            document.reference.update({'rejected': true});
+          });
+        });
+      });
+    } catch (e) {
+      if (e is PlatformException) {
+        return e.message;
+      }
+    }
+  }
+
+  Future rejectProposal(String commentId) async {
+    try {
+      await _commentsCollection.doc(commentId).update({
+        'rejected': true,
+      });
+    } catch (e) {
+      if (e is PlatformException) {
+        return e.message;
+      }
+    }
+  }
+
+  Future commentPrivacyToggle(String commentId, bool value) async {
+    try {
+      await _commentsCollection
+          .doc(commentId)
+          .update(({'commentPrivacyToggle': value}));
+    } catch (e) {
+      if (e is PlatformException) {
+        return e.message;
+      }
+
+      return e.toString();
+    }
+  }
+
+  Future updateComment(Comment comment) async {
+    try {
+      await _commentsCollection.doc(comment.commentId).update(comment.toMap());
+    } catch (e) {
+      if (e is PlatformException) {
+        return e.message;
+      }
+
+      return e.toString();
+    }
   }
 }

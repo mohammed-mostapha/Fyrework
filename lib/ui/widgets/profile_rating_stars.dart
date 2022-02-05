@@ -1,4 +1,4 @@
-import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -64,7 +64,7 @@ class _ProfileRatingStarsState extends State<ProfileRatingStars> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: DatabaseService().fetchUserRating(userId: widget.userId),
+        future: FirestoreDatabase().fetchUserRating(userId: widget.userId),
         builder: (BuildContext context,
             AsyncSnapshot<QuerySnapshot> userRatingSnapshot) {
           switch (userRatingSnapshot.connectionState) {

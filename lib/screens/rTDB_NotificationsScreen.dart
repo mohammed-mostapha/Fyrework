@@ -1,94 +1,9 @@
-import 'dart:async';
-
 import 'package:Fyrework/models/myUser.dart';
-import 'package:Fyrework/services/database.dart';
-import 'package:Fyrework/services/realtime_database.dart';
+import 'package:Fyrework/firebase_database/realtime_database.dart';
 import 'package:Fyrework/ui/widgets/individual_gig_item.dart';
-import 'package:Fyrework/ui/widgets/notification_Item.dart';
-import 'package:Fyrework/ui/widgets/notification_item_builder.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
-
-// class NotificationsScreen extends StatefulWidget {
-//   const NotificationsScreen({Key key}) : super(key: key);
-
-//   @override
-//   _NotificationsScreenState createState() => _NotificationsScreenState();
-// }
-
-// class _NotificationsScreenState extends State<NotificationsScreen> {
-//   RefreshController _refreshController =
-//       RefreshController(initialRefresh: false);
-//   @override
-//   Widget build(BuildContext context) {
-//     return SafeArea(
-//       child: Scaffold(
-//         body: StreamBuilder(
-//           stream: DatabaseService().fetchAllNotifications(),
-//           builder: (_, allNotificationsSnapshot) {
-//             if (!allNotificationsSnapshot.hasData) {
-//               return Center(
-//                 child: CircularProgressIndicator(
-//                   valueColor: AlwaysStoppedAnimation<Color>(
-//                       Theme.of(context).primaryColor),
-//                   strokeWidth: 2.0,
-//                 ),
-//               );
-//             } else if (!(allNotificationsSnapshot.data.docs.length > 0)) {
-//               return Center(
-//                 child: Text(
-//                   'Notifications list is empty',
-//                   style: Theme.of(context).textTheme.headline6,
-//                 ),
-//               );
-//             } else {
-//               return SmartRefresher(
-//                 controller: _refreshController,
-//                 header: WaterDropHeader(
-//                   refresh: SizedBox(
-//                     width: 20,
-//                     height: 20,
-//                     child: CircularProgressIndicator(
-//                       valueColor: AlwaysStoppedAnimation<Color>(
-//                         Theme.of(context).primaryColor,
-//                       ),
-//                       strokeWidth: 2.0,
-//                     ),
-//                   ),
-//                   complete: Container(),
-//                   completeDuration: Duration(microseconds: 100),
-//                 ),
-//                 enablePullDown: true,
-//                 child: ListView.builder(
-//                     addAutomaticKeepAlives: false,
-//                     cacheExtent: 100.0,
-//                     itemCount: allNotificationsSnapshot.data.docs.length,
-//                     itemBuilder: (context, index) {
-//                       DocumentSnapshot data =
-//                           allNotificationsSnapshot.data.docs[index];
-//                       Map getDocData = data.data();
-//                       return NotificationItem(
-//                         index: index,
-//                         notificationId: getDocData['notificationId'],
-//                         gigId: getDocData['gigId'],
-//                         notificationTitle: getDocData['notificationTitle'],
-//                         notificationBody: getDocData['notificationBody'],
-//                         seen: getDocData['seen'],
-//                         generalNotification: getDocData['generalNotification'],
-//                         createdAt: getDocData['createdAt'],
-//                       );
-//                     }),
-//               );
-//             }
-//           },
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 class RTDBNotificationsScreen extends StatefulWidget {
   const RTDBNotificationsScreen({Key key}) : super(key: key);
@@ -99,10 +14,6 @@ class RTDBNotificationsScreen extends StatefulWidget {
 }
 
 class _RTDBNotificationsScreenState extends State<RTDBNotificationsScreen> {
-  StreamSubscription _myNotificationsStream;
-  String _notificationBody = '';
-  String likerUserAvatarUrl = '';
-  String gigId = '';
   final _rTDB = FirebaseDatabase.instance.reference();
 
   @override
@@ -147,7 +58,7 @@ class _RTDBNotificationsScreenState extends State<RTDBNotificationsScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Individual_gig_item(
+                          builder: (context) => IndividualGigItem(
                             gigId: _notification['gigId'],
                           ),
                         ),
@@ -204,12 +115,6 @@ class _RTDBNotificationsScreenState extends State<RTDBNotificationsScreen> {
       ),
     );
   }
-
-  // @override
-  // void deactivate() {
-  //   // _myNotificationsStream.cancel();
-  //   // super.deactivate();
-  // }
 
   @override
   void dispose() {

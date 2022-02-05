@@ -1,16 +1,14 @@
 import 'dart:core';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/screens/my_profile.dart';
-import 'package:Fyrework/services/database.dart';
-import 'package:Fyrework/services/realtime_database.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
+import 'package:Fyrework/firebase_database/realtime_database.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:Fyrework/services/firestore_service.dart';
 import 'package:Fyrework/ui/views/add_comments_view.dart';
 import 'package:Fyrework/ui/widgets/gig_item_media_previewer.dart';
 import 'package:Fyrework/ui/widgets/user_profile.dart';
@@ -150,32 +148,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                 )));
   }
 
-  // _doubleTappedLike() {
-  //   if (liked == false && showLikeOverlay == false) {
-  //     setState(() {
-  //       liked = true;
-  //       showLikeOverlay = true;
-  //       _likeAnimationController.forward().then((value) {
-  //         _likeAnimationController.reverse();
-  //       });
-  //       if (showLikeOverlay) {
-  //         Timer(const Duration(milliseconds: 500), () {
-  //           setState(() {
-  //             showLikeOverlay = false;
-  //           });
-  //         });
-  //       }
-
-  //       FirestoreService().updateGigAddRemoveLike(widget.gigId, liked);
-  //     });
-  //   }
-  //   showLikeOverlay = true;
-  //   _likeAnimationController.forward().then((value) {
-  //     _likeAnimationController.reverse();
-  //     showLikeOverlay = false;
-  //   });
-  // }
-
   showUserProfile({@required String userId}) {
     userId != MyUser.uid
         ? Navigator.push(
@@ -210,7 +182,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
         });
       });
       try {
-        await FirestoreService().updateGigAddOrRemoveLike(
+        await FirestoreDatabase().updateGigAddOrRemoveLike(
           gigId: widget.gigId,
           userId: MyUser.uid,
           likedOrNot: hasLiked,
@@ -285,7 +257,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
     timeAgo.setLocaleMessages('ro_short', timeAgo.RoShortMessages());
     timeAgo.setLocaleMessages('sv', timeAgo.SvMessages());
     timeAgo.setLocaleMessages('sv_short', timeAgo.SvShortMessages());
-    var locale = 'en';
 
     ScaleTransition likeButton = ScaleTransition(
       scale: _likeAnimationController,
@@ -378,7 +349,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
           onPressed: () async {
             Navigator.of(context, rootNavigator: true).pop();
             EasyLoading.show();
-            await DatabaseService().deleteMyGigByGigId(gigId: widget.gigId);
+            await FirestoreDatabase().deleteMyGigByGigId(gigId: widget.gigId);
 
             EasyLoading.showSuccess('');
 

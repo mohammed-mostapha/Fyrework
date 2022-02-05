@@ -1,5 +1,5 @@
 import 'package:Fyrework/models/myUser.dart';
-import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -30,8 +30,8 @@ class _WorkerActionsState extends State<WorkerActions> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream:
-          DatabaseService().showGigWorkstreamActions(gigId: widget.passedGigId),
+      stream: FirestoreDatabase()
+          .showGigWorkstreamActions(gigId: widget.passedGigId),
       builder: (BuildContext context, AsyncSnapshot gigActionSnapshot) {
         if (!gigActionSnapshot.hasData) {
           return Container(
@@ -64,7 +64,6 @@ class _WorkerActionsState extends State<WorkerActions> {
                   height: 20,
                 ),
                 Wrap(
-                  // alignment: WrapAlignment.spaceEvenly,
                   spacing: 20,
                   runSpacing: 20,
                   runAlignment: WrapAlignment.center,
@@ -95,7 +94,7 @@ class _WorkerActionsState extends State<WorkerActions> {
                           ),
                         ),
                         onTap: () {
-                          DatabaseService().addGigWorkstreamActions(
+                          FirestoreDatabase().addGigWorkstreamActions(
                             gigId: widget.passedGigId,
                             action: 'marked as done',
                             userAvatarUrl: MyUser.userAvatarUrl,
@@ -129,7 +128,7 @@ class _WorkerActionsState extends State<WorkerActions> {
                         ),
                       ),
                       onTap: () {
-                        DatabaseService().addGigWorkstreamActions(
+                        FirestoreDatabase().addGigWorkstreamActions(
                           gigId: widget.passedGigId,
                           action: 'request payment',
                           userAvatarUrl: MyUser.userAvatarUrl,
@@ -232,7 +231,7 @@ class _WorkerActionsState extends State<WorkerActions> {
                       ),
                       onTap: !workerAction
                           ? () {
-                              DatabaseService().addGigWorkstreamActions(
+                              FirestoreDatabase().addGigWorkstreamActions(
                                 gigId: widget.passedGigId,
                                 action: 'mark as done',
                                 userAvatarUrl: MyUser.userAvatarUrl,
@@ -281,7 +280,7 @@ class _WorkerActionsState extends State<WorkerActions> {
                       ),
                       onTap: !workerAction
                           ? () {
-                              DatabaseService().addGigWorkstreamActions(
+                              FirestoreDatabase().addGigWorkstreamActions(
                                 gigId: widget.passedGigId,
                                 action: 'requested payment',
                                 userAvatarUrl: MyUser.userAvatarUrl,

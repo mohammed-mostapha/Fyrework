@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:core';
 import 'package:Fyrework/screens/my_profile.dart';
-import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:Fyrework/ui/shared/constants.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:Fyrework/models/myUser.dart';
-import 'package:Fyrework/services/firestore_service.dart';
 import 'package:Fyrework/ui/widgets/user_profile.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:expandable_text/expandable_text.dart';
@@ -21,7 +20,6 @@ import 'package:video_player/video_player.dart';
 
 import 'chewie_list_item.dart';
 import 'client_worker_rating.dart';
-import 'package:photo_view/photo_view.dart';
 
 class CommentItem extends StatefulWidget {
   // final passedCurrentUserId;
@@ -182,16 +180,16 @@ class _CommentItemState extends State<CommentItem>
 
   addReview() async {
     if (validate()) {
-      await DatabaseService().updateCommentRatingCount(
+      await FirestoreDatabase().updateCommentRatingCount(
         commentId: widget.commentId,
         ratingCount: initialRating,
       );
-      await DatabaseService().addRatingToUser(
+      await FirestoreDatabase().addRatingToUser(
         userId: widget.appointedUserId,
         gigId: widget.gigIdHoldingComment,
         userRating: initialRating,
       );
-      await DatabaseService().updateLeftReviewFieldToTrue(
+      await FirestoreDatabase().updateLeftReviewFieldToTrue(
         commentId: widget.commentId,
         review: _clientReviewTextController.text,
       );
@@ -319,7 +317,7 @@ class _CommentItemState extends State<CommentItem>
                                           activeColor: Colors.black,
                                           value: widget.commentPrivacyToggle,
                                           onChanged: (value) {
-                                            FirestoreService()
+                                            FirestoreDatabase()
                                                 .commentPrivacyToggle(
                                               widget.commentId,
                                               value,
@@ -980,7 +978,7 @@ class _CommentItemState extends State<CommentItem>
                                           ),
                                         ),
                                         onTap: () {
-                                          FirestoreService().appointGigToUser(
+                                          FirestoreDatabase().appointGigToUser(
                                             gigId: widget.gigIdHoldingComment,
                                             appointedUserId:
                                                 widget.commentOwnerId,
@@ -1021,7 +1019,7 @@ class _CommentItemState extends State<CommentItem>
                                         ),
                                       ),
                                       onTap: () {
-                                        FirestoreService()
+                                        FirestoreDatabase()
                                             .rejectProposal(widget.commentId);
                                       },
                                     ),
@@ -1357,7 +1355,6 @@ class _CommentItemState extends State<CommentItem>
     timeAgo.setLocaleMessages('sv', timeAgo.SvMessages());
     timeAgo.setLocaleMessages('sv_short', timeAgo.SvShortMessages());
 
-    var locale = 'en';
     return Padding(
       padding: const EdgeInsets.all(0.1),
       child: Container(

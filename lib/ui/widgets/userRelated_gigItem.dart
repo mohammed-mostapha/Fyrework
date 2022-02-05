@@ -2,7 +2,7 @@ import 'dart:core';
 
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/screens/trends/gigIndexProvider.dart';
-import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:Fyrework/ui/views/edit_your_gig.dart';
@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:Fyrework/services/firestore_service.dart';
 import 'package:Fyrework/ui/views/add_comments_view.dart';
 import 'package:Fyrework/ui/widgets/gig_item_media_previewer.dart';
 import 'package:Fyrework/ui/widgets/user_profile.dart';
@@ -135,7 +134,6 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                   passedGigOwnerId: widget.gigOwnerId,
                   passGigOwnerUsername: widget.gigOwnerUsername,
                   passedCurrentUserId: widget.currentUserId,
-                  // passedGigAppointed: widget.appointed,
                   passedGigValue: widget.gigValue,
                   passedGigCurrency: widget.gigCurrency,
                   passedGigBudget: widget.gigBudget,
@@ -168,7 +166,7 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
           _likeAnimationController.reverse();
         });
       });
-      FirestoreService().updateGigAddOrRemoveLike(
+      FirestoreDatabase().updateGigAddOrRemoveLike(
         gigId: widget.gigId,
         userId: MyUser.uid,
         likedOrNot: liked,
@@ -230,7 +228,6 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
     timeAgo.setLocaleMessages('ro_short', timeAgo.RoShortMessages());
     timeAgo.setLocaleMessages('sv', timeAgo.SvMessages());
     timeAgo.setLocaleMessages('sv_short', timeAgo.SvShortMessages());
-    var locale = 'en';
 
     ScaleTransition likeButton = ScaleTransition(
       scale: _likeAnimationController,
@@ -329,7 +326,7 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
               rootNavigator: true,
             ).pop();
             EasyLoading.show();
-            await DatabaseService().deleteMyGigByGigId(
+            await FirestoreDatabase().deleteMyGigByGigId(
               gigId: widget.gigId,
             );
 

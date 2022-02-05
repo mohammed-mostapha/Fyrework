@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:Fyrework/services/stripe_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -103,7 +103,7 @@ class _AdvertPaymentState extends State<AdvertPayment> {
                         for (var i = 0;
                             i < widget.receivedAdvertHashtags.length;
                             i++) {
-                          await DatabaseService().fetchOrCreateGigsForAdverts(
+                          await FirestoreDatabase().fetchOrCreateGigsForAdverts(
                             widget.receivedAdvertHashtags[i],
                           );
                         }

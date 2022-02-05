@@ -1,15 +1,13 @@
 import 'package:Fyrework/screens/add_gig/assets_picker/pages/multi_assets_picker.dart';
 import 'package:Fyrework/screens/advertisements/addAdvert.dart';
-import 'package:Fyrework/services/firestore_service.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:Fyrework/models/myUser.dart';
-import 'package:Fyrework/screens/add_gig/addGigDetails.dart';
 import 'package:Fyrework/screens/my_profile.dart';
 import 'package:Fyrework/screens/trends/trends.dart';
 import 'package:flutter_svg/svg.dart';
-// import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:Fyrework/screens/trends/queryStringProvider.dart';
 import 'package:Fyrework/services/local_notification_service.dart';
@@ -24,17 +22,17 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  final String home_outlined = 'assets/svgs/flaticon/home_outlined.svg';
-  final String home_solid = 'assets/svgs/flaticon/home_solid.svg';
-  final String add_outlined = 'assets/svgs/flaticon/add_outlined.svg';
-  final String add_solid = 'assets/svgs/flaticon/add_solid.svg';
-  final String search_thin = 'assets/svgs/flaticon/search_thin.svg';
-  final String search_thick = 'assets/svgs/flaticon/search_thick.svg';
-  final String megaphone_outlined =
+  final String homeOutlined = 'assets/svgs/flaticon/home_outlined.svg';
+  final String homeSolid = 'assets/svgs/flaticon/home_solid.svg';
+  final String addOutlined = 'assets/svgs/flaticon/add_outlined.svg';
+  final String addSolid = 'assets/svgs/flaticon/add_solid.svg';
+  final String searchThin = 'assets/svgs/flaticon/search_thin.svg';
+  final String searchThick = 'assets/svgs/flaticon/search_thick.svg';
+  final String megaphoneOutlined =
       'assets/svgs/flaticon/megaphone_outlined.svg';
-  final String megaphone_solid = 'assets/svgs/flaticon/megaphone_solid.svg';
-  final String adverts_outlined = 'assets/svgs/flaticon/adverts_outlined.svg';
-  final String adverts_solid = 'assets/svgs/flaticon/adverts_solid.svg';
+  final String megaphoneSolid = 'assets/svgs/flaticon/megaphone_solid.svg';
+  final String advertsOutlined = 'assets/svgs/flaticon/adverts_outlined.svg';
+  final String advertsSolid = 'assets/svgs/flaticon/adverts_solid.svg';
 
   // BannerAd firstBannerAd;
 
@@ -66,26 +64,9 @@ class _HomeState extends State<Home> {
   _getDeviceToken() {
     _firebaseMessaging.getToken().then((deviceToken) {
       print('Device token: $deviceToken');
-      FirestoreService().saveDeviceToken(deviceToken);
+      FirestoreDatabase().saveDeviceToken(deviceToken);
     });
   }
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   final mobileAdState = Provider.of<MobileAdsState>(context);
-  //   mobileAdState.adStateInitialization.then((status) {
-  //     setState(() {
-  //       firstBannerAd = BannerAd(
-  //         size: AdSize.banner,
-  //         adUnitId: mobileAdState.testBannerAdUnit,
-  //         request: AdRequest(),
-  //         listener: mobileAdState.adListener,
-  //       )..load();
-  //     });
-  //   });
-  // }
-
-  // void _onPageChanged(int currentIndex) {}
 
   void _onItemTapped(int selectedIndex) {
     if (this.mounted) {
@@ -134,7 +115,7 @@ class _HomeState extends State<Home> {
                     width: 20,
                     height: 20,
                     child: SvgPicture.asset(
-                      _selectedIndex == 0 ? home_solid : home_outlined,
+                      _selectedIndex == 0 ? homeSolid : homeOutlined,
                       semanticsLabel: 'home',
                       color: Theme.of(context).primaryColor,
                     ),
@@ -146,7 +127,7 @@ class _HomeState extends State<Home> {
                     width: 20,
                     height: 20,
                     child: SvgPicture.asset(
-                      _selectedIndex == 1 ? add_solid : add_outlined,
+                      _selectedIndex == 1 ? addSolid : addOutlined,
                       semanticsLabel: 'add',
                       color: Theme.of(context).primaryColor,
                     ),
@@ -158,9 +139,7 @@ class _HomeState extends State<Home> {
                     width: 23,
                     height: 23,
                     child: SvgPicture.asset(
-                      _selectedIndex == 2
-                          ? megaphone_solid
-                          : megaphone_outlined,
+                      _selectedIndex == 2 ? megaphoneSolid : megaphoneOutlined,
                       semanticsLabel: 'search',
                       color: Theme.of(context).primaryColor,
                     ),
@@ -172,7 +151,7 @@ class _HomeState extends State<Home> {
                     width: 23,
                     height: 23,
                     child: SvgPicture.asset(
-                      _selectedIndex == 3 ? adverts_solid : adverts_outlined,
+                      _selectedIndex == 3 ? advertsSolid : advertsOutlined,
                       semanticsLabel: 'home',
                       color: Theme.of(context).primaryColor,
                     ),

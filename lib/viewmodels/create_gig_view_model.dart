@@ -1,12 +1,12 @@
 import 'package:Fyrework/locator.dart';
 import 'package:Fyrework/models/gig.dart';
 import 'package:Fyrework/services/navigation_service.dart';
-import 'package:Fyrework/services/firestore_service.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class CreateGigViewModel {
-  final FirestoreService _firestoreService = locator<FirestoreService>();
+  final FirestoreDatabase _firestoreService = locator<FirestoreDatabase>();
   final NavigationService _navigationService = locator<NavigationService>();
 
   Future createGig({

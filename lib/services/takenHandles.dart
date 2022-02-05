@@ -1,10 +1,8 @@
-import 'dart:math';
-import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 
 class TakenHandlesService {
   static Future<List> fetchTakenHandles(String query) async {
-    // List filteredHashtags = List();
     await Future.delayed(Duration(seconds: 1));
-    return await DatabaseService().fetchTakenHandles(query);
+    return await FirestoreDatabase().fetchTakenHandles(query);
   }
 }

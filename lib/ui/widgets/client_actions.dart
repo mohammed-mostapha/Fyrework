@@ -1,6 +1,5 @@
 import 'package:Fyrework/models/myUser.dart';
-import 'package:Fyrework/services/database.dart';
-import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:Fyrework/viewmodels/add_comment_view_model.dart';
 import 'package:flutter/material.dart';
@@ -43,8 +42,8 @@ class _ClientActionsState extends State<ClientActions> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: FutureBuilder(
-        future:
-            DatabaseService().fetchAppointedUserData(gigId: widget.passedGigId),
+        future: FirestoreDatabase()
+            .fetchAppointedUserData(gigId: widget.passedGigId),
         builder: (BuildContext context, AsyncSnapshot appointedUserSnapshot) {
           switch (appointedUserSnapshot.connectionState) {
             case ConnectionState.none:
@@ -78,7 +77,7 @@ class _ClientActionsState extends State<ClientActions> {
                       appointedUserSnapshot.data['appointedUsername'];
 
                   return StreamBuilder(
-                    stream: DatabaseService()
+                    stream: FirestoreDatabase()
                         .showGigWorkstreamActions(gigId: widget.passedGigId),
                     builder: (BuildContext context,
                         AsyncSnapshot gigActionsSnapshot) {
@@ -150,7 +149,7 @@ class _ClientActionsState extends State<ClientActions> {
                                         ),
                                       ),
                                       onTap: () {
-                                        DatabaseService()
+                                        FirestoreDatabase()
                                             .addGigWorkstreamActions(
                                           gigId: widget.passedGigId,
                                           action: 'unsatisfied',
@@ -213,7 +212,7 @@ class _ClientActionsState extends State<ClientActions> {
                                         leftReview: false,
                                       );
 
-                                      await DatabaseService()
+                                      await FirestoreDatabase()
                                           .addGigWorkstreamActions(
                                         gigId: widget.passedGigId,
                                         action: 'marked as completed',
@@ -221,7 +220,7 @@ class _ClientActionsState extends State<ClientActions> {
                                         gigActionOwner: "client",
                                       );
 
-                                      await DatabaseService()
+                                      await FirestoreDatabase()
                                           .convertOpenGigToCompletedGig(
                                         gigId: widget.passedGigId,
                                         gigOwnerId: widget.passedGigOwnerId,
@@ -360,7 +359,7 @@ class _ClientActionsState extends State<ClientActions> {
                                     ),
                                     onTap: !clientAction
                                         ? () {
-                                            DatabaseService()
+                                            FirestoreDatabase()
                                                 .addGigWorkstreamActions(
                                               gigId: widget.passedGigId,
                                               action: 'unsatisfied',
@@ -418,7 +417,7 @@ class _ClientActionsState extends State<ClientActions> {
                                     onTap:
                                         !clientAction || worksteamActionsEmpty
                                             ? () {
-                                                DatabaseService()
+                                                FirestoreDatabase()
                                                     .addGigWorkstreamActions(
                                                   gigId: widget.passedGigId,
                                                   action: 'marked as completed',
@@ -426,13 +425,6 @@ class _ClientActionsState extends State<ClientActions> {
                                                       MyUser.userAvatarUrl,
                                                   gigActionOwner: 'client',
                                                 );
-                                                //     .then((value) {
-                                                //   print('should add template');
-                                                //   addGigCompletedCommentTemplate(
-                                                //     containMediaFile: false,
-                                                //     commentBody: 'Gig Completed',
-                                                //   );
-                                                // });
                                               }
                                             : null,
                                   ),
@@ -466,7 +458,7 @@ class _ClientActionsState extends State<ClientActions> {
                                     ),
                                     onTap: markedAsCompleted
                                         ? () {
-                                            DatabaseService()
+                                            FirestoreDatabase()
                                                 .addGigWorkstreamActions(
                                               gigId: widget.passedGigId,
                                               action: 'left Review',

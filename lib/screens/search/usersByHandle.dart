@@ -1,14 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Fyrework/models/myUser.dart';
-import 'package:Fyrework/services/database.dart';
-import 'package:Fyrework/ui/widgets/gig_item.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:flutter/material.dart';
 import 'package:Fyrework/ui/widgets/user_profile.dart';
 
 class UsersSearchByHandle extends StatelessWidget {
   UsersSearchByHandle({Key key}) : super(key: key);
-  // String currentUserId = UserController.currentUserId;
-  String currentUserId = MyUser.uid;
+  final String currentUserId = MyUser.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +20,7 @@ class UsersSearchByHandle extends StatelessWidget {
     }
 
     return StreamBuilder<QuerySnapshot>(
-      stream: DatabaseService().fetchUsersInSearch(),
+      stream: FirestoreDatabase().fetchUsersInSearch(),
       builder: (context, AsyncSnapshot<QuerySnapshot> usersSnapshot) {
         Iterable<DocumentSnapshot> handleResults;
 

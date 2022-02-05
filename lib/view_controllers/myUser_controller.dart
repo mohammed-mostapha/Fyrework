@@ -1,7 +1,7 @@
 import 'package:Fyrework/locator.dart';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/services/auth_service.dart';
-import 'package:Fyrework/services/firestore_service.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:Fyrework/services/storage_repo.dart';
 
 class MyUserController {
@@ -13,6 +13,6 @@ class MyUserController {
 //fetch user id from firebase
   getCurrentUserFromFirebase(String uid) async {
     //passing myUserData from cloud to my local user object
-    await FirestoreService().getCurrentUserData(uid);
+    await FirestoreDatabase().getCurrentUserData(uid);
   }
 }

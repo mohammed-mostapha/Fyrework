@@ -1,6 +1,5 @@
-import 'package:Fyrework/services/database.dart';
-import 'package:Fyrework/services/realtime_database.dart';
-import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
+import 'package:Fyrework/firebase_database/realtime_database.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -103,7 +102,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
   dynamic userProfilePictureUrl = MyUser.userAvatarUrl;
 
   Future addComment({@required bool containMediaFile}) {
-    return AddCommentViewModel().addComment(
+    AddCommentViewModel().addComment(
       gigIdHoldingComment: widget.passedGigId,
       gigOwnerId: widget.passedGigOwnerId,
       gigOwnerUsername: widget.passGigOwnerUsername,
@@ -234,7 +233,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                   : Container(
                                       width: 130,
                                       child: StreamBuilder(
-                                        stream: DatabaseService()
+                                        stream: FirestoreDatabase()
                                             .showGigWorkstreamActions(
                                           gigId: widget.passedGigId,
                                         ),

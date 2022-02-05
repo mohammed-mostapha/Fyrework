@@ -2,9 +2,8 @@ import 'dart:io';
 
 import 'package:Fyrework/screens/home/home.dart';
 import 'package:Fyrework/services/bunny_service.dart';
-import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:Fyrework/viewmodels/create_gig_view_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,7 +15,6 @@ import 'package:Fyrework/ui/shared/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:Fyrework/models/gig.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:sliding_card/sliding_card.dart';
@@ -358,7 +356,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
         adultContentBool: _adultContentBool,
       );
       clearGigMediaFiles();
-      await DatabaseService().addToPopularHashtags(_myFavoriteHashtags);
+      await FirestoreDatabase().addToPopularHashtags(_myFavoriteHashtags);
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
@@ -378,7 +376,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
     SizeConfig().init(context);
 
     return FutureBuilder(
-        future: DatabaseService().fetchGigsByOwnerId(),
+        future: FirestoreDatabase().fetchGigsByOwnerId(),
         builder: (context, gigsByOwnerIdSnapshot) {
           if (gigsByOwnerIdSnapshot.data != null) {
             List userGigsDocs = List.from(gigsByOwnerIdSnapshot.data.docs);

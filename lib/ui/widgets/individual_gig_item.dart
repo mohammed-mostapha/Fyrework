@@ -1,23 +1,23 @@
 import 'dart:core';
 import 'package:Fyrework/models/myUser.dart';
-import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'gig_item.dart';
 
-class Individual_gig_item extends StatefulWidget {
+class IndividualGigItem extends StatefulWidget {
   final gigId;
-  Individual_gig_item({
+  IndividualGigItem({
     Key key,
     @required this.gigId,
   }) : super(key: key);
 
   @override
-  _Individual_gig_itemState createState() => _Individual_gig_itemState();
+  _IndividualGigItemState createState() => _IndividualGigItemState();
 }
 
-class _Individual_gig_itemState extends State<Individual_gig_item> {
+class _IndividualGigItemState extends State<IndividualGigItem> {
   final String currentUserId = MyUser.uid;
 
   void initState() {
@@ -28,7 +28,7 @@ class _Individual_gig_itemState extends State<Individual_gig_item> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: StreamBuilder<QuerySnapshot>(
-        stream: DatabaseService().fetchIndividualGig(gigId: widget.gigId),
+        stream: FirestoreDatabase().fetchIndividualGig(gigId: widget.gigId),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(

@@ -9,7 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/screens/authenticate/app_start.dart';
-import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:Fyrework/ui/views/sign_up_view.dart';
 import 'package:Fyrework/services/auth_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -39,58 +39,8 @@ class _MyProfileViewState extends State<MyProfileView> {
   final String policies = 'assets/svgs/light/file-signature.svg';
   final String grid = 'assets/svgs/light/th.svg';
 
-  // signing up with phone number
-  Future verifyPhoneNumber(String phone, BuildContext context) async {
-    final _codeController = TextEditingController();
-    FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: phone,
-        timeout: Duration(seconds: 30),
-        verificationCompleted: (AuthCredential authCredential) {
-          setState(() {
-            MyProfileView.myPhoneNumber = phone;
-            MyUser.phoneNumber = phone;
-          });
-        },
-        verificationFailed: (FirebaseAuthException exception) {
-          // return "error";
-        },
-        codeSent: (String verificationId, [int forceResendingToken]) {
-          return;
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          verificationId = verificationId;
-          print(verificationId);
-          print("Timeout");
-        });
-  }
-
-  // Widget phoneVerifyer() {
-  //   return Container(
-  //     child: InternationalPhoneNumberInput(
-  //       onInputChanged: (PhoneNumber number) {
-  //         print(number.phoneNumber);
-  //         setState(() {
-  //           _phoneNumberToVerify = number.toString();
-  //         });
-  //       },
-  //       onInputValidated: (bool value) {
-  //         print(value);
-  //       },
-  //       ignoreBlank: false,
-  //       autoValidateMode: AutovalidateMode.always,
-  //       // autoValidate: false,
-  //       selectorTextStyle: TextStyle(color: Colors.black),
-  //       textFieldController: _myNewPhoneNumberController,
-  //       keyboardType: TextInputType.number,
-  //       // selectorType: PhoneInputSelectorType.DIALOG,
-  //     ),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
-    // _myFavoriteHashtagsController.text =
-    //     '${MyUser.favoriteHashtags.map((h) => h.toString())}';
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
@@ -130,7 +80,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                     padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                     child: StreamBuilder(
                       stream:
-                          DatabaseService().fetchUserData(userId: MyUser.uid),
+                          FirestoreDatabase().fetchUserData(userId: MyUser.uid),
                       builder: (context, snapshot) {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -721,7 +671,7 @@ class _MyProfileViewState extends State<MyProfileView> {
 
   userOpenGigs() {
     return StreamBuilder<QuerySnapshot>(
-      stream: DatabaseService().openGigsByGigRelatedUsers(userId: MyUser.uid),
+      stream: FirestoreDatabase().openGigsByGigRelatedUsers(userId: MyUser.uid),
       builder: (context, snapshot) {
         // print('snapshot.data: ${snapshot.data.documents.length}');
         return snapshot.hasError
@@ -797,8 +747,8 @@ class _MyProfileViewState extends State<MyProfileView> {
 
   userCompletedGigs() {
     return StreamBuilder<QuerySnapshot>(
-      stream:
-          DatabaseService().completedGigsByGigRelatedUsers(userId: MyUser.uid),
+      stream: FirestoreDatabase()
+          .completedGigsByGigRelatedUsers(userId: MyUser.uid),
       builder: (context, snapshot) {
         // print('snapshot.data: ${snapshot.data.documents.length}');
         return snapshot.hasError
@@ -874,9 +824,8 @@ class _MyProfileViewState extends State<MyProfileView> {
 
   userLikedGigs() {
     return StreamBuilder<QuerySnapshot>(
-      stream: DatabaseService().likedGigsByLikersByUserId(userId: MyUser.uid),
+      stream: FirestoreDatabase().likedGigsByLikersByUserId(userId: MyUser.uid),
       builder: (context, snapshot) {
-        // print('snapshot.data: ${snapshot.data.documents.length}');
         return snapshot.hasError
             ? Center(
                 child: Text(

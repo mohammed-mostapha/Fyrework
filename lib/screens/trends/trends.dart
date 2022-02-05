@@ -1,5 +1,4 @@
-import 'package:Fyrework/services/database.dart';
-import 'package:Fyrework/services/realtime_database.dart';
+import 'package:Fyrework/firebase_database/realtime_database.dart';
 import 'package:flutter/material.dart';
 import 'package:Fyrework/screens/trends/appbar_textfield.dart';
 import 'package:Fyrework/screens/trends/providerGigs_view.dart';
@@ -19,8 +18,8 @@ class Trends extends StatefulWidget {
 
 class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
   final String bell = 'assets/svgs/light/bell.svg';
-  final String search_thin = 'assets/svgs/flaticon/search_thin.svg';
-  final String search_thick = 'assets/svgs/flaticon/search_thick.svg';
+  final String searchThin = 'assets/svgs/flaticon/search_thin.svg';
+  final String searchThick = 'assets/svgs/flaticon/search_thick.svg';
   TabController trendsController;
   TextEditingController searchController = TextEditingController();
   bool isSearchOpen = false;

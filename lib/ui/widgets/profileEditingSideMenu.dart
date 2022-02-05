@@ -4,12 +4,11 @@ import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/screens/add_gig/assets_picker/constants/picker_model.dart';
 import 'package:Fyrework/screens/add_gig/assets_picker/src/widget/asset_picker.dart';
 import 'package:Fyrework/services/auth_service.dart';
-import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:Fyrework/services/places_autocomplete.dart';
 import 'package:Fyrework/services/popularHashtags.dart';
 import 'package:Fyrework/services/storage_repo.dart';
 import 'package:Fyrework/ui/shared/constants.dart';
-import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:Fyrework/view_controllers/myUser_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -50,10 +49,7 @@ class _ProfileEditingSideMenuState extends State<ProfileEditingSideMenu> {
       TextEditingController(text: MyUser.username);
   TextEditingController _myNewEmailaddress =
       TextEditingController(text: MyUser.email);
-  TextEditingController _myNewPhoneNumberController = TextEditingController(
-      text: MyUser.phoneNumber == null ? '' : MyUser.phoneNumber);
   String myNewLocation = PlacesAutocomplete.placesAutoCompleteController.text;
-  String _phoneNumberToVerify;
   final _myFavoriteHashtagsListEmpty = SnackBar(
     // backgroundColor: Theme.of(context).accentColor,
     content: Text(
@@ -153,11 +149,12 @@ class _ProfileEditingSideMenuState extends State<ProfileEditingSideMenu> {
                     storageZonePath: 'profilePictures',
                   );
 
-          await DatabaseService().updateMyAvatar(
+          await FirestoreDatabase().updateMyAvatar(
             uid: MyUser.uid,
             updatedProfileAvatar: _updatedProfileAvatar,
           );
-          await DatabaseService().addToPopularHashtags(_myFavoriteHashtagsList);
+          await FirestoreDatabase()
+              .addToPopularHashtags(_myFavoriteHashtagsList);
           MyUserController().getCurrentUserFromFirebase(MyUser.uid);
           EasyLoading.dismiss().then(
             (value) => EasyLoading.showSuccess(''),
@@ -166,7 +163,7 @@ class _ProfileEditingSideMenuState extends State<ProfileEditingSideMenu> {
 
         if (validate()) {
           EasyLoading.show();
-          await DatabaseService().updateMyProfileData(
+          await FirestoreDatabase().updateMyProfileData(
             uid: MyUser.uid,
             myNewAvatar: _updatedProfileAvatar,
             myNewFavoriteHashtag: _myFavoriteHashtagsList,

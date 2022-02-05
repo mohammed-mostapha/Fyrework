@@ -5,7 +5,7 @@ import 'package:Fyrework/services/bunny_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Fyrework/screens/home/home.dart';
-import 'package:Fyrework/services/database.dart';
+import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:Fyrework/viewmodels/create_gig_view_model.dart';
 import '../src/wechat_assets_picker.dart';
 import '../constants/picker_model.dart';
@@ -74,16 +74,6 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
       if (result != null && result != assets) {
         assets = List<AssetEntity>.from(result);
         if (mounted) {
-          // setState(() {
-          //   // choosedAssets = !choosedAssets;
-          //   print('count: ${result.length}');
-          // });
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (_) => MultiAssetsPicker(assets: assets),
-          //   ),
-          // );
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -160,46 +150,6 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
   Widget _audioAssetWidget(AssetEntity asset) {
     return Container(width: 0, height: 0);
   }
-
-  // Widget _audioAssetWidget(AssetEntity asset) {
-  //   return ColoredBox(
-  //     color: context.themeData.dividerColor,
-  //     child: Stack(
-  //       children: <Widget>[
-  //         AnimatedPositioned(
-  //           duration: kThemeAnimationDuration,
-  //           top: 0.0,
-  //           left: 0.0,
-  //           right: 0.0,
-  //           bottom: isDisplayingDetail ? 20.0 : 0.0,
-  //           child: Center(
-  //             child: Icon(
-  //               Icons.audiotrack,
-  //               size: isDisplayingDetail ? 24.0 : 16.0,
-  //             ),
-  //           ),
-  //         ),
-  //         AnimatedPositioned(
-  //           duration: kThemeAnimationDuration,
-  //           left: 0.0,
-  //           right: 0.0,
-  //           bottom: isDisplayingDetail ? 0.0 : -20.0,
-  //           height: 20.0,
-  //           child: Text(
-  //             asset.title,
-  //             style: const TextStyle(
-  //               height: 1.0,
-  //               fontSize: 16.0,
-  //             ),
-  //             maxLines: 1,
-  //             overflow: TextOverflow.ellipsis,
-  //             textAlign: TextAlign.center,
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Widget _imageAssetWidget(AssetEntity asset) {
     return Image(
@@ -327,13 +277,6 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
         ),
       );
 
-  // Future prepareGigMediaFilesAndPublish() async {
-  //   Future<List<File>> assignAssetsToGigMediaFiles = assigingLists();
-  //   await assignAssetsToGigMediaFiles;
-  //   await uploadMediaFiles();
-  //   clearGigMediaFiles();
-  // }
-
   Future<List<File>> assigingLists() async {
     for (final mediaFile in assets) {
       gigMediaFiles.add(await mediaFile.originFile);
@@ -345,11 +288,6 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
     String uploadResult;
     if (gigMediaFiles != null) {
       for (var i = 0; i < gigMediaFiles.length; i++) {
-        // storageResult = await StorageRepo().uploadMediaFile(
-        //   title: fileName.basename(gigMediaFiles[i].path),
-        //   mediaFileToUpload: gigMediaFiles[i],
-        // );
-
         uploadResult = await BunnyService().uploadMediaFileToBunny(
             fileToUpload: gigMediaFiles[i], storageZonePath: 'gigMediaFiles');
 
@@ -376,7 +314,7 @@ class _MultiAssetsPickerState extends State<MultiAssetsPicker> {
         adultContentBool: widget.adultContentBool,
       );
       clearGigMediaFiles();
-      await DatabaseService().addToPopularHashtags(widget.gigHashtags);
+      await FirestoreDatabase().addToPopularHashtags(widget.gigHashtags);
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
