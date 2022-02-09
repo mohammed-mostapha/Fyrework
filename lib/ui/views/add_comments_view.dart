@@ -48,6 +48,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
   AnimationController animationController;
   Animation<double> animation;
   bool _filePickerOpened = false;
+  bool _canSendComment = false;
   double _animatedContainerHeight = 0;
 
   AnimationController _pickFilecontroller;
@@ -69,7 +70,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
   double screenWidth = 0.0;
   double screenHeight = 0.0;
   // bool isPortrait = true;
-  final _proposalFormKey = GlobalKey<FormState>();
+  // final _proposalFormKey = GlobalKey<FormState>();
   TextEditingController _addCommentsController = TextEditingController();
   TextEditingController _addProposalController = TextEditingController();
   TextEditingController _offeredBudgetController = TextEditingController();
@@ -124,6 +125,9 @@ class _AddCommentsViewState extends State<AddCommentsView>
     _addCommentsController.clear();
     _addProposalController.clear();
     _offeredBudgetController.clear();
+    setState(() {
+      _canSendComment = false;
+    });
   }
 
   @override
@@ -742,15 +746,19 @@ class _AddCommentsViewState extends State<AddCommentsView>
                               : myGig || appointedUser
                                   ? Column(
                                       children: [
-                                        SizeTransition(
-                                          sizeFactor:
-                                              _pickFilecontroller, // duration: Duration(milliseconds: 300),
-                                          child: WorkstreamFiles(
-                                            passedGigId: widget.passedGigId,
-                                            passedGigOwnerId:
-                                                widget.passedGigOwnerId,
-                                            passedGigOwnerUsername:
-                                                widget.passGigOwnerUsername,
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(40.0),
+                                          child: SizeTransition(
+                                            sizeFactor:
+                                                _pickFilecontroller, // duration: Duration(milliseconds: 300),
+                                            child: WorkstreamFiles(
+                                              passedGigId: widget.passedGigId,
+                                              passedGigOwnerId:
+                                                  widget.passedGigOwnerId,
+                                              passedGigOwnerUsername:
+                                                  widget.passGigOwnerUsername,
+                                            ),
                                           ),
                                         ),
                                         Container(
@@ -791,6 +799,17 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                               context,
                                                               "Add private comment",
                                                             ),
+                                                            onChanged: (text) {
+                                                              setState(() {
+                                                                _addCommentsController
+                                                                        .text
+                                                                        .isNotEmpty
+                                                                    ? _canSendComment =
+                                                                        true
+                                                                    : _canSendComment =
+                                                                        false;
+                                                              });
+                                                            },
                                                             onFieldSubmitted:
                                                                 (String
                                                                     submittedString) async {
@@ -1006,11 +1025,14 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                   width: 5,
                                                 ),
                                                 GestureDetector(
-                                                  onTap: () {
-                                                    addComment(
-                                                        containMediaFile:
-                                                            false);
-                                                  },
+                                                  onTap: _canSendComment
+                                                      ? () {
+                                                          addComment(
+                                                            containMediaFile:
+                                                                false,
+                                                          );
+                                                        }
+                                                      : null,
                                                   child: Padding(
                                                     padding:
                                                         const EdgeInsets.all(
@@ -1019,14 +1041,15 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                       width: 48,
                                                       height: 48,
                                                       decoration: BoxDecoration(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .primaryColor,
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          50))),
+                                                        color: _canSendComment
+                                                            ? Theme.of(context)
+                                                                .primaryColor
+                                                            : Colors.grey,
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                          Radius.circular(50),
+                                                        ),
+                                                      ),
                                                       child: Center(
                                                         child: SizedBox(
                                                           width: 20,

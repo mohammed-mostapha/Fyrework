@@ -42,7 +42,7 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
   List<File> _multipleFilesPaths;
   String _fileExtension;
   List<String> _multipleFilesExtensions;
-  FileType _pickType;
+  RequestType _pickType;
   bool _multiPick = false;
   List<AssetEntity> selectedWorkStreamFilesList;
   File assetEntityToFile;
@@ -94,7 +94,7 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
               context,
               maxAssets: maxAssetsCount,
               selectedAssets: assets,
-              requestType: RequestType.image,
+              requestType: _pickType,
             );
           },
         ),
@@ -104,7 +104,9 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
     try {
       await navigateToSelectWorkstreamFiles(isMultiPick: _multiPick);
     } on PlatformException catch (e) {
-      print('Unsupported Operation' + e.toString());
+      print(
+        'Unsupported Operation' + e.toString(),
+      );
     }
     if (!mounted) {
       return;
@@ -191,188 +193,129 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).inputDecorationTheme.fillColor,
-            border: Border.all(width: 1, color: Theme.of(context).primaryColor),
-            borderRadius: BorderRadius.only(
-              topLeft: const Radius.circular(10),
-              topRight: const Radius.circular(10),
-            ),
-          ),
-          width: double.infinity,
-          // height: 100,
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Container(
+      // decoration: BoxDecoration(
+      //   // color: Colors.red,
+      //   color: Theme.of(context).inputDecorationTheme.fillColor,
+      //   border: Border.all(
+      //     width: 1,
+      //     color: Theme.of(context).primaryColor,
+      //   ),
+      //   borderRadius: BorderRadius.only(
+      //     topLeft: const Radius.circular(10),
+      //     topRight: const Radius.circular(10),
+      //   ),
+      // ),
+      width: double.infinity,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Wrap(
+              alignment: WrapAlignment.spaceEvenly,
+              spacing: 40,
+              runAlignment: WrapAlignment.center,
               children: [
-                Wrap(
-                  alignment: WrapAlignment.spaceEvenly,
-                  spacing: 40,
-                  runAlignment: WrapAlignment.center,
-                  children: [
-                    GestureDetector(
-                      child: FittedBox(
-                        fit: BoxFit.fill,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: SvgPicture.asset(
-                                document,
-                                semanticsLabel: 'document',
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              'document',
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.bodyText1,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      child: FittedBox(
-                        fit: BoxFit.fill,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: SvgPicture.asset(
-                                image,
-                                semanticsLabel: 'image',
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text('image',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.bodyText1)
-                          ],
-                        ),
-                      ),
-                      onTap: () {
-                        setState(() {
-                          _pickType = FileType.image;
-                        });
-                        openFileExplorer();
-                      },
-                    ),
-                    GestureDetector(
-                      child: FittedBox(
-                        fit: BoxFit.fill,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: SvgPicture.asset(
-                                video,
-                                semanticsLabel: 'video',
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text('video',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.bodyText1)
-                          ],
-                        ),
-                      ),
-                      onTap: () {
-                        setState(() {
-                          _pickType = FileType.video;
-                        });
-                        openFileExplorer();
-                      },
-                    ),
-                    GestureDetector(
-                      child: FittedBox(
-                        fit: BoxFit.fill,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 30,
-                              height: 30,
-                              child: SvgPicture.asset(
-                                audio,
-                                semanticsLabel: 'audio',
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              'audio',
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.bodyText1,
-                            )
-                          ],
-                        ),
-                      ),
-                      onTap: () {
-                        setState(() {
-                          _pickType = FileType.audio;
-                        });
-                        openFileExplorer();
-                      },
-                    ),
-                  ],
-                ),
-                Container(
-                  width: 200,
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: SwitchListTile.adaptive(
-                          title: Text(
-                            'Multiple Files',
-                            style: Theme.of(context).textTheme.bodyText1,
+                GestureDetector(
+                  child: FittedBox(
+                    fit: BoxFit.fill,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: SvgPicture.asset(
+                            image,
+                            semanticsLabel: 'image',
+                            color: Theme.of(context).primaryColor,
                           ),
-                          onChanged: (bool value) {
-                            setState(() {
-                              _multiPick = value;
-                            });
-                          },
-                          value: _multiPick,
                         ),
-                      )
-                    ],
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text('image',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodyText1)
+                      ],
+                    ),
                   ),
+                  onTap: () {
+                    setState(() {
+                      _pickType = RequestType.image;
+                    });
+                    openFileExplorer();
+                  },
                 ),
-                SizedBox(
-                  height: 20,
+                GestureDetector(
+                  child: FittedBox(
+                    fit: BoxFit.fill,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: SvgPicture.asset(
+                            video,
+                            semanticsLabel: 'video',
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text('video',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodyText1)
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      _pickType = RequestType.video;
+                    });
+                    openFileExplorer();
+                  },
                 ),
-                // Container(
-                //   color: Colors.white,
-                //   width: double.infinity,
-                //   height: 300,
-                //   child: ListView(
-                //     children: workstreamFilesList,
-                //   ),
-                // )
               ],
             ),
-          )),
+            Container(
+              width: 200,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: SwitchListTile.adaptive(
+                      title: Text(
+                        'Multiple Files',
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                      onChanged: (bool value) {
+                        setState(() {
+                          _multiPick = value;
+                        });
+                      },
+                      value: _multiPick,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            // Container(
+            //   color: Colors.white,
+            //   width: double.infinity,
+            //   height: 300,
+            //   child: ListView(
+            //     children: workstreamFilesList,
+            //   ),
+            // )
+          ],
+        ),
+      ),
     );
   }
 
@@ -381,124 +324,3 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
     super.dispose();
   }
 }
-
-// class UploadTaskListTile extends StatelessWidget {
-// addWorkstreamFileAsComment(
-//     {bool persistentPrivateComment, String commentBody}) {
-//   AddCommentViewModel().addComment(
-//     gigIdHoldingComment: WorkstreamFiles.passedGigId,
-//     gigOwnerId: WorkstreamFiles.passedGigOwnerId,
-//     commentOwnerUsername: myUsername,
-//     commentBody: commentBody,
-//     commentOwnerId: myUserId,
-//     commentOwnerAvatarUrl: myUserProfilePictureUrl,
-//     commentId: '',
-//     commentTime: new DateTime.now(),
-//     isPrivateComment: false,
-//     persistentPrivateComment: persistentPrivateComment,
-//     proposal: false,
-//     approved: false,
-//     rejected: false,
-//     gigCurrency: null,
-//     offeredBudget: null,
-//   );
-// }
-
-//   UploadTaskListTile({Key key, this.task, this.onDismissed, this.onDownload})
-//       : super(key: key);
-
-//   final UploadTask task;
-//   final VoidCallback onDismissed;
-//   final VoidCallback onDownload;
-
-//   Future pushWorkstreamFile() async {
-//     print('coming from pushWorkstreamFile');
-//     String workstreamfileUrl = await task.snapshot.ref.getDownloadURL();
-//     // addWorkstreamFileAsComment(
-//     //     persistentPrivateComment: true, commentBody: workstreamfileUrl);
-//   }
-
-//   String get uploadStatus {
-//     String result;
-//     if (task.isComplete) {
-//       if (task.isSuccessful) {
-//         result = 'Complete';
-//         //post a comment with the uploaded file
-//         pushWorkstreamFile();
-//       } else if (task.isCanceled) {
-//         result = 'Canceled';
-//       } else {
-//         result = 'Failed Error ${task.lastSnapshot.error}';
-//       }
-//     } else if (task.isInProgress) {
-//       result = 'Uploading';
-//     } else if (task.isPaused) {
-//       result = 'Paused';
-//     }
-//     return result;
-//   }
-
-//   String bytesTransferred(TaskSnapshot snapshot) {
-//     return '${snapshot.bytesTransferred} / ${snapshot.bytesTransferred}';
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return StreamBuilder<StorageTaskEvent>(
-//         stream: task.events,
-//         builder: (BuildContext context,
-//             AsyncSnapshot<StorageTaskEvent> asyncSnapshot) {
-//           Widget subtitle;
-//           if (asyncSnapshot.hasData) {
-//             final StorageTaskEvent event = asyncSnapshot.data;
-//             final TaskSnapshot snapshot = event.snapshot;
-
-//             subtitle =
-//                 Text('$uploadStatus: ${bytesTransferred(snapshot)} bytes sent');
-//           } else {
-//             subtitle = const Text('Starting...');
-//           }
-//           return Dismissible(
-//             key: Key(task.hashCode.toString()),
-//             onDismissed: (_) => onDismissed(),
-//             child: ListTile(
-//               title: Text('Upload Task #${task.hashCode}'),
-//               subtitle: subtitle,
-//               trailing: Row(
-//                 mainAxisSize: MainAxisSize.min,
-//                 children: <Widget>[
-//                   Offstage(
-//                     offstage: !task.isInProgress,
-//                     child: IconButton(
-//                       icon: const Icon(Icons.pause),
-//                       onPressed: () => task.pause(),
-//                     ),
-//                   ),
-//                   Offstage(
-//                     offstage: !task.isPaused,
-//                     child: IconButton(
-//                       icon: const Icon(Icons.file_upload),
-//                       onPressed: () => task.resume(),
-//                     ),
-//                   ),
-//                   Offstage(
-//                     offstage: task.isComplete,
-//                     child: IconButton(
-//                       icon: const Icon(Icons.cancel),
-//                       onPressed: () => task.cancel(),
-//                     ),
-//                   ),
-//                   Offstage(
-//                     offstage: !(task.isComplete && task.isSuccessful),
-//                     child: IconButton(
-//                       icon: const Icon(Icons.file_download),
-//                       onPressed: () => onDownload(),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           );
-//         });
-//   }
-// }
