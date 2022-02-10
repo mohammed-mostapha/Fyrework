@@ -1,9 +1,9 @@
-import 'package:Fyrework/ui/widgets/workstreamFiles_viewer.dart';
+import 'package:Fyrework/custom_widgets/chewie_list_item.dart';
+import 'package:Fyrework/custom_widgets/workstreamFiles_viewer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:video_player/video_player.dart';
-import 'package:Fyrework/ui/widgets/chewie_list_item.dart';
 
 class GigItemMediaPreviewer extends StatefulWidget {
   final List<dynamic> receivedGigMediaFilesUrls;

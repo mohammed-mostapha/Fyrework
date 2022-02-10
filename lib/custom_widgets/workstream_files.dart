@@ -1,17 +1,15 @@
 import 'dart:io';
 
+import 'package:Fyrework/firebase_database/firestore_database.dart';
+import 'package:Fyrework/models/comment.dart';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/screens/add_gig/assets_picker/constants/picker_model.dart';
 import 'package:Fyrework/screens/add_gig/assets_picker/src/widget/asset_picker.dart';
 import 'package:Fyrework/services/bunny_service.dart';
-import 'package:Fyrework/viewmodels/add_comment_view_model.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as extractedFileName;
-import 'package:http/http.dart' as http;
 import 'package:photo_manager/photo_manager.dart';
 
 class WorkstreamFiles extends StatefulWidget {
@@ -37,11 +35,6 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
     super.initState();
   }
 
-  String _fileName;
-  File _filePath;
-  List<File> _multipleFilesPaths;
-  String _fileExtension;
-  List<String> _multipleFilesExtensions;
   RequestType _pickType;
   bool _multiPick = false;
   List<AssetEntity> selectedWorkStreamFilesList;
@@ -52,35 +45,33 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
   final String image = 'assets/svgs/flaticon/image.svg';
   final String video = 'assets/svgs/flaticon/video.svg';
   final String audio = 'assets/svgs/flaticon/audio.svg';
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  List<UploadTask> _storageUploadTasks = <UploadTask>[];
   List urlsForFirestoreDB = [];
-
   String myUsername = MyUser.username;
   String myUserId = MyUser.uid;
   String myUserAvatarUrl = MyUser.userAvatarUrl;
 
   addWorkstreamFileAsComment(
       {bool persistentPrivateComment, dynamic commentBody}) {
-    AddCommentViewModel().addComment(
-      gigIdHoldingComment: widget.passedGigId,
-      gigOwnerId: widget.passedGigOwnerId,
-      gigOwnerUsername: widget.passedGigOwnerUsername,
-      commentOwnerUsername: myUsername,
-      commentBody: commentBody,
-      commentOwnerId: myUserId,
-      commentOwnerAvatarUrl: myUserAvatarUrl,
-      commentId: '',
-      isPrivateComment: false,
-      proposal: false,
-      approved: false,
-      rejected: false,
-      gigCurrency: null,
-      offeredBudget: null,
-      containMediaFile: true,
-      isGigCompleted: false,
-    );
+    FirestoreDatabase().addComment(
+        Comment(
+          gigIdHoldingComment: widget.passedGigId,
+          gigOwnerId: widget.passedGigOwnerId,
+          gigOwnerUsername: widget.passedGigOwnerUsername,
+          commentOwnerUsername: myUsername,
+          commentBody: commentBody,
+          commentOwnerId: myUserId,
+          commentOwnerAvatarUrl: myUserAvatarUrl,
+          commentId: '',
+          isPrivateComment: false,
+          proposal: false,
+          approved: false,
+          rejected: false,
+          gigCurrency: null,
+          offeredBudget: null,
+          containMediaFile: true,
+          isGigCompleted: false,
+        ),
+        widget.passedGigId);
     urlsForFirestoreDB = [];
   }
 
@@ -139,7 +130,7 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
 
   Future<dynamic> uploadWorkstreamFiles({
     String fileName,
-    String filePath,
+    File filePath,
     String storageZonePath,
     bool multipleFiles,
   }) async {
@@ -149,9 +140,9 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
     if (multipleFiles) {
       for (var i = 0; i < selectedWorkStreamFilesList.length; i++) {
         assetEntityToFile = await selectedWorkStreamFilesList[i].file;
-        _fileName = extractedFileName.basename(assetEntityToFile.path);
-        _filePath = File(assetEntityToFile.path);
-        fileToUPload = _filePath;
+        fileName = extractedFileName.basename(assetEntityToFile.path);
+        filePath = File(assetEntityToFile.path);
+        fileToUPload = filePath;
         ////////////
         uploadResult = await BunnyService().uploadMediaFileToBunny(
           fileToUpload: fileToUPload,
@@ -160,12 +151,6 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
 
         urlsForFirestoreDB.add(uploadResult);
       }
-
-      // uploadResult = await BunnyService().uploadFileToBunny(
-      //   fileToUpload: fileToUPload,
-      //   storageZonePath: storageZonePath,
-      // );
-
       return addWorkstreamFileAsComment(
         persistentPrivateComment: true,
         commentBody: urlsForFirestoreDB,
@@ -174,9 +159,9 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
       ///////////////////////////
     } else {
       assetEntityToFile = await selectedWorkStreamFilesList.first.file;
-      _fileName = extractedFileName.basename(assetEntityToFile.path);
-      _filePath = File(assetEntityToFile.path);
-      fileToUPload = _filePath;
+      fileName = extractedFileName.basename(assetEntityToFile.path);
+      filePath = File(assetEntityToFile.path);
+      fileToUPload = filePath;
 
       uploadResult = await BunnyService().uploadMediaFileToBunny(
         fileToUpload: fileToUPload,
@@ -194,18 +179,6 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // decoration: BoxDecoration(
-      //   // color: Colors.red,
-      //   color: Theme.of(context).inputDecorationTheme.fillColor,
-      //   border: Border.all(
-      //     width: 1,
-      //     color: Theme.of(context).primaryColor,
-      //   ),
-      //   borderRadius: BorderRadius.only(
-      //     topLeft: const Radius.circular(10),
-      //     topRight: const Radius.circular(10),
-      //   ),
-      // ),
       width: double.infinity,
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 10),

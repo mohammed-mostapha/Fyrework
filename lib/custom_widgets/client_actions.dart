@@ -1,7 +1,7 @@
+import 'package:Fyrework/models/comment.dart';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
-import 'package:Fyrework/viewmodels/add_comment_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -188,28 +188,32 @@ class _ClientActionsState extends State<ClientActions> {
                                       ),
                                     ),
                                     onTap: () async {
-                                      await AddCommentViewModel().addComment(
-                                        gigIdHoldingComment: widget.passedGigId,
-                                        gigOwnerId: widget.passedGigOwnerId,
-                                        gigOwnerUsername:
-                                            widget.pasedGigOwnerUsername,
-                                        commentOwnerUsername: username,
-                                        commentBody:
-                                            'Your review will appear here...',
-                                        commentOwnerId: userId,
-                                        commentOwnerAvatarUrl:
-                                            userProfilePictureUrl,
-                                        commentId: '',
-                                        isPrivateComment: true,
-                                        proposal: false,
-                                        approved: true,
-                                        rejected: false,
-                                        containMediaFile: false,
-                                        isGigCompleted: true,
-                                        appointedUserId: appointedUserId,
-                                        appointedUsername: appointedUsername,
-                                        ratingCount: 0,
-                                        leftReview: false,
+                                      await FirestoreDatabase().addComment(
+                                        Comment(
+                                          gigIdHoldingComment:
+                                              widget.passedGigId,
+                                          gigOwnerId: widget.passedGigOwnerId,
+                                          gigOwnerUsername:
+                                              widget.pasedGigOwnerUsername,
+                                          commentOwnerUsername: username,
+                                          commentBody:
+                                              'Your review will appear here...',
+                                          commentOwnerId: userId,
+                                          commentOwnerAvatarUrl:
+                                              userProfilePictureUrl,
+                                          commentId: '',
+                                          isPrivateComment: true,
+                                          proposal: false,
+                                          approved: true,
+                                          rejected: false,
+                                          containMediaFile: false,
+                                          isGigCompleted: true,
+                                          appointedUserId: appointedUserId,
+                                          appointedUsername: appointedUsername,
+                                          ratingCount: 0,
+                                          leftReview: false,
+                                        ),
+                                        widget.passedGigId,
                                       );
 
                                       await FirestoreDatabase()

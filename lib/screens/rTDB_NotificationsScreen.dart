@@ -1,6 +1,6 @@
+import 'package:Fyrework/custom_widgets/individual_gig_item.dart';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/firebase_database/realtime_database.dart';
-import 'package:Fyrework/ui/widgets/individual_gig_item.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeAgo;

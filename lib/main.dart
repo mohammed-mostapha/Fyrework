@@ -1,7 +1,7 @@
+import 'package:Fyrework/custom_widgets/network_sensor.dart';
 import 'package:Fyrework/services/connectivity_provider.dart';
 import 'package:Fyrework/services/mobileAds_provider.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
-import 'package:Fyrework/ui/widgets/network_sensor.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ import 'package:Fyrework/screens/authenticate/app_start.dart';
 import 'package:Fyrework/screens/home/home.dart';
 import 'package:Fyrework/services/auth_service.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
-import 'package:Fyrework/ui/views/sign_up_view.dart';
+import 'package:Fyrework/screens/sign_up_view.dart';
 import 'package:Fyrework/view_controllers/myUser_controller.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -51,16 +51,6 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // routes: <String, WidgetBuilder>{
-      //   '/home': (BuildContext context) => HomeController(),
-      //   '/signUp': (BuildContext context) => SignUpView(
-      //         authFormType: AuthFormType.signUp,
-      //       ),
-      //   '/signIn': (BuildContext context) => SignUpView(
-      //         authFormType: AuthFormType.signIn,
-      //       ),
-      //   '/addGig': (BuildContext context) => Home(passedSelectedIndex: 1),
-      // },
       debugShowCheckedModeBanner: false,
       home: HomeController(),
     );

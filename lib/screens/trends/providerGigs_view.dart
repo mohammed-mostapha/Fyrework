@@ -1,10 +1,10 @@
+import 'package:Fyrework/custom_widgets/gig_item.dart';
 import 'package:Fyrework/screens/trends/gigIndexProvider.dart';
 import 'package:Fyrework/screens/trends/queryStringProvider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/firebase_database/firestore_database.dart';
-import 'package:Fyrework/ui/widgets/gig_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';

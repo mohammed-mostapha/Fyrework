@@ -1,29 +1,25 @@
 import 'dart:core';
+
+import 'package:Fyrework/custom_widgets/gig_item_media_previewer.dart';
+import 'package:Fyrework/custom_widgets/user_profile.dart';
 import 'package:Fyrework/models/myUser.dart';
-import 'package:Fyrework/screens/my_profile.dart';
+import 'package:Fyrework/screens/trends/gigIndexProvider.dart';
 import 'package:Fyrework/firebase_database/firestore_database.dart';
-import 'package:Fyrework/firebase_database/realtime_database.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
+import 'package:Fyrework/screens/edit_your_gig.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:Fyrework/ui/views/add_comments_view.dart';
-import 'package:Fyrework/ui/widgets/gig_item_media_previewer.dart';
-import 'package:Fyrework/ui/widgets/user_profile.dart';
+import 'package:Fyrework/screens/add_comments_view.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
-import 'package:Fyrework/ui/views/edit_your_gig.dart';
-import 'package:Fyrework/screens/trends/gigIndexProvider.dart';
 
-class GigItem extends StatefulWidget {
+class UserRelatedGigItem extends StatefulWidget {
   final index;
   final appointed;
   final appointedusername;
-  final appointedUserId;
-  final hirerUserId;
-  final hirerUsername;
   final appliersOrHirersByUserId;
   final gigRelatedUsersByUserId;
   final gigId;
@@ -42,6 +38,7 @@ class GigItem extends StatefulWidget {
   final gigCurrency;
   final gigBudget;
   final gigValue;
+  final appointedUserId;
   final adultContentText;
   final adultContentBool;
   final hidden;
@@ -51,15 +48,11 @@ class GigItem extends StatefulWidget {
   final clientLeftReview;
   final likesCount;
   final likersByUserId;
-
-  GigItem({
+  UserRelatedGigItem({
     Key key,
     this.index,
     this.appointed,
     this.appointedusername,
-    this.appointedUserId,
-    this.hirerUserId,
-    this.hirerUsername,
     this.appliersOrHirersByUserId,
     this.gigRelatedUsersByUserId,
     this.gigId,
@@ -78,6 +71,7 @@ class GigItem extends StatefulWidget {
     this.gigCurrency,
     this.gigBudget,
     this.gigValue,
+    this.appointedUserId,
     this.adultContentText,
     this.adultContentBool,
     this.hidden,
@@ -90,10 +84,11 @@ class GigItem extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _GigItemState createState() => _GigItemState();
+  _UserRelatedGigItemState createState() => _UserRelatedGigItemState();
 }
 
-class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
+class _UserRelatedGigItemState extends State<UserRelatedGigItem>
+    with TickerProviderStateMixin {
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
   bool myGig = false;
@@ -118,8 +113,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
 
   AnimationController _likeAnimationController;
 
-  // List<String> gigMediaFilesDownloadedUrls = List<String>();
-
   void initState() {
     super.initState();
 
@@ -141,27 +134,19 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                   passedGigOwnerId: widget.gigOwnerId,
                   passGigOwnerUsername: widget.gigOwnerUsername,
                   passedCurrentUserId: widget.currentUserId,
-                  // passedGigAppointed: widget.appointed,
                   passedGigValue: widget.gigValue,
                   passedGigCurrency: widget.gigCurrency,
                   passedGigBudget: widget.gigBudget,
                 )));
   }
 
-  showUserProfile({@required String userId}) {
-    userId != MyUser.uid
-        ? Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => UserProfileView(
-                      passedUserUid: userId,
-                    )))
-        : Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MyProfileView(),
-            ),
-          );
+  showUserProfile() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => UserProfileView(
+                  passedUserUid: widget.gigOwnerId,
+                )));
   }
 
   @override
@@ -172,34 +157,20 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
         darkModeOn ? fyreworkLightTheme() : fyreworkDarkTheme();
 
     bool gigHasLikes = widget.likesCount > 0 ? true : false;
-    bool hasLiked = widget.likersByUserId.contains(MyUser.uid) ? true : false;
+    bool liked = widget.likersByUserId.contains(MyUser.uid) ? true : false;
 
-    Future _likedPressed() async {
-      hasLiked = !hasLiked;
+    _likedPressed() {
       setState(() {
+        liked = !liked;
         _likeAnimationController.forward().then((value) {
           _likeAnimationController.reverse();
         });
       });
-      try {
-        await FirestoreDatabase().updateGigAddOrRemoveLike(
-          gigId: widget.gigId,
-          userId: MyUser.uid,
-          likedOrNot: hasLiked,
-        );
-        print('hasLikedBefore: $hasLiked');
-        if (hasLiked) {
-          await RealTimeDatabase().addLikeNotification(
-            gigId: widget.gigId,
-            gigOwnerId: widget.gigOwnerId,
-            likerId: MyUser.uid,
-            likerUsername: MyUser.username,
-            likerUserAvatarUrl: MyUser.userAvatarUrl,
-          );
-        }
-      } catch (e) {
-        print(e);
-      }
+      FirestoreDatabase().updateGigAddOrRemoveLike(
+        gigId: widget.gigId,
+        userId: MyUser.uid,
+        likedOrNot: liked,
+      );
     }
 
     myGig = widget.gigOwnerId == MyUser.uid ? true : false;
@@ -265,9 +236,9 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
           width: 25,
           height: 25,
           child: SvgPicture.asset(
-            hasLiked ? heartSolid : heart,
+            liked ? heartSolid : heart,
             semanticsLabel: 'Like',
-            color: hasLiked ? Colors.red[300] : Theme.of(context).primaryColor,
+            color: liked ? Colors.red[300] : Theme.of(context).primaryColor,
           ),
         ),
         onTap: () => _likedPressed(),
@@ -335,7 +306,10 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                 .copyWith(color: Theme.of(context).accentColor),
           ),
           onPressed: () {
-            Navigator.of(context, rootNavigator: true).pop();
+            Navigator.of(
+              context,
+              rootNavigator: true,
+            ).pop();
           },
         ),
         FlatButton(
@@ -347,9 +321,14 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                 .copyWith(color: Theme.of(context).accentColor),
           ),
           onPressed: () async {
-            Navigator.of(context, rootNavigator: true).pop();
+            Navigator.of(
+              context,
+              rootNavigator: true,
+            ).pop();
             EasyLoading.show();
-            await FirestoreDatabase().deleteMyGigByGigId(gigId: widget.gigId);
+            await FirestoreDatabase().deleteMyGigByGigId(
+              gigId: widget.gigId,
+            );
 
             EasyLoading.showSuccess('');
 
@@ -461,9 +440,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                             ),
                           ),
                         ),
-                        onTap: () {
-                          showUserProfile(userId: widget.gigOwnerId);
-                        },
+                        onTap: showUserProfile,
                       ),
                       (myGig && !widget.appointed)
                           ? PopupMenuButton(
@@ -515,12 +492,13 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                                               vertical: 8.0),
                                           child: Container(
                                             decoration: BoxDecoration(
-                                                color: themeOfOppositeContext
-                                                    .inputDecorationTheme
-                                                    .fillColor,
-                                                border: Border(),
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
+                                              color: themeOfOppositeContext
+                                                  .inputDecorationTheme
+                                                  .fillColor,
+                                              border: Border(),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
                                             child: ListTile(
                                               leading: SizedBox(
                                                 width: 20,
@@ -632,29 +610,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                         ],
                       ),
                     ),
-
-                    // width: MediaQuery.of(context).size.width / 2.5,
-                    // widget.gigLocation != null
-                    //     ? Expanded(
-                    //         child: Padding(
-                    //           padding: const EdgeInsets.only(left: 10),
-                    //           child: Row(
-                    //             mainAxisAlignment: MainAxisAlignment.end,
-                    //             children: [
-                    //               SizedBox(
-                    //                 width: 16,
-                    //                 height: 16,
-                    //                 child: SvgPicture.asset(
-                    //                   mapMarkerAlt,
-                    //                   semanticsLabel: 'Location',
-                    //                   color: Theme.of(context).primaryColor,
-                    //                 ),
-                    //               ),
-                    //             ],
-                    //           ),
-                    //         ),
-                    //       )
-                    //     : Container(width: 0, height: 0),
                   ],
                 ),
                 SizedBox(
@@ -674,9 +629,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                             height: 0,
                           ),
                   ],
-                ),
-                SizedBox(
-                  height: 10,
                 ),
                 Container(
                   alignment: Alignment.centerLeft,
@@ -771,7 +723,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                         children: [
                           Text(
                             timeAgo.format(widget.createdAt.toDate()),
-                            style: Theme.of(context).textTheme.bodyText1,
+                            style: Theme.of(context).textTheme.bodyText2,
                           ),
                         ],
                       )

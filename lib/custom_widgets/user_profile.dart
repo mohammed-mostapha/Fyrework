@@ -1,13 +1,13 @@
+import 'package:Fyrework/custom_widgets/profile_rating_stars.dart';
+import 'package:Fyrework/custom_widgets/userRelated_gigItem.dart';
 import 'package:Fyrework/models/myUser.dart';
-import 'package:Fyrework/ui/widgets/profile_rating_stars.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:Fyrework/firebase_database/firestore_database.dart';
-import 'package:Fyrework/ui/views/sign_up_view.dart';
-import 'package:Fyrework/ui/widgets/userRelated_gigItem.dart';
+import 'package:Fyrework/screens/sign_up_view.dart';
 
 class UserProfileView extends StatefulWidget {
   final String passedUserUid;

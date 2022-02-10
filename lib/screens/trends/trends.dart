@@ -1,3 +1,4 @@
+import 'package:Fyrework/custom_widgets/badgeIcon.dart';
 import 'package:Fyrework/firebase_database/realtime_database.dart';
 import 'package:flutter/material.dart';
 import 'package:Fyrework/screens/trends/appbar_textfield.dart';
@@ -6,7 +7,6 @@ import 'package:Fyrework/screens/trends/AllGigs_view.dart';
 import '../rTDB_NotificationsScreen.dart';
 import 'clientGigs_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:Fyrework/ui/widgets/badgeIcon.dart';
 import 'package:provider/provider.dart';
 import 'package:Fyrework/screens/trends/queryStringProvider.dart';
 import 'package:Fyrework/screens/trends/gigIndexProvider.dart';
@@ -69,15 +69,6 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
                         }
                       });
                     }
-
-                    // print(
-                    // 'unseenCountSnapshot: ${_unseenCountSnapshot.data.snapshot.value}');
-                    // var unseenCount = !(_unseenCountSnapshot.hasData)
-                    //     ? 0
-                    //     : !(_unseenCountSnapshot.data.docs.length > 0)
-                    //         ? 0
-                    //         : _unseenCountSnapshot.data.docs.length;
-
                     return GestureDetector(
                       child: BadgeIcon(
                         icon: SizedBox(

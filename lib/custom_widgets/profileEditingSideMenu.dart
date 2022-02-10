@@ -17,8 +17,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:photo_manager/photo_manager.dart';
-
-import '../../locator.dart';
+import '../locator.dart';
 
 class ProfileEditingSideMenu extends StatefulWidget {
   @override

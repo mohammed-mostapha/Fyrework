@@ -1,7 +1,7 @@
+import 'package:Fyrework/custom_widgets/comment_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:Fyrework/firebase_database/firestore_database.dart';
-import 'package:Fyrework/ui/widgets/comment_item.dart';
 
 class CommentsView extends StatelessWidget {
   final bool isGigAppointed;
@@ -20,11 +20,14 @@ class CommentsView extends StatelessWidget {
       stream: FirestoreDatabase().gigRelatedComments(gigIdCommentsIdentifier),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          print('look at this error: ${snapshot.error}');
-          return Center(child: Text(''));
+          return Center(
+            child: Text(''),
+          );
         }
         if (!snapshot.hasData) {
-          return Center(child: Text(''));
+          return Center(
+            child: Text(''),
+          );
         }
 
         if (snapshot.hasData && !(snapshot.data.docs.length > 0)) {

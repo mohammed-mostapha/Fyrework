@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class Comment {
   final String gigIdHoldingComment;
   final String gigOwnerId;

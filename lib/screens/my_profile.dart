@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:Fyrework/ui/widgets/profileEditingSideMenu.dart';
-import 'package:Fyrework/ui/widgets/profile_rating_stars.dart';
+import 'package:Fyrework/custom_widgets/profileEditingSideMenu.dart';
+import 'package:Fyrework/custom_widgets/profile_rating_stars.dart';
+import 'package:Fyrework/custom_widgets/userRelated_gigItem.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -10,10 +10,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/screens/authenticate/app_start.dart';
 import 'package:Fyrework/firebase_database/firestore_database.dart';
-import 'package:Fyrework/ui/views/sign_up_view.dart';
+import 'package:Fyrework/screens/sign_up_view.dart';
 import 'package:Fyrework/services/auth_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:Fyrework/ui/widgets/userRelated_gigItem.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyProfileView extends StatefulWidget {

@@ -1,6 +1,7 @@
+import 'package:Fyrework/firebase_database/firestore_database.dart';
+import 'package:Fyrework/models/comment.dart';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/ui/shared/constants.dart';
-import 'package:Fyrework/viewmodels/add_comment_view_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -55,27 +56,29 @@ class _ProposalWidgetState extends State<ProposalWidget> {
 
   submitProposal() async {
     if (_proposalFormKey.currentState.validate()) {
-      // isPrivateComment = true;
       proposal = true;
-      await AddCommentViewModel().addComment(
-        gigIdHoldingComment: widget.passedGigId,
-        gigOwnerId: widget.passedGigOwnerId,
-        gigOwnerUsername: widget.passedGigOwnerUsername,
-        commentOwnerUsername: username,
-        commentBody: _addProposalController.text,
-        commentOwnerId: userId,
-        commentOwnerAvatarUrl: userProfilePictureUrl,
-        commentId: '',
-        isPrivateComment: isPrivateComment,
-        proposal: proposal,
-        approved: approved,
-        rejected: rejected,
-        gigCurrency: widget.passedGigCurrency,
-        offeredBudget: _offeredBudgetController.text,
-        gigValue: widget.passedGigValue,
-        preferredPaymentMethod: preferredPaymentMethod,
-        isGigCompleted: false,
-        containMediaFile: false,
+      await FirestoreDatabase().addComment(
+        Comment(
+          gigIdHoldingComment: widget.passedGigId,
+          gigOwnerId: widget.passedGigOwnerId,
+          gigOwnerUsername: widget.passedGigOwnerUsername,
+          commentOwnerUsername: username,
+          commentBody: _addProposalController.text,
+          commentOwnerId: userId,
+          commentOwnerAvatarUrl: userProfilePictureUrl,
+          commentId: '',
+          isPrivateComment: isPrivateComment,
+          proposal: proposal,
+          approved: approved,
+          rejected: rejected,
+          gigCurrency: widget.passedGigCurrency,
+          offeredBudget: _offeredBudgetController.text,
+          gigValue: widget.passedGigValue,
+          preferredPaymentMethod: preferredPaymentMethod,
+          isGigCompleted: false,
+          containMediaFile: false,
+        ),
+        widget.passedGigId,
       );
       addToGigAppliersOrHirersList();
       isPrivateComment = false;

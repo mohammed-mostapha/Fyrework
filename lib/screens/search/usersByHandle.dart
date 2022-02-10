@@ -1,8 +1,8 @@
+import 'package:Fyrework/custom_widgets/user_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:flutter/material.dart';
-import 'package:Fyrework/ui/widgets/user_profile.dart';
 
 class UsersSearchByHandle extends StatelessWidget {
   UsersSearchByHandle({Key key}) : super(key: key);
