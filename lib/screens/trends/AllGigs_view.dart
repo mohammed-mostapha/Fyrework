@@ -111,7 +111,6 @@ class _AllGigsViewState extends State<AllGigsView> {
                     //end
 
                   } else if (snapshot.data.docs.length > 0) {
-                    print('smartRefresher: you should see gigs right now');
                     return SmartRefresher(
                       header: WaterDropHeader(
                         refresh: SizedBox(

@@ -335,7 +335,10 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                 .copyWith(color: Theme.of(context).accentColor),
           ),
           onPressed: () {
-            Navigator.of(context, rootNavigator: true).pop();
+            Navigator.of(
+              context,
+              rootNavigator: true,
+            ).pop();
           },
         ),
         FlatButton(
@@ -352,7 +355,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
             await FirestoreDatabase().deleteMyGigByGigId(gigId: widget.gigId);
 
             EasyLoading.showSuccess('');
-
+            setState(() {});
             EasyLoading.dismiss();
           },
         )

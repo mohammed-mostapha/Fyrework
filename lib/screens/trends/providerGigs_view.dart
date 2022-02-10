@@ -69,7 +69,6 @@ class _ProviderGigsViewState extends State<ProviderGigsView> {
 
                   } else if (snapshot.data.docs.length > 0 &&
                       queryString != '') {
-                    print('smartRefresher: you should see gigs now');
                     return SmartRefresher(
                       enablePullDown: true,
                       child: ListView.builder(
@@ -145,7 +144,6 @@ class _ProviderGigsViewState extends State<ProviderGigsView> {
                     );
                   } else if (snapshot.data.docs.length > 0 &&
                       queryString == '') {
-                    print('smartRefresher: you should see gigs now');
                     return SmartRefresher(
                       enablePullDown: true,
                       child: ListView.builder(

@@ -86,7 +86,7 @@ class _ClientGigsViewState extends State<ClientGigsView> {
                             DocumentSnapshot data = snapshot.data.docs[index];
                             Map getDocData = data.data();
 
-                            return getDocData['hidden'] != true
+                            return (getDocData['hidden'] != true)
                                 ? GigItem(
                                     index: index,
                                     appointed: getDocData['appointed'],
