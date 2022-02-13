@@ -53,6 +53,7 @@ class CreateGigViewModel {
         adultContentBool: adultContentBool,
         gigLocationIndex: gigLocation.substring(0, 1).toUpperCase(),
         gigOwnerUsernameIndex: username.substring(0, 1).toUpperCase(),
+        hirerId: '',
       ),
     );
 

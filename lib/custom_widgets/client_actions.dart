@@ -11,12 +11,12 @@ class ClientActions extends StatefulWidget {
   @required
   final String passedGigOwnerId;
   @required
-  final String pasedGigOwnerUsername;
+  final String passedGigOwnerUsername;
 
   ClientActions({
     this.passedGigId,
     this.passedGigOwnerId,
-    this.pasedGigOwnerUsername,
+    this.passedGigOwnerUsername,
   });
 
   @override
@@ -148,7 +148,36 @@ class _ClientActionsState extends State<ClientActions> {
                                           ],
                                         ),
                                       ),
-                                      onTap: () {
+                                      onTap: () async {
+                                        await FirestoreDatabase().addComment(
+                                          Comment(
+                                            gigIdHoldingComment:
+                                                widget.passedGigId,
+                                            gigOwnerId: widget.passedGigOwnerId,
+                                            gigOwnerUsername:
+                                                widget.passedGigOwnerUsername,
+                                            commentOwnerUsername: username,
+                                            commentBody:
+                                                '${MyUser.username} is unsatisfied with the work provided',
+                                            commentOwnerId: userId,
+                                            commentOwnerAvatarUrl:
+                                                userProfilePictureUrl,
+                                            commentId: '',
+                                            createdAt: DateTime.now(),
+                                            isPrivateComment: true,
+                                            proposal: false,
+                                            approved: true,
+                                            rejected: false,
+                                            containMediaFile: false,
+                                            isGigCompleted: false,
+                                            appointedUserId: appointedUserId,
+                                            appointedUsername:
+                                                appointedUsername,
+                                            ratingCount: 0,
+                                            leftReview: false,
+                                          ),
+                                          widget.passedGigId,
+                                        );
                                         FirestoreDatabase()
                                             .addGigWorkstreamActions(
                                           gigId: widget.passedGigId,
@@ -194,7 +223,7 @@ class _ClientActionsState extends State<ClientActions> {
                                               widget.passedGigId,
                                           gigOwnerId: widget.passedGigOwnerId,
                                           gigOwnerUsername:
-                                              widget.pasedGigOwnerUsername,
+                                              widget.passedGigOwnerUsername,
                                           commentOwnerUsername: username,
                                           commentBody:
                                               'Your review will appear here...',
@@ -335,7 +364,7 @@ class _ClientActionsState extends State<ClientActions> {
                                                       .primaryColor
                                                   : fyreworkLightTheme()
                                                       .primaryColor
-                                                      .withOpacity(0.5),
+                                                      .withOpacity(0.3),
                                             ),
                                           ),
                                           SizedBox(
@@ -362,7 +391,39 @@ class _ClientActionsState extends State<ClientActions> {
                                       ),
                                     ),
                                     onTap: !clientAction
-                                        ? () {
+                                        ? () async {
+                                            await FirestoreDatabase()
+                                                .addComment(
+                                              Comment(
+                                                gigIdHoldingComment:
+                                                    widget.passedGigId,
+                                                gigOwnerId:
+                                                    widget.passedGigOwnerId,
+                                                gigOwnerUsername: widget
+                                                    .passedGigOwnerUsername,
+                                                commentOwnerUsername: username,
+                                                commentBody:
+                                                    '$username is unsatisfied with the provided work',
+                                                commentOwnerId: userId,
+                                                commentOwnerAvatarUrl:
+                                                    userProfilePictureUrl,
+                                                commentId: '',
+                                                createdAt: DateTime.now(),
+                                                isPrivateComment: true,
+                                                proposal: false,
+                                                approved: true,
+                                                rejected: false,
+                                                containMediaFile: false,
+                                                isGigCompleted: false,
+                                                appointedUserId:
+                                                    appointedUserId,
+                                                appointedUsername:
+                                                    appointedUsername,
+                                                ratingCount: 0,
+                                                leftReview: false,
+                                              ),
+                                              widget.passedGigId,
+                                            );
                                             FirestoreDatabase()
                                                 .addGigWorkstreamActions(
                                               gigId: widget.passedGigId,
@@ -392,7 +453,7 @@ class _ClientActionsState extends State<ClientActions> {
                                                       .primaryColor
                                                   : fyreworkLightTheme()
                                                       .primaryColor
-                                                      .withOpacity(0.5),
+                                                      .withOpacity(0.8),
                                             ),
                                           ),
                                           SizedBox(
@@ -418,54 +479,44 @@ class _ClientActionsState extends State<ClientActions> {
                                         ],
                                       ),
                                     ),
-                                    onTap:
-                                        !clientAction || worksteamActionsEmpty
-                                            ? () {
-                                                FirestoreDatabase()
-                                                    .addGigWorkstreamActions(
-                                                  gigId: widget.passedGigId,
-                                                  action: 'marked as completed',
-                                                  userAvatarUrl:
-                                                      MyUser.userAvatarUrl,
-                                                  gigActionOwner: 'client',
-                                                );
-                                              }
-                                            : null,
-                                  ),
-                                  GestureDetector(
-                                    child: FittedBox(
-                                      fit: BoxFit.fill,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SizedBox(
-                                            width: 30,
-                                            height: 30,
-                                            child: SvgPicture.asset(
-                                              releaseEscrowPaymentIcon,
-                                              semanticsLabel: 'release_payment',
-                                              color: fyreworkLightTheme()
-                                                  .primaryColor,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Text('Release Payment',
-                                              textAlign: TextAlign.center,
-                                              style: fyreworkLightTheme()
-                                                  .textTheme
-                                                  .bodyText1)
-                                        ],
-                                      ),
-                                    ),
-                                    onTap: markedAsCompleted
-                                        ? () {
+                                    onTap: !clientAction ||
+                                            worksteamActionsEmpty
+                                        ? () async {
+                                            await FirestoreDatabase()
+                                                .addComment(
+                                              Comment(
+                                                gigIdHoldingComment:
+                                                    widget.passedGigId,
+                                                gigOwnerId:
+                                                    widget.passedGigOwnerId,
+                                                gigOwnerUsername: widget
+                                                    .passedGigOwnerUsername,
+                                                commentOwnerUsername: username,
+                                                commentBody: 'Gig is completed',
+                                                commentOwnerId: userId,
+                                                commentOwnerAvatarUrl:
+                                                    userProfilePictureUrl,
+                                                commentId: '',
+                                                createdAt: DateTime.now(),
+                                                isPrivateComment: true,
+                                                proposal: false,
+                                                approved: true,
+                                                rejected: false,
+                                                containMediaFile: false,
+                                                isGigCompleted: true,
+                                                appointedUserId:
+                                                    appointedUserId,
+                                                appointedUsername:
+                                                    appointedUsername,
+                                                ratingCount: 0,
+                                                leftReview: false,
+                                              ),
+                                              widget.passedGigId,
+                                            );
                                             FirestoreDatabase()
                                                 .addGigWorkstreamActions(
                                               gigId: widget.passedGigId,
-                                              action: 'left Review',
+                                              action: 'marked as completed',
                                               userAvatarUrl:
                                                   MyUser.userAvatarUrl,
                                               gigActionOwner: 'client',

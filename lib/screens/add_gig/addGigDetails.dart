@@ -20,7 +20,6 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:sliding_card/sliding_card.dart';
 import 'package:Fyrework/services/popularHashtags.dart';
 import 'package:geocoding/geocoding.dart';
-
 import 'assets_picker/src/provider/asset_entity_image_provider.dart';
 import 'assets_picker/src/widget/asset_picker.dart';
 import 'assets_picker/src/widget/asset_picker_viewer.dart';

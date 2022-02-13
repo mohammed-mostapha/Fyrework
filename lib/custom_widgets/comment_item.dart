@@ -178,7 +178,7 @@ class _CommentItemState extends State<CommentItem>
     });
   }
 
-  addReview() async {
+  addReview({userIdToReceiveRating}) async {
     if (validate()) {
       await FirestoreDatabase().updateCommentRatingCount(
         commentId: widget.commentId,
@@ -394,8 +394,10 @@ class _CommentItemState extends State<CommentItem>
                                                           ),
                                                     ),
                                                     TextSpan(
-                                                      text:
-                                                          "${widget.appointedUsername}",
+                                                      text: myGig
+                                                          ? "${widget.appointedUsername}"
+                                                          : widget
+                                                              .gigOwnerUsername,
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .bodyText1
@@ -478,41 +480,46 @@ class _CommentItemState extends State<CommentItem>
                                         height: 10,
                                       ),
                                       GestureDetector(
-                                        child: Container(
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            color:
-                                                Theme.of(context).accentColor,
-                                            border: Border.all(
-                                              width: 1,
+                                          child: Container(
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Theme.of(context).accentColor,
+                                              border: Border.all(
+                                                width: 1,
+                                              ),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(
+                                                  5,
+                                                ),
+                                              ),
                                             ),
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(
-                                                5,
+                                            child: Center(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  'Submit Review',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText1
+                                                      .copyWith(
+                                                        color: Theme.of(context)
+                                                            .primaryColor,
+                                                      ),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                          child: Center(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Text(
-                                                'Submit Review',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1
-                                                    .copyWith(
-                                                      color: Theme.of(context)
-                                                          .primaryColor,
-                                                    ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        onTap: initialRating > 0 != true
-                                            ? alertUserToSelectRating
-                                            : addReview,
-                                      ),
+                                          onTap: () async {
+                                            initialRating > 0 != true
+                                                ? alertUserToSelectRating()
+                                                : addReview(
+                                                    userIdToReceiveRating: myGig
+                                                        ? widget.appointedUserId
+                                                        : widget.gigOwnerId,
+                                                  );
+                                          }),
                                     ],
                                   ),
                                 ),
@@ -978,10 +985,20 @@ class _CommentItemState extends State<CommentItem>
                                           ),
                                         ),
                                         onTap: () {
+                                          FirestoreDatabase().setGigHiererId(
+                                            gigId: widget.gigIdHoldingComment,
+                                            appointedUserId: myGig
+                                                ? MyUser.uid
+                                                : widget.commentOwnerId,
+                                            hiererId: myGig
+                                                ? MyUser.uid
+                                                : widget.commentOwnerId,
+                                          );
                                           FirestoreDatabase().appointGigToUser(
                                             gigId: widget.gigIdHoldingComment,
-                                            appointedUserId:
-                                                widget.commentOwnerId,
+                                            appointedUserId: myGig
+                                                ? MyUser.uid
+                                                : widget.commentOwnerId,
                                             commentId: widget.commentId,
                                           );
                                         }),
@@ -1107,7 +1124,9 @@ class _CommentItemState extends State<CommentItem>
                                             alignment: WrapAlignment.start,
                                             children: [
                                               Text(
-                                                'Gig awarded to ',
+                                                myGig
+                                                    ? 'Gig is hired by '
+                                                    : 'Gig awarded to ',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodyText1

@@ -18,8 +18,6 @@ class Gig {
   final bool adultContentBool;
   final String appointedUserId;
   final String appointedusername;
-  final String hirerUserId;
-  final String hirerUsername;
   final List appliersOrHirersByUserId;
   final List gigRelatedUsersByUserId;
   final bool hidden;
@@ -31,6 +29,7 @@ class Gig {
   final List likersByUserId;
   final String gigLocationIndex;
   final String gigOwnerUsernameIndex;
+  final String hirerId;
   Gig({
     this.appointed = false,
     this.gigId,
@@ -51,8 +50,6 @@ class Gig {
     this.adultContentBool,
     this.appointedUserId,
     this.appointedusername,
-    this.hirerUserId,
-    this.hirerUsername,
     this.appliersOrHirersByUserId,
     this.gigRelatedUsersByUserId,
     this.hidden = false,
@@ -64,6 +61,7 @@ class Gig {
     this.likersByUserId,
     this.gigLocationIndex,
     this.gigOwnerUsernameIndex,
+    this.hirerId,
   });
 
   Map<String, dynamic> toMap() {
@@ -87,8 +85,6 @@ class Gig {
       'adultContentBool': adultContentBool,
       'appointedUserId': appointedUserId,
       'appointedusername': appointedusername,
-      'hirerUserId': hirerUserId,
-      'hirerUsername': hirerUsername,
       'appliersOrHirersByUserId': [],
       'gigRelatedUsersByUserId': [],
       'hidden': hidden,
@@ -100,6 +96,7 @@ class Gig {
       'likersByUserId': [],
       'gigLocationIndex': gigLocationIndex,
       'gigOwnerUsernameIndex': gigOwnerUsernameIndex,
+      'hirerId': hirerId,
     };
   }
 
@@ -107,37 +104,37 @@ class Gig {
     if (map == null) return null;
 
     return Gig(
-        appointed: map['appointed'],
-        gigId: map['gigId'],
-        gigOwnerId: map['gigOwnerId'],
-        gigOwnerAvatarUrl: map['gigOwnerAvatarUrl'],
-        gigOwnerUsername: map['gigOwnerUsername'],
-        createdAt: map['createdAt'],
-        gigOwnerLocation: map['gigOwnerLocation'],
-        gigLocation: map['gigLocation'],
-        gigHashtags: map['gigHashtags'],
-        gigMediaFilesDownloadUrls: map['gigMediaFilesDownloadUrls'],
-        gigPost: map['gigPost'],
-        gigDeadline: map['gigDeadline'],
-        gigCurrency: map['gigCurrency'],
-        gigBudget: map['gigBudget'],
-        gigValue: map['gigValue'],
-        adultContentText: map['adultContentText'],
-        adultContentBool: map['adultContentBool'],
-        appointedUserId: map['appointedUserId'],
-        appointedusername: map['appointedusername'],
-        hirerUserId: map['hirerUserId'],
-        hirerUsername: map['hirerUsername'],
-        appliersOrHirersByUserId: map['appliersOrHirersByUserId'],
-        gigRelatedUsersByUserId: map['gigRelatedUsersByUserId'],
-        hidden: map['hidden'],
-        gigActions: map['gigActions'],
-        paymentReleased: map['paymentReleased'],
-        markedAsComplete: map['markedAsComplete'],
-        clientLeftReview: map['clientLeftReview'],
-        likesCount: map['likesCount'],
-        likersByUserId: map['likersByUserId'],
-        gigLocationIndex: map['gigLocationIndex'],
-        gigOwnerUsernameIndex: map['gigOwnerUsernameIndex']);
+      appointed: map['appointed'],
+      gigId: map['gigId'],
+      gigOwnerId: map['gigOwnerId'],
+      gigOwnerAvatarUrl: map['gigOwnerAvatarUrl'],
+      gigOwnerUsername: map['gigOwnerUsername'],
+      createdAt: map['createdAt'],
+      gigOwnerLocation: map['gigOwnerLocation'],
+      gigLocation: map['gigLocation'],
+      gigHashtags: map['gigHashtags'],
+      gigMediaFilesDownloadUrls: map['gigMediaFilesDownloadUrls'],
+      gigPost: map['gigPost'],
+      gigDeadline: map['gigDeadline'],
+      gigCurrency: map['gigCurrency'],
+      gigBudget: map['gigBudget'],
+      gigValue: map['gigValue'],
+      adultContentText: map['adultContentText'],
+      adultContentBool: map['adultContentBool'],
+      appointedUserId: map['appointedUserId'],
+      appointedusername: map['appointedusername'],
+      appliersOrHirersByUserId: map['appliersOrHirersByUserId'],
+      gigRelatedUsersByUserId: map['gigRelatedUsersByUserId'],
+      hidden: map['hidden'],
+      gigActions: map['gigActions'],
+      paymentReleased: map['paymentReleased'],
+      markedAsComplete: map['markedAsComplete'],
+      clientLeftReview: map['clientLeftReview'],
+      likesCount: map['likesCount'],
+      likersByUserId: map['likersByUserId'],
+      gigLocationIndex: map['gigLocationIndex'],
+      gigOwnerUsernameIndex: map['gigOwnerUsernameIndex'],
+      hirerId: map['hirerId'],
+    );
   }
 }

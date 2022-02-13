@@ -157,10 +157,7 @@ class FirestoreDatabase {
 
   Future<QuerySnapshot> fetchGigsByOwnerId({String userId}) async {
     await Future.delayed(Duration(milliseconds: 1000));
-    return _gigsCollection
-        .where('hidden', isEqualTo: false)
-        .where('gigOwnerId', isEqualTo: userId)
-        .get();
+    return _gigsCollection.where('gigOwnerId', isEqualTo: userId).get();
   }
 
   Stream<QuerySnapshot> openGigsByGigRelatedUsers({String userId}) {
@@ -197,7 +194,7 @@ class FirestoreDatabase {
   }
 
   Stream<QuerySnapshot> fetchAllNotifications() {
-    return _notifications.orderBy('createdAt', descending: true).snapshots();
+    return _notifications.orderBy('createdAt', descending: false).snapshots();
   }
 
   Stream<QuerySnapshot> fetchIndividualGig({@required String gigId}) {
@@ -589,22 +586,36 @@ class FirestoreDatabase {
     }
   }
 
+  // set gig hirer
+  Future setGigHiererId(
+      {String gigId, String appointedUserId, String hiererId}) async {
+    var appointedUser = await _usersCollection.doc(appointedUserId).get();
+    var appointedUsername = appointedUser.data()['username'];
+
+    try {
+      await _gigsCollection.doc(gigId).update({
+        'appointed': true,
+        'appointedUserId': appointedUserId,
+        'appointedUsername': appointedUsername,
+        'hirerId': hiererId,
+      });
+    } catch (e) {
+      if (e is PlatformException) {
+        return e.message;
+      }
+    }
+  }
+
   Future appointGigToUser(
       {String gigId, String appointedUserId, String commentId}) async {
-    try {
-      var appointedUser = await _usersCollection.doc(appointedUserId).get();
-      var appointedUsername = appointedUser.data()['username'];
+    var appointedUser = await _usersCollection.doc(appointedUserId).get();
+    var appointedUsername = appointedUser.data()['username'];
 
+    try {
       await FirestoreDatabase()
           .updateOpenGigsByGigId(userId: appointedUserId, gigId: gigId);
       await FirestoreDatabase().addUserIdToGigRelatedUsersArray(
           gigId: gigId, userId: appointedUserId);
-
-      await _gigsCollection.doc(gigId).update({
-        'appointed': true,
-        'appointedUserId': appointedUserId,
-        'appointedUsername': appointedUsername
-      });
 
       await _commentsCollection.doc(commentId).update({
         'approved': true,

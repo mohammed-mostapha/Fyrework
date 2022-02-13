@@ -77,6 +77,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
 
   bool myGig = false;
   bool appointed = false;
+  bool hirer;
+  String hirerId = '';
   bool appointedUser = false;
   String appointedUserId = '';
   List appliersOrHirersByUserId = [];
@@ -176,9 +178,9 @@ class _AddCommentsViewState extends State<AddCommentsView>
     //     : false;
 
     myGig = widget.passedGigOwnerId == MyUser.uid ? true : false;
-    gigICanDo = widget.passedGigValue == 'Gig I can do' ? true : false;
+    gigICanDo = widget.passedGigValue == 'Gig i can do' ? true : false;
     worker = (!myGig && gigICanDo || myGig && gigICanDo) ? true : false;
-    client = (myGig && !gigICanDo || !myGig && !gigICanDo) ? true : false;
+    client = (myGig && !gigICanDo || !myGig && gigICanDo) ? true : false;
     // _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
 
     // hirer = (myGig && !gigICanDo || !myGig && gigICanDo) ? true : false;
@@ -234,6 +236,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
                 );
               } else {
                 appointed = snapshot.data['appointed'];
+                hirerId = snapshot.data['hirerId'];
+                hirer = MyUser.uid == hirerId ? true : false;
                 appointedUserId = snapshot.data['appointedUserId'];
                 appliersOrHirersByUserId =
                     snapshot.data['appliersOrHirersByUserId'];
@@ -801,7 +805,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                     ],
                                   ),
                                 )
-                              : myGig || appointedUser
+                              : myGig || appointedUser || hirer
                                   ? Column(
                                       children: [
                                         ClipRRect(
@@ -1021,11 +1025,16 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                       showModalBottomSheet(
                                                           shape:
                                                               RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        50.0),
-                                                          ),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .only(
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                    20.0),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    20.0),
+                                                          )),
                                                           backgroundColor:
                                                               fyreworkLightTheme()
                                                                   .accentColor,
@@ -1066,7 +1075,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                                 : ClientActions(
                                                                                     passedGigId: widget.passedGigId,
                                                                                     passedGigOwnerId: widget.passedGigOwnerId,
-                                                                                    pasedGigOwnerUsername: widget.passGigOwnerUsername,
+                                                                                    passedGigOwnerUsername: widget.passGigOwnerUsername,
                                                                                   ),
                                                                           ),
                                                                         );
