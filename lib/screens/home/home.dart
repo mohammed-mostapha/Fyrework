@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/screens/my_profile.dart';
 import 'package:Fyrework/screens/trends/trends.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:Fyrework/screens/trends/queryStringProvider.dart';
