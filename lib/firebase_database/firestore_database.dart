@@ -155,7 +155,7 @@ class FirestoreDatabase {
         .get();
   }
 
-  Future<QuerySnapshot> fetchGigsByOwnerId({String userId}) async {
+  Future<QuerySnapshot> fetchGigsByOwnerId({@required String userId}) async {
     await Future.delayed(Duration(milliseconds: 1000));
     return _gigsCollection.where('gigOwnerId', isEqualTo: userId).get();
   }

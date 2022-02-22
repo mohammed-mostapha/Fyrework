@@ -60,6 +60,12 @@ class _HomeState extends State<Home> {
     super.initState();
     _getDeviceToken();
     localNotificationService.initialize(context);
+
+    Future.delayed(Duration.zero, () {
+      _onItemTapped(widget.passedSelectedIndex == null
+          ? _selectedIndex
+          : widget.passedSelectedIndex);
+    });
   }
 
   _getDeviceToken() {

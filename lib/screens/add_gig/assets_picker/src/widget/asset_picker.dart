@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:Fyrework/screens/home/home.dart';
 import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:flutter/material.dart';
@@ -1048,7 +1049,13 @@ class AssetPicker extends StatelessWidget {
               )
             : IconButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            Home(passedSelectedIndex: 0),
+                      ),
+                      (route) => false);
                 },
                 icon: const Icon(Icons.close),
                 color: Colors.white,
@@ -1160,7 +1167,12 @@ class AssetPicker extends StatelessWidget {
 
     return WillPopScope(
       onWillPop: () {
-        Navigator.of(context).pop();
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => Home(passedSelectedIndex: 0),
+            ),
+            (route) => false);
         return;
       },
       child: AnnotatedRegion<SystemUiOverlayStyle>(

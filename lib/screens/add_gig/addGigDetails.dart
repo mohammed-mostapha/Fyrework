@@ -375,7 +375,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
     SizeConfig().init(context);
 
     return FutureBuilder(
-        future: FirestoreDatabase().fetchGigsByOwnerId(),
+        future: FirestoreDatabase().fetchGigsByOwnerId(userId: MyUser.uid),
         builder: (context, gigsByOwnerIdSnapshot) {
           if (gigsByOwnerIdSnapshot.data != null) {
             List userGigsDocs = List.from(gigsByOwnerIdSnapshot.data.docs);
