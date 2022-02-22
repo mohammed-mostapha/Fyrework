@@ -149,6 +149,7 @@ class _AddAdvertState extends State<AddAdvert> {
     showDialog(
       context: context,
       child: AlertDialog(
+        backgroundColor: Theme.of(context).accentColor,
         title: const Text('Advert Text Color'),
         content: SingleChildScrollView(
           // child: ColorPicker(
@@ -179,14 +180,14 @@ class _AddAdvertState extends State<AddAdvert> {
         ),
         actions: <Widget>[
           FlatButton(
-            child: const Text(
+            child: Text(
               'Pick',
+              style: TextStyle(color: Theme.of(context).primaryColor),
             ),
             onPressed: () {
               setState(
                 () => advertTextColor = pickerColor,
               );
-              print('advertTextColor: $advertTextColor');
               Navigator.of(context, rootNavigator: true).pop();
             },
           ),
@@ -271,6 +272,8 @@ class _AddAdvertState extends State<AddAdvert> {
                                 _myFavoriteHashtags.length < 1 ? '' : null,
                             // onSaved: (value) => _myHashtag = value,
                             textFieldConfiguration: TextFieldConfiguration(
+                              enabled:
+                                  _myFavoriteHashtags.length < 1 ? true : false,
                               controller:
                                   AddAdvert.myFavoriteHashtagsController,
                               style: Theme.of(context).textTheme.bodyText1,
@@ -294,29 +297,10 @@ class _AddAdvertState extends State<AddAdvert> {
                               );
                             },
                             onSuggestionSelected: (suggestion) {
-                              // _myHashtagController.text = suggestion;
-                              // _myHashtag = suggestion;
-                              if (_myFavoriteHashtags.length < 20 != true) {
-                                setState(() {
-                                  clientSideWarning =
-                                      'Only 20 #Hashtags allowed';
-                                });
-                              } else if (_myFavoriteHashtags
-                                  .contains(suggestion)) {
-                                setState(() {
-                                  clientSideWarning =
-                                      'Duplicate #Hashtags are not allowed';
-                                });
+                              setState(() {
+                                _myFavoriteHashtags.add(suggestion);
                                 AddAdvert.myFavoriteHashtagsController.clear();
-                              } else if (!_myFavoriteHashtags
-                                      .contains(suggestion) &&
-                                  _myFavoriteHashtags.length < 20) {
-                                setState(() {
-                                  _myFavoriteHashtags.add(suggestion);
-                                  AddAdvert.myFavoriteHashtagsController
-                                      .clear();
-                                });
-                              }
+                              });
                             },
                           ),
                         ),
@@ -328,50 +312,37 @@ class _AddAdvertState extends State<AddAdvert> {
                               style: TextStyle(
                                 shadows: [
                                   Shadow(
-                                      color: Theme.of(context).primaryColor,
+                                      color: _myFavoriteHashtags.length < 1
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.grey,
                                       offset: Offset(0, -2.5))
                                 ],
                                 fontSize: 14,
                                 color: Colors.transparent,
                                 decoration: TextDecoration.underline,
                                 decorationThickness: 2,
-                                decorationColor: Theme.of(context).primaryColor,
+                                decorationColor: _myFavoriteHashtags.length < 1
+                                    ? Theme.of(context).primaryColor
+                                    : Colors.grey,
                                 decorationStyle: TextDecorationStyle.dotted,
                               ),
                             ),
-                            onTap: () {
-                              if (_myFavoriteHashtags.length < 20 != true) {
-                                setState(() {
-                                  clientSideWarning =
-                                      'Only 20 #Hashtags allowed';
-                                  AddAdvert.myFavoriteHashtagsController
-                                      .clear();
-                                });
-                              } else if (_myFavoriteHashtags.contains('#' +
-                                  AddAdvert
-                                      .myFavoriteHashtagsController.text)) {
-                                setState(() {
-                                  clientSideWarning =
-                                      'Duplicate #Hashtags are not allowed';
-                                });
-                                AddAdvert.myFavoriteHashtagsController.clear();
-                              } else if (AddAdvert.myFavoriteHashtagsController
-                                      .text.isNotEmpty &&
-                                  !_myFavoriteHashtags.contains('#' +
-                                      AddAdvert
-                                          .myFavoriteHashtagsController.text) &&
-                                  _myFavoriteHashtags.length < 20) {
-                                setState(() {
-                                  _myFavoriteHashtags.add('#' +
-                                      AddAdvert
-                                          .myFavoriteHashtagsController.text);
-                                  AddAdvert.myFavoriteHashtagsController
-                                      .clear();
-                                  FocusScope.of(context).unfocus();
-                                  print(_myFavoriteHashtags);
-                                });
-                              }
-                            },
+                            onTap: AddAdvert
+                                    .myFavoriteHashtagsController.text.isEmpty
+                                ? null
+                                : _myFavoriteHashtags.length < 1
+                                    ? () {
+                                        setState(() {
+                                          _myFavoriteHashtags.add('#' +
+                                              AddAdvert
+                                                  .myFavoriteHashtagsController
+                                                  .text);
+                                          AddAdvert.myFavoriteHashtagsController
+                                              .clear();
+                                          FocusScope.of(context).unfocus();
+                                        });
+                                      }
+                                    : null,
                           ),
                         ),
                       ],
@@ -581,28 +552,40 @@ class _AddAdvertState extends State<AddAdvert> {
                               ),
                             ),
                             onTap: () {
-                              AddAdvert.advertScreenshotController
-                                  .capture(delay: Duration(milliseconds: 10))
-                                  .then((Uint8List image) {
-                                //Capture Done
+                              if (_myFavoriteHashtags.length < 1) {
                                 setState(() {
-                                  _advertScreenshot = image;
+                                  clientSideWarning =
+                                      'Only one hashtag is required';
                                 });
-                              }).catchError((onError) {
-                                print(onError);
-                              }).then(
-                                (value) => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AdvertPayment(
-                                      receivedAdvertScreenshot:
-                                          _advertScreenshot,
-                                      receivedAdvertHashtags:
-                                          _myFavoriteHashtags,
+                              } else if (_advertImage == null) {
+                                setState(() {
+                                  clientSideWarning =
+                                      'Only one image is required';
+                                });
+                              } else {
+                                AddAdvert.advertScreenshotController
+                                    .capture(delay: Duration(milliseconds: 10))
+                                    .then((Uint8List image) {
+                                  //Capture Done
+                                  setState(() {
+                                    _advertScreenshot = image;
+                                  });
+                                }).catchError((onError) {
+                                  print(onError);
+                                }).then(
+                                  (value) => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AdvertPayment(
+                                        receivedAdvertScreenshot:
+                                            _advertScreenshot,
+                                        receivedAdvertHashtags:
+                                            _myFavoriteHashtags,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
+                                );
+                              }
                             },
                           ),
                         ],
@@ -623,8 +606,12 @@ class _AddAdvertState extends State<AddAdvert> {
       _scrollController.animateTo(0,
           duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       return Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color: Theme.of(context).primaryColor,),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Theme.of(context).primaryColor,
+        ),
         width: double.infinity,
+        height: 50,
         padding: EdgeInsets.all(8.0),
         child: Row(
           children: <Widget>[

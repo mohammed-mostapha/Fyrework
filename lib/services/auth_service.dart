@@ -13,6 +13,7 @@ class AuthService {
   // GET UID
 
   Future<String> getCurrentUID() async {
+    await Future.delayed(Duration(seconds: 3));
     return (_firebaseAuth.currentUser).uid;
   }
 

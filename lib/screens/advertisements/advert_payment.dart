@@ -109,7 +109,12 @@ class _AdvertPaymentState extends State<AdvertPayment> {
                         }
                         EasyLoading.dismiss();
                       },
-                      child: Text('Stripe Pay \$5.00'),
+                      child: Text(
+                        'Stripe Pay \$5.00',
+                        style: TextStyle(
+                          color: Theme.of(context).accentColor,
+                        ),
+                      ),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
                             Theme.of(context).primaryColor),
@@ -119,7 +124,7 @@ class _AdvertPaymentState extends State<AdvertPayment> {
                       height: 50,
                     ),
                     Text(
-                      'You advert will go under the selected hashtags at the top',
+                      'Your advert will go under the selected hashtags at the top',
                       style: Theme.of(context).textTheme.headline1,
                       textAlign: TextAlign.center,
                     )

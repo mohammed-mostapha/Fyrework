@@ -202,7 +202,6 @@ class _HomeControllerState extends State<HomeController> {
           future: authService.getCurrentUID(),
           builder: (BuildContext context, AsyncSnapshot authenticitySnapshot) {
             if (authenticitySnapshot.hasData) {
-              print('dataaa: ' + authenticitySnapshot.data);
               () async {
                 String myUid = await authenticitySnapshot.data;
                 await MyUserController().getCurrentUserFromFirebase(myUid);
