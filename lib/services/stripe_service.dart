@@ -30,7 +30,7 @@ class StripeServices {
     StripePayment.setOptions(StripeOptions(
       publishableKey: 'pk_test_3cXl3FkRpnNrY7ZWuuNRq8Rn00QX5CW6FW',
       androidPayMode: 'test',
-      merchantId: 'test',
+      merchantId: 'Fyrework',
     ));
   }
 
@@ -57,7 +57,8 @@ class StripeServices {
       {@required String amount, @required String currency}) async {
     try {
       var paymentMethod = await StripePayment.paymentRequestWithCardForm(
-          CardFormPaymentRequest());
+        CardFormPaymentRequest(),
+      );
       var paymentIntent =
           await StripeServices.createPaymentIntent(amount, currency);
       var response = await StripePayment.confirmPaymentIntent(

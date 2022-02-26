@@ -5,7 +5,9 @@ import 'package:Fyrework/models/gig.dart';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:Fyrework/models/otherUser.dart';
 
@@ -144,16 +146,73 @@ class FirestoreDatabase {
             .snapshots();
   }
 
-  Future<QuerySnapshot> fetchOrCreateGigsForAdverts(
-      String receivedAdvertHashtag) {
-    print('count me receivedHashtag: $receivedAdvertHashtag');
-    print('count me');
-    return _gigsCollection
+  Future<List<String>> checkGigExistenceWithHashtag(
+      String receivedAdvertHashtag) async {
+    return await _gigsCollection
         .where('hidden', isEqualTo: false)
         .where('gigHashtags', arrayContains: receivedAdvertHashtag)
         .orderBy('createdAt', descending: true)
-        .get();
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      List<String> gigIds = List();
+      if (!(querySnapshot.docs.length > 0)) {
+        print('result: no docs exist');
+        gigIds = null;
+        return gigIds;
+      } else {
+        querySnapshot.docs.forEach((element) {
+          // print('result: ${element.data()}');
+          gigIds.add(element.id);
+          print('result: $gigIds');
+          return gigIds;
+        });
+        return gigIds;
+      }
+    });
   }
+
+  // Future createGigAsAdvert({String passedAdvertHashtag, String passedGigMediaFileDownloadUrl}) {
+  //   Future uploadMediaFiles() async {
+  //   // String storageResult;
+  //   String uploadResult;
+  //     for (var i = 0; i < gigMediaFiles.length; i++) {
+  //       uploadResult = await BunnyService().uploadMediaFileToBunny(
+  //         fileToUpload: gigMediaFiles[i],
+  //         storageZonePath: 'gigMediaFiles',
+  //       );
+
+  //       //adding each downloadUrl to downloadUrls list
+  //       _gigMeidaFilesDownloadUrls.add(uploadResult);
+  //     }
+
+  //     CreateGigViewModel().createGigAsAdvert(
+  //       appointed: _appointed,
+  //       gigId: _gigId,
+  //       userId: _userId,
+  //       userProfilePictureDownloadUrl: _userProfilePictureDownloadUrl,
+  //       username: _username,
+  //       gigHashtags: _myFavoriteHashtags,
+  //       userLocation: _userLocation,
+  //       gigLocation: _gigLocation,
+  //       gigMediaFilesDownloadUrls: _gigMeidaFilesDownloadUrls,
+  //       gigPost: _gigPost,
+  //       gigDeadLine: AppointmentCard.gigDeadline,
+  //       gigCurrency: _gigCurrency,
+  //       gigBudget: _gigBudget,
+  //       gigValue: AppointmentCard.gigValue,
+  //       adultContentText: _adultContentText,
+  //       adultContentBool: _adultContentBool,
+  //     );
+  //     await FirestoreDatabase().addToPopularHashtags(_myFavoriteHashtags);
+  //     // Navigator.pushAndRemoveUntil(
+  //     //     context,
+  //     //     MaterialPageRoute(
+  //     //       builder: (BuildContext context) => Home(passedSelectedIndex: 0),
+  //     //     ),
+  //     //     (route) => false);
+
+  // }
+  // }
 
   Future<QuerySnapshot> fetchGigsByOwnerId({@required String userId}) async {
     await Future.delayed(Duration(milliseconds: 1000));
@@ -242,6 +301,28 @@ class FirestoreDatabase {
         'gigBudget': editedGigBudget,
         'gigHashtags': editedFavoriteHashtags,
         'gigPost': editedGigPost,
+      });
+    } catch (e) {
+      if (e is PlatformException) {
+        print(e.message);
+        return e.message;
+      }
+    }
+  }
+
+  // add advert image to a gig
+  Future addAdvertImageToGig({
+    @required List<String> gigIds,
+    @required String advertImageDownloadUrl,
+  }) async {
+    print('from firestore: ${gigIds.length}');
+    try {
+      gigIds.forEach((gigId) async {
+        print('from firestore: 1');
+        return await _gigsCollection.doc(gigId).update(<String, dynamic>{
+          'gigMediaFilesDownloadUrls':
+              FieldValue.arrayUnion([advertImageDownloadUrl]),
+        });
       });
     } catch (e) {
       if (e is PlatformException) {

@@ -1,8 +1,12 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:Fyrework/firebase_database/firestore_database.dart';
+import 'package:Fyrework/screens/home/home.dart';
+import 'package:Fyrework/services/bunny_service.dart';
 import 'package:Fyrework/services/stripe_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:path_provider/path_provider.dart';
 
 class AdvertPayment extends StatefulWidget {
   final Uint8List receivedAdvertScreenshot;
@@ -103,9 +107,39 @@ class _AdvertPaymentState extends State<AdvertPayment> {
                         for (var i = 0;
                             i < widget.receivedAdvertHashtags.length;
                             i++) {
-                          await FirestoreDatabase().fetchOrCreateGigsForAdverts(
+                          List<String> gigIds = await FirestoreDatabase()
+                              .checkGigExistenceWithHashtag(
                             widget.receivedAdvertHashtags[i],
                           );
+                          if (gigIds != null) {
+                            // inject advert image withing all gigs under selected hashtag
+                            final tempDir = await getTemporaryDirectory();
+                            final advertImageFile = await new File(
+                                    '${tempDir.path}/advertImage.jpg')
+                                .create();
+                            advertImageFile.writeAsBytesSync(
+                                widget.receivedAdvertScreenshot);
+
+                            String uploadAdvertResult =
+                                await BunnyService().uploadMediaFileToBunny(
+                              fileToUpload: advertImageFile,
+                              storageZonePath: 'gigMediaFiles',
+                            );
+                            await FirestoreDatabase().addAdvertImageToGig(
+                                gigIds: gigIds,
+                                advertImageDownloadUrl: uploadAdvertResult);
+                            await FirestoreDatabase().addToPopularHashtags(
+                                widget.receivedAdvertHashtags);
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      Home(passedSelectedIndex: 0),
+                                ),
+                                (route) => false);
+                          } else {
+                            // create a new gig with selected hashtag
+                          }
                         }
                         EasyLoading.dismiss();
                       },
@@ -124,7 +158,7 @@ class _AdvertPaymentState extends State<AdvertPayment> {
                       height: 50,
                     ),
                     Text(
-                      'Your advert will go under the selected hashtags at the top',
+                      'Your advert will go under the selected hashtag at the top',
                       style: Theme.of(context).textTheme.headline1,
                       textAlign: TextAlign.center,
                     )
