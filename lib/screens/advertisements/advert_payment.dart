@@ -104,41 +104,43 @@ class _AdvertPaymentState extends State<AdvertPayment> {
                             amount: 500.toString(), currency: 'usd');
                         Scaffold.of(context).showSnackBar(
                             SnackBar(content: Text(response.message)));
-                        for (var i = 0;
-                            i < widget.receivedAdvertHashtags.length;
-                            i++) {
-                          List<String> gigIds = await FirestoreDatabase()
-                              .checkGigExistenceWithHashtag(
-                            widget.receivedAdvertHashtags[i],
-                          );
-                          if (gigIds != null) {
-                            // inject advert image withing all gigs under selected hashtag
-                            final tempDir = await getTemporaryDirectory();
-                            final advertImageFile = await new File(
-                                    '${tempDir.path}/advertImage.jpg')
-                                .create();
-                            advertImageFile.writeAsBytesSync(
-                                widget.receivedAdvertScreenshot);
-
-                            String uploadAdvertResult =
-                                await BunnyService().uploadMediaFileToBunny(
-                              fileToUpload: advertImageFile,
-                              storageZonePath: 'gigMediaFiles',
+                        if (response.success) {
+                          for (var i = 0;
+                              i < widget.receivedAdvertHashtags.length;
+                              i++) {
+                            List<String> gigIds = await FirestoreDatabase()
+                                .checkGigExistenceWithHashtag(
+                              widget.receivedAdvertHashtags[i],
                             );
-                            await FirestoreDatabase().addAdvertImageToGig(
-                                gigIds: gigIds,
-                                advertImageDownloadUrl: uploadAdvertResult);
-                            await FirestoreDatabase().addToPopularHashtags(
-                                widget.receivedAdvertHashtags);
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      Home(passedSelectedIndex: 0),
-                                ),
-                                (route) => false);
-                          } else {
-                            // create a new gig with selected hashtag
+                            if (gigIds != null) {
+                              // inject advert image withing all gigs under selected hashtag
+                              final tempDir = await getTemporaryDirectory();
+                              final advertImageFile = await new File(
+                                      '${tempDir.path}/advertImage.jpg')
+                                  .create();
+                              advertImageFile.writeAsBytesSync(
+                                  widget.receivedAdvertScreenshot);
+
+                              String uploadAdvertResult =
+                                  await BunnyService().uploadMediaFileToBunny(
+                                fileToUpload: advertImageFile,
+                                storageZonePath: 'gigMediaFiles',
+                              );
+                              await FirestoreDatabase().addAdvertImageToGig(
+                                  gigIds: gigIds,
+                                  advertImageDownloadUrl: uploadAdvertResult);
+                              await FirestoreDatabase().addToPopularHashtags(
+                                  widget.receivedAdvertHashtags);
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        Home(passedSelectedIndex: 0),
+                                  ),
+                                  (route) => false);
+                            } else {
+                              // create a new gig with selected hashtag
+                            }
                           }
                         }
                         EasyLoading.dismiss();
