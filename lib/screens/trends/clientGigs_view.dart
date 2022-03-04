@@ -174,6 +174,8 @@ class _ClientGigsViewState extends State<ClientGigsView> {
                                     gigId: getDocData['gigId'],
                                     currentUserId: currentUserId,
                                     gigOwnerId: getDocData['gigOwnerId'],
+                                    gigClientId: getDocData['gigClientId'],
+                                    gigWorkerId: getDocData['gigWorkerId'],
                                     gigOwnerAvatarUrl:
                                         getDocData['gigOwnerAvatarUrl'],
                                     gigOwnerUsername:

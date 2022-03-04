@@ -9,6 +9,7 @@ import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_switch/custom_switch.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -93,10 +94,9 @@ class _CommentItemState extends State<CommentItem>
   final String cash = 'assets/svgs/flaticon/cash.svg';
   final String alternatePayment = 'assets/svgs/flaticon/alternate_payment.svg';
   bool myGig;
+  bool gigICanDo;
   bool myComment;
   bool appointedUser;
-  bool worker;
-  bool client;
   bool imageMediaFile;
   bool videoMediaFile;
   Timer _timer;
@@ -214,8 +214,9 @@ class _CommentItemState extends State<CommentItem>
     bool darkModeOn = brightness == Brightness.dark;
 
     myGig = widget.gigOwnerId == MyUser.uid ? true : false;
-    worker = widget.gigValue == 'Gig I can do' ? true : false;
-    client = widget.gigValue != 'Gig I can do' ? true : false;
+    gigICanDo = widget.gigValue == 'Gig i can do' ? true : false;
+    // worker = widget.gigValue == 'Gig I can do' ? true : false;
+    // client = widget.gigValue != 'Gig I can do' ? true : false;
     myComment = widget.commentOwnerId == MyUser.uid ? true : false;
     appointedUser = widget.appointedUserId == MyUser.uid ? true : false;
     createdAtDateTime =
@@ -970,7 +971,7 @@ class _CommentItemState extends State<CommentItem>
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Text(
-                                              worker ? 'Accept' : 'Approve',
+                                              'Approve',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyText1
@@ -984,21 +985,47 @@ class _CommentItemState extends State<CommentItem>
                                             ),
                                           ),
                                         ),
-                                        onTap: () {
-                                          FirestoreDatabase().setGigHiererId(
+                                        onTap: () async {
+                                          myGig
+                                              ? gigICanDo
+                                                  ? await FirestoreDatabase()
+                                                      .setGigClientAndGigWorker(
+                                                          gigId: widget
+                                                              .gigIdHoldingComment,
+                                                          gigClientId: widget
+                                                              .commentOwnerId,
+                                                          gigWorkerId:
+                                                              MyUser.uid)
+                                                  : await FirestoreDatabase()
+                                                      .setGigClientAndGigWorker(
+                                                          gigId: widget
+                                                              .gigIdHoldingComment,
+                                                          gigClientId:
+                                                              MyUser.uid,
+                                                          gigWorkerId: widget
+                                                              .commentOwnerId)
+                                              : !gigICanDo
+                                                  ? await FirestoreDatabase()
+                                                      .setGigClientAndGigWorker(
+                                                          gigId: widget
+                                                              .gigIdHoldingComment,
+                                                          gigClientId:
+                                                              MyUser.uid,
+                                                          gigWorkerId: widget
+                                                              .commentOwnerId)
+                                                  : await FirestoreDatabase()
+                                                      .setGigClientAndGigWorker(
+                                                          gigId: widget
+                                                              .gigIdHoldingComment,
+                                                          gigClientId: widget
+                                                              .commentOwnerId,
+                                                          gigWorkerId:
+                                                              MyUser.uid);
+                                          await FirestoreDatabase()
+                                              .appointGigToUser(
                                             gigId: widget.gigIdHoldingComment,
-                                            appointedUserId: myGig
-                                                ? MyUser.uid
-                                                : widget.commentOwnerId,
-                                            hiererId: myGig
-                                                ? MyUser.uid
-                                                : widget.commentOwnerId,
-                                          );
-                                          FirestoreDatabase().appointGigToUser(
-                                            gigId: widget.gigIdHoldingComment,
-                                            appointedUserId: myGig
-                                                ? MyUser.uid
-                                                : widget.commentOwnerId,
+                                            appointedUserId:
+                                                widget.commentOwnerId,
                                             commentId: widget.commentId,
                                           );
                                         }),
@@ -1124,9 +1151,7 @@ class _CommentItemState extends State<CommentItem>
                                             alignment: WrapAlignment.start,
                                             children: [
                                               Text(
-                                                myGig
-                                                    ? 'Gig is hired by '
-                                                    : 'Gig awarded to ',
+                                                'Gig awarded to ',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .bodyText1

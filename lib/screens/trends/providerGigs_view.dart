@@ -100,6 +100,8 @@ class _ProviderGigsViewState extends State<ProviderGigsView> {
                                     gigId: getDocData['gigId'],
                                     currentUserId: currentUserId,
                                     gigOwnerId: getDocData['gigOwnerId'],
+                                    gigClientId: getDocData['gigClientId'],
+                                    gigWorkerId: getDocData['gigWorkerId'],
                                     gigOwnerAvatarUrl:
                                         getDocData['gigOwnerAvatarUrl'],
                                     gigOwnerUsername:

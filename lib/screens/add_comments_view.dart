@@ -20,6 +20,8 @@ import 'package:intl/intl.dart';
 class AddCommentsView extends StatefulWidget {
   final String passedGigId;
   final String passedGigOwnerId;
+  final String passedGigClientId;
+  final String passedGigWorkerId;
   final String passGigOwnerUsername;
   final String passedCurrentUserId;
   final String passedGigCurrency;
@@ -30,6 +32,8 @@ class AddCommentsView extends StatefulWidget {
     Key key,
     @required this.passedGigId,
     @required this.passedGigOwnerId,
+    @required this.passedGigClientId,
+    @required this.passedGigWorkerId,
     @required this.passGigOwnerUsername,
     @required this.passedCurrentUserId,
     @required this.passedGigValue,
@@ -75,17 +79,11 @@ class _AddCommentsViewState extends State<AddCommentsView>
   TextEditingController _addProposalController = TextEditingController();
   TextEditingController _offeredBudgetController = TextEditingController();
 
-  bool myGig = false;
+  // bool myGig = false;
   bool appointed = false;
-  bool hirer;
-  String hirerId = '';
   bool appointedUser = false;
   String appointedUserId = '';
   List appliersOrHirersByUserId = [];
-  bool worker = false;
-  bool client = false;
-  bool gigICanDo = false;
-  // bool _keyboardVisible;
   String gigCurrency;
   String gigBudget;
 
@@ -169,23 +167,13 @@ class _AddCommentsViewState extends State<AddCommentsView>
 
   @override
   Widget build(BuildContext context) {
-    // var brightness = MediaQuery.of(context).platformBrightness;
-    // bool darkModeOn = brightness == Brightness.dark;
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
-    // isPortrait = MediaQuery.of(context).orientation == Orientation.portrait
-    //     ? true
-    //     : false;
+    // myGig = widget.passedGigOwnerId == MyUser.uid ? true : false;
+    // gigICanDo = widget.passedGigValue == 'Gig i can do' ? true : false;
+    // client = widget.passedGigClientId == MyUser.uid ? true : false;
 
-    myGig = widget.passedGigOwnerId == MyUser.uid ? true : false;
-    gigICanDo = widget.passedGigValue == 'Gig i can do' ? true : false;
-    worker = (!myGig && gigICanDo || myGig && gigICanDo) ? true : false;
-    client = (myGig && !gigICanDo || !myGig && gigICanDo) ? true : false;
-    // _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
-
-    // hirer = (myGig && !gigICanDo || !myGig && gigICanDo) ? true : false;
-
-//first check if this gig is appointed or not
+    //first check if this gig is appointed or not
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
@@ -236,14 +224,16 @@ class _AddCommentsViewState extends State<AddCommentsView>
                 );
               } else {
                 appointed = snapshot.data['appointed'];
-                hirerId = snapshot.data['hirerId'];
-                hirer = MyUser.uid == hirerId ? true : false;
                 appointedUserId = snapshot.data['appointedUserId'];
                 appliersOrHirersByUserId =
                     snapshot.data['appliersOrHirersByUserId'];
                 gigCurrency = snapshot.data['gigCurrency'];
                 gigBudget = snapshot.data['gigBudget'];
                 appointedUser = appointedUserId == MyUser.uid ? true : false;
+                bool myGig =
+                    snapshot.data['gigOwnerId'] == MyUser.uid ? true : false;
+                bool client =
+                    snapshot.data['gigClientId'] == MyUser.uid ? true : false;
 
                 return Scaffold(
                   key: _scaffoldKey,
@@ -535,7 +525,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                               .contains(
                                                                   MyUser.uid)
                                                           ? widget.passedGigValue ==
-                                                                  'Gig I can do'
+                                                                  'Gig i can do'
                                                               ? 'Hire'
                                                               : 'Apply'
                                                           : 'Request sent',
@@ -805,7 +795,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                     ],
                                   ),
                                 )
-                              : myGig || appointedUser || hirer
+                              : myGig || appointedUser
                                   ? Column(
                                       children: [
                                         ClipRRect(

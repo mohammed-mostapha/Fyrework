@@ -55,8 +55,6 @@ class _IndividualGigItemState extends State<IndividualGigItem> {
                     appointed: getDocData['appointed'],
                     appointedUserId: getDocData['appointedUserId'],
                     appointedusername: getDocData['appointedUserFullName'],
-                    hirerUserId: getDocData['hirerUserId'],
-                    hirerUsername: getDocData['hirerUsername'],
                     appliersOrHirersByUserId:
                         getDocData['appliersOrHirersByUserId'],
                     gigRelatedUsersByUserId:
@@ -64,6 +62,8 @@ class _IndividualGigItemState extends State<IndividualGigItem> {
                     gigId: getDocData['gigId'],
                     currentUserId: currentUserId,
                     gigOwnerId: getDocData['gigOwnerId'],
+                    gigClientId: getDocData['gigClientId'],
+                    gigWorkerId: getDocData['gigWorkerId'],
                     gigOwnerAvatarUrl: getDocData['gigOwnerAvatarUrl'],
                     gigOwnerUsername: getDocData['gigOwnerUsername'],
                     createdAt: getDocData['createdAt'],

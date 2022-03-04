@@ -882,126 +882,149 @@ class _SignUpViewState extends State<SignUpView> with TickerProviderStateMixin {
               ],
             ),
             //2nd TypeAhead for Handles goes here
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TypeAheadFormField(
-                      validator: (value) => (_myHandleController.text.isEmpty ||
-                              _myHandleController.text.length < 5)
-                          ? ''
-                          : null,
-                      textFieldConfiguration: TextFieldConfiguration(
-                        controller: _myHandleController,
-                        style: Theme.of(context).textTheme.bodyText1,
-                        inputFormatters: [
-                          new LengthLimitingTextInputFormatter(20),
-                          FilteringTextInputFormatter.allow(
-                              RegExp("[a-z0-9_]")),
-                        ],
-                        decoration: signUpInputDecoration(context, '@handle'),
-                        focusNode: handleFocus,
-                      ),
-                      suggestionsCallback: (pattern) async {
-                        _fetchedHandles.clear();
-                        print('fetchedHandles: $_fetchedHandles');
-                        _fetchedHandles = await FirestoreDatabase()
-                            .fetchTakenHandles(pattern);
-                        print('fetchedHandles: $_fetchedHandles');
-                        if (_fetchedHandles
-                            .contains(_myHandleController.text)) {
-                          setState(() {
-                            handleDuplicated = true;
-                          });
-                        } else {
-                          setState(() {
-                            handleDuplicated = false;
-                          });
-                        }
-
-                        return _fetchedHandles;
-                      },
-                      itemBuilder: (context, suggestions) {
-                        return ListTile(
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                suggestions,
-                                style: Theme.of(context).textTheme.bodyText1,
-                              ),
-                              Text(
-                                '(Taken)',
-                                style: Theme.of(context).textTheme.bodyText1,
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                      onSuggestionSelected: (suggestion) {
-                        handleFocus.requestFocus();
-                      },
-                    ),
-                  ),
-                  Container(
-                    width: 20,
-                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                    child: _myHandleController.text.isEmpty
-                        ? Container(
-                            width: 0,
-                            height: 0,
-                          )
-                        : handleDuplicated ||
-                                _myHandleController.text.length < 5
-                            ? FaIcon(
-                                FontAwesomeIcons.timesCircle,
-                                size: 18,
-                                color: Colors.red,
-                              )
-                            : FaIcon(
-                                FontAwesomeIcons.checkCircle,
-                                size: 18,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                  ),
-                  Container(
-                    width: 50,
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                          child: GestureDetector(
-                            child: Center(
-                              child: Text(
-                                'Add',
-                                style: TextStyle(
-                                  shadows: [
-                                    Shadow(
-                                        color: Theme.of(context).primaryColor,
-                                        offset: Offset(0, -2.5))
-                                  ],
-                                  fontSize: 14,
-                                  color: Colors.transparent,
-                                  decoration: TextDecoration.underline,
-                                  decorationThickness: 2,
-                                  decorationColor:
-                                      Theme.of(context).primaryColor,
-                                  decorationStyle: TextDecorationStyle.dotted,
-                                ),
-                              ),
+                        Expanded(
+                          child: TypeAheadFormField(
+                            validator: (value) =>
+                                (_myHandleController.text.isEmpty ||
+                                        _myHandleController.text.length < 5)
+                                    ? ''
+                                    : null,
+                            textFieldConfiguration: TextFieldConfiguration(
+                              controller: _myHandleController,
+                              style: Theme.of(context).textTheme.bodyText1,
+                              inputFormatters: [
+                                new LengthLimitingTextInputFormatter(20),
+                                FilteringTextInputFormatter.allow(
+                                    RegExp("[a-z0-9_]")),
+                              ],
+                              decoration:
+                                  signUpInputDecoration(context, '@handle'),
+                              focusNode: handleFocus,
                             ),
-                            onTap: () {
-                              FocusScope.of(context).unfocus();
+                            suggestionsCallback: (pattern) async {
+                              _fetchedHandles.clear();
+                              print('fetchedHandles: $_fetchedHandles');
+                              _fetchedHandles = await FirestoreDatabase()
+                                  .fetchTakenHandles(pattern);
+                              print('fetchedHandles: $_fetchedHandles');
+                              if (_fetchedHandles
+                                  .contains(_myHandleController.text)) {
+                                setState(() {
+                                  handleDuplicated = true;
+                                });
+                              } else {
+                                setState(() {
+                                  handleDuplicated = false;
+                                });
+                              }
+
+                              return _fetchedHandles;
+                            },
+                            itemBuilder: (context, suggestions) {
+                              return ListTile(
+                                title: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      suggestions,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                    Text(
+                                      '(Taken)',
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            onSuggestionSelected: (suggestion) {
+                              handleFocus.requestFocus();
                             },
                           ),
                         ),
+                        Container(
+                          width: 70,
+                          // padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                          child: _myHandleController.text.isEmpty
+                              ? Container(
+                                  width: 0,
+                                  height: 0,
+                                )
+                              : Container(
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          20.0, 0, 0, 0),
+                                      child: handleDuplicated ||
+                                              _myHandleController.text.length <
+                                                  5
+                                          ? FaIcon(
+                                              FontAwesomeIcons.timesCircle,
+                                              size: 20,
+                                              color: Colors.red,
+                                            )
+                                          : FaIcon(
+                                              FontAwesomeIcons.checkCircle,
+                                              size: 18,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                    ),
+                                  ),
+                                ),
+                        ),
+                        // Container(
+                        //   width: 50,
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.end,
+                        //     children: [
+                        //       Padding(
+                        //         padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                        //         child: GestureDetector(
+                        //           child: Center(
+                        //             child: Text(
+                        //               'Add',
+                        //               style: TextStyle(
+                        //                 shadows: [
+                        //                   Shadow(
+                        //                       color: Theme.of(context)
+                        //                           .primaryColor,
+                        //                       offset: Offset(0, -2.5))
+                        //                 ],
+                        //                 fontSize: 14,
+                        //                 color: Colors.transparent,
+                        //                 decoration: TextDecoration.underline,
+                        //                 decorationThickness: 2,
+                        //                 decorationColor:
+                        //                     Theme.of(context).primaryColor,
+                        //                 decorationStyle:
+                        //                     TextDecorationStyle.dotted,
+                        //               ),
+                        //             ),
+                        //           ),
+                        //           onTap: () {
+                        //             FocusScope.of(context).unfocus();
+                        //           },
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
 
             Row(

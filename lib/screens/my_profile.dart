@@ -409,7 +409,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                 Icon(Icons.chevron_right, color: Theme.of(context).accentColor),
           ),
           onTap: () async {
-            const url = 'http://districthive.com/terms.php';
+            const url = 'http://fyre.work';
             if (await canLaunch(url)) {
               await launch(url, forceWebView: true, enableJavaScript: true);
             } else {
@@ -471,8 +471,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                 Icon(Icons.chevron_right, color: Theme.of(context).accentColor),
           ),
           onTap: () async {
-            // const url = 'http://districthive.com/privacy.php';
-            const url = 'https://google.com';
+            const url = 'http://fyre.work';
             if (await canLaunch(url)) {
               await launch(url, forceWebView: true, enableJavaScript: true);
             } else {
@@ -533,7 +532,35 @@ class _MyProfileViewState extends State<MyProfileView> {
             trailing:
                 Icon(Icons.chevron_right, color: Theme.of(context).accentColor),
           ),
-          onTap: () {},
+          onTap: () async {
+            const url = 'http://fyre.work';
+            if (await canLaunch(url)) {
+              await launch(url, forceWebView: true, enableJavaScript: true);
+            } else {
+              // throw 'Could not launch $url';
+              showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                        title: Text(
+                          "Something went wrong",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        content: FlatButton(
+                          color: Theme.of(context).primaryColor,
+                          onPressed: () {
+                            Navigator.of(context, rootNavigator: true).pop();
+                          },
+                          child: Text(
+                            'Dismiss',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .copyWith(color: Theme.of(context).accentColor),
+                          ),
+                        ),
+                      ));
+            }
+          },
         ),
         GestureDetector(
           child: ListTile(
@@ -567,7 +594,35 @@ class _MyProfileViewState extends State<MyProfileView> {
             trailing:
                 Icon(Icons.chevron_right, color: Theme.of(context).accentColor),
           ),
-          onTap: () {},
+          onTap: () async {
+            const url = 'http://fyre.work';
+            if (await canLaunch(url)) {
+              await launch(url, forceWebView: true, enableJavaScript: true);
+            } else {
+              // throw 'Could not launch $url';
+              showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                        title: Text(
+                          "Something went wrong",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        content: FlatButton(
+                          color: Theme.of(context).primaryColor,
+                          onPressed: () {
+                            Navigator.of(context, rootNavigator: true).pop();
+                          },
+                          child: Text(
+                            'Dismiss',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .copyWith(color: Theme.of(context).accentColor),
+                          ),
+                        ),
+                      ));
+            }
+          },
         ),
         GestureDetector(
           child: ListTile(

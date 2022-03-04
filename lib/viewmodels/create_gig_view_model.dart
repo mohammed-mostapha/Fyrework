@@ -35,6 +35,8 @@ class CreateGigViewModel {
         appointed: appointed,
         gigId: gigId,
         gigOwnerId: userId,
+        gigClientId: '',
+        gigWorkerId: '',
         gigOwnerAvatarUrl: userProfilePictureDownloadUrl,
         gigOwnerUsername:
             username.substring(0, 1).toUpperCase() + username.substring(1),
@@ -53,7 +55,6 @@ class CreateGigViewModel {
         adultContentBool: adultContentBool,
         gigLocationIndex: gigLocation.substring(0, 1).toUpperCase(),
         gigOwnerUsernameIndex: username.substring(0, 1).toUpperCase(),
-        hirerId: '',
       ),
     );
 
@@ -109,7 +110,6 @@ class CreateGigViewModel {
         adultContentBool: adultContentBool,
         gigLocationIndex: gigLocation.substring(0, 1).toUpperCase(),
         gigOwnerUsernameIndex: username.substring(0, 1).toUpperCase(),
-        hirerId: '',
       ),
     );
 

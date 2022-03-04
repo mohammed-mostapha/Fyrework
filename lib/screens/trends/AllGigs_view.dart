@@ -143,8 +143,6 @@ class _AllGigsViewState extends State<AllGigsView> {
                                         getDocData['appointedUserId'],
                                     appointedusername:
                                         getDocData['appointedUserFullName'],
-                                    hirerUserId: getDocData['hirerUserId'],
-                                    hirerUsername: getDocData['hirerUsername'],
                                     appliersOrHirersByUserId:
                                         getDocData['appliersOrHirersByUserId'],
                                     gigRelatedUsersByUserId:
@@ -152,6 +150,8 @@ class _AllGigsViewState extends State<AllGigsView> {
                                     gigId: getDocData['gigId'],
                                     currentUserId: currentUserId,
                                     gigOwnerId: getDocData['gigOwnerId'],
+                                    gigClientId: getDocData['gigClientId'],
+                                    gigWorkerId: getDocData['gigWorkerId'],
                                     gigOwnerAvatarUrl:
                                         getDocData['gigOwnerAvatarUrl'],
                                     gigOwnerUsername:

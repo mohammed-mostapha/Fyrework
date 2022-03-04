@@ -667,18 +667,15 @@ class FirestoreDatabase {
     }
   }
 
-  // set gig hirer
-  Future setGigHiererId(
-      {String gigId, String appointedUserId, String hiererId}) async {
-    var appointedUser = await _usersCollection.doc(appointedUserId).get();
-    var appointedUsername = appointedUser.data()['username'];
-
+  // set gig client and gig worker
+  Future setGigClientAndGigWorker(
+      {@required String gigId,
+      @required String gigClientId,
+      @required String gigWorkerId}) async {
     try {
       await _gigsCollection.doc(gigId).update({
-        'appointed': true,
-        'appointedUserId': appointedUserId,
-        'appointedUsername': appointedUsername,
-        'hirerId': hiererId,
+        'gigClientId': gigClientId,
+        'gigWorkerId': gigWorkerId,
       });
     } catch (e) {
       if (e is PlatformException) {
@@ -691,8 +688,12 @@ class FirestoreDatabase {
       {String gigId, String appointedUserId, String commentId}) async {
     var appointedUser = await _usersCollection.doc(appointedUserId).get();
     var appointedUsername = appointedUser.data()['username'];
-
     try {
+      await _gigsCollection.doc(gigId).update({
+        'appointed': true,
+        'appointedUserId': appointedUserId,
+        'appointedUsername': appointedUsername,
+      });
       await FirestoreDatabase()
           .updateOpenGigsByGigId(userId: appointedUserId, gigId: gigId);
       await FirestoreDatabase().addUserIdToGigRelatedUsersArray(
@@ -704,6 +705,7 @@ class FirestoreDatabase {
         'appointedUsername': appointedUsername,
       }).then((value) async {
         await _commentsCollection
+            .where('gigIdHoldingComment', isEqualTo: gigId)
             .where('approved', isEqualTo: false)
             .get()
             .then((querySnapshots) {

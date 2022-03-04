@@ -2,6 +2,8 @@ class Gig {
   final bool appointed;
   final String gigId;
   final String gigOwnerId;
+  final String gigClientId;
+  final String gigWorkerId;
   final String gigOwnerAvatarUrl;
   final String gigOwnerUsername;
   dynamic createdAt;
@@ -17,7 +19,7 @@ class Gig {
   final String adultContentText;
   final bool adultContentBool;
   final String appointedUserId;
-  final String appointedusername;
+  final String appointedUsername;
   final List appliersOrHirersByUserId;
   final List gigRelatedUsersByUserId;
   final bool hidden;
@@ -29,11 +31,12 @@ class Gig {
   final List likersByUserId;
   final String gigLocationIndex;
   final String gigOwnerUsernameIndex;
-  final String hirerId;
   Gig({
     this.appointed = false,
     this.gigId,
     this.gigOwnerId,
+    this.gigClientId,
+    this.gigWorkerId,
     this.gigOwnerAvatarUrl,
     this.gigOwnerUsername,
     this.createdAt,
@@ -49,7 +52,7 @@ class Gig {
     this.adultContentText,
     this.adultContentBool,
     this.appointedUserId,
-    this.appointedusername,
+    this.appointedUsername,
     this.appliersOrHirersByUserId,
     this.gigRelatedUsersByUserId,
     this.hidden = false,
@@ -61,7 +64,6 @@ class Gig {
     this.likersByUserId,
     this.gigLocationIndex,
     this.gigOwnerUsernameIndex,
-    this.hirerId,
   });
 
   Map<String, dynamic> toMap() {
@@ -69,6 +71,8 @@ class Gig {
       'appointed': appointed,
       'gigId': gigId,
       'gigOwnerId': gigOwnerId,
+      'gigClientId': gigClientId,
+      'gigWorkerId': gigWorkerId,
       'gigOwnerAvatarUrl': gigOwnerAvatarUrl,
       'gigOwnerUsername': gigOwnerUsername,
       'createdAt': createdAt,
@@ -84,7 +88,7 @@ class Gig {
       'adultContentText': adultContentText,
       'adultContentBool': adultContentBool,
       'appointedUserId': appointedUserId,
-      'appointedusername': appointedusername,
+      'appointedUsername': appointedUsername,
       'appliersOrHirersByUserId': [],
       'gigRelatedUsersByUserId': [],
       'hidden': hidden,
@@ -96,7 +100,6 @@ class Gig {
       'likersByUserId': [],
       'gigLocationIndex': gigLocationIndex,
       'gigOwnerUsernameIndex': gigOwnerUsernameIndex,
-      'hirerId': hirerId,
     };
   }
 
@@ -107,6 +110,8 @@ class Gig {
       appointed: map['appointed'],
       gigId: map['gigId'],
       gigOwnerId: map['gigOwnerId'],
+      gigClientId: map['gigClientId'],
+      gigWorkerId: map['gigWorkerId'],
       gigOwnerAvatarUrl: map['gigOwnerAvatarUrl'],
       gigOwnerUsername: map['gigOwnerUsername'],
       createdAt: map['createdAt'],
@@ -122,7 +127,7 @@ class Gig {
       adultContentText: map['adultContentText'],
       adultContentBool: map['adultContentBool'],
       appointedUserId: map['appointedUserId'],
-      appointedusername: map['appointedusername'],
+      appointedUsername: map['appointedUsername'],
       appliersOrHirersByUserId: map['appliersOrHirersByUserId'],
       gigRelatedUsersByUserId: map['gigRelatedUsersByUserId'],
       hidden: map['hidden'],
@@ -134,7 +139,6 @@ class Gig {
       likersByUserId: map['likersByUserId'],
       gigLocationIndex: map['gigLocationIndex'],
       gigOwnerUsernameIndex: map['gigOwnerUsernameIndex'],
-      hirerId: map['hirerId'],
     );
   }
 }

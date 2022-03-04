@@ -176,9 +176,9 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                                 width: 10,
                               ),
                               Text(
-                                widget.passedGigValue == 'Gig I can do'
+                                widget.passedGigValue == 'Gig i can do'
                                     ? 'Pay by Paypal'
-                                    : 'Request PayPal escrow deposit',
+                                    : 'Get paid by Paypal',
                                 style: Theme.of(context).textTheme.bodyText1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -238,9 +238,9 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                                 width: 10,
                               ),
                               Text(
-                                widget.passedGigValue == 'Gig I can do'
-                                    ? 'Pay by cash'
-                                    : 'Get paid by cash',
+                                widget.passedGigValue == 'Gig i can do'
+                                    ? 'Pay by Cash'
+                                    : 'Get paid by Cash',
                                 style: Theme.of(context).textTheme.bodyText1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -297,7 +297,7 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                                 width: 10,
                               ),
                               Text(
-                                'Agree alternate with the poster',
+                                'Agree on alternate with the poster',
                                 style: Theme.of(context).textTheme.bodyText1,
                                 overflow: TextOverflow.ellipsis,
                               ),

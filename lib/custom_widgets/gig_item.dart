@@ -22,13 +22,13 @@ class GigItem extends StatefulWidget {
   final appointed;
   final appointedusername;
   final appointedUserId;
-  final hirerUserId;
-  final hirerUsername;
   final appliersOrHirersByUserId;
   final gigRelatedUsersByUserId;
   final gigId;
   final currentUserId;
   final gigOwnerId;
+  final gigClientId;
+  final gigWorkerId;
   final gigOwnerEmail;
   final gigOwnerAvatarUrl;
   final gigOwnerUsername;
@@ -58,13 +58,13 @@ class GigItem extends StatefulWidget {
     this.appointed,
     this.appointedusername,
     this.appointedUserId,
-    this.hirerUserId,
-    this.hirerUsername,
     this.appliersOrHirersByUserId,
     this.gigRelatedUsersByUserId,
     this.gigId,
     this.currentUserId,
     this.gigOwnerId,
+    this.gigClientId,
+    this.gigWorkerId,
     this.gigOwnerEmail,
     this.gigOwnerAvatarUrl,
     this.gigOwnerUsername,
@@ -139,6 +139,8 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
             builder: (context) => AddCommentsView(
                   passedGigId: widget.gigId,
                   passedGigOwnerId: widget.gigOwnerId,
+                  passedGigClientId: widget.gigClientId,
+                  passedGigWorkerId: widget.gigWorkerId,
                   passGigOwnerUsername: widget.gigOwnerUsername,
                   passedCurrentUserId: widget.currentUserId,
                   // passedGigAppointed: widget.appointed,
