@@ -67,8 +67,6 @@ class CommentsView extends StatelessWidget {
                     containMediaFile: getDocData['containMediaFile'],
                     commentPrivacyToggle: getDocData['commentPrivacyToggle'],
                     isGigCompleted: getDocData['isGigCompleted'],
-                    appointedUserId: getDocData['appointedUserId'],
-                    appointedUsername: getDocData['appointedUsername'],
                     ratingCount: getDocData['ratingCount'],
                     leftReview: getDocData['leftReview'],
                   ),

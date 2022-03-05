@@ -53,14 +53,11 @@ class _IndividualGigItemState extends State<IndividualGigItem> {
             return getDocData['hidden'] != true
                 ? GigItem(
                     appointed: getDocData['appointed'],
-                    appointedUserId: getDocData['appointedUserId'],
-                    appointedusername: getDocData['appointedUserFullName'],
                     appliersOrHirersByUserId:
                         getDocData['appliersOrHirersByUserId'],
                     gigRelatedUsersByUserId:
                         getDocData['gigRelatedUsersByUserId'],
                     gigId: getDocData['gigId'],
-                    currentUserId: currentUserId,
                     gigOwnerId: getDocData['gigOwnerId'],
                     gigClientId: getDocData['gigClientId'],
                     gigWorkerId: getDocData['gigWorkerId'],

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:core';
+import 'dart:typed_data';
 import 'package:Fyrework/custom_widgets/user_profile.dart';
 import 'package:Fyrework/custom_widgets/workstreamFiles_viewer.dart';
 import 'package:Fyrework/screens/my_profile.dart';
@@ -46,39 +47,34 @@ class CommentItem extends StatefulWidget {
   final containMediaFile;
   final commentPrivacyToggle;
   final isGigCompleted;
-  final appointedUserId;
-  final appointedUsername;
   final ratingCount;
   final leftReview;
   CommentItem({
     Key key,
-    // this.passedCurrentUserId,
-    this.isGigAppointed,
-    this.gigIdHoldingComment,
-    this.gigOwnerId,
-    this.gigOwnerUsername,
-    this.commentId,
-    this.commentOwnerId,
-    this.commentOwnerAvatarUrl,
-    this.commentOwnerUsername,
-    this.commentBody,
-    this.gigCurrency,
-    this.gigValue,
-    this.createdAt,
-    this.isPrivateComment,
-    this.proposal,
-    this.approved,
-    this.rejected,
-    this.offeredBudget,
-    this.preferredPaymentMethod,
-    this.workstreamFileUrl,
-    this.containMediaFile,
-    this.commentPrivacyToggle,
-    this.isGigCompleted,
-    this.appointedUserId,
-    this.appointedUsername,
-    this.ratingCount,
-    this.leftReview,
+    @required this.isGigAppointed,
+    @required this.gigIdHoldingComment,
+    @required this.gigOwnerId,
+    @required this.gigOwnerUsername,
+    @required this.commentId,
+    @required this.commentOwnerId,
+    @required this.commentOwnerAvatarUrl,
+    @required this.commentOwnerUsername,
+    @required this.commentBody,
+    @required this.gigCurrency,
+    @required this.gigValue,
+    @required this.createdAt,
+    @required this.isPrivateComment,
+    @required this.proposal,
+    @required this.approved,
+    @required this.rejected,
+    @required this.offeredBudget,
+    @required this.preferredPaymentMethod,
+    @required this.workstreamFileUrl,
+    @required this.containMediaFile,
+    @required this.commentPrivacyToggle,
+    @required this.isGigCompleted,
+    @required this.ratingCount,
+    @required this.leftReview,
   }) : super(key: key);
 
   @override
@@ -96,13 +92,11 @@ class _CommentItemState extends State<CommentItem>
   bool myGig;
   bool gigICanDo;
   bool myComment;
-  bool appointedUser;
   bool imageMediaFile;
   bool videoMediaFile;
   Timer _timer;
   int _commentViewIndex = 0;
   double _commentOpacity = 0.9;
-  bool isAppointedUser;
   dynamic createdAtDateTime;
   int initialRating = 0;
   bool _userMissedRating = false;
@@ -185,7 +179,7 @@ class _CommentItemState extends State<CommentItem>
         ratingCount: initialRating,
       );
       await FirestoreDatabase().addRatingToUser(
-        userId: widget.appointedUserId,
+        // userId: widget.appointedUserId,
         gigId: widget.gigIdHoldingComment,
         userRating: initialRating,
       );
@@ -215,10 +209,8 @@ class _CommentItemState extends State<CommentItem>
 
     myGig = widget.gigOwnerId == MyUser.uid ? true : false;
     gigICanDo = widget.gigValue == 'Gig i can do' ? true : false;
-    // worker = widget.gigValue == 'Gig I can do' ? true : false;
-    // client = widget.gigValue != 'Gig I can do' ? true : false;
     myComment = widget.commentOwnerId == MyUser.uid ? true : false;
-    appointedUser = widget.appointedUserId == MyUser.uid ? true : false;
+    // appointedUser = widget.appointedUserId == MyUser.uid ? true : false;
     createdAtDateTime =
         widget.createdAt != null ? widget.createdAt.toDate() : DateTime.now();
 
@@ -396,7 +388,7 @@ class _CommentItemState extends State<CommentItem>
                                                     ),
                                                     TextSpan(
                                                       text: myGig
-                                                          ? "${widget.appointedUsername}"
+                                                          ? "should be worker name"
                                                           : widget
                                                               .gigOwnerUsername,
                                                       style: Theme.of(context)
@@ -417,9 +409,9 @@ class _CommentItemState extends State<CommentItem>
                                                           TapGestureRecognizer()
                                                             ..onTap = () {
                                                               showUserProfile(
-                                                                userId: widget
-                                                                    .appointedUserId,
-                                                              );
+                                                                  // userId: widget
+                                                                  //     .appointedUserId,
+                                                                  );
                                                             },
                                                     ),
                                                   ]),
@@ -516,10 +508,10 @@ class _CommentItemState extends State<CommentItem>
                                             initialRating > 0 != true
                                                 ? alertUserToSelectRating()
                                                 : addReview(
-                                                    userIdToReceiveRating: myGig
-                                                        ? widget.appointedUserId
-                                                        : widget.gigOwnerId,
-                                                  );
+                                                    // userIdToReceiveRating: myGig
+                                                    //     ? widget.appointedUserId
+                                                    //     : widget.gigOwnerId,
+                                                    );
                                           }),
                                     ],
                                   ),
@@ -565,8 +557,10 @@ class _CommentItemState extends State<CommentItem>
                                   ),
                                 ],
                               )
-                        : (appointedUser && !widget.leftReview ||
-                                appointedUser && widget.leftReview == null)
+                        :
+                        //  (appointedUser && !widget.leftReview ||
+                        //         appointedUser && widget.leftReview == null)
+                        false
                             ? Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -591,7 +585,9 @@ class _CommentItemState extends State<CommentItem>
                                   ),
                                 ],
                               )
-                            : (appointedUser && widget.leftReview == true)
+                            :
+                            //  (appointedUser && widget.leftReview == true)
+                            false
                                 ? Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -986,48 +982,40 @@ class _CommentItemState extends State<CommentItem>
                                           ),
                                         ),
                                         onTap: () async {
-                                          myGig
-                                              ? gigICanDo
-                                                  ? await FirestoreDatabase()
-                                                      .setGigClientAndGigWorker(
-                                                          gigId: widget
-                                                              .gigIdHoldingComment,
-                                                          gigClientId: widget
-                                                              .commentOwnerId,
-                                                          gigWorkerId:
-                                                              MyUser.uid)
-                                                  : await FirestoreDatabase()
-                                                      .setGigClientAndGigWorker(
-                                                          gigId: widget
-                                                              .gigIdHoldingComment,
-                                                          gigClientId:
-                                                              MyUser.uid,
-                                                          gigWorkerId: widget
-                                                              .commentOwnerId)
-                                              : !gigICanDo
-                                                  ? await FirestoreDatabase()
-                                                      .setGigClientAndGigWorker(
-                                                          gigId: widget
-                                                              .gigIdHoldingComment,
-                                                          gigClientId:
-                                                              MyUser.uid,
-                                                          gigWorkerId: widget
-                                                              .commentOwnerId)
-                                                  : await FirestoreDatabase()
-                                                      .setGigClientAndGigWorker(
-                                                          gigId: widget
-                                                              .gigIdHoldingComment,
-                                                          gigClientId: widget
-                                                              .commentOwnerId,
-                                                          gigWorkerId:
-                                                              MyUser.uid);
-                                          await FirestoreDatabase()
-                                              .appointGigToUser(
-                                            gigId: widget.gigIdHoldingComment,
-                                            appointedUserId:
-                                                widget.commentOwnerId,
-                                            commentId: widget.commentId,
-                                          );
+                                          gigICanDo
+                                              ? await FirestoreDatabase()
+                                                  .setGigClientAndGigWorker(
+                                                      gigId: widget
+                                                          .gigIdHoldingComment,
+                                                      gigClientId:
+                                                          widget.commentOwnerId,
+                                                      gigWorkerId: MyUser.uid)
+                                                  .then((value) async {
+                                                  await FirestoreDatabase()
+                                                      .appointGigToUser(
+                                                    gigId: widget
+                                                        .gigIdHoldingComment,
+                                                    appointedUserId: MyUser.uid,
+                                                    commentId: widget.commentId,
+                                                  );
+                                                })
+                                              : await FirestoreDatabase()
+                                                  .setGigClientAndGigWorker(
+                                                      gigId: widget
+                                                          .gigIdHoldingComment,
+                                                      gigClientId: MyUser.uid,
+                                                      gigWorkerId:
+                                                          widget.commentOwnerId)
+                                                  .then((value) async {
+                                                  await FirestoreDatabase()
+                                                      .appointGigToUser(
+                                                    gigId: widget
+                                                        .gigIdHoldingComment,
+                                                    appointedUserId:
+                                                        widget.commentOwnerId,
+                                                    commentId: widget.commentId,
+                                                  );
+                                                });
                                         }),
                                     SizedBox(
                                       width: 10,
@@ -1421,7 +1409,8 @@ class _CommentItemState extends State<CommentItem>
                   ),
           ),
         ),
-        child: myGig || myComment || appointedUser
+        // child: myGig || myComment || appointedUser
+        child: myGig || myComment
             ? IndexedStack(
                 index: _commentViewIndex,
                 children: [

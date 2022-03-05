@@ -12,11 +12,17 @@ class WorkerActions extends StatefulWidget {
   final String passedGigOwnerId;
   @required
   final String passedGigOwnerUsername;
+  @required
+  String passedGigClientId;
+  @required
+  String passedGigWorkerId;
 
   WorkerActions({
     this.passedGigId,
     this.passedGigOwnerId,
     this.passedGigOwnerUsername,
+    this.passedGigClientId,
+    this.passedGigWorkerId,
   });
 
   @override
@@ -295,7 +301,8 @@ class _WorkerActionsState extends State<WorkerActions> {
                                         ],
                                       ),
                                     ),
-                                    onTap: !workerAction
+                                    onTap: gigActionsList.last['gigAction'] !=
+                                            'marked as done'
                                         ? () async {
                                             await FirestoreDatabase()
                                                 .addComment(
@@ -307,6 +314,10 @@ class _WorkerActionsState extends State<WorkerActions> {
                                                 gigOwnerUsername: widget
                                                     .passedGigOwnerUsername,
                                                 commentOwnerUsername: username,
+                                                gigClientId:
+                                                    widget.passedGigClientId,
+                                                gigworkerId:
+                                                    widget.passedGigWorkerId,
                                                 commentBody:
                                                     '$username marks gig as done',
                                                 commentOwnerId: userId,
@@ -320,10 +331,6 @@ class _WorkerActionsState extends State<WorkerActions> {
                                                 rejected: false,
                                                 containMediaFile: false,
                                                 isGigCompleted: false,
-                                                appointedUserId:
-                                                    appointedUserId,
-                                                appointedUsername:
-                                                    appointedUsername,
                                                 ratingCount: 0,
                                                 leftReview: false,
                                               ),
@@ -368,23 +375,14 @@ class _WorkerActionsState extends State<WorkerActions> {
                                           ),
                                           Text('Request Payment',
                                               textAlign: TextAlign.center,
-                                              style: !workerAction
-                                                  ? fyreworkLightTheme()
-                                                      .textTheme
-                                                      .bodyText1
-                                                  : fyreworkLightTheme()
-                                                      .textTheme
-                                                      .bodyText1
-                                                      .copyWith(
-                                                          color:
-                                                              fyreworkLightTheme()
-                                                                  .primaryColor
-                                                                  .withOpacity(
-                                                                      (0.5)))),
+                                              style: fyreworkLightTheme()
+                                                  .textTheme
+                                                  .bodyText1),
                                         ],
                                       ),
                                     ),
-                                    onTap: !workerAction
+                                    onTap: gigActionsList.last['gigAction'] !=
+                                            'request payment'
                                         ? () async {
                                             await FirestoreDatabase()
                                                 .addComment(
@@ -395,6 +393,10 @@ class _WorkerActionsState extends State<WorkerActions> {
                                                     widget.passedGigOwnerId,
                                                 gigOwnerUsername: widget
                                                     .passedGigOwnerUsername,
+                                                gigClientId:
+                                                    widget.passedGigClientId,
+                                                gigworkerId:
+                                                    widget.passedGigWorkerId,
                                                 commentOwnerUsername: username,
                                                 commentBody:
                                                     '$username requests payment',
@@ -409,10 +411,6 @@ class _WorkerActionsState extends State<WorkerActions> {
                                                 rejected: false,
                                                 containMediaFile: false,
                                                 isGigCompleted: false,
-                                                appointedUserId:
-                                                    appointedUserId,
-                                                appointedUsername:
-                                                    appointedUsername,
                                                 ratingCount: 0,
                                                 leftReview: false,
                                               ),

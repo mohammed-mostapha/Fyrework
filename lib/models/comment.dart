@@ -1,6 +1,10 @@
+import 'package:flutter/material.dart';
+
 class Comment {
   final String gigIdHoldingComment;
   final String gigOwnerId;
+  final String gigClientId;
+  final String gigworkerId;
   final String gigOwnerUsername;
   final String commentId;
   final String commentOwnerId;
@@ -20,43 +24,43 @@ class Comment {
   final bool containMediaFile;
   final bool commentPrivacyToggle;
   final bool isGigCompleted;
-  final String appointedUserId;
-  final String appointedUsername;
   final int ratingCount;
   final bool leftReview;
 
   Comment({
-    this.gigIdHoldingComment,
-    this.gigOwnerId,
-    this.gigOwnerUsername,
-    this.commentId,
-    this.commentOwnerId,
-    this.commentOwnerAvatarUrl,
-    this.commentOwnerUsername,
-    this.commentBody,
-    this.createdAt,
-    this.isPrivateComment,
-    this.proposal,
-    this.approved,
-    this.rejected,
-    this.gigCurrency,
-    this.offeredBudget,
-    this.gigValue,
-    this.preferredPaymentMethod,
-    this.workstreamFileUrl,
-    this.containMediaFile,
-    this.commentPrivacyToggle,
-    this.isGigCompleted,
-    this.appointedUserId,
-    this.appointedUsername,
-    this.ratingCount,
-    this.leftReview,
+    @required this.gigIdHoldingComment,
+    @required this.gigOwnerId,
+    @required this.gigClientId,
+    @required this.gigworkerId,
+    @required this.gigOwnerUsername,
+    @required this.commentId,
+    @required this.commentOwnerId,
+    @required this.commentOwnerAvatarUrl,
+    @required this.commentOwnerUsername,
+    @required this.commentBody,
+    @required this.createdAt,
+    @required this.isPrivateComment,
+    @required this.proposal,
+    @required this.approved,
+    @required this.rejected,
+    @required this.gigCurrency,
+    @required this.offeredBudget,
+    @required this.gigValue,
+    @required this.preferredPaymentMethod,
+    @required this.workstreamFileUrl,
+    @required this.containMediaFile,
+    @required this.commentPrivacyToggle,
+    @required this.isGigCompleted,
+    @required this.ratingCount,
+    @required this.leftReview,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'gigIdHoldingComment': gigIdHoldingComment,
       'gigOwnerId': gigOwnerId,
+      'gigClientId': gigClientId,
+      'gigWorkerId': gigworkerId,
       'gigOwnerUsername': gigOwnerUsername,
       'commentId': commentId,
       'commentOwnerId': commentOwnerId,
@@ -76,8 +80,6 @@ class Comment {
       'containMediaFile': containMediaFile,
       'commentPrivacyToggle': commentPrivacyToggle,
       'isGigCompleted': isGigCompleted,
-      'appointedUserId': appointedUserId,
-      'appointedUsername': appointedUsername,
       'ratingCount': ratingCount,
       'leftReview': leftReview,
     };
@@ -89,6 +91,8 @@ class Comment {
     return Comment(
       gigIdHoldingComment: map['gigIdHoldingComment'],
       gigOwnerId: map['gigOwnerId'],
+      gigClientId: map['gigClientId'],
+      gigworkerId: map['gigWorkerId'],
       gigOwnerUsername: map['gigOwnerUsername'],
       commentId: map['commentId'],
       commentOwnerId: map['commentOwnerId'],
@@ -108,8 +112,6 @@ class Comment {
       containMediaFile: map['containMediaFile'],
       commentPrivacyToggle: map['commentPrivacyToggle'],
       isGigCompleted: map['isGigCompleted'],
-      appointedUserId: map['appointedUserId'],
-      appointedUsername: map['appointedUsername'],
       ratingCount: map['ratingCount'],
       leftReview: map['leftReview'],
     );

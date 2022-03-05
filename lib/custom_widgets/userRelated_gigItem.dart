@@ -133,7 +133,6 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                   passedGigId: widget.gigId,
                   passedGigOwnerId: widget.gigOwnerId,
                   passGigOwnerUsername: widget.gigOwnerUsername,
-                  passedCurrentUserId: widget.currentUserId,
                   passedGigValue: widget.gigValue,
                   passedGigCurrency: widget.gigCurrency,
                   passedGigBudget: widget.gigBudget,
@@ -267,7 +266,6 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                     child: EditYourGig(
                       gigIndex: widget.index,
                       gigId: widget.gigId,
-                      currentUserId: widget.currentUserId,
                       gigOwnerId: widget.gigOwnerId,
                       gigOwnerEmail: widget.gigOwnerEmail,
                       gigOwnerAvatarUrl: widget.gigOwnerAvatarUrl,

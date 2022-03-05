@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Gig {
   final bool appointed;
   final String gigId;
@@ -18,12 +20,8 @@ class Gig {
   String gigValue;
   final String adultContentText;
   final bool adultContentBool;
-  final String appointedUserId;
-  final String appointedUsername;
   final List appliersOrHirersByUserId;
-  final List gigRelatedUsersByUserId;
   final bool hidden;
-  final bool paymentReleased;
   final bool markedAsComplete;
   final bool clientLeftReview;
   final List gigActions;
@@ -33,37 +31,33 @@ class Gig {
   final String gigOwnerUsernameIndex;
   Gig({
     this.appointed = false,
-    this.gigId,
-    this.gigOwnerId,
-    this.gigClientId,
-    this.gigWorkerId,
-    this.gigOwnerAvatarUrl,
-    this.gigOwnerUsername,
-    this.createdAt,
-    this.gigOwnerLocation,
-    this.gigLocation,
-    this.gigHashtags,
-    this.gigMediaFilesDownloadUrls,
-    this.gigPost,
-    this.gigDeadline,
-    this.gigCurrency,
-    this.gigBudget,
-    this.gigValue,
-    this.adultContentText,
-    this.adultContentBool,
-    this.appointedUserId,
-    this.appointedUsername,
-    this.appliersOrHirersByUserId,
-    this.gigRelatedUsersByUserId,
+    @required this.gigId,
+    @required this.gigOwnerId,
+    @required this.gigClientId,
+    @required this.gigWorkerId,
+    @required this.gigOwnerAvatarUrl,
+    @required this.gigOwnerUsername,
+    @required this.createdAt,
+    @required this.gigOwnerLocation,
+    @required this.gigLocation,
+    @required this.gigHashtags,
+    @required this.gigMediaFilesDownloadUrls,
+    @required this.gigPost,
+    @required this.gigDeadline,
+    @required this.gigCurrency,
+    @required this.gigBudget,
+    @required this.gigValue,
+    @required this.adultContentText,
+    @required this.adultContentBool,
+    @required this.appliersOrHirersByUserId,
     this.hidden = false,
-    this.paymentReleased = false,
     this.markedAsComplete = false,
     this.clientLeftReview = false,
-    this.gigActions,
+    @required this.gigActions,
     this.likesCount = 0,
-    this.likersByUserId,
-    this.gigLocationIndex,
-    this.gigOwnerUsernameIndex,
+    @required this.likersByUserId,
+    @required this.gigLocationIndex,
+    @required this.gigOwnerUsernameIndex,
   });
 
   Map<String, dynamic> toMap() {
@@ -87,13 +81,9 @@ class Gig {
       'gigValue': gigValue,
       'adultContentText': adultContentText,
       'adultContentBool': adultContentBool,
-      'appointedUserId': appointedUserId,
-      'appointedUsername': appointedUsername,
       'appliersOrHirersByUserId': [],
-      'gigRelatedUsersByUserId': [],
       'hidden': hidden,
       'gigActions': [],
-      'paymentReleased': paymentReleased,
       'markedAsComplete': markedAsComplete,
       'clientLeftReview': clientLeftReview,
       'likesCount': likesCount,
@@ -126,13 +116,9 @@ class Gig {
       gigValue: map['gigValue'],
       adultContentText: map['adultContentText'],
       adultContentBool: map['adultContentBool'],
-      appointedUserId: map['appointedUserId'],
-      appointedUsername: map['appointedUsername'],
       appliersOrHirersByUserId: map['appliersOrHirersByUserId'],
-      gigRelatedUsersByUserId: map['gigRelatedUsersByUserId'],
       hidden: map['hidden'],
       gigActions: map['gigActions'],
-      paymentReleased: map['paymentReleased'],
       markedAsComplete: map['markedAsComplete'],
       clientLeftReview: map['clientLeftReview'],
       likesCount: map['likesCount'],

@@ -90,14 +90,11 @@ class _ClientGigsViewState extends State<ClientGigsView> {
                                 ? GigItem(
                                     index: index,
                                     appointed: getDocData['appointed'],
-                                    appointedusername:
-                                        getDocData['appointedUserFullName'],
                                     appliersOrHirersByUserId:
                                         getDocData['appliersOrHirersByUserId'],
                                     gigRelatedUsersByUserId:
                                         getDocData['gigRelatedUsersByUserId'],
                                     gigId: getDocData['gigId'],
-                                    currentUserId: currentUserId,
                                     gigOwnerId: getDocData['gigOwnerId'],
                                     gigOwnerAvatarUrl:
                                         getDocData['gigOwnerAvatarUrl'],
@@ -118,8 +115,6 @@ class _ClientGigsViewState extends State<ClientGigsView> {
                                         getDocData['adultContentText'],
                                     adultContentBool:
                                         getDocData['adultContentBool'],
-                                    appointedUserId:
-                                        getDocData['appointedUserId'],
                                     hidden: getDocData['hidden'],
                                     gigActions: getDocData['gigActions'],
                                     paymentReleased:
@@ -165,14 +160,11 @@ class _ClientGigsViewState extends State<ClientGigsView> {
                                 ? GigItem(
                                     index: index,
                                     appointed: getDocData['appointed'],
-                                    appointedusername:
-                                        getDocData['appointedUserFullName'],
                                     appliersOrHirersByUserId:
                                         getDocData['appliersOrHirersByUserId'],
                                     gigRelatedUsersByUserId:
                                         getDocData['gigRelatedUsersByUserId'],
                                     gigId: getDocData['gigId'],
-                                    currentUserId: currentUserId,
                                     gigOwnerId: getDocData['gigOwnerId'],
                                     gigClientId: getDocData['gigClientId'],
                                     gigWorkerId: getDocData['gigWorkerId'],
@@ -195,8 +187,6 @@ class _ClientGigsViewState extends State<ClientGigsView> {
                                         getDocData['adultContentText'],
                                     adultContentBool:
                                         getDocData['adultContentBool'],
-                                    appointedUserId:
-                                        getDocData['appointedUserId'],
                                     hidden: getDocData['hidden'],
                                     gigActions: getDocData['gigActions'],
                                     paymentReleased:

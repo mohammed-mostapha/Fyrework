@@ -23,7 +23,6 @@ class AddCommentsView extends StatefulWidget {
   final String passedGigClientId;
   final String passedGigWorkerId;
   final String passGigOwnerUsername;
-  final String passedCurrentUserId;
   final String passedGigCurrency;
   final String passedGigValue;
   final String passedGigBudget;
@@ -35,7 +34,6 @@ class AddCommentsView extends StatefulWidget {
     @required this.passedGigClientId,
     @required this.passedGigWorkerId,
     @required this.passGigOwnerUsername,
-    @required this.passedCurrentUserId,
     @required this.passedGigValue,
     @required this.passedGigCurrency,
     @required this.passedGigBudget,
@@ -81,8 +79,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
 
   // bool myGig = false;
   bool appointed = false;
-  bool appointedUser = false;
-  String appointedUserId = '';
   List appliersOrHirersByUserId = [];
   String gigCurrency;
   String gigBudget;
@@ -121,8 +117,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
     String preferredPaymentMethod,
     @required bool isGigCompleted,
     @required bool containMediaFile,
-    appointedUserId,
-    appointedUsername,
     int ratingCount,
     bool leftReview,
   }) async {
@@ -131,12 +125,13 @@ class _AddCommentsViewState extends State<AddCommentsView>
         gigIdHoldingComment: gigIdHoldingComment,
         gigOwnerId: gigOwnerId,
         gigOwnerUsername: gigOwnerUsername,
+        gigClientId: widget.passedGigClientId,
+        gigworkerId: widget.passedGigWorkerId,
         commentId: commentId,
         commentOwnerId: commentOwnerId,
         commentOwnerAvatarUrl: commentOwnerAvatarUrl,
         commentOwnerUsername: commentOwnerUsername,
         commentBody: commentBody,
-        // createdAt: FieldValue.serverTimestamp(),
         createdAt: DateTime.now(),
         isPrivateComment: isPrivateComment,
         proposal: proposal,
@@ -149,8 +144,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
         containMediaFile: containMediaFile,
         commentPrivacyToggle: isPrivateComment,
         isGigCompleted: isGigCompleted,
-        appointedUserId: appointedUserId,
-        appointedUsername: appointedUsername,
         ratingCount: ratingCount,
         leftReview: leftReview,
       ),
@@ -169,9 +162,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
-    // myGig = widget.passedGigOwnerId == MyUser.uid ? true : false;
-    // gigICanDo = widget.passedGigValue == 'Gig i can do' ? true : false;
-    // client = widget.passedGigClientId == MyUser.uid ? true : false;
 
     //first check if this gig is appointed or not
     return Container(
@@ -224,16 +214,16 @@ class _AddCommentsViewState extends State<AddCommentsView>
                 );
               } else {
                 appointed = snapshot.data['appointed'];
-                appointedUserId = snapshot.data['appointedUserId'];
                 appliersOrHirersByUserId =
                     snapshot.data['appliersOrHirersByUserId'];
                 gigCurrency = snapshot.data['gigCurrency'];
                 gigBudget = snapshot.data['gigBudget'];
-                appointedUser = appointedUserId == MyUser.uid ? true : false;
                 bool myGig =
                     snapshot.data['gigOwnerId'] == MyUser.uid ? true : false;
                 bool client =
                     snapshot.data['gigClientId'] == MyUser.uid ? true : false;
+                bool worker =
+                    snapshot.data['gigWorkerId'] == MyUser.uid ? true : false;
 
                 return Scaffold(
                   key: _scaffoldKey,
@@ -538,7 +528,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                           );
                                         },
                                       )
-                                    : appointedUserId == MyUser.uid
+                                    : client || worker
                                         ? SizedBox(
                                             width: 20,
                                             height: 20,
@@ -795,7 +785,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                     ],
                                   ),
                                 )
-                              : myGig || appointedUser
+                              : client || worker
                                   ? Column(
                                       children: [
                                         ClipRRect(
@@ -1061,11 +1051,15 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                                     passedGigId: widget.passedGigId,
                                                                                     passedGigOwnerId: widget.passedGigOwnerId,
                                                                                     passedGigOwnerUsername: widget.passGigOwnerUsername,
+                                                                                    passedGigClientId: widget.passedGigClientId,
+                                                                                    passedGigWorkerId: widget.passedGigWorkerId,
                                                                                   )
                                                                                 : ClientActions(
                                                                                     passedGigId: widget.passedGigId,
                                                                                     passedGigOwnerId: widget.passedGigOwnerId,
                                                                                     passedGigOwnerUsername: widget.passGigOwnerUsername,
+                                                                                    passedGigClientId: widget.passedGigClientId,
+                                                                                    passedGigWorkerId: widget.passedGigWorkerId,
                                                                                   ),
                                                                           ),
                                                                         );

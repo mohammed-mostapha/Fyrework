@@ -13,7 +13,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class AllGigsView extends StatefulWidget {
   AllGigsView({Key key}) : super(key: key);
-  // String currentUserId = UserController.currentUserId;
 
   @override
   _AllGigsViewState createState() => _AllGigsViewState();
@@ -139,16 +138,11 @@ class _AllGigsViewState extends State<AllGigsView> {
                                 ? GigItem(
                                     index: index,
                                     appointed: getDocData['appointed'],
-                                    appointedUserId:
-                                        getDocData['appointedUserId'],
-                                    appointedusername:
-                                        getDocData['appointedUserFullName'],
                                     appliersOrHirersByUserId:
                                         getDocData['appliersOrHirersByUserId'],
                                     gigRelatedUsersByUserId:
                                         getDocData['gigRelatedUsersByUserId'],
                                     gigId: getDocData['gigId'],
-                                    currentUserId: currentUserId,
                                     gigOwnerId: getDocData['gigOwnerId'],
                                     gigClientId: getDocData['gigClientId'],
                                     gigWorkerId: getDocData['gigWorkerId'],

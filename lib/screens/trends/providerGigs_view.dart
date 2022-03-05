@@ -3,7 +3,6 @@ import 'package:Fyrework/screens/trends/gigIndexProvider.dart';
 import 'package:Fyrework/screens/trends/queryStringProvider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +16,6 @@ class ProviderGigsView extends StatefulWidget {
 }
 
 class _ProviderGigsViewState extends State<ProviderGigsView> {
-  final String currentUserId = MyUser.uid;
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
@@ -91,14 +89,11 @@ class _ProviderGigsViewState extends State<ProviderGigsView> {
                                 ? GigItem(
                                     index: index,
                                     appointed: getDocData['appointed'],
-                                    appointedusername:
-                                        getDocData['appointedUserFullName'],
                                     appliersOrHirersByUserId:
                                         getDocData['appliersOrHirersByUserId'],
                                     gigRelatedUsersByUserId:
                                         getDocData['gigRelatedUsersByUserId'],
                                     gigId: getDocData['gigId'],
-                                    currentUserId: currentUserId,
                                     gigOwnerId: getDocData['gigOwnerId'],
                                     gigClientId: getDocData['gigClientId'],
                                     gigWorkerId: getDocData['gigWorkerId'],
@@ -121,8 +116,6 @@ class _ProviderGigsViewState extends State<ProviderGigsView> {
                                         getDocData['adultContentText'],
                                     adultContentBool:
                                         getDocData['adultContentBool'],
-                                    appointedUserId:
-                                        getDocData['appointedUserId'],
                                     hidden: getDocData['hidden'],
                                     gigActions: getDocData['gigActions'],
                                     paymentReleased:
@@ -160,14 +153,11 @@ class _ProviderGigsViewState extends State<ProviderGigsView> {
                                 ? GigItem(
                                     index: index,
                                     appointed: getDocData['appointed'],
-                                    appointedusername:
-                                        getDocData['appointedUserFullName'],
                                     appliersOrHirersByUserId:
                                         getDocData['appliersOrHirersByUserId'],
                                     gigRelatedUsersByUserId:
                                         getDocData['gigRelatedUsersByUserId'],
                                     gigId: getDocData['gigId'],
-                                    currentUserId: currentUserId,
                                     gigOwnerId: getDocData['gigOwnerId'],
                                     gigOwnerAvatarUrl:
                                         getDocData['gigOwnerAvatarUrl'],
@@ -188,8 +178,6 @@ class _ProviderGigsViewState extends State<ProviderGigsView> {
                                         getDocData['adultContentText'],
                                     adultContentBool:
                                         getDocData['adultContentBool'],
-                                    appointedUserId:
-                                        getDocData['appointedUserId'],
                                     hidden: getDocData['hidden'],
                                     gigActions: getDocData['gigActions'],
                                     paymentReleased:

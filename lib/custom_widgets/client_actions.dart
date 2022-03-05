@@ -12,11 +12,17 @@ class ClientActions extends StatefulWidget {
   final String passedGigOwnerId;
   @required
   final String passedGigOwnerUsername;
+  @required
+  String passedGigClientId;
+  @required
+  String passedGigWorkerId;
 
   ClientActions({
     this.passedGigId,
     this.passedGigOwnerId,
     this.passedGigOwnerUsername,
+    this.passedGigClientId,
+    this.passedGigWorkerId,
   });
 
   @override
@@ -27,8 +33,6 @@ class _ClientActionsState extends State<ClientActions> {
   String userId = MyUser.uid;
   String username = MyUser.username;
   dynamic userProfilePictureUrl = MyUser.userAvatarUrl;
-  String appointedUserId;
-  String appointedUsername;
 
   // bool showReviewTemplate = false;
   final String unsatisfied = 'assets/svgs/flaticon/unsatisfied.svg';
@@ -71,11 +75,6 @@ class _ClientActionsState extends State<ClientActions> {
                 )));
               } else if (appointedUserSnapshot.hasData) {
                 if (appointedUserSnapshot.data != null) {
-                  appointedUserId =
-                      appointedUserSnapshot.data['appointedUserId'];
-                  appointedUsername =
-                      appointedUserSnapshot.data['appointedUsername'];
-
                   return StreamBuilder(
                     stream: FirestoreDatabase()
                         .showGigWorkstreamActions(gigId: widget.passedGigId),
@@ -170,9 +169,6 @@ class _ClientActionsState extends State<ClientActions> {
                                             rejected: false,
                                             containMediaFile: false,
                                             isGigCompleted: false,
-                                            appointedUserId: appointedUserId,
-                                            appointedUsername:
-                                                appointedUsername,
                                             ratingCount: 0,
                                             leftReview: false,
                                           ),
@@ -237,10 +233,9 @@ class _ClientActionsState extends State<ClientActions> {
                                           rejected: false,
                                           containMediaFile: false,
                                           isGigCompleted: true,
-                                          appointedUserId: appointedUserId,
-                                          appointedUsername: appointedUsername,
                                           ratingCount: 0,
                                           leftReview: false,
+                                          createdAt: DateTime.now(),
                                         ),
                                         widget.passedGigId,
                                       );
@@ -257,7 +252,7 @@ class _ClientActionsState extends State<ClientActions> {
                                           .convertOpenGigToCompletedGig(
                                         gigId: widget.passedGigId,
                                         gigOwnerId: widget.passedGigOwnerId,
-                                        appointedUserId: appointedUserId,
+                                        // appointedUserId: appointedUserId,
                                       );
                                     },
                                   ),
@@ -415,10 +410,6 @@ class _ClientActionsState extends State<ClientActions> {
                                                 rejected: false,
                                                 containMediaFile: false,
                                                 isGigCompleted: false,
-                                                appointedUserId:
-                                                    appointedUserId,
-                                                appointedUsername:
-                                                    appointedUsername,
                                                 ratingCount: 0,
                                                 leftReview: false,
                                               ),
@@ -504,10 +495,6 @@ class _ClientActionsState extends State<ClientActions> {
                                                 rejected: false,
                                                 containMediaFile: false,
                                                 isGigCompleted: true,
-                                                appointedUserId:
-                                                    appointedUserId,
-                                                appointedUsername:
-                                                    appointedUsername,
                                                 ratingCount: 0,
                                                 leftReview: false,
                                               ),

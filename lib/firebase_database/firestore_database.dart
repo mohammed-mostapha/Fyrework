@@ -390,12 +390,6 @@ class FirestoreDatabase {
     });
   }
 
-  Future addUserIdToGigRelatedUsersArray({String gigId, String userId}) async {
-    return await _gigsCollection.doc(gigId).update({
-      'gigRelatedUsersByUserId': FieldValue.arrayUnion([userId]),
-    });
-  }
-
   //add user favorite hashtags to popular hashtags collection
   Future addToPopularHashtags(List favoriteHashtags) async {
     QuerySnapshot querySnapshot = await _popularHashtagsCollection.get();
@@ -572,9 +566,6 @@ class FirestoreDatabase {
       await FirestoreDatabase()
           .updateOpenGigsByGigId(userId: userId, gigId: gigId);
 
-      await FirestoreDatabase()
-          .addUserIdToGigRelatedUsersArray(gigId: gigId, userId: userId);
-
       // only add gigHashtags that dont exist in popularHashtags cloud firestore collection
       QuerySnapshot popularHashtagsDocuments =
           await _popularHashtagsCollection.get();
@@ -696,8 +687,6 @@ class FirestoreDatabase {
       });
       await FirestoreDatabase()
           .updateOpenGigsByGigId(userId: appointedUserId, gigId: gigId);
-      await FirestoreDatabase().addUserIdToGigRelatedUsersArray(
-          gigId: gigId, userId: appointedUserId);
 
       await _commentsCollection.doc(commentId).update({
         'approved': true,

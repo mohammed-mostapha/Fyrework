@@ -20,12 +20,9 @@ import 'package:Fyrework/screens/trends/gigIndexProvider.dart';
 class GigItem extends StatefulWidget {
   final index;
   final appointed;
-  final appointedusername;
-  final appointedUserId;
   final appliersOrHirersByUserId;
   final gigRelatedUsersByUserId;
   final gigId;
-  final currentUserId;
   final gigOwnerId;
   final gigClientId;
   final gigWorkerId;
@@ -54,39 +51,36 @@ class GigItem extends StatefulWidget {
 
   GigItem({
     Key key,
-    this.index,
-    this.appointed,
-    this.appointedusername,
-    this.appointedUserId,
-    this.appliersOrHirersByUserId,
-    this.gigRelatedUsersByUserId,
-    this.gigId,
-    this.currentUserId,
-    this.gigOwnerId,
-    this.gigClientId,
-    this.gigWorkerId,
-    this.gigOwnerEmail,
-    this.gigOwnerAvatarUrl,
-    this.gigOwnerUsername,
-    this.createdAt,
-    this.gigOwnerLocation,
-    this.gigLocation,
-    this.gigHashtags,
-    this.gigMediaFilesDownloadUrls,
-    this.gigPost,
-    this.gigDeadline,
-    this.gigCurrency,
-    this.gigBudget,
-    this.gigValue,
-    this.adultContentText,
-    this.adultContentBool,
-    this.hidden,
-    this.gigActions,
-    this.paymentReleased,
-    this.markedAsComplete,
-    this.clientLeftReview,
-    this.likesCount,
-    this.likersByUserId,
+    @required this.index,
+    @required this.appointed,
+    @required this.appliersOrHirersByUserId,
+    @required this.gigRelatedUsersByUserId,
+    @required this.gigId,
+    @required this.gigOwnerId,
+    @required this.gigClientId,
+    @required this.gigWorkerId,
+    @required this.gigOwnerEmail,
+    @required this.gigOwnerAvatarUrl,
+    @required this.gigOwnerUsername,
+    @required this.createdAt,
+    @required this.gigOwnerLocation,
+    @required this.gigLocation,
+    @required this.gigHashtags,
+    @required this.gigMediaFilesDownloadUrls,
+    @required this.gigPost,
+    @required this.gigDeadline,
+    @required this.gigCurrency,
+    @required this.gigBudget,
+    @required this.gigValue,
+    @required this.adultContentText,
+    @required this.adultContentBool,
+    @required this.hidden,
+    @required this.gigActions,
+    @required this.paymentReleased,
+    @required this.markedAsComplete,
+    @required this.clientLeftReview,
+    @required this.likesCount,
+    @required this.likersByUserId,
   }) : super(key: key);
 
   @override
@@ -98,8 +92,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
 
   bool myGig = false;
   bool appointed = false;
-  bool appointedUser = false;
-  String appointedUserId = '';
   bool appliedOrHired = false;
   List appliersOrHirersByUserId = [];
   bool gigICanDo = false;
@@ -142,8 +134,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                   passedGigClientId: widget.gigClientId,
                   passedGigWorkerId: widget.gigWorkerId,
                   passGigOwnerUsername: widget.gigOwnerUsername,
-                  passedCurrentUserId: widget.currentUserId,
-                  // passedGigAppointed: widget.appointed,
                   passedGigValue: widget.gigValue,
                   passedGigCurrency: widget.gigCurrency,
                   passedGigBudget: widget.gigBudget,
@@ -206,13 +196,10 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
 
     myGig = widget.gigOwnerId == MyUser.uid ? true : false;
     appointed = widget.appointed;
-    appointedUserId = widget.appointedUserId;
     appliedOrHired =
         appliersOrHirersByUserId.contains(MyUser.uid) ? true : false;
     appliersOrHirersByUserId = widget.appliersOrHirersByUserId;
     gigICanDo = widget.gigValue == 'Gig I can do' ? true : false;
-
-    appointedUser = appointedUserId == MyUser.uid ? true : false;
 
     timeAgo.setLocaleMessages('de', timeAgo.DeMessages());
     timeAgo.setLocaleMessages('dv', timeAgo.DvMessages());
@@ -298,7 +285,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                     child: EditYourGig(
                       gigIndex: widget.index,
                       gigId: widget.gigId,
-                      currentUserId: widget.currentUserId,
                       gigOwnerId: widget.gigOwnerId,
                       gigOwnerEmail: widget.gigOwnerEmail,
                       gigOwnerAvatarUrl: widget.gigOwnerAvatarUrl,

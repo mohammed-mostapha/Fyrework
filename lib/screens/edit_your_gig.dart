@@ -21,7 +21,6 @@ import 'package:geocoding/geocoding.dart';
 class EditYourGig extends StatefulWidget {
   final gigIndex;
   final gigId;
-  final currentUserId;
   final gigOwnerId;
   final gigOwnerEmail;
   final gigOwnerAvatarUrl;
@@ -43,7 +42,6 @@ class EditYourGig extends StatefulWidget {
     Key key,
     @required this.gigIndex,
     @required this.gigId,
-    @required this.currentUserId,
     @required this.gigOwnerId,
     @required this.gigOwnerEmail,
     @required this.gigOwnerAvatarUrl,
