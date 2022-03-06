@@ -25,9 +25,10 @@ class UserRelatedGigItem extends StatefulWidget {
   final gigId;
   final currentUserId;
   final gigOwnerId;
-  final gigOwnerEmail;
   final gigOwnerAvatarUrl;
   final gigOwnerUsername;
+  final gigClientId;
+  final gigWorkerId;
   final createdAt;
   final gigOwnerLocation;
   final gigLocation;
@@ -58,9 +59,10 @@ class UserRelatedGigItem extends StatefulWidget {
     this.gigId,
     this.currentUserId,
     this.gigOwnerId,
-    this.gigOwnerEmail,
     this.gigOwnerAvatarUrl,
     this.gigOwnerUsername,
+    this.gigClientId,
+    this.gigWorkerId,
     this.createdAt,
     this.gigOwnerLocation,
     this.gigLocation,
@@ -133,6 +135,8 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                   passedGigId: widget.gigId,
                   passedGigOwnerId: widget.gigOwnerId,
                   passGigOwnerUsername: widget.gigOwnerUsername,
+                  passedGigClientId: widget.gigClientId,
+                  passedGigWorkerId: widget.gigWorkerId,
                   passedGigValue: widget.gigValue,
                   passedGigCurrency: widget.gigCurrency,
                   passedGigBudget: widget.gigBudget,
@@ -267,7 +271,6 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                       gigIndex: widget.index,
                       gigId: widget.gigId,
                       gigOwnerId: widget.gigOwnerId,
-                      gigOwnerEmail: widget.gigOwnerEmail,
                       gigOwnerAvatarUrl: widget.gigOwnerAvatarUrl,
                       gigOwnerUsername: widget.gigOwnerUsername,
                       createdAt: widget.createdAt,

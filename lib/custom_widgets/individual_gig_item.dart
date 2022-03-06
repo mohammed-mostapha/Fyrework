@@ -60,6 +60,7 @@ class _IndividualGigItemState extends State<IndividualGigItem> {
                     gigId: getDocData['gigId'],
                     gigOwnerId: getDocData['gigOwnerId'],
                     gigClientId: getDocData['gigClientId'],
+                    gigDeadline: getDocData['gigDeadline'],
                     gigWorkerId: getDocData['gigWorkerId'],
                     gigOwnerAvatarUrl: getDocData['gigOwnerAvatarUrl'],
                     gigOwnerUsername: getDocData['gigOwnerUsername'],

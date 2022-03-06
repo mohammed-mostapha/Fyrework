@@ -144,6 +144,7 @@ class _AllGigsViewState extends State<AllGigsView> {
                                         getDocData['gigRelatedUsersByUserId'],
                                     gigId: getDocData['gigId'],
                                     gigOwnerId: getDocData['gigOwnerId'],
+                                    gigDeadline: getDocData['gigDeadline'],
                                     gigClientId: getDocData['gigClientId'],
                                     gigWorkerId: getDocData['gigWorkerId'],
                                     gigOwnerAvatarUrl:

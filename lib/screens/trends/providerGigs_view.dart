@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -95,6 +96,7 @@ class _ProviderGigsViewState extends State<ProviderGigsView> {
                                         getDocData['gigRelatedUsersByUserId'],
                                     gigId: getDocData['gigId'],
                                     gigOwnerId: getDocData['gigOwnerId'],
+                                    gigDeadline: getDocData['gigDeadline'],
                                     gigClientId: getDocData['gigClientId'],
                                     gigWorkerId: getDocData['gigWorkerId'],
                                     gigOwnerAvatarUrl:
@@ -163,6 +165,9 @@ class _ProviderGigsViewState extends State<ProviderGigsView> {
                                         getDocData['gigOwnerAvatarUrl'],
                                     gigOwnerUsername:
                                         getDocData['gigOwnerUsername'],
+                                    gigClientId: getDocData['gigClientId'],
+                                    gigWorkerId: getDocData['gigWorkerId'],
+                                    gigDeadline: getDocData['gigDeadline'],
                                     createdAt: getDocData['createdAt'],
                                     gigOwnerLocation:
                                         getDocData['gigOwnerLocation'],

@@ -22,7 +22,6 @@ class EditYourGig extends StatefulWidget {
   final gigIndex;
   final gigId;
   final gigOwnerId;
-  final gigOwnerEmail;
   final gigOwnerAvatarUrl;
   final gigOwnerUsername;
   final createdAt;
@@ -43,7 +42,6 @@ class EditYourGig extends StatefulWidget {
     @required this.gigIndex,
     @required this.gigId,
     @required this.gigOwnerId,
-    @required this.gigOwnerEmail,
     @required this.gigOwnerAvatarUrl,
     @required this.gigOwnerUsername,
     @required this.createdAt,

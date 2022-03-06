@@ -43,16 +43,16 @@ class Comment {
     @required this.proposal,
     @required this.approved,
     @required this.rejected,
-    @required this.gigCurrency,
-    @required this.offeredBudget,
+    this.gigCurrency,
+    this.offeredBudget,
     @required this.gigValue,
-    @required this.preferredPaymentMethod,
-    @required this.workstreamFileUrl,
+    this.preferredPaymentMethod,
+    this.workstreamFileUrl,
     @required this.containMediaFile,
-    @required this.commentPrivacyToggle,
+    this.commentPrivacyToggle,
     @required this.isGigCompleted,
-    @required this.ratingCount,
-    @required this.leftReview,
+    this.ratingCount,
+    this.leftReview,
   });
 
   Map<String, dynamic> toMap() {

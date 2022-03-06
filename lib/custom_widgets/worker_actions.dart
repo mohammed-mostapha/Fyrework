@@ -6,23 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class WorkerActions extends StatefulWidget {
-  @required
   final String passedGigId;
-  @required
   final String passedGigOwnerId;
-  @required
   final String passedGigOwnerUsername;
-  @required
   String passedGigClientId;
-  @required
   String passedGigWorkerId;
+  String passedGigValue;
 
   WorkerActions({
-    this.passedGigId,
-    this.passedGigOwnerId,
-    this.passedGigOwnerUsername,
-    this.passedGigClientId,
-    this.passedGigWorkerId,
+    @required this.passedGigId,
+    @required this.passedGigOwnerId,
+    @required this.passedGigOwnerUsername,
+    @required this.passedGigClientId,
+    @required this.passedGigWorkerId,
+    @required this.passedGigValue,
   });
 
   @override
@@ -318,6 +315,7 @@ class _WorkerActionsState extends State<WorkerActions> {
                                                     widget.passedGigClientId,
                                                 gigworkerId:
                                                     widget.passedGigWorkerId,
+                                                gigValue: widget.passedGigValue,
                                                 commentBody:
                                                     '$username marks gig as done',
                                                 commentOwnerId: userId,
@@ -397,6 +395,7 @@ class _WorkerActionsState extends State<WorkerActions> {
                                                     widget.passedGigClientId,
                                                 gigworkerId:
                                                     widget.passedGigWorkerId,
+                                                gigValue: widget.passedGigValue,
                                                 commentOwnerUsername: username,
                                                 commentBody:
                                                     '$username requests payment',

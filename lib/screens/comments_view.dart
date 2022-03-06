@@ -18,29 +18,31 @@ class CommentsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirestoreDatabase().gigRelatedComments(gigIdCommentsIdentifier),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
+      builder: (context, commentsSnapshot) {
+        if (commentsSnapshot.hasError) {
           return Center(
             child: Text(''),
           );
         }
-        if (!snapshot.hasData) {
+        if (!commentsSnapshot.hasData) {
           return Center(
             child: Text(''),
           );
         }
 
-        if (snapshot.hasData && !(snapshot.data.docs.length > 0)) {
+        if (commentsSnapshot.hasData &&
+            !(commentsSnapshot.data.docs.length > 0)) {
           return Center(
               child: Text(
             'No comments yet...',
             style: Theme.of(context).textTheme.bodyText1,
           ));
-        } else if (snapshot.hasData && snapshot.data.docs.length > 0) {
+        } else if (commentsSnapshot.hasData &&
+            commentsSnapshot.data.docs.length > 0) {
           return ListView.builder(
-              itemCount: snapshot.data.docs.length,
+              itemCount: commentsSnapshot.data.docs.length,
               itemBuilder: (context, index) {
-                DocumentSnapshot data = snapshot.data.docs[index];
+                DocumentSnapshot data = commentsSnapshot.data.docs[index];
                 Map getDocData = data.data();
                 return GestureDetector(
                   child: CommentItem(

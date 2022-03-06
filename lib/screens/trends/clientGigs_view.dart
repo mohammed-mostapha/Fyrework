@@ -100,6 +100,9 @@ class _ClientGigsViewState extends State<ClientGigsView> {
                                         getDocData['gigOwnerAvatarUrl'],
                                     gigOwnerUsername:
                                         getDocData['gigOwnerUsername'],
+                                    gigDeadline: getDocData['gigDeadline'],
+                                    gigClientId: getDocData['gigClientId'],
+                                    gigWorkerId: getDocData['gigWorkerId'],
                                     createdAt: getDocData['createdAt'],
                                     gigOwnerLocation:
                                         getDocData['gigOwnerLocation'],
@@ -167,6 +170,7 @@ class _ClientGigsViewState extends State<ClientGigsView> {
                                     gigId: getDocData['gigId'],
                                     gigOwnerId: getDocData['gigOwnerId'],
                                     gigClientId: getDocData['gigClientId'],
+                                    gigDeadline: getDocData['gigDeadline'],
                                     gigWorkerId: getDocData['gigWorkerId'],
                                     gigOwnerAvatarUrl:
                                         getDocData['gigOwnerAvatarUrl'],

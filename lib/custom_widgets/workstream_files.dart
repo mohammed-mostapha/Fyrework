@@ -16,6 +16,9 @@ class WorkstreamFiles extends StatefulWidget {
   final String passedGigId;
   final String passedGigOwnerId;
   final String passedGigOwnerUsername;
+  final String passedGigClientId;
+  final String passedGigWorkerId;
+  final String passedGigValue;
   List<String> multipleWorkStreamFiles;
 
   WorkstreamFiles({
@@ -23,6 +26,9 @@ class WorkstreamFiles extends StatefulWidget {
     @required this.passedGigId,
     @required this.passedGigOwnerId,
     @required this.passedGigOwnerUsername,
+    @required this.passedGigClientId,
+    @required this.passedGigWorkerId,
+    @required this.passedGigValue,
   });
 
   @override
@@ -54,9 +60,13 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
       {bool persistentPrivateComment, dynamic commentBody}) {
     FirestoreDatabase().addComment(
         Comment(
+          createdAt: DateTime.now(),
           gigIdHoldingComment: widget.passedGigId,
           gigOwnerId: widget.passedGigOwnerId,
           gigOwnerUsername: widget.passedGigOwnerUsername,
+          gigClientId: widget.passedGigClientId,
+          gigworkerId: widget.passedGigWorkerId,
+          gigValue: widget.passedGigValue,
           commentOwnerUsername: myUsername,
           commentBody: commentBody,
           commentOwnerId: myUserId,

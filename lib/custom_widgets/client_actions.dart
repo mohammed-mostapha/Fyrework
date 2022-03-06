@@ -6,23 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class ClientActions extends StatefulWidget {
-  @required
   final String passedGigId;
-  @required
   final String passedGigOwnerId;
-  @required
   final String passedGigOwnerUsername;
-  @required
   String passedGigClientId;
-  @required
   String passedGigWorkerId;
+  String passedGigValue;
 
   ClientActions({
-    this.passedGigId,
-    this.passedGigOwnerId,
-    this.passedGigOwnerUsername,
-    this.passedGigClientId,
-    this.passedGigWorkerId,
+    @required this.passedGigId,
+    @required this.passedGigOwnerId,
+    @required this.passedGigOwnerUsername,
+    @required this.passedGigClientId,
+    @required this.passedGigWorkerId,
+    @required this.passedGigValue,
   });
 
   @override
@@ -155,6 +152,10 @@ class _ClientActionsState extends State<ClientActions> {
                                             gigOwnerId: widget.passedGigOwnerId,
                                             gigOwnerUsername:
                                                 widget.passedGigOwnerUsername,
+                                            gigClientId:
+                                                widget.passedGigClientId,
+                                            gigworkerId:
+                                                widget.passedGigWorkerId,
                                             commentOwnerUsername: username,
                                             commentBody:
                                                 '${MyUser.username} is unsatisfied with the work provided',

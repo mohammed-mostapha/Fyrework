@@ -89,9 +89,7 @@ class _CommentItemState extends State<CommentItem>
   final String paypalIcon = 'assets/svgs/flaticon/paypal.svg';
   final String cash = 'assets/svgs/flaticon/cash.svg';
   final String alternatePayment = 'assets/svgs/flaticon/alternate_payment.svg';
-  bool myGig;
-  bool gigICanDo;
-  bool myComment;
+
   bool imageMediaFile;
   bool videoMediaFile;
   Timer _timer;
@@ -116,7 +114,6 @@ class _CommentItemState extends State<CommentItem>
 
   void commentViewShifter() {
     if (!widget.isPrivateComment) {
-      print('condition 1');
       setState(() {
         _commentOpacity = 0;
       });
@@ -139,7 +136,6 @@ class _CommentItemState extends State<CommentItem>
         });
       });
     } else {
-      print('condition 2');
       setState(() {
         _commentViewIndex = 0;
       });
@@ -203,13 +199,12 @@ class _CommentItemState extends State<CommentItem>
 
   @override
   Widget build(BuildContext context) {
-    print(widget.gigValue);
     var brightness = MediaQuery.of(context).platformBrightness;
     bool darkModeOn = brightness == Brightness.dark;
 
-    myGig = widget.gigOwnerId == MyUser.uid ? true : false;
-    gigICanDo = widget.gigValue == 'Gig i can do' ? true : false;
-    myComment = widget.commentOwnerId == MyUser.uid ? true : false;
+    bool myGig = widget.gigOwnerId == MyUser.uid ? true : false;
+    bool gigICanDo = widget.gigValue == 'Gig i can do' ? true : false;
+    bool myComment = widget.commentOwnerId == MyUser.uid ? true : false;
     // appointedUser = widget.appointedUserId == MyUser.uid ? true : false;
     createdAtDateTime =
         widget.createdAt != null ? widget.createdAt.toDate() : DateTime.now();
@@ -802,9 +797,6 @@ class _CommentItemState extends State<CommentItem>
                                                               10),
                                                       child: InkResponse(
                                                         onTap: () {
-                                                          print(widget
-                                                              .commentBody
-                                                              .length);
                                                           Navigator.of(context)
                                                               .push(
                                                             MaterialPageRoute(

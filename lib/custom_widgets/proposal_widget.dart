@@ -62,6 +62,8 @@ class _ProposalWidgetState extends State<ProposalWidget> {
           gigIdHoldingComment: widget.passedGigId,
           gigOwnerId: widget.passedGigOwnerId,
           gigOwnerUsername: widget.passedGigOwnerUsername,
+          gigClientId: '',
+          gigworkerId: '',
           commentOwnerUsername: username,
           commentBody: _addProposalController.text,
           commentOwnerId: userId,

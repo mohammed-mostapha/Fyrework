@@ -24,9 +24,9 @@ class Gig {
   final bool hidden;
   final bool markedAsComplete;
   final bool clientLeftReview;
-  final List gigActions;
   final int likesCount;
   final List likersByUserId;
+  final List gigRelatedUsersByUserId;
   final String gigLocationIndex;
   final String gigOwnerUsernameIndex;
   Gig({
@@ -47,23 +47,23 @@ class Gig {
     @required this.gigCurrency,
     @required this.gigBudget,
     @required this.gigValue,
+    @required this.gigRelatedUsersByUserId,
     @required this.adultContentText,
     @required this.adultContentBool,
     @required this.appliersOrHirersByUserId,
     this.hidden = false,
     this.markedAsComplete = false,
     this.clientLeftReview = false,
-    @required this.gigActions,
     this.likesCount = 0,
     @required this.likersByUserId,
     @required this.gigLocationIndex,
     @required this.gigOwnerUsernameIndex,
   });
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap({@required String rTDbGigId}) {
     return {
       'appointed': appointed,
-      'gigId': gigId,
+      'gigId': rTDbGigId,
       'gigOwnerId': gigOwnerId,
       'gigClientId': gigClientId,
       'gigWorkerId': gigWorkerId,
@@ -83,10 +83,10 @@ class Gig {
       'adultContentBool': adultContentBool,
       'appliersOrHirersByUserId': [],
       'hidden': hidden,
-      'gigActions': [],
       'markedAsComplete': markedAsComplete,
       'clientLeftReview': clientLeftReview,
       'likesCount': likesCount,
+      'gigRelatedUsersByUserId': gigRelatedUsersByUserId,
       'likersByUserId': [],
       'gigLocationIndex': gigLocationIndex,
       'gigOwnerUsernameIndex': gigOwnerUsernameIndex,
@@ -118,11 +118,11 @@ class Gig {
       adultContentBool: map['adultContentBool'],
       appliersOrHirersByUserId: map['appliersOrHirersByUserId'],
       hidden: map['hidden'],
-      gigActions: map['gigActions'],
       markedAsComplete: map['markedAsComplete'],
       clientLeftReview: map['clientLeftReview'],
       likesCount: map['likesCount'],
       likersByUserId: map['likersByUserId'],
+      gigRelatedUsersByUserId: map['gigRelatedUsersByUserId'],
       gigLocationIndex: map['gigLocationIndex'],
       gigOwnerUsernameIndex: map['gigOwnerUsernameIndex'],
     );

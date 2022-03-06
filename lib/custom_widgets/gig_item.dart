@@ -26,7 +26,6 @@ class GigItem extends StatefulWidget {
   final gigOwnerId;
   final gigClientId;
   final gigWorkerId;
-  final gigOwnerEmail;
   final gigOwnerAvatarUrl;
   final gigOwnerUsername;
   final createdAt;
@@ -51,7 +50,7 @@ class GigItem extends StatefulWidget {
 
   GigItem({
     Key key,
-    @required this.index,
+    this.index,
     @required this.appointed,
     @required this.appliersOrHirersByUserId,
     @required this.gigRelatedUsersByUserId,
@@ -59,7 +58,6 @@ class GigItem extends StatefulWidget {
     @required this.gigOwnerId,
     @required this.gigClientId,
     @required this.gigWorkerId,
-    @required this.gigOwnerEmail,
     @required this.gigOwnerAvatarUrl,
     @required this.gigOwnerUsername,
     @required this.createdAt,
@@ -286,7 +284,6 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                       gigIndex: widget.index,
                       gigId: widget.gigId,
                       gigOwnerId: widget.gigOwnerId,
-                      gigOwnerEmail: widget.gigOwnerEmail,
                       gigOwnerAvatarUrl: widget.gigOwnerAvatarUrl,
                       gigOwnerUsername: widget.gigOwnerUsername,
                       createdAt: widget.createdAt,

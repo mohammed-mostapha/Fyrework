@@ -336,7 +336,7 @@ class _AddGigDetailsState extends State<AddGigDetails> {
         _gigMeidaFilesDownloadUrls.add(uploadResult);
       }
 
-      CreateGigViewModel().createGig(
+      await CreateGigViewModel().createGig(
         appointed: _appointed,
         gigId: _gigId,
         userId: _userId,

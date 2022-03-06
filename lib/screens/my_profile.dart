@@ -762,6 +762,8 @@ class _MyProfileViewState extends State<MyProfileView> {
                               gigOwnerAvatarUrl:
                                   getDocData['gigOwnerAvatarUrl'],
                               gigOwnerUsername: getDocData['gigOwnerUsername'],
+                              gigClientId: getDocData['gigClientId'],
+                              gigWorkerId: getDocData['gigWorkerId'],
                               createdAt: getDocData['createdAt'],
                               gigOwnerLocation: getDocData['gigOwnerLocation'],
                               gigLocation: getDocData['gigLocation'],

@@ -800,6 +800,12 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                   widget.passedGigOwnerId,
                                               passedGigOwnerUsername:
                                                   widget.passGigOwnerUsername,
+                                              passedGigClientId:
+                                                  widget.passedGigClientId,
+                                              passedGigWorkerId:
+                                                  widget.passedGigWorkerId,
+                                              passedGigValue:
+                                                  widget.passedGigValue,
                                             ),
                                           ),
                                         ),
@@ -1053,6 +1059,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                                     passedGigOwnerUsername: widget.passGigOwnerUsername,
                                                                                     passedGigClientId: widget.passedGigClientId,
                                                                                     passedGigWorkerId: widget.passedGigWorkerId,
+                                                                                    passedGigValue: widget.passedGigValue,
                                                                                   )
                                                                                 : ClientActions(
                                                                                     passedGigId: widget.passedGigId,
@@ -1060,6 +1067,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                                     passedGigOwnerUsername: widget.passGigOwnerUsername,
                                                                                     passedGigClientId: widget.passedGigClientId,
                                                                                     passedGigWorkerId: widget.passedGigWorkerId,
+                                                                                    passedGigValue: widget.passedGigValue,
                                                                                   ),
                                                                           ),
                                                                         );
