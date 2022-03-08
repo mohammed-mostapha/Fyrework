@@ -55,7 +55,7 @@ class Gig {
     this.markedAsComplete = false,
     this.clientLeftReview = false,
     this.likesCount = 0,
-    @required this.likersByUserId,
+    this.likersByUserId = const [],
     @required this.gigLocationIndex,
     @required this.gigOwnerUsernameIndex,
   });

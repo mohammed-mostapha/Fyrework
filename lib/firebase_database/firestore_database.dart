@@ -97,18 +97,19 @@ class FirestoreDatabase {
   }
 
   // filter all gigs
-  Stream<QuerySnapshot> filterAllGigs(String query) {
-    return query.isEmpty
-        ? _gigsCollection
-            .where('hidden', isEqualTo: false)
-            .orderBy('createdAt', descending: true)
-            .snapshots()
-        : _gigsCollection
-            .where('hidden', isEqualTo: false)
-            .where('gigHashtags', arrayContains: query)
-            .orderBy('createdAt', descending: true)
-            .snapshots();
-  }
+
+  // Stream<QuerySnapshot> filterAllGigs(String query) {
+  //   return query.isEmpty
+  //       ? _gigsCollection
+  //           .where('hidden', isEqualTo: false)
+  //           .orderBy('createdAt', descending: true)
+  //           .snapshots()
+  //       : _gigsCollection
+  //           .where('hidden', isEqualTo: false)
+  //           .where('gigHashtags', arrayContains: query)
+  //           .orderBy('createdAt', descending: true)
+  //           .snapshots();
+  // }
 
   // filter client gigs
   Stream<QuerySnapshot> filterCilentGigs(String query) {

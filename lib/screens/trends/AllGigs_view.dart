@@ -1,5 +1,7 @@
 import 'package:Fyrework/custom_widgets/gig_item.dart';
+import 'package:Fyrework/models/gig.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:Fyrework/models/myUser.dart';
@@ -19,6 +21,9 @@ class AllGigsView extends StatefulWidget {
 }
 
 class _AllGigsViewState extends State<AllGigsView> {
+  final _gigsObj = FirebaseDatabase.instance.reference().child('gigs');
+  List allGigsList = List();
+
   final String currentUserId = MyUser.uid;
   int gigsCount;
   RefreshController _refreshController =
@@ -90,12 +95,14 @@ class _AllGigsViewState extends State<AllGigsView> {
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
               ),
-              StreamBuilder<QuerySnapshot>(
-                stream: FirestoreDatabase().filterAllGigs(
-                  QueryStringProvider.getQueryString(),
-                ),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
+              StreamBuilder(
+                // stream: FirestoreDatabase().filterAllGigs(
+                //   QueryStringProvider.getQueryString(),
+                // ),
+                stream: _gigsObj.onValue,
+                builder: (context, AsyncSnapshot<Event> allGigsSnapshot) {
+                  if (!allGigsSnapshot.hasData) {
+                    print('data: no data');
                     return SmartRefresher(
                       enablePullDown: true,
                       child: ListView.builder(itemBuilder: (context, index) {
@@ -109,7 +116,15 @@ class _AllGigsViewState extends State<AllGigsView> {
                     );
                     //end
 
-                  } else if (snapshot.data.docs.length > 0) {
+                  } else if (allGigsSnapshot.data.snapshot.value != null) {
+                    print('data: ${allGigsSnapshot.data.snapshot.value}');
+                    DataSnapshot dataValues = allGigsSnapshot.data.snapshot;
+                    Map<dynamic, dynamic> values = dataValues.value;
+                    allGigsList.clear();
+                    values.forEach((key, values) {
+                      allGigsList.add(values);
+                    });
+                    print('allGigs Length: ${allGigsList.length}');
                     return SmartRefresher(
                       header: WaterDropHeader(
                         refresh: SizedBox(
@@ -129,54 +144,110 @@ class _AllGigsViewState extends State<AllGigsView> {
                       child: ListView.builder(
                           addAutomaticKeepAlives: false,
                           cacheExtent: 100.0,
-                          itemCount: snapshot.data.docs.length,
-                          itemBuilder: (context, index) {
-                            DocumentSnapshot data = snapshot.data.docs[index];
-                            Map getDocData = data.data();
+                          itemCount: allGigsList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            // DocumentSnapshot data =
+                            //     allGigsSnapshot.data.docs[index];
+                            // Map getDocData = data.data();
 
-                            return getDocData['hidden'] != true
+                            // return getDocData['hidden'] != true
+                            //     ? GigItem(
+                            //         index: index,
+                            //         appointed: getDocData['appointed'],
+                            //         appliersOrHirersByUserId:
+                            //             getDocData['appliersOrHirersByUserId'],
+                            //         gigRelatedUsersByUserId:
+                            //             getDocData['gigRelatedUsersByUserId'],
+                            //         gigId: getDocData['gigId'],
+                            //         gigOwnerId: getDocData['gigOwnerId'],
+                            //         gigDeadline: getDocData['gigDeadline'],
+                            //         gigClientId: getDocData['gigClientId'],
+                            //         gigWorkerId: getDocData['gigWorkerId'],
+                            //         gigOwnerAvatarUrl:
+                            //             getDocData['gigOwnerAvatarUrl'],
+                            //         gigOwnerUsername:
+                            //             getDocData['gigOwnerUsername'],
+                            //         createdAt: getDocData['createdAt'],
+                            //         gigOwnerLocation:
+                            //             getDocData['gigOwnerLocation'],
+                            //         gigLocation: getDocData['gigLocation'],
+                            //         gigHashtags: getDocData['gigHashtags'],
+                            //         gigMediaFilesDownloadUrls:
+                            //             getDocData['gigMediaFilesDownloadUrls'],
+                            //         gigPost: getDocData['gigPost'],
+                            //         gigCurrency: getDocData['gigCurrency'],
+                            //         gigBudget: getDocData['gigBudget'],
+                            //         gigValue: getDocData['gigValue'],
+                            //         adultContentText:
+                            //             getDocData['adultContentText'],
+                            //         adultContentBool:
+                            //             getDocData['adultContentBool'],
+                            //         hidden: getDocData['hidden'],
+                            //         gigActions: getDocData['gigActions'],
+                            //         paymentReleased:
+                            //             getDocData['paymentReleased'],
+                            //         markedAsComplete:
+                            //             getDocData['markedAsComplete'],
+                            //         clientLeftReview:
+                            //             getDocData['clientLeftReview'],
+                            //         likesCount: getDocData['likesCount'],
+                            //         likersByUserId:
+                            //             getDocData['likersByUserId'],
+                            //       )
+
+                            return allGigsList[index]['hidden'] != true
                                 ? GigItem(
                                     index: index,
-                                    appointed: getDocData['appointed'],
-                                    appliersOrHirersByUserId:
-                                        getDocData['appliersOrHirersByUserId'],
-                                    gigRelatedUsersByUserId:
-                                        getDocData['gigRelatedUsersByUserId'],
-                                    gigId: getDocData['gigId'],
-                                    gigOwnerId: getDocData['gigOwnerId'],
-                                    gigDeadline: getDocData['gigDeadline'],
-                                    gigClientId: getDocData['gigClientId'],
-                                    gigWorkerId: getDocData['gigWorkerId'],
-                                    gigOwnerAvatarUrl:
-                                        getDocData['gigOwnerAvatarUrl'],
-                                    gigOwnerUsername:
-                                        getDocData['gigOwnerUsername'],
-                                    createdAt: getDocData['createdAt'],
-                                    gigOwnerLocation:
-                                        getDocData['gigOwnerLocation'],
-                                    gigLocation: getDocData['gigLocation'],
-                                    gigHashtags: getDocData['gigHashtags'],
+                                    appointed: allGigsList[index]['appointed'],
+                                    appliersOrHirersByUserId: allGigsList[index]
+                                        ['appliersOrHirersByUserId'],
+                                    gigRelatedUsersByUserId: allGigsList[index]
+                                        ['gigRelatedUsersByUserId'],
+                                    gigId: allGigsList[index]['gigId'],
+                                    gigOwnerId: allGigsList[index]
+                                        ['gigOwnerId'],
+                                    gigDeadline: allGigsList[index]
+                                        ['gigDeadline'],
+                                    gigClientId: allGigsList[index]
+                                        ['gigClientId'],
+                                    gigWorkerId: allGigsList[index]
+                                        ['gigWorkerId'],
+                                    gigOwnerAvatarUrl: allGigsList[index]
+                                        ['gigOwnerAvatarUrl'],
+                                    gigOwnerUsername: allGigsList[index]
+                                        ['gigOwnerUsername'],
+                                    createdAt: allGigsList[index]['createdAt'],
+                                    gigOwnerLocation: allGigsList[index]
+                                        ['gigOwnerLocation'],
+                                    gigLocation: allGigsList[index]
+                                        ['gigLocation'],
+                                    gigHashtags: allGigsList[index]
+                                        ['gigHashtags'],
                                     gigMediaFilesDownloadUrls:
-                                        getDocData['gigMediaFilesDownloadUrls'],
-                                    gigPost: getDocData['gigPost'],
-                                    gigCurrency: getDocData['gigCurrency'],
-                                    gigBudget: getDocData['gigBudget'],
-                                    gigValue: getDocData['gigValue'],
-                                    adultContentText:
-                                        getDocData['adultContentText'],
-                                    adultContentBool:
-                                        getDocData['adultContentBool'],
-                                    hidden: getDocData['hidden'],
-                                    gigActions: getDocData['gigActions'],
-                                    paymentReleased:
-                                        getDocData['paymentReleased'],
-                                    markedAsComplete:
-                                        getDocData['markedAsComplete'],
-                                    clientLeftReview:
-                                        getDocData['clientLeftReview'],
-                                    likesCount: getDocData['likesCount'],
-                                    likersByUserId:
-                                        getDocData['likersByUserId'],
+                                        allGigsList[index]
+                                            ['gigMediaFilesDownloadUrls'],
+                                    gigPost: allGigsList[index]['gigPost'],
+                                    gigCurrency: allGigsList[index]
+                                        ['gigCurrency'],
+                                    gigBudget: allGigsList[index]['gigBudget'],
+                                    gigValue: allGigsList[index]['gigValue'],
+                                    adultContentText: allGigsList[index]
+                                        ['adultContentText'],
+                                    adultContentBool: allGigsList[index]
+                                        ['adultContentBool'],
+                                    hidden: allGigsList[index]['hidden'],
+                                    gigActions: allGigsList[index]
+                                        ['gigActions'],
+                                    paymentReleased: allGigsList[index]
+                                        ['paymentReleased'],
+                                    markedAsComplete: allGigsList[index]
+                                        ['markedAsComplete'],
+                                    clientLeftReview: allGigsList[index]
+                                        ['clientLeftReview'],
+                                    likesCount: allGigsList[index]
+                                        ['likesCount'],
+                                    likersByUserId: allGigsList[index]
+                                        ['likersByUserId'],
                                   )
                                 : Container(
                                     width: 0,
@@ -188,6 +259,7 @@ class _AllGigsViewState extends State<AllGigsView> {
                       onLoading: _onLoading,
                     );
                   } else {
+                    print('data: noData');
                     //start
                     return SmartRefresher(
                       enablePullDown: true,

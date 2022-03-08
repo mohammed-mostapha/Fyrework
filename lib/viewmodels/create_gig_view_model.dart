@@ -4,6 +4,7 @@ import 'package:Fyrework/models/gig.dart';
 import 'package:Fyrework/services/navigation_service.dart';
 import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class CreateGigViewModel {
@@ -88,6 +89,8 @@ class CreateGigViewModel {
     String adultContentText,
     bool adultContentBool,
   }) async {
+    print('error is: last gigDeadline: $gigDeadLine');
+    print('error is: last gigDeadline: ${gigDeadLine.runtimeType}');
     var gigAdded;
 
     gigAdded = await _rTDB.createNewGig(
@@ -104,8 +107,7 @@ class CreateGigViewModel {
         gigOwnerAvatarUrl: userProfilePictureDownloadUrl,
         gigOwnerUsername:
             username.substring(0, 1).toUpperCase() + username.substring(1),
-        // createdAt: FieldValue.serverTimestamp(),
-        createdAt: '${DateTime.now()}',
+        createdAt: ServerValue.timestamp,
         gigHashtags: gigHashtags,
         gigOwnerLocation: userLocation,
         gigLocation: gigLocation.substring(0, 1).toUpperCase() +

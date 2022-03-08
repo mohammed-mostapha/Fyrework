@@ -12,6 +12,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:Fyrework/screens/add_comments_view.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:Fyrework/screens/edit_your_gig.dart';
@@ -91,7 +92,7 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
   bool myGig = false;
   bool appointed = false;
   bool appliedOrHired = false;
-  List appliersOrHirersByUserId = [];
+  // List appliersOrHirersByUserId = [];
   bool gigICanDo = false;
 
   final String heart = 'assets/svgs/light/heart.svg';
@@ -162,7 +163,11 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
         darkModeOn ? fyreworkLightTheme() : fyreworkDarkTheme();
 
     bool gigHasLikes = widget.likesCount > 0 ? true : false;
-    bool hasLiked = widget.likersByUserId.contains(MyUser.uid) ? true : false;
+    bool hasLiked = widget.likersByUserId != null
+        ? widget.likersByUserId.contains(MyUser.uid)
+            ? true
+            : false
+        : false;
 
     Future _likedPressed() async {
       hasLiked = !hasLiked;
@@ -194,9 +199,13 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
 
     myGig = widget.gigOwnerId == MyUser.uid ? true : false;
     appointed = widget.appointed;
-    appliedOrHired =
-        appliersOrHirersByUserId.contains(MyUser.uid) ? true : false;
-    appliersOrHirersByUserId = widget.appliersOrHirersByUserId;
+    // appliersOrHirersByUserId = widget.appliersOrHirersByUserId;
+    appliedOrHired = widget.appliersOrHirersByUserId != null
+        ? widget.appliersOrHirersByUserId.contains(MyUser.uid)
+            ? true
+            : false
+        : false;
+
     gigICanDo = widget.gigValue == 'Gig I can do' ? true : false;
 
     timeAgo.setLocaleMessages('de', timeAgo.DeMessages());
@@ -719,9 +728,11 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                           alignment: Alignment.centerLeft,
                           child: FittedBox(
                               fit: BoxFit.scaleDown,
-                              child: widget.gigDeadline != null
+                              child: (widget.gigDeadline != null &&
+                                      widget.gigDeadline != 'null')
                                   ? Text(
-                                      widget.gigDeadline,
+                                      DateFormat('yyyy-MM-dd').format(
+                                          DateTime.parse(widget.gigDeadline)),
                                       style:
                                           Theme.of(context).textTheme.bodyText1,
                                     )
@@ -758,7 +769,9 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
                     ? Row(
                         children: [
                           Text(
-                            timeAgo.format(widget.createdAt.toDate()),
+                            // timeAgo.format(widget.createdAt.toDate()),
+                            timeAgo.format(DateTime.fromMillisecondsSinceEpoch(
+                                widget.createdAt)),
                             style: Theme.of(context).textTheme.bodyText1,
                           ),
                         ],

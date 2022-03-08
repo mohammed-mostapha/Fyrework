@@ -8,7 +8,6 @@ import 'package:uuid/uuid.dart';
 class RealTimeDatabase {
   final _rTDb = FirebaseDatabase.instance.reference();
   var _nUid = Uuid().v1();
-  var _gUid = Uuid().v1();
 
   Future addLikeNotification({
     @required gigId,
