@@ -7,6 +7,7 @@ import 'package:Fyrework/firebase_database/realtime_database.dart';
 import 'package:Fyrework/models/comment.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -20,8 +21,6 @@ import 'package:intl/intl.dart';
 class AddCommentsView extends StatefulWidget {
   final String passedGigId;
   final String passedGigOwnerId;
-  final String passedGigClientId;
-  final String passedGigWorkerId;
   final String passGigOwnerUsername;
   final String passedGigCurrency;
   final String passedGigValue;
@@ -31,8 +30,6 @@ class AddCommentsView extends StatefulWidget {
     Key key,
     @required this.passedGigId,
     @required this.passedGigOwnerId,
-    @required this.passedGigClientId,
-    @required this.passedGigWorkerId,
     @required this.passGigOwnerUsername,
     @required this.passedGigValue,
     @required this.passedGigCurrency,
@@ -46,33 +43,29 @@ class _AddCommentsViewState extends State<AddCommentsView>
     // with WidgetsBindingObserver {
     with
         SingleTickerProviderStateMixin {
+  DatabaseReference _parentGigObjRef;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   AnimationController animationController;
   Animation<double> animation;
   bool _filePickerOpened = false;
   bool _canSendComment = false;
-  double _animatedContainerHeight = 0;
 
   AnimationController _pickFilecontroller;
 
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addObserver(this);
+    _parentGigObjRef = FirebaseDatabase.instance
+        .reference()
+        .child('gigs')
+        .child(widget.passedGigId);
     _pickFilecontroller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 200),
     );
   }
 
-  // @override
-  // void didChangeMetrics() {
-  //   print('device rotated');
-  // }
-
   double screenWidth = 0.0;
   double screenHeight = 0.0;
-  // bool isPortrait = true;
-  // final _proposalFormKey = GlobalKey<FormState>();
   TextEditingController _addCommentsController = TextEditingController();
   TextEditingController _addProposalController = TextEditingController();
   TextEditingController _offeredBudgetController = TextEditingController();
@@ -99,10 +92,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
   dynamic userProfilePictureUrl = MyUser.userAvatarUrl;
 
   Future addComment({
-    @required String gigIdHoldingComment,
     @required String gigOwnerId,
     @required String gigOwnerUsername,
-    String commentId,
     @required String commentOwnerId,
     @required String commentOwnerAvatarUrl,
     @required String commentOwnerUsername,
@@ -111,43 +102,26 @@ class _AddCommentsViewState extends State<AddCommentsView>
     @required bool proposal,
     @required bool approved,
     @required bool rejected,
-    String gigCurrency,
-    String offeredBudget,
-    @required String gigValue,
     String preferredPaymentMethod,
-    @required bool isGigCompleted,
     @required bool containMediaFile,
-    int ratingCount,
-    bool leftReview,
   }) async {
-    await FirestoreDatabase().addComment(
-      Comment(
-        gigIdHoldingComment: gigIdHoldingComment,
+    await RealTimeDatabase().addComment(
+      parentGigId: widget.passedGigId,
+      comment: Comment(
         gigOwnerId: gigOwnerId,
         gigOwnerUsername: gigOwnerUsername,
-        gigClientId: widget.passedGigClientId,
-        gigworkerId: widget.passedGigWorkerId,
-        commentId: commentId,
         commentOwnerId: commentOwnerId,
         commentOwnerAvatarUrl: commentOwnerAvatarUrl,
         commentOwnerUsername: commentOwnerUsername,
         commentBody: commentBody,
-        createdAt: DateTime.now(),
+        createdAt: ServerValue.timestamp,
         isPrivateComment: isPrivateComment,
         proposal: proposal,
         approved: approved,
         rejected: rejected,
-        gigCurrency: gigCurrency,
-        offeredBudget: offeredBudget,
-        gigValue: gigValue,
         preferredPaymentMethod: preferredPaymentMethod,
         containMediaFile: containMediaFile,
-        commentPrivacyToggle: isPrivateComment,
-        isGigCompleted: isGigCompleted,
-        ratingCount: ratingCount,
-        leftReview: leftReview,
       ),
-      gigIdHoldingComment,
     );
 
     _addCommentsController.clear();
@@ -167,14 +141,10 @@ class _AddCommentsViewState extends State<AddCommentsView>
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: SafeArea(
-        child: StreamBuilder<DocumentSnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('gigs')
-                .doc(widget.passedGigId)
-                .snapshots(),
-            builder: (BuildContext context,
-                AsyncSnapshot<DocumentSnapshot> snapshot) {
-              if (!snapshot.hasData) {
+        child: StreamBuilder<Event>(
+            stream: _parentGigObjRef.onValue,
+            builder: (BuildContext context, AsyncSnapshot<Event> gigSnapshot) {
+              if (!gigSnapshot.hasData) {
                 return Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
@@ -187,7 +157,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
                 );
               }
 
-              if (!snapshot.data.exists) {
+              // if (!gigSnapshot.data.exists) {
+              if (gigSnapshot.hasError) {
                 Future.delayed(Duration(milliseconds: 1000)).then((_) {
                   Navigator.pop(context);
                 });
@@ -213,17 +184,27 @@ class _AddCommentsViewState extends State<AddCommentsView>
                   ),
                 );
               } else {
-                appointed = snapshot.data['appointed'];
-                appliersOrHirersByUserId =
-                    snapshot.data['appliersOrHirersByUserId'];
-                gigCurrency = snapshot.data['gigCurrency'];
-                gigBudget = snapshot.data['gigBudget'];
+                appointed = gigSnapshot.data.snapshot.value['appointed'];
+                appliersOrHirersByUserId = gigSnapshot
+                            .data.snapshot.value['appliersOrHirersByUserId'] !=
+                        null
+                    ? gigSnapshot
+                        .data.snapshot.value['appliersOrHirersByUserId']
+                    : [];
+                gigCurrency = gigSnapshot.data.snapshot.value['gigCurrency'];
+                gigBudget = gigSnapshot.data.snapshot.value['gigBudget'];
                 bool myGig =
-                    snapshot.data['gigOwnerId'] == MyUser.uid ? true : false;
+                    gigSnapshot.data.snapshot.value['gigOwnerId'] == MyUser.uid
+                        ? true
+                        : false;
                 bool client =
-                    snapshot.data['gigClientId'] == MyUser.uid ? true : false;
+                    gigSnapshot.data.snapshot.value['gigClientId'] == MyUser.uid
+                        ? true
+                        : false;
                 bool worker =
-                    snapshot.data['gigWorkerId'] == MyUser.uid ? true : false;
+                    gigSnapshot.data.snapshot.value['gigWorkerId'] == MyUser.uid
+                        ? true
+                        : false;
 
                 return Scaffold(
                   key: _scaffoldKey,
@@ -256,10 +237,13 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                   : Container(
                                       width: 130,
                                       child: StreamBuilder(
-                                        stream: FirestoreDatabase()
-                                            .showGigWorkstreamActions(
-                                          gigId: widget.passedGigId,
-                                        ),
+                                        // stream: FirestoreDatabase()
+                                        //     .showGigWorkstreamActions(
+                                        //   gigId: widget.passedGigId,
+                                        // ),
+                                        stream: _parentGigObjRef
+                                            .child('gigActions')
+                                            .onValue,
                                         builder: (context, snapshot) {
                                           if (!snapshot.hasData ||
                                               !(snapshot.data.docs.length >
@@ -578,7 +562,7 @@ class _AddCommentsViewState extends State<AddCommentsView>
                           Expanded(
                             child: CommentsView(
                               isGigAppointed: appointed,
-                              gigIdCommentsIdentifier: widget.passedGigId,
+                              parentGigId: widget.passedGigId,
                               gigOwnerId: widget.passedGigOwnerId,
                             ),
                           ),
@@ -625,11 +609,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                       if (submittedString
                                                           .isNotEmpty) {
                                                         await addComment(
-                                                          gigValue: widget
-                                                              .passedGigValue,
-                                                          gigIdHoldingComment:
-                                                              widget
-                                                                  .passedGigId,
                                                           gigOwnerId: widget
                                                               .passedGigOwnerId,
                                                           gigOwnerUsername: widget
@@ -642,19 +621,13 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                               userId,
                                                           commentOwnerAvatarUrl:
                                                               userProfilePictureUrl,
-                                                          commentId: '',
                                                           isPrivateComment:
                                                               isPrivateComment,
                                                           proposal: proposal,
                                                           approved: approved,
                                                           rejected: rejected,
-                                                          gigCurrency: widget
-                                                              .passedGigCurrency,
-                                                          offeredBudget:
-                                                              offeredBudget,
                                                           containMediaFile:
                                                               false,
-                                                          isGigCompleted: false,
                                                         );
                                                       }
 
@@ -716,8 +689,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                           if (_addCommentsController
                                               .text.isNotEmpty) {
                                             await addComment(
-                                              gigIdHoldingComment:
-                                                  widget.passedGigId,
                                               gigOwnerId:
                                                   widget.passedGigOwnerId,
                                               gigOwnerUsername:
@@ -728,18 +699,12 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                               commentOwnerId: userId,
                                               commentOwnerAvatarUrl:
                                                   userProfilePictureUrl,
-                                              commentId: '',
                                               isPrivateComment:
                                                   isPrivateComment,
                                               proposal: proposal,
                                               approved: approved,
                                               rejected: rejected,
-                                              gigCurrency:
-                                                  widget.passedGigCurrency,
-                                              offeredBudget: offeredBudget,
-                                              gigValue: widget.passedGigValue,
                                               containMediaFile: false,
-                                              isGigCompleted: false,
                                             );
                                             await RealTimeDatabase()
                                                 .addCommentNotification(
@@ -800,12 +765,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                   widget.passedGigOwnerId,
                                               passedGigOwnerUsername:
                                                   widget.passGigOwnerUsername,
-                                              passedGigClientId:
-                                                  widget.passedGigClientId,
-                                              passedGigWorkerId:
-                                                  widget.passedGigWorkerId,
-                                              passedGigValue:
-                                                  widget.passedGigValue,
                                             ),
                                           ),
                                         ),
@@ -864,11 +823,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                               if (submittedString
                                                                   .isNotEmpty) {
                                                                 await addComment(
-                                                                  gigValue: widget
-                                                                      .passedGigValue,
-                                                                  gigIdHoldingComment:
-                                                                      widget
-                                                                          .passedGigId,
                                                                   gigOwnerId: widget
                                                                       .passedGigOwnerId,
                                                                   commentOwnerUsername:
@@ -879,11 +833,8 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                       userId,
                                                                   commentOwnerAvatarUrl:
                                                                       userProfilePictureUrl,
-                                                                  commentId: '',
                                                                   isPrivateComment:
                                                                       isPrivateComment,
-                                                                  isGigCompleted:
-                                                                      false,
                                                                   containMediaFile:
                                                                       false,
                                                                   gigOwnerUsername:
@@ -895,11 +846,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                       approved,
                                                                   rejected:
                                                                       rejected,
-                                                                  gigCurrency:
-                                                                      widget
-                                                                          .passedGigCurrency,
-                                                                  offeredBudget:
-                                                                      offeredBudget,
                                                                 );
                                                               }
 
@@ -1052,23 +998,23 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                               10,
                                                                             ),
                                                                             // child: hirer ? _hirerActions() : _applierActions(),
-                                                                            child: !client
-                                                                                ? WorkerActions(
-                                                                                    passedGigId: widget.passedGigId,
-                                                                                    passedGigOwnerId: widget.passedGigOwnerId,
-                                                                                    passedGigOwnerUsername: widget.passGigOwnerUsername,
-                                                                                    passedGigClientId: widget.passedGigClientId,
-                                                                                    passedGigWorkerId: widget.passedGigWorkerId,
-                                                                                    passedGigValue: widget.passedGigValue,
-                                                                                  )
-                                                                                : ClientActions(
-                                                                                    passedGigId: widget.passedGigId,
-                                                                                    passedGigOwnerId: widget.passedGigOwnerId,
-                                                                                    passedGigOwnerUsername: widget.passGigOwnerUsername,
-                                                                                    passedGigClientId: widget.passedGigClientId,
-                                                                                    passedGigWorkerId: widget.passedGigWorkerId,
-                                                                                    passedGigValue: widget.passedGigValue,
-                                                                                  ),
+                                                                            // child: !client
+                                                                            //     ? WorkerActions(
+                                                                            //         passedGigId: widget.passedGigId,
+                                                                            //         passedGigOwnerId: widget.passedGigOwnerId,
+                                                                            //         passedGigOwnerUsername: widget.passGigOwnerUsername,
+                                                                            //         passedGigClientId: widget.passedGigClientId,
+                                                                            //         passedGigWorkerId: widget.passedGigWorkerId,
+                                                                            //         passedGigValue: widget.passedGigValue,
+                                                                            //       )
+                                                                            //     : ClientActions(
+                                                                            //         passedGigId: widget.passedGigId,
+                                                                            //         passedGigOwnerId: widget.passedGigOwnerId,
+                                                                            //         passedGigOwnerUsername: widget.passGigOwnerUsername,
+                                                                            //         passedGigClientId: widget.passedGigClientId,
+                                                                            //         passedGigWorkerId: widget.passedGigWorkerId,
+                                                                            //         passedGigValue: widget.passedGigValue,
+                                                                            //       ),
                                                                           ),
                                                                         );
                                                                       }),
@@ -1086,9 +1032,6 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                   onTap: _canSendComment
                                                       ? () {
                                                           addComment(
-                                                            gigIdHoldingComment:
-                                                                widget
-                                                                    .passedGigId,
                                                             gigOwnerId: widget
                                                                 .passedGigOwnerId,
                                                             gigOwnerUsername: widget
@@ -1102,21 +1045,12 @@ class _AddCommentsViewState extends State<AddCommentsView>
                                                                 userId,
                                                             commentOwnerAvatarUrl:
                                                                 userProfilePictureUrl,
-                                                            commentId: '',
                                                             isPrivateComment:
                                                                 isPrivateComment,
                                                             proposal: proposal,
                                                             approved: approved,
                                                             rejected: rejected,
-                                                            gigCurrency: widget
-                                                                .passedGigCurrency,
-                                                            offeredBudget:
-                                                                offeredBudget,
-                                                            gigValue: widget
-                                                                .passedGigValue,
                                                             containMediaFile:
-                                                                false,
-                                                            isGigCompleted:
                                                                 false,
                                                           );
                                                         }

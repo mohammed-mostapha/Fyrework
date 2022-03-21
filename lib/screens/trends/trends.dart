@@ -50,7 +50,7 @@ class _TrendsState extends State<Trends> with AutomaticKeepAliveClientMixin {
               width: 50,
               child: StreamBuilder(
                   // stream: DatabaseService().unseenNotificationsCount(),
-                  stream: RealTimeDatabase().fetchUnseenCount(),
+                  stream: RealTimeDatabase().unseenNotificationsCount(),
                   builder: (_, _unseenCountSnapshot) {
                     var _unseenList = [];
                     if (!_unseenCountSnapshot.hasData) {

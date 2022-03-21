@@ -1,11 +1,9 @@
 import 'package:Fyrework/custom_widgets/gig_item.dart';
-import 'package:Fyrework/models/gig.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:Fyrework/models/myUser.dart';
-import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:Fyrework/screens/trends/queryStringProvider.dart';
@@ -146,55 +144,6 @@ class _AllGigsViewState extends State<AllGigsView> {
                           cacheExtent: 100.0,
                           itemCount: allGigsList.length,
                           itemBuilder: (BuildContext context, int index) {
-                            // DocumentSnapshot data =
-                            //     allGigsSnapshot.data.docs[index];
-                            // Map getDocData = data.data();
-
-                            // return getDocData['hidden'] != true
-                            //     ? GigItem(
-                            //         index: index,
-                            //         appointed: getDocData['appointed'],
-                            //         appliersOrHirersByUserId:
-                            //             getDocData['appliersOrHirersByUserId'],
-                            //         gigRelatedUsersByUserId:
-                            //             getDocData['gigRelatedUsersByUserId'],
-                            //         gigId: getDocData['gigId'],
-                            //         gigOwnerId: getDocData['gigOwnerId'],
-                            //         gigDeadline: getDocData['gigDeadline'],
-                            //         gigClientId: getDocData['gigClientId'],
-                            //         gigWorkerId: getDocData['gigWorkerId'],
-                            //         gigOwnerAvatarUrl:
-                            //             getDocData['gigOwnerAvatarUrl'],
-                            //         gigOwnerUsername:
-                            //             getDocData['gigOwnerUsername'],
-                            //         createdAt: getDocData['createdAt'],
-                            //         gigOwnerLocation:
-                            //             getDocData['gigOwnerLocation'],
-                            //         gigLocation: getDocData['gigLocation'],
-                            //         gigHashtags: getDocData['gigHashtags'],
-                            //         gigMediaFilesDownloadUrls:
-                            //             getDocData['gigMediaFilesDownloadUrls'],
-                            //         gigPost: getDocData['gigPost'],
-                            //         gigCurrency: getDocData['gigCurrency'],
-                            //         gigBudget: getDocData['gigBudget'],
-                            //         gigValue: getDocData['gigValue'],
-                            //         adultContentText:
-                            //             getDocData['adultContentText'],
-                            //         adultContentBool:
-                            //             getDocData['adultContentBool'],
-                            //         hidden: getDocData['hidden'],
-                            //         gigActions: getDocData['gigActions'],
-                            //         paymentReleased:
-                            //             getDocData['paymentReleased'],
-                            //         markedAsComplete:
-                            //             getDocData['markedAsComplete'],
-                            //         clientLeftReview:
-                            //             getDocData['clientLeftReview'],
-                            //         likesCount: getDocData['likesCount'],
-                            //         likersByUserId:
-                            //             getDocData['likersByUserId'],
-                            //       )
-
                             return allGigsList[index]['hidden'] != true
                                 ? GigItem(
                                     index: index,

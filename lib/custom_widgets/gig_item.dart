@@ -125,18 +125,18 @@ class _GigItemState extends State<GigItem> with TickerProviderStateMixin {
 
   _commentButtonPressed() {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => AddCommentsView(
-                  passedGigId: widget.gigId,
-                  passedGigOwnerId: widget.gigOwnerId,
-                  passedGigClientId: widget.gigClientId,
-                  passedGigWorkerId: widget.gigWorkerId,
-                  passGigOwnerUsername: widget.gigOwnerUsername,
-                  passedGigValue: widget.gigValue,
-                  passedGigCurrency: widget.gigCurrency,
-                  passedGigBudget: widget.gigBudget,
-                )));
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddCommentsView(
+          passedGigId: widget.gigId,
+          passedGigOwnerId: widget.gigOwnerId,
+          passGigOwnerUsername: widget.gigOwnerUsername,
+          passedGigValue: widget.gigValue,
+          passedGigCurrency: widget.gigCurrency,
+          passedGigBudget: widget.gigBudget,
+        ),
+      ),
+    );
   }
 
   showUserProfile({@required String userId}) {

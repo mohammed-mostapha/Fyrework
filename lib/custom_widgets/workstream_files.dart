@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:Fyrework/firebase_database/firestore_database.dart';
+import 'package:Fyrework/firebase_database/realtime_database.dart';
 import 'package:Fyrework/models/comment.dart';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/screens/add_gig/assets_picker/constants/picker_model.dart';
@@ -58,30 +59,23 @@ class _WorkstreamFilesState extends State<WorkstreamFiles> {
 
   addWorkstreamFileAsComment(
       {bool persistentPrivateComment, dynamic commentBody}) {
-    FirestoreDatabase().addComment(
-        Comment(
-          createdAt: DateTime.now(),
-          gigIdHoldingComment: widget.passedGigId,
-          gigOwnerId: widget.passedGigOwnerId,
-          gigOwnerUsername: widget.passedGigOwnerUsername,
-          gigClientId: widget.passedGigClientId,
-          gigworkerId: widget.passedGigWorkerId,
-          gigValue: widget.passedGigValue,
-          commentOwnerUsername: myUsername,
-          commentBody: commentBody,
-          commentOwnerId: myUserId,
-          commentOwnerAvatarUrl: myUserAvatarUrl,
-          commentId: '',
-          isPrivateComment: false,
-          proposal: false,
-          approved: false,
-          rejected: false,
-          gigCurrency: null,
-          offeredBudget: null,
-          containMediaFile: true,
-          isGigCompleted: false,
-        ),
-        widget.passedGigId);
+    RealTimeDatabase().addComment(
+      parentGigId: widget.passedGigId,
+      comment: Comment(
+        createdAt: DateTime.now(),
+        gigOwnerId: widget.passedGigOwnerId,
+        gigOwnerUsername: widget.passedGigOwnerUsername,
+        commentOwnerUsername: myUsername,
+        commentBody: commentBody,
+        commentOwnerId: myUserId,
+        commentOwnerAvatarUrl: myUserAvatarUrl,
+        isPrivateComment: false,
+        proposal: false,
+        approved: false,
+        rejected: false,
+        containMediaFile: true,
+      ),
+    );
     urlsForFirestoreDB = [];
   }
 

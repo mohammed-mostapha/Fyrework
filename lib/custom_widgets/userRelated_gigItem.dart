@@ -135,8 +135,6 @@ class _UserRelatedGigItemState extends State<UserRelatedGigItem>
                   passedGigId: widget.gigId,
                   passedGigOwnerId: widget.gigOwnerId,
                   passGigOwnerUsername: widget.gigOwnerUsername,
-                  passedGigClientId: widget.gigClientId,
-                  passedGigWorkerId: widget.gigWorkerId,
                   passedGigValue: widget.gigValue,
                   passedGigCurrency: widget.gigCurrency,
                   passedGigBudget: widget.gigBudget,

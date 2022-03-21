@@ -1,8 +1,9 @@
-import 'package:Fyrework/firebase_database/firestore_database.dart';
+import 'package:Fyrework/firebase_database/realtime_database.dart';
 import 'package:Fyrework/models/comment.dart';
 import 'package:Fyrework/models/myUser.dart';
 import 'package:Fyrework/ui/shared/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -26,6 +27,16 @@ class ProposalWidget extends StatefulWidget {
 }
 
 class _ProposalWidgetState extends State<ProposalWidget> {
+  DatabaseReference _parentGigObjRef;
+
+  void initState() {
+    super.initState();
+    _parentGigObjRef = FirebaseDatabase.instance
+        .reference()
+        .child('gigs')
+        .child(widget.passedGigId);
+  }
+
   String userId = MyUser.uid;
   String username = MyUser.username;
   dynamic userProfilePictureUrl = MyUser.userAvatarUrl;
@@ -57,31 +68,23 @@ class _ProposalWidgetState extends State<ProposalWidget> {
   submitProposal() async {
     if (_proposalFormKey.currentState.validate()) {
       proposal = true;
-      await FirestoreDatabase().addComment(
-        Comment(
-          gigIdHoldingComment: widget.passedGigId,
+      await RealTimeDatabase().addComment(
+        parentGigId: widget.passedGigId,
+        comment: Comment(
           gigOwnerId: widget.passedGigOwnerId,
           gigOwnerUsername: widget.passedGigOwnerUsername,
-          gigClientId: '',
-          gigworkerId: '',
           commentOwnerUsername: username,
           commentBody: _addProposalController.text,
           commentOwnerId: userId,
           commentOwnerAvatarUrl: userProfilePictureUrl,
-          commentId: '',
-          createdAt: DateTime.now(),
+          createdAt: ServerValue.timestamp,
           isPrivateComment: true,
           proposal: proposal,
           approved: approved,
           rejected: rejected,
-          gigCurrency: widget.passedGigCurrency,
-          offeredBudget: _offeredBudgetController.text,
-          gigValue: widget.passedGigValue,
           preferredPaymentMethod: preferredPaymentMethod,
-          isGigCompleted: false,
           containMediaFile: false,
         ),
-        widget.passedGigId,
       );
       addToGigAppliersOrHirersList();
       isPrivateComment = false;
@@ -351,16 +354,13 @@ class _ProposalWidgetState extends State<ProposalWidget> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(right: 10),
-                          child: StreamBuilder<DocumentSnapshot>(
-                            stream: FirebaseFirestore.instance
-                                .collection('gigs')
-                                .doc(widget.passedGigId)
-                                .snapshots(),
+                          child: StreamBuilder<Event>(
+                            stream: _parentGigObjRef.onValue,
                             builder: (BuildContext context,
-                                AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                AsyncSnapshot<Event> snapshot) {
                               if (snapshot.hasData) {
                                 return Text(
-                                  snapshot.data['gigCurrency'],
+                                  snapshot.data.snapshot.value['gigCurrency'],
                                   style: Theme.of(context).textTheme.bodyText1,
                                 );
                               }

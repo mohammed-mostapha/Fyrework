@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:core';
-import 'dart:typed_data';
 import 'package:Fyrework/custom_widgets/user_profile.dart';
 import 'package:Fyrework/custom_widgets/workstreamFiles_viewer.dart';
+import 'package:Fyrework/firebase_database/realtime_database.dart';
 import 'package:Fyrework/screens/my_profile.dart';
 import 'package:Fyrework/firebase_database/firestore_database.dart';
 import 'package:Fyrework/ui/shared/constants.dart';
@@ -10,7 +10,6 @@ import 'package:Fyrework/ui/shared/fyreworkDarkTheme.dart';
 import 'package:Fyrework/ui/shared/fyreworkLightTheme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_switch/custom_switch.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,9 +23,8 @@ import 'chewie_list_item.dart';
 import 'client_worker_rating.dart';
 
 class CommentItem extends StatefulWidget {
-  // final passedCurrentUserId;
+  final parentGigId;
   final isGigAppointed;
-  final gigIdHoldingComment;
   final gigOwnerId;
   final gigOwnerUsername;
   final commentId;
@@ -34,25 +32,20 @@ class CommentItem extends StatefulWidget {
   final commentOwnerAvatarUrl;
   final commentOwnerUsername;
   final commentBody;
-  final gigCurrency;
   final gigValue;
   final createdAt;
   final isPrivateComment;
   final proposal;
   final approved;
   final rejected;
-  final offeredBudget;
   final preferredPaymentMethod;
   final workstreamFileUrl;
   final containMediaFile;
-  final commentPrivacyToggle;
-  final isGigCompleted;
   final ratingCount;
-  final leftReview;
   CommentItem({
     Key key,
+    @required this.parentGigId,
     @required this.isGigAppointed,
-    @required this.gigIdHoldingComment,
     @required this.gigOwnerId,
     @required this.gigOwnerUsername,
     @required this.commentId,
@@ -60,21 +53,16 @@ class CommentItem extends StatefulWidget {
     @required this.commentOwnerAvatarUrl,
     @required this.commentOwnerUsername,
     @required this.commentBody,
-    @required this.gigCurrency,
     @required this.gigValue,
     @required this.createdAt,
     @required this.isPrivateComment,
     @required this.proposal,
     @required this.approved,
     @required this.rejected,
-    @required this.offeredBudget,
     @required this.preferredPaymentMethod,
     @required this.workstreamFileUrl,
     @required this.containMediaFile,
-    @required this.commentPrivacyToggle,
-    @required this.isGigCompleted,
     @required this.ratingCount,
-    @required this.leftReview,
   }) : super(key: key);
 
   @override
@@ -174,11 +162,11 @@ class _CommentItemState extends State<CommentItem>
         commentId: widget.commentId,
         ratingCount: initialRating,
       );
-      await FirestoreDatabase().addRatingToUser(
-        // userId: widget.appointedUserId,
-        gigId: widget.gigIdHoldingComment,
-        userRating: initialRating,
-      );
+      // await FirestoreDatabase().addRatingToUser(
+      //   // userId: widget.appointedUserId,
+      //   gigId: widget.gigIdHoldingComment,
+      //   userRating: initialRating,
+      // );
       await FirestoreDatabase().updateLeftReviewFieldToTrue(
         commentId: widget.commentId,
         review: _clientReviewTextController.text,
@@ -199,6 +187,7 @@ class _CommentItemState extends State<CommentItem>
 
   @override
   Widget build(BuildContext context) {
+    print('widget.commentOwnerId: ${widget.commentOwnerId}');
     var brightness = MediaQuery.of(context).platformBrightness;
     bool darkModeOn = brightness == Brightness.dark;
 
@@ -206,8 +195,8 @@ class _CommentItemState extends State<CommentItem>
     bool gigICanDo = widget.gigValue == 'Gig i can do' ? true : false;
     bool myComment = widget.commentOwnerId == MyUser.uid ? true : false;
     // appointedUser = widget.appointedUserId == MyUser.uid ? true : false;
-    createdAtDateTime =
-        widget.createdAt != null ? widget.createdAt.toDate() : DateTime.now();
+    // createdAtDateTime =
+    //     widget.createdAt != null ? widget.createdAt.toDate() : DateTime.now();
 
     if (widget.containMediaFile == true) {
       String workStreamFileUrl = widget.commentBody.toString().split('/').last;
@@ -232,6 +221,7 @@ class _CommentItemState extends State<CommentItem>
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -250,7 +240,7 @@ class _CommentItemState extends State<CommentItem>
                           backgroundImage:
                               NetworkImage("${widget.commentOwnerAvatarUrl}"),
                         ),
-                        SizedBox(
+                        Container(
                           width: 10,
                           height: 0,
                         ),
@@ -270,1050 +260,1016 @@ class _CommentItemState extends State<CommentItem>
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 5,
-                ),
-                !widget.isGigCompleted
-                    ? Container(
-                        child: (myGig &&
-                                widget.gigOwnerId != widget.commentOwnerId &&
-                                widget.proposal &&
-                                !widget.approved &&
-                                widget.rejected)
-                            ? RejectedLabel()
-                            : (myGig &&
-                                    widget.gigOwnerId !=
-                                        widget.commentOwnerId &&
-                                    widget.proposal &&
-                                    widget.approved &&
-                                    !widget.rejected)
-                                ? ApprovedLabel()
-                                : (myComment &&
-                                        !widget.proposal &&
-                                        !widget.isGigAppointed)
-                                    ? Container(
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            width: 1,
-                                            color:
-                                                Theme.of(context).accentColor,
-                                          ),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(50)),
-                                        ),
-                                        child: CustomSwitch(
-                                          activeColor: Colors.black,
-                                          value: widget.commentPrivacyToggle,
-                                          onChanged: (value) {
-                                            FirestoreDatabase()
-                                                .commentPrivacyToggle(
-                                              widget.commentId,
-                                              value,
-                                            );
-                                            commentViewShifter();
-                                          },
-                                        ),
-                                      )
-                                    : Container(
-                                        width: 0,
-                                        height: 0,
+                Container(
+                  child: (myGig &&
+                          widget.gigOwnerId != widget.commentOwnerId &&
+                          widget.proposal &&
+                          !widget.approved &&
+                          !widget.rejected)
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            GestureDetector(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                        width: 1,
+                                        color: myComment
+                                            ? Colors.white
+                                            : Theme.of(context).primaryColor,
                                       ),
-                      )
-                    : Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 1,
-                              color: Colors.green,
-                            ),
-                            borderRadius: BorderRadius.all(Radius.circular(2))),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'GIG COMPLETED',
-                            style:
-                                Theme.of(context).textTheme.bodyText1.copyWith(
-                                      color: Colors.green,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(2))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      'Approve',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1
+                                          .copyWith(
+                                            color: myComment
+                                                ? Theme.of(context).accentColor
+                                                : Theme.of(context)
+                                                    .primaryColor,
+                                          ),
                                     ),
-                          ),
-                        ),
-                      ),
-              ],
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                widget.isGigCompleted
-                    ? myGig || myComment
-                        ? widget.leftReview != true
-                            ? Form(
-                                key: _reviewFormKey,
-                                child: SizedBox(
-                                  height: 200,
-                                  child: Column(
-                                    children: [
-                                      SizedBox(width: 10),
-                                      Column(
-                                        children: [
-                                          Container(
-                                            child: RichText(
-                                              textAlign: TextAlign.center,
-                                              overflow: TextOverflow.ellipsis,
-                                              text: TextSpan(
-                                                  style: DefaultTextStyle.of(
-                                                          context)
-                                                      .style,
-                                                  children: [
-                                                    TextSpan(
-                                                      text: 'Rate ',
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodyText1
-                                                          .copyWith(
-                                                            color: myComment
-                                                                ? Theme.of(
-                                                                        context)
-                                                                    .accentColor
-                                                                : Theme.of(
-                                                                        context)
-                                                                    .primaryColor,
-                                                          ),
-                                                    ),
-                                                    TextSpan(
-                                                      text: myGig
-                                                          ? "should be worker name"
-                                                          : widget
-                                                              .gigOwnerUsername,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodyText1
-                                                          .copyWith(
-                                                            color: myComment
-                                                                ? Theme.of(
-                                                                        context)
-                                                                    .accentColor
-                                                                : Theme.of(
-                                                                        context)
-                                                                    .primaryColor,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                      recognizer:
-                                                          TapGestureRecognizer()
-                                                            ..onTap = () {
-                                                              showUserProfile(
-                                                                  // userId: widget
-                                                                  //     .appointedUserId,
-                                                                  );
-                                                            },
-                                                    ),
-                                                  ]),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          ScaleTransition(
-                                            scale:
-                                                _ratingStarsAnimationController,
-                                            child: ClientWorkerRating(
-                                              onRatingSelected: (rating) {
-                                                setState(() {
-                                                  initialRating = rating;
-                                                });
-                                              },
-                                              passedRatingCount:
-                                                  widget.ratingCount,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Expanded(
-                                        child: TextFormField(
-                                          validator: ReviewValidator().validate,
-                                          style: TextStyle(
-                                            color:
-                                                Theme.of(context).accentColor,
-                                          ),
-                                          controller:
-                                              _clientReviewTextController,
-                                          decoration: signUpInputDecoration(
-                                                  context,
-                                                  "Leave Review...",
-                                                  !darkModeOn
-                                                      ? fyreworkDarkTheme()
-                                                          .inputDecorationTheme
-                                                          .fillColor
-                                                      : fyreworkLightTheme()
-                                                          .inputDecorationTheme
-                                                          .fillColor)
-                                              .copyWith(
-                                                  contentPadding:
-                                                      EdgeInsets.all(10)),
-                                          inputFormatters: [
-                                            LengthLimitingTextInputFormatter(
-                                                100),
-                                          ],
-                                          maxLength: 100,
-                                          minLines: 1,
-                                          maxLines: 6,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      GestureDetector(
-                                          child: Container(
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  Theme.of(context).accentColor,
-                                              border: Border.all(
-                                                width: 1,
-                                              ),
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(
-                                                  5,
-                                                ),
-                                              ),
-                                            ),
-                                            child: Center(
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Text(
-                                                  'Submit Review',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyText1
-                                                      .copyWith(
-                                                        color: Theme.of(context)
-                                                            .primaryColor,
-                                                      ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          onTap: () async {
-                                            initialRating > 0 != true
-                                                ? alertUserToSelectRating()
-                                                : addReview(
-                                                    // userIdToReceiveRating: myGig
-                                                    //     ? widget.appointedUserId
-                                                    //     : widget.gigOwnerId,
-                                                    );
-                                          }),
-                                    ],
                                   ),
                                 ),
-                              )
-                            : Column(
-                                children: [
-                                  Text(
-                                    'You have been rated with ',
+                                onTap: () async {
+                                  RealTimeDatabase()
+                                      .acceptOrRejectProposalComment(
+                                    parentGigId: widget.parentGigId,
+                                    commentId: widget.commentId,
+                                    approved: true,
+                                    rejected: false,
+                                  );
+
+                                  gigICanDo
+                                      ? await RealTimeDatabase()
+                                          .setGigClientAndGigWorker(
+                                              parentGigId: widget.parentGigId,
+                                              parentGigClientId:
+                                                  widget.commentOwnerId,
+                                              parentGigWorkerId: MyUser.uid)
+                                      : await RealTimeDatabase()
+                                          .setGigClientAndGigWorker(
+                                              parentGigId: widget.parentGigId,
+                                              parentGigClientId: MyUser.uid,
+                                              parentGigWorkerId:
+                                                  widget.commentOwnerId);
+                                }),
+                            Container(
+                              width: 10,
+                            ),
+                            GestureDetector(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      width: 1,
+                                      color: myComment
+                                          ? Theme.of(context).accentColor
+                                          : Theme.of(context).primaryColor,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(2))),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Reject',
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyText1
                                         .copyWith(
-                                          color: Theme.of(context).primaryColor,
+                                          color: myComment
+                                              ? Theme.of(context).accentColor
+                                              : Theme.of(context).primaryColor,
                                         ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  ClientWorkerRating(
-                                    onRatingSelected: (rating) {
-                                      setState(() {
-                                        initialRating = rating;
-                                      });
-                                    },
-                                    passedRatingCount: widget.ratingCount,
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Container(
-                                    child: Center(
-                                      child: Text(
-                                        '${widget.commentBody}',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1
-                                            .copyWith(
-                                                color: Theme.of(context)
-                                                    .accentColor),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                        :
-                        //  (appointedUser && !widget.leftReview ||
-                        //         appointedUser && widget.leftReview == null)
-                        false
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Column(
-                                    children: [
-                                      Text(
-                                        'Congrats!!',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        '${widget.gigOwnerUsername} will rate your work',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            :
-                            //  (appointedUser && widget.leftReview == true)
-                            false
-                                ? Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Text(
-                                            'You have been rated with',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1,
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          ClientWorkerRating(
-                                            onRatingSelected: (rating) {
-                                              setState(() {
-                                                initialRating = rating;
-                                              });
-                                            },
-                                            passedRatingCount:
-                                                widget.ratingCount,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                : Container(
-                                    width: 0,
-                                    height: 0,
-                                  )
-                    : widget.containMediaFile != true
-                        ? Container(
-                            child: ExpandableText(
-                              '${widget.commentBody}',
-                              expandText: ' more',
-                              collapseText: ' less',
-                              maxLines: 3,
-                              linkColor: myComment
-                                  ? Theme.of(context).accentColor
-                                  : Theme.of(context).primaryColor,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1
-                                  .copyWith(
-                                    color: myComment
-                                        ? Theme.of(context).accentColor
-                                        : Theme.of(context).primaryColor,
-                                  ),
-                            ),
-                          )
-                        : imageMediaFile
-                            ? Container(
-                                width: 300,
-                                height: 300,
-                                padding: EdgeInsets.all(2.5),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: myComment
-                                      ? Theme.of(context).accentColor
-                                      : Theme.of(context).primaryColor,
-                                ),
-                                child: !(widget.commentBody.length > 1)
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: InkResponse(
-                                          onTap: () {
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                  builder: (context) {
-                                                return WorkstreamFilesViewer(
-                                                  initialPage: 0,
-                                                  workstreamFilesUrls:
-                                                      widget.commentBody,
-                                                );
-                                              }),
-                                            );
-                                          },
-                                          child: CachedNetworkImage(
-                                            placeholder: (context, url) =>
-                                                Center(
-                                              child: CircularProgressIndicator(
-                                                valueColor:
-                                                    AlwaysStoppedAnimation<
-                                                        Color>(
-                                                  myComment
-                                                      ? Theme.of(context)
-                                                          .accentColor
-                                                      : Theme.of(context)
-                                                          .primaryColor,
-                                                ),
-                                                strokeWidth: 2.0,
-                                              ),
-                                            ),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Icon(Icons.error),
-                                            imageUrl: widget.commentBody[0],
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      )
-                                    : GridView.builder(
-                                        primary: true,
-                                        shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        gridDelegate:
-                                            SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2,
-                                          crossAxisSpacing: 2.5,
-                                          mainAxisSpacing: 2.5,
-                                          // childAspectRatio:
-                                          //     MediaQuery.of(context)
-                                          //             .size
-                                          //             .width /
-                                          //         (MediaQuery.of(context)
-                                          //                 .size
-                                          //                 .height /
-                                          //             2),
-                                        ),
-                                        itemCount: widget.commentBody.length,
-                                        itemBuilder: (context, index) =>
-                                            index == 3
-                                                ? Container(
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      child: Container(
-                                                        width: double.infinity,
-                                                        child: InkResponse(
-                                                          onTap: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .push(
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) {
-                                                                return WorkstreamFilesViewer(
-                                                                  initialPage:
-                                                                      index,
-                                                                  workstreamFilesUrls:
-                                                                      widget
-                                                                          .commentBody,
-                                                                );
-                                                              }),
-                                                            );
-                                                          },
-                                                          child: Stack(
-                                                              children: <
-                                                                  Widget>[
-                                                                Container(
-                                                                  width: double
-                                                                      .infinity,
-                                                                  child:
-                                                                      ColorFiltered(
-                                                                    colorFilter:
-                                                                        ColorFilter
-                                                                            .mode(
-                                                                      Colors
-                                                                          .grey,
-                                                                      BlendMode
-                                                                          .saturation,
-                                                                    ),
-                                                                    child:
-                                                                        CachedNetworkImage(
-                                                                      placeholder:
-                                                                          (context, url) =>
-                                                                              Center(
-                                                                        child:
-                                                                            CircularProgressIndicator(
-                                                                          valueColor:
-                                                                              AlwaysStoppedAnimation<Color>(
-                                                                            myComment
-                                                                                ? Theme.of(context).accentColor
-                                                                                : Theme.of(context).primaryColor,
-                                                                          ),
-                                                                          strokeWidth:
-                                                                              2.0,
-                                                                        ),
-                                                                      ),
-                                                                      errorWidget: (context,
-                                                                              url,
-                                                                              error) =>
-                                                                          Icon(Icons
-                                                                              .error),
-                                                                      imageUrl:
-                                                                          widget
-                                                                              .commentBody[index],
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                Center(
-                                                                  child: Text(
-                                                                    '+ ${widget.commentBody.length - 4}',
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            30),
-                                                                  ),
-                                                                )
-                                                              ]),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  )
-                                                : Container(
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      child: InkResponse(
-                                                        onTap: () {
-                                                          Navigator.of(context)
-                                                              .push(
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) {
-                                                              return WorkstreamFilesViewer(
-                                                                initialPage:
-                                                                    index,
-                                                                workstreamFilesUrls:
-                                                                    widget
-                                                                        .commentBody,
-                                                              );
-                                                            }),
-                                                          );
-                                                        },
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          placeholder:
-                                                              (context, url) =>
-                                                                  Center(
-                                                            child:
-                                                                CircularProgressIndicator(
-                                                              valueColor:
-                                                                  AlwaysStoppedAnimation<
-                                                                      Color>(
-                                                                myComment
-                                                                    ? Theme.of(
-                                                                            context)
-                                                                        .accentColor
-                                                                    : Theme.of(
-                                                                            context)
-                                                                        .primaryColor,
-                                                              ),
-                                                              strokeWidth: 2.0,
-                                                            ),
-                                                          ),
-                                                          errorWidget: (context,
-                                                                  url, error) =>
-                                                              Icon(Icons.error),
-                                                          imageUrl: widget
-                                                                  .commentBody[
-                                                              index],
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                      ),
-                              )
-                            : Container(
-                                width: double.infinity,
-                                height: 200,
-                                child: GridView.builder(
-                                  primary: true,
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 5.0,
-                                    mainAxisSpacing: 5.0,
-                                    childAspectRatio: MediaQuery.of(context)
-                                            .size
-                                            .width /
-                                        (MediaQuery.of(context).size.height /
-                                            3),
-                                  ),
-                                  itemCount: widget.commentBody.length,
-                                  itemBuilder: (context, index) =>
-                                      ChewieListItem(
-                                    videoPlayerController:
-                                        VideoPlayerController.network(
-                                      widget.commentBody[index],
-                                    ),
                                   ),
                                 ),
                               ),
-                Container(height: 5),
-                (myGig &&
-                        !myComment &&
-                        widget.proposal &&
-                        !widget.approved &&
-                        !widget.rejected)
-                    ? Column(
-                        children: [
-                          Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: <Widget>[
-                                    Text(
-                                      '${widget.gigCurrency}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1
-                                          .copyWith(
-                                            color: myComment
-                                                ? Theme.of(context).accentColor
-                                                : Theme.of(context)
-                                                    .primaryColor,
-                                          ),
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      '${widget.offeredBudget}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1
-                                          .copyWith(
-                                            color: myComment
-                                                ? Theme.of(context).accentColor
-                                                : Theme.of(context)
-                                                    .primaryColor,
-                                          ),
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    widget.preferredPaymentMethod != null
-                                        ? SizedBox(
-                                            width: 35,
-                                            height: 35,
-                                            child: SvgPicture.asset(
-                                              widget.preferredPaymentMethod ==
-                                                      'paypal'
-                                                  ? paypalIcon
-                                                  : widget.preferredPaymentMethod ==
-                                                          'cash'
-                                                      ? cash
-                                                      : alternatePayment,
-                                              semanticsLabel: 'paypal',
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                            ),
-                                          )
-                                        : SizedBox(
-                                            width: 0,
-                                            height: 0,
-                                          ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: <Widget>[
-                                    GestureDetector(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                width: 1,
-                                                color: myComment
-                                                    ? Colors.white
-                                                    : Theme.of(context)
-                                                        .primaryColor,
-                                              ),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(2))),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              'Approve',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText1
-                                                  .copyWith(
-                                                    color: myComment
-                                                        ? Theme.of(context)
-                                                            .accentColor
-                                                        : Theme.of(context)
-                                                            .primaryColor,
-                                                  ),
-                                            ),
-                                          ),
-                                        ),
-                                        onTap: () async {
-                                          gigICanDo
-                                              ? await FirestoreDatabase()
-                                                  .setGigClientAndGigWorker(
-                                                      gigId: widget
-                                                          .gigIdHoldingComment,
-                                                      gigClientId:
-                                                          widget.commentOwnerId,
-                                                      gigWorkerId: MyUser.uid)
-                                                  .then((value) async {
-                                                  await FirestoreDatabase()
-                                                      .appointGigToUser(
-                                                    gigId: widget
-                                                        .gigIdHoldingComment,
-                                                    appointedUserId: MyUser.uid,
-                                                    commentId: widget.commentId,
-                                                  );
-                                                })
-                                              : await FirestoreDatabase()
-                                                  .setGigClientAndGigWorker(
-                                                      gigId: widget
-                                                          .gigIdHoldingComment,
-                                                      gigClientId: MyUser.uid,
-                                                      gigWorkerId:
-                                                          widget.commentOwnerId)
-                                                  .then((value) async {
-                                                  await FirestoreDatabase()
-                                                      .appointGigToUser(
-                                                    gigId: widget
-                                                        .gigIdHoldingComment,
-                                                    appointedUserId:
-                                                        widget.commentOwnerId,
-                                                    commentId: widget.commentId,
-                                                  );
-                                                });
-                                        }),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    GestureDetector(
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                              width: 1,
-                                              color: myComment
-                                                  ? Theme.of(context)
-                                                      .accentColor
-                                                  : Theme.of(context)
-                                                      .primaryColor,
-                                            ),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(2))),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            'Reject',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1
-                                                .copyWith(
-                                                  color: myComment
-                                                      ? Theme.of(context)
-                                                          .accentColor
-                                                      : Theme.of(context)
-                                                          .primaryColor,
-                                                ),
-                                          ),
-                                        ),
-                                      ),
-                                      onTap: () {
-                                        FirestoreDatabase()
-                                            .rejectProposal(widget.commentId);
-                                      },
-                                    ),
-                                  ],
-                                )
-                              ],
+                              onTap: () {
+                                RealTimeDatabase()
+                                    .acceptOrRejectProposalComment(
+                                  parentGigId: widget.parentGigId,
+                                  commentId: widget.commentId,
+                                  approved: false,
+                                  rejected: true,
+                                );
+                              },
                             ),
-                          ),
-                        ],
-                      )
-                    : (myGig &&
-                            !myComment &&
-                            widget.proposal &&
-                            widget.rejected)
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                child: Wrap(
-                                  direction: Axis.horizontal,
-                                  alignment: WrapAlignment.start,
-                                  children: [
-                                    Text(
-                                      'You rejected ',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1
-                                          .copyWith(
-                                              color: myComment
-                                                  ? Theme.of(context)
-                                                      .accentColor
-                                                  : Theme.of(context)
-                                                      .primaryColor,
-                                              fontWeight: FontWeight.bold),
-                                    ),
-                                    GestureDetector(
-                                      child: Text(
-                                        '${widget.commentOwnerUsername}\'s proposal',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1
-                                            .copyWith(
-                                                color: myComment
+                          ],
+                        )
+                      : (myGig &&
+                              widget.gigOwnerId != widget.commentOwnerId &&
+                              widget.proposal &&
+                              !widget.approved &&
+                              widget.rejected)
+                          ? RejectedLabel()
+                          : (myGig &&
+                                  widget.gigOwnerId != widget.commentOwnerId &&
+                                  widget.proposal &&
+                                  widget.approved &&
+                                  !widget.rejected)
+                              ? ApprovedLabel()
+                              : (myComment && widget.proposal)
+                                  ? Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                            width: 1,
+                                            color: !widget.approved
+                                                ? !widget.rejected
                                                     ? Theme.of(context)
                                                         .accentColor
-                                                    : Theme.of(context)
-                                                        .primaryColor,
-                                                fontWeight: FontWeight.bold),
-                                      ),
-                                      onTap: () {
-                                        showUserProfile(
-                                            userId: widget.commentOwnerId);
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                height: 5,
-                              ),
-                            ],
-                          )
-                        : (myGig &&
-                                !myComment &&
-                                widget.proposal &&
-                                widget.approved)
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                width: 1,
-                                                color: Theme.of(context)
-                                                    .hintColor),
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Wrap(
-                                            direction: Axis.horizontal,
-                                            alignment: WrapAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Gig awarded to ',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1
-                                                    .copyWith(
-                                                      color: myComment
-                                                          ? Theme.of(context)
-                                                              .accentColor
-                                                          : Theme.of(context)
-                                                              .primaryColor,
-                                                    ),
-                                              ),
-                                              GestureDetector(
-                                                child: Text(
-                                                  '${widget.commentOwnerUsername}',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyText1
-                                                      .copyWith(
-                                                        color: myComment
-                                                            ? Theme.of(context)
-                                                                .accentColor
-                                                            : Theme.of(context)
-                                                                .primaryColor,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                ),
-                                                onTap: () {
-                                                  showUserProfile(
-                                                      userId: widget
-                                                          .commentOwnerId);
-                                                },
-                                              ),
-                                            ],
+                                                    : Colors.red
+                                                : Colors.green,
                                           ),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(2))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          !widget.approved
+                                              ? !widget.rejected
+                                                  ? 'Pending approval'
+                                                  : 'Rejected'
+                                              : 'Approved',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              .copyWith(
+                                                color: !widget.approved
+                                                    ? !widget.rejected
+                                                        ? Theme.of(context)
+                                                            .accentColor
+                                                        : Colors.red
+                                                    : Colors.green,
+                                              ),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                  Container(
-                                    height: 5,
-                                  ),
-                                ],
-                              )
-                            : (myComment && widget.proposal)
-                                ? Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: <Widget>[
-                                              widget.gigCurrency != null
-                                                  ? Text(
-                                                      '${widget.gigCurrency}',
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodyText1
-                                                          .copyWith(
-                                                              color: myComment
-                                                                  ? Theme.of(
-                                                                          context)
-                                                                      .accentColor
-                                                                  : Theme.of(
-                                                                          context)
-                                                                      .primaryColor),
-                                                    )
-                                                  : Container(
-                                                      width: 0,
-                                                      height: 0,
-                                                    ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              widget.offeredBudget != null
-                                                  ? Text(
-                                                      '${widget.offeredBudget}',
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodyText1
-                                                          .copyWith(
-                                                              color: myComment
-                                                                  ? Theme.of(
-                                                                          context)
-                                                                      .accentColor
-                                                                  : Theme.of(
-                                                                          context)
-                                                                      .primaryColor),
-                                                    )
-                                                  : Container(
-                                                      width: 0, height: 0),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              widget.preferredPaymentMethod !=
-                                                      null
-                                                  ? SizedBox(
-                                                      width: 35,
-                                                      height: 35,
-                                                      child: SvgPicture.asset(
-                                                          widget.preferredPaymentMethod ==
-                                                                  'paypal'
-                                                              ? paypalIcon
-                                                              : widget.preferredPaymentMethod ==
-                                                                      'cash'
-                                                                  ? cash
-                                                                  : alternatePayment,
-                                                          semanticsLabel:
-                                                              'paypal',
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .accentColor),
-                                                    )
-                                                  : SizedBox(
-                                                      width: 0,
-                                                      height: 0,
-                                                    ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Container(
-                                            decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  width: 1,
-                                                  color: !widget.approved
-                                                      ? !widget.rejected
-                                                          ? Theme.of(context)
-                                                              .accentColor
-                                                          : Colors.red
-                                                      : Colors.green,
-                                                ),
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(2))),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Text(
-                                                !widget.approved
-                                                    ? !widget.rejected
-                                                        ? 'Pending approval'
-                                                        : 'Rejected'
-                                                    : 'Approved',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1
-                                                    .copyWith(
-                                                      color: !widget.approved
-                                                          ? !widget.rejected
-                                                              ? Theme.of(
-                                                                      context)
-                                                                  .accentColor
-                                                              : Colors.red
-                                                          : Colors.green,
-                                                    ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Container(
-                                        height: 5,
-                                      ),
-                                    ],
-                                  )
-                                : Container(
-                                    width: 0,
-                                    height: 0,
-                                  ),
+                                    )
+                                  : Container(
+                                      width: 0,
+                                      height: 0,
+                                    ),
+                ),
+                // Container(
+                //    decoration: BoxDecoration(
+                //      border: Border.all(
+                //        width: 1,
+                //        color: Colors.green,
+                //      ),
+                //     borderRadius: BorderRadius.all(
+                //       Radius.circular(2),
+                //     ),
+                //   ),
+                //   child: Padding(
+                //     padding: const EdgeInsets.all(8.0),
+                //     child: Text(
+                //       'GIG COMPLETED',
+                //       style:
+                //           Theme.of(context).textTheme.bodyText1.copyWith(
+                //                 color: Colors.green,
+                //               ),
+                //     ),
+                //   ),
+                // ),
+              ],
+
+              // SizedBox(
+              //   height: 5,
+              // ),
+              //     Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         myGig || myComment
+              //             ?
+              //             Form(
+              //                 key: _reviewFormKey,
+              //                 child: SizedBox(
+              //                   height: 200,
+              //                   child: Column(
+              //                     children: [
+              //                       SizedBox(width: 10),
+              //                       Column(
+              //                         children: [
+              //                           Container(
+              //                             child: RichText(
+              //                               textAlign: TextAlign.center,
+              //                               overflow: TextOverflow.ellipsis,
+              //                               text: TextSpan(
+              //                                   style: DefaultTextStyle.of(context)
+              //                                       .style,
+              //                                   children: [
+              //                                     TextSpan(
+              //                                       text: 'Rate ',
+              //                                       style: Theme.of(context)
+              //                                           .textTheme
+              //                                           .bodyText1
+              //                                           .copyWith(
+              //                                             color: myComment
+              //                                                 ? Theme.of(context)
+              //                                                     .accentColor
+              //                                                 : Theme.of(context)
+              //                                                     .primaryColor,
+              //                                           ),
+              //                                     ),
+              //                                     TextSpan(
+              //                                       text: myGig
+              //                                           ? "should be worker name"
+              //                                           : widget.gigOwnerUsername,
+              //                                       style: Theme.of(context)
+              //                                           .textTheme
+              //                                           .bodyText1
+              //                                           .copyWith(
+              //                                             color: myComment
+              //                                                 ? Theme.of(context)
+              //                                                     .accentColor
+              //                                                 : Theme.of(context)
+              //                                                     .primaryColor,
+              //                                             fontWeight: FontWeight.bold,
+              //                                           ),
+              //                                       recognizer: TapGestureRecognizer()
+              //                                         ..onTap = () {
+              //                                           showUserProfile(
+              //                                               // userId: widget
+              //                                               //     .appointedUserId,
+              //                                               );
+              //                                         },
+              //                                     ),
+              //                                   ]),
+              //                             ),
+              //                           ),
+              //                           SizedBox(
+              //                             height: 10,
+              //                           ),
+              //                           ScaleTransition(
+              //                             scale: _ratingStarsAnimationController,
+              //                             child: ClientWorkerRating(
+              //                               onRatingSelected: (rating) {
+              //                                 setState(() {
+              //                                   initialRating = rating;
+              //                                 });
+              //                               },
+              //                               passedRatingCount:
+              //                                   widget.ratingCount == null
+              //                                       ? 0
+              //                                       : widget.ratingCount,
+              //                             ),
+              //                           ),
+              //                         ],
+              //                       ),
+              //                       SizedBox(
+              //                         height: 20,
+              //                       ),
+              //                       Expanded(
+              //                         child: TextFormField(
+              //                           validator: ReviewValidator().validate,
+              //                           style: TextStyle(
+              //                             color: Theme.of(context).accentColor,
+              //                           ),
+              //                           controller: _clientReviewTextController,
+              //                           decoration: signUpInputDecoration(
+              //                                   context,
+              //                                   "Leave Review...",
+              //                                   !darkModeOn
+              //                                       ? fyreworkDarkTheme()
+              //                                           .inputDecorationTheme
+              //                                           .fillColor
+              //                                       : fyreworkLightTheme()
+              //                                           .inputDecorationTheme
+              //                                           .fillColor)
+              //                               .copyWith(
+              //                                   contentPadding: EdgeInsets.all(10)),
+              //                           inputFormatters: [
+              //                             LengthLimitingTextInputFormatter(100),
+              //                           ],
+              //                           maxLength: 100,
+              //                           minLines: 1,
+              //                           maxLines: 6,
+              //                         ),
+              //                       ),
+              //                       SizedBox(
+              //                         height: 10,
+              //                       ),
+              //                       GestureDetector(
+              //                           child: Container(
+              //                             width: double.infinity,
+              //                             decoration: BoxDecoration(
+              //                               color: Theme.of(context).accentColor,
+              //                               border: Border.all(
+              //                                 width: 1,
+              //                               ),
+              //                               borderRadius: BorderRadius.all(
+              //                                 Radius.circular(
+              //                                   5,
+              //                                 ),
+              //                               ),
+              //                             ),
+              //                             child: Center(
+              //                               child: Padding(
+              //                                 padding: const EdgeInsets.all(8.0),
+              //                                 child: Text(
+              //                                   'Submit Review',
+              //                                   style: Theme.of(context)
+              //                                       .textTheme
+              //                                       .bodyText1
+              //                                       .copyWith(
+              //                                         color: Theme.of(context)
+              //                                             .primaryColor,
+              //                                       ),
+              //                                 ),
+              //                               ),
+              //                             ),
+              //                           ),
+              //                           onTap: () async {
+              //                             initialRating > 0 != true
+              //                                 ? alertUserToSelectRating()
+              //                                 : addReview(
+              //                                     // userIdToReceiveRating: myGig
+              //                                     //     ? widget.appointedUserId
+              //                                     //     : widget.gigOwnerId,
+              //                                     );
+              //                           }),
+              //                     ],
+              //                   ),
+              //                 ),
+              //               )
+              //             :
+              //                 Column(
+              //                     children: [
+              //                       Text(
+              //                         'You have been rated with ',
+              //                         style: Theme.of(context)
+              //                             .textTheme
+              //                             .bodyText1
+              //                             .copyWith(
+              //                               color: Theme.of(context).primaryColor,
+              //                             ),
+              //                       ),
+              //                       SizedBox(
+              //                         height: 10,
+              //                       ),
+              //                       ClientWorkerRating(
+              //                         onRatingSelected: (rating) {
+              //                           setState(() {
+              //                             initialRating = rating;
+              //                           });
+              //                         },
+              //                         passedRatingCount: widget.ratingCount,
+              //                       ),
+
+              //                     ],
+              //                   )
+
+              //         //     :
+              //         //      (appointedUser && !widget.leftReview ||
+              //         //             appointedUser && widget.leftReview == null)
+              //         //     false
+              //         //         ?
+              //         //     Row(
+              //         //         mainAxisAlignment: MainAxisAlignment.center,
+              //         //         children: [
+              //         //           Column(
+              //         //             children: [
+              //         //               Text(
+              //         //                 'Congrats!!',
+              //         //                 style: Theme.of(context).textTheme.bodyText1,
+              //         //               ),
+              //         //               SizedBox(
+              //         //                 height: 10,
+              //         //               ),
+              //         //               Text(
+              //         //                 '${widget.gigOwnerUsername} will rate your work',
+              //         //                 style: Theme.of(context).textTheme.bodyText1,
+              //         //               ),
+              //         //             ],
+              //         //           ),
+              //         //         ],
+              //         //       )
+              //         //             :
+              //         //         //  (appointedUser && widget.leftReview == true)
+              //         //         false
+              //         //             ? Row(
+              //         //                 mainAxisAlignment: MainAxisAlignment.center,
+              //         //                 children: [
+              //         //                   Column(
+              //         //                     children: [
+              //         //                       Text(
+              //         //                         'You have been rated with',
+              //         //                         style: Theme.of(context)
+              //         //                             .textTheme
+              //         //                             .bodyText1,
+              //         //                       ),
+              //         //                       SizedBox(
+              //         //                         height: 10,
+              //         //                       ),
+              //         //                       ClientWorkerRating(
+              //         //                         onRatingSelected: (rating) {
+              //         //                           setState(() {
+              //         //                             initialRating = rating;
+              //         //                           });
+              //         //                         },
+              //         //                         passedRatingCount:
+              //         //                             widget.ratingCount,
+              //         //                       ),
+              //         //                     ],
+              //         //                   ),
+              //         //                 ],
+              //         //               )
+              //         //             : Container(
+              //         //                 width: 0,
+              //         //                 height: 0,
+              //         //               )
+              //         // : widget.containMediaFile != true
+              //         //     ?
+              //             Container(
+              //                 child: ExpandableText(
+              //                   '${widget.commentBody}',
+              //                   expandText: ' more',
+              //                   collapseText: ' less',
+              //                   maxLines: 3,
+              //                   linkColor: myComment
+              //                       ? Theme.of(context).accentColor
+              //                       : Theme.of(context).primaryColor,
+              //                   style: Theme.of(context)
+              //                       .textTheme
+              //                       .bodyText1
+              //                       .copyWith(
+              //                         color: myComment
+              //                             ? Theme.of(context).accentColor
+              //                             : Theme.of(context).primaryColor,
+              //                       ),
+              //                 ),
+              //               )
+              //             : imageMediaFile
+              //                 ? Container(
+              //                     width: 300,
+              //                     height: 300,
+              //                     padding: EdgeInsets.all(2.5),
+              //                     decoration: BoxDecoration(
+              //                       borderRadius: BorderRadius.circular(10),
+              //                       color: myComment
+              //                           ? Theme.of(context).accentColor
+              //                           : Theme.of(context).primaryColor,
+              //                     ),
+              //                     child: !(widget.commentBody.length > 1)
+              //                         ? ClipRRect(
+              //                             borderRadius: BorderRadius.circular(10),
+              //                             child: InkResponse(
+              //                               onTap: () {
+              //                                 Navigator.of(context).push(
+              //                                   MaterialPageRoute(
+              //                                       builder: (context) {
+              //                                     return WorkstreamFilesViewer(
+              //                                       initialPage: 0,
+              //                                       workstreamFilesUrls:
+              //                                           widget.commentBody,
+              //                                     );
+              //                                   }),
+              //                                 );
+              //                               },
+              //                               child: CachedNetworkImage(
+              //                                 placeholder: (context, url) =>
+              //                                     Center(
+              //                                   child: CircularProgressIndicator(
+              //                                     valueColor:
+              //                                         AlwaysStoppedAnimation<
+              //                                             Color>(
+              //                                       myComment
+              //                                           ? Theme.of(context)
+              //                                               .accentColor
+              //                                           : Theme.of(context)
+              //                                               .primaryColor,
+              //                                     ),
+              //                                     strokeWidth: 2.0,
+              //                                   ),
+              //                                 ),
+              //                                 errorWidget:
+              //                                     (context, url, error) =>
+              //                                         Icon(Icons.error),
+              //                                 imageUrl: widget.commentBody[0],
+              //                                 fit: BoxFit.cover,
+              //                               ),
+              //                             ),
+              //                           )
+              //                         : GridView.builder(
+              //                             primary: true,
+              //                             shrinkWrap: true,
+              //                             physics: NeverScrollableScrollPhysics(),
+              //                             gridDelegate:
+              //                                 SliverGridDelegateWithFixedCrossAxisCount(
+              //                               crossAxisCount: 2,
+              //                               crossAxisSpacing: 2.5,
+              //                               mainAxisSpacing: 2.5,
+              //                               // childAspectRatio:
+              //                               //     MediaQuery.of(context)
+              //                               //             .size
+              //                               //             .width /
+              //                               //         (MediaQuery.of(context)
+              //                               //                 .size
+              //                               //                 .height /
+              //                               //             2),
+              //                             ),
+              //                             itemCount: widget.commentBody.length,
+              //                             itemBuilder: (context, index) =>
+              //                                 index == 3
+              //                                     ? Container(
+              //                                         child: ClipRRect(
+              //                                           borderRadius:
+              //                                               BorderRadius.circular(
+              //                                                   10),
+              //                                           child: Container(
+              //                                             width: double.infinity,
+              //                                             child: InkResponse(
+              //                                               onTap: () {
+              //                                                 Navigator.of(
+              //                                                         context)
+              //                                                     .push(
+              //                                                   MaterialPageRoute(
+              //                                                       builder:
+              //                                                           (context) {
+              //                                                     return WorkstreamFilesViewer(
+              //                                                       initialPage:
+              //                                                           index,
+              //                                                       workstreamFilesUrls:
+              //                                                           widget
+              //                                                               .commentBody,
+              //                                                     );
+              //                                                   }),
+              //                                                 );
+              //                                               },
+              //                                               child: Stack(
+              //                                                   children: <
+              //                                                       Widget>[
+              //                                                     Container(
+              //                                                       width: double
+              //                                                           .infinity,
+              //                                                       child:
+              //                                                           ColorFiltered(
+              //                                                         colorFilter:
+              //                                                             ColorFilter
+              //                                                                 .mode(
+              //                                                           Colors
+              //                                                               .grey,
+              //                                                           BlendMode
+              //                                                               .saturation,
+              //                                                         ),
+              //                                                         child:
+              //                                                             CachedNetworkImage(
+              //                                                           placeholder:
+              //                                                               (context, url) =>
+              //                                                                   Center(
+              //                                                             child:
+              //                                                                 CircularProgressIndicator(
+              //                                                               valueColor:
+              //                                                                   AlwaysStoppedAnimation<Color>(
+              //                                                                 myComment
+              //                                                                     ? Theme.of(context).accentColor
+              //                                                                     : Theme.of(context).primaryColor,
+              //                                                               ),
+              //                                                               strokeWidth:
+              //                                                                   2.0,
+              //                                                             ),
+              //                                                           ),
+              //                                                           errorWidget: (context,
+              //                                                                   url,
+              //                                                                   error) =>
+              //                                                               Icon(Icons
+              //                                                                   .error),
+              //                                                           imageUrl:
+              //                                                               widget
+              //                                                                   .commentBody[index],
+              //                                                           fit: BoxFit
+              //                                                               .cover,
+              //                                                         ),
+              //                                                       ),
+              //                                                     ),
+              //                                                     Center(
+              //                                                       child: Text(
+              //                                                         '+ ${widget.commentBody.length - 4}',
+              //                                                         style: TextStyle(
+              //                                                             fontSize:
+              //                                                                 30),
+              //                                                       ),
+              //                                                     )
+              //                                                   ]),
+              //                                             ),
+              //                                           ),
+              //                                         ),
+              //                                       )
+              //                                     : Container(
+              //                                         child: ClipRRect(
+              //                                           borderRadius:
+              //                                               BorderRadius.circular(
+              //                                                   10),
+              //                                           child: InkResponse(
+              //                                             onTap: () {
+              //                                               Navigator.of(context)
+              //                                                   .push(
+              //                                                 MaterialPageRoute(
+              //                                                     builder:
+              //                                                         (context) {
+              //                                                   return WorkstreamFilesViewer(
+              //                                                     initialPage:
+              //                                                         index,
+              //                                                     workstreamFilesUrls:
+              //                                                         widget
+              //                                                             .commentBody,
+              //                                                   );
+              //                                                 }),
+              //                                               );
+              //                                             },
+              //                                             child:
+              //                                                 CachedNetworkImage(
+              //                                               placeholder:
+              //                                                   (context, url) =>
+              //                                                       Center(
+              //                                                 child:
+              //                                                     CircularProgressIndicator(
+              //                                                   valueColor:
+              //                                                       AlwaysStoppedAnimation<
+              //                                                           Color>(
+              //                                                     myComment
+              //                                                         ? Theme.of(
+              //                                                                 context)
+              //                                                             .accentColor
+              //                                                         : Theme.of(
+              //                                                                 context)
+              //                                                             .primaryColor,
+              //                                                   ),
+              //                                                   strokeWidth: 2.0,
+              //                                                 ),
+              //                                               ),
+              //                                               errorWidget: (context,
+              //                                                       url, error) =>
+              //                                                   Icon(Icons.error),
+              //                                               imageUrl: widget
+              //                                                       .commentBody[
+              //                                                   index],
+              //                                               fit: BoxFit.cover,
+              //                                             ),
+              //                                           ),
+              //                                         ),
+              //                                       ),
+              //                           ),
+              //                   )
+              //                 : Container(
+              //                     width: double.infinity,
+              //                     height: 200,
+              //                     child: GridView.builder(
+              //                       primary: true,
+              //                       shrinkWrap: true,
+              //                       physics: NeverScrollableScrollPhysics(),
+              //                       gridDelegate:
+              //                           SliverGridDelegateWithFixedCrossAxisCount(
+              //                         crossAxisCount: 2,
+              //                         crossAxisSpacing: 5.0,
+              //                         mainAxisSpacing: 5.0,
+              //                         childAspectRatio: MediaQuery.of(context)
+              //                                 .size
+              //                                 .width /
+              //                             (MediaQuery.of(context).size.height /
+              //                                 3),
+              //                       ),
+              //                       itemCount: widget.commentBody.length,
+              //                       itemBuilder: (context, index) =>
+              //                           ChewieListItem(
+              //                         videoPlayerController:
+              //                             VideoPlayerController.network(
+              //                           widget.commentBody[index],
+              //                         ),
+              //                       ),
+              //                     ),
+              //                   ),
+              //         Container(height: 5),
+              //         (myGig &&
+              //                 !myComment &&
+              //                 widget.proposal &&
+              //                 !widget.approved &&
+              //                 !widget.rejected)
+              //             ? Column(
+              //                 children: [
+              //                   Container(
+              //                     child: Row(
+              //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //                       children: [
+              //                         Row(
+              //                           children: <Widget>[
+              //                             Text(
+              //                               '${widget.gigCurrency}',
+              //                               style: Theme.of(context)
+              //                                   .textTheme
+              //                                   .bodyText1
+              //                                   .copyWith(
+              //                                     color: myComment
+              //                                         ? Theme.of(context).accentColor
+              //                                         : Theme.of(context)
+              //                                             .primaryColor,
+              //                                   ),
+              //                             ),
+              //                             SizedBox(
+              //                               width: 5,
+              //                             ),
+              //                             Text(
+              //                               '${widget.offeredBudget}',
+              //                               style: Theme.of(context)
+              //                                   .textTheme
+              //                                   .bodyText1
+              //                                   .copyWith(
+              //                                     color: myComment
+              //                                         ? Theme.of(context).accentColor
+              //                                         : Theme.of(context)
+              //                                             .primaryColor,
+              //                                   ),
+              //                             ),
+              //                             SizedBox(
+              //                               width: 5,
+              //                             ),
+              //                             widget.preferredPaymentMethod != null
+              //                                 ? SizedBox(
+              //                                     width: 35,
+              //                                     height: 35,
+              //                                     child: SvgPicture.asset(
+              //                                       widget.preferredPaymentMethod ==
+              //                                               'paypal'
+              //                                           ? paypalIcon
+              //                                           : widget.preferredPaymentMethod ==
+              //                                                   'cash'
+              //                                               ? cash
+              //                                               : alternatePayment,
+              //                                       semanticsLabel: 'paypal',
+              //                                       color: Theme.of(context)
+              //                                           .primaryColor,
+              //                                     ),
+              //                                   )
+              //                                 : SizedBox(
+              //                                     width: 0,
+              //                                     height: 0,
+              //                                   ),
+              //                           ],
+              //                         ),
+              //
+              //             : (myGig &&
+              //                     !myComment &&
+              //                     widget.proposal &&
+              //                     widget.rejected)
+              //                 ? Column(
+              //                     crossAxisAlignment: CrossAxisAlignment.start,
+              //                     children: [
+              //                       Container(
+              //                         child: Wrap(
+              //                           direction: Axis.horizontal,
+              //                           alignment: WrapAlignment.start,
+              //                           children: [
+              //                             Text(
+              //                               'You rejected ',
+              //                               style: Theme.of(context)
+              //                                   .textTheme
+              //                                   .bodyText1
+              //                                   .copyWith(
+              //                                       color: myComment
+              //                                           ? Theme.of(context)
+              //                                               .accentColor
+              //                                           : Theme.of(context)
+              //                                               .primaryColor,
+              //                                       fontWeight: FontWeight.bold),
+              //                             ),
+              //                             GestureDetector(
+              //                               child: Text(
+              //                                 '${widget.commentOwnerUsername}\'s proposal',
+              //                                 style: Theme.of(context)
+              //                                     .textTheme
+              //                                     .bodyText1
+              //                                     .copyWith(
+              //                                         color: myComment
+              //                                             ? Theme.of(context)
+              //                                                 .accentColor
+              //                                             : Theme.of(context)
+              //                                                 .primaryColor,
+              //                                         fontWeight: FontWeight.bold),
+              //                               ),
+              //                               onTap: () {
+              //                                 showUserProfile(
+              //                                     userId: widget.commentOwnerId);
+              //                               },
+              //                             ),
+              //                           ],
+              //                         ),
+              //                       ),
+              //                       Container(
+              //                         height: 5,
+              //                       ),
+              //                     ],
+              //                   )
+              //                 : (myGig &&
+              //                         !myComment &&
+              //                         widget.proposal &&
+              //                         widget.approved)
+              //                     ? Column(
+              //                         crossAxisAlignment: CrossAxisAlignment.start,
+              //                         children: [
+              //                           Row(
+              //                             mainAxisAlignment: MainAxisAlignment.end,
+              //                             children: [
+              //                               Container(
+              //                                 decoration: BoxDecoration(
+              //                                     border: Border.all(
+              //                                         width: 1,
+              //                                         color: Theme.of(context)
+              //                                             .hintColor),
+              //                                     borderRadius:
+              //                                         BorderRadius.circular(5)),
+              //                                 child: Padding(
+              //                                   padding: const EdgeInsets.all(8.0),
+              //                                   child: Wrap(
+              //                                     direction: Axis.horizontal,
+              //                                     alignment: WrapAlignment.start,
+              //                                     children: [
+              //                                       Text(
+              //                                         'Gig awarded to ',
+              //                                         style: Theme.of(context)
+              //                                             .textTheme
+              //                                             .bodyText1
+              //                                             .copyWith(
+              //                                               color: myComment
+              //                                                   ? Theme.of(context)
+              //                                                       .accentColor
+              //                                                   : Theme.of(context)
+              //                                                       .primaryColor,
+              //                                             ),
+              //                                       ),
+              //                                       GestureDetector(
+              //                                         child: Text(
+              //                                           '${widget.commentOwnerUsername}',
+              //                                           style: Theme.of(context)
+              //                                               .textTheme
+              //                                               .bodyText1
+              //                                               .copyWith(
+              //                                                 color: myComment
+              //                                                     ? Theme.of(context)
+              //                                                         .accentColor
+              //                                                     : Theme.of(context)
+              //                                                         .primaryColor,
+              //                                                 fontWeight:
+              //                                                     FontWeight.bold,
+              //                                               ),
+              //                                         ),
+              //                                         onTap: () {
+              //                                           showUserProfile(
+              //                                               userId: widget
+              //                                                   .commentOwnerId);
+              //                                         },
+              //                                       ),
+              //                                     ],
+              //                                   ),
+              //                                 ),
+              //                               ),
+              //                             ],
+              //                           ),
+              //                           Container(
+              //                             height: 5,
+              //                           ),
+              //                         ],
+              //                       )
+              //                     : (myComment && widget.proposal)
+              //                         ? Column(
+              //                             crossAxisAlignment: CrossAxisAlignment.end,
+              //                             children: [
+              //                               Row(
+              //                                 mainAxisAlignment:
+              //                                     MainAxisAlignment.spaceBetween,
+              //                                 children: [
+              //                                   Row(
+              //                                     children: <Widget>[
+              //                                       widget.gigCurrency != null
+              //                                           ? Text(
+              //                                               '${widget.gigCurrency}',
+              //                                               style: Theme.of(context)
+              //                                                   .textTheme
+              //                                                   .bodyText1
+              //                                                   .copyWith(
+              //                                                       color: myComment
+              //                                                           ? Theme.of(
+              //                                                                   context)
+              //                                                               .accentColor
+              //                                                           : Theme.of(
+              //                                                                   context)
+              //                                                               .primaryColor),
+              //                                             )
+              //                                           : Container(
+              //                                               width: 0,
+              //                                               height: 0,
+              //                                             ),
+              //                                       SizedBox(
+              //                                         width: 5,
+              //                                       ),
+              //                                       widget.offeredBudget != null
+              //                                           ? Text(
+              //                                               '${widget.offeredBudget}',
+              //                                               style: Theme.of(context)
+              //                                                   .textTheme
+              //                                                   .bodyText1
+              //                                                   .copyWith(
+              //                                                       color: myComment
+              //                                                           ? Theme.of(
+              //                                                                   context)
+              //                                                               .accentColor
+              //                                                           : Theme.of(
+              //                                                                   context)
+              //                                                               .primaryColor),
+              //                                             )
+              //                                           : Container(
+              //                                               width: 0, height: 0),
+              //                                       SizedBox(
+              //                                         width: 5,
+              //                                       ),
+              //                                       widget.preferredPaymentMethod !=
+              //                                               null
+              //                                           ? SizedBox(
+              //                                               width: 35,
+              //                                               height: 35,
+              //                                               child: SvgPicture.asset(
+              //                                                   widget.preferredPaymentMethod ==
+              //                                                           'paypal'
+              //                                                       ? paypalIcon
+              //                                                       : widget.preferredPaymentMethod ==
+              //                                                               'cash'
+              //                                                           ? cash
+              //                                                           : alternatePayment,
+              //                                                   semanticsLabel:
+              //                                                       'paypal',
+              //                                                   color:
+              //                                                       Theme.of(context)
+              //                                                           .accentColor),
+              //                                             )
+              //                                           : SizedBox(
+              //                                               width: 0,
+              //                                               height: 0,
+              //                                             ),
+              //                                     ],
+              //                                   ),
+              //                                   SizedBox(
+              //                                     height: 10,
+              //                                   ),
+              //
+              //                                 ],
+              //                               ),
+              //                             ],
+              //                           )
+              //                         :
+
+              //     //   ],
+              //     // ),
+              //   ],
+              // ),
+            ),
+            SizedBox(
+              width: 0,
+              height: 5,
+            ),
+            Container(
+              child: Text(
+                '${widget.commentBody}',
+                style: Theme.of(context).textTheme.bodyText1.copyWith(
+                      color: myComment
+                          ? Theme.of(context).accentColor
+                          : Theme.of(context).primaryColor,
+                    ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            SizedBox(
+              width: 0,
+              height: 5,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 Text(
-                  timeAgo.format(createdAtDateTime),
+                  timeAgo.format(
+                      DateTime.fromMillisecondsSinceEpoch(widget.createdAt)),
                   style: Theme.of(context).textTheme.bodyText2.copyWith(
                         color: myComment
                             ? Theme.of(context).accentColor
                             : Theme.of(context).primaryColor,
                       ),
-                )
+                ),
+                CustomSwitch(
+                  activeColor: Colors.black,
+                  value: widget.isPrivateComment,
+                  onChanged: (value) {
+                    print('commentId: ${widget.commentId}');
+                    RealTimeDatabase().changeCommentPrivacy(
+                      parentGigId: widget.parentGigId,
+                      commentId: widget.commentId,
+                      isPrivateComment: value,
+                    );
+                    commentViewShifter();
+                  },
+                ),
               ],
-            ),
+            )
           ],
         ),
       ),
@@ -1382,45 +1338,50 @@ class _CommentItemState extends State<CommentItem>
     return Padding(
       padding: const EdgeInsets.all(0.1),
       child: Container(
-        decoration: BoxDecoration(
-          color: myComment
-              ? Theme.of(context).primaryColor
-              : Theme.of(context).accentColor,
-          border: Border(
-            top: myComment
-                ? BorderSide(width: 0.3, color: Theme.of(context).accentColor)
-                : BorderSide(
-                    width: 0.3,
-                    color: Theme.of(context).primaryColor,
-                  ),
-            bottom: myComment
-                ? BorderSide(width: 0.3, color: Theme.of(context).accentColor)
-                : BorderSide(
-                    width: 0.3,
-                    color: Theme.of(context).primaryColor,
-                  ),
+          decoration: BoxDecoration(
+            color: myComment
+                ? Theme.of(context).primaryColor
+                : Theme.of(context).accentColor,
+            border: Border(
+              top: myComment
+                  ? BorderSide(width: 0.3, color: Theme.of(context).accentColor)
+                  : BorderSide(
+                      width: 0.3,
+                      color: Theme.of(context).primaryColor,
+                    ),
+              bottom: myComment
+                  ? BorderSide(width: 0.3, color: Theme.of(context).accentColor)
+                  : BorderSide(
+                      width: 0.3,
+                      color: Theme.of(context).primaryColor,
+                    ),
+            ),
           ),
-        ),
-        // child: myGig || myComment || appointedUser
-        child: myGig || myComment
-            ? IndexedStack(
-                index: _commentViewIndex,
-                children: [
-                  AnimatedOpacity(
-                    opacity: _commentOpacity,
-                    child: publicCommentView,
-                    duration: Duration(milliseconds: 500),
-                  ),
-                  AnimatedOpacity(
+          // child: myGig || myComment || appointedUser
+          child: myGig || myComment
+              ? IndexedStack(
+                  index: _commentViewIndex,
+                  children: [
+                    AnimatedOpacity(
                       opacity: _commentOpacity,
-                      child: privateCommentView,
-                      duration: Duration(milliseconds: 500)),
-                ],
-              )
-            : widget.commentPrivacyToggle
-                ? privateCommentView
-                : publicCommentView,
-      ),
+                      child: publicCommentView,
+                      duration: Duration(milliseconds: 500),
+                    ),
+                    AnimatedOpacity(
+                        opacity: _commentOpacity,
+                        child: privateCommentView,
+                        duration: Duration(milliseconds: 500)),
+                  ],
+                )
+              // : widget.commentPrivacyToggle
+              //     ? privateCommentView
+              //     : publicCommentView,
+              : Container(
+                  child: Text(
+                    'Private comment view',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                )),
     );
   }
 

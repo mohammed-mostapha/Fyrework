@@ -246,12 +246,12 @@ class FirestoreDatabase {
         .snapshots();
   }
 
-  Stream<QuerySnapshot> gigRelatedComments(String gigIdCommentsIdentifier) {
-    return _commentsCollection
-        .where('gigIdHoldingComment', isEqualTo: gigIdCommentsIdentifier)
-        .orderBy('createdAt', descending: false)
-        .snapshots();
-  }
+  // Stream<QuerySnapshot> gigRelatedComments(String gigIdCommentsIdentifier) {
+  //   return _commentsCollection
+  //       .where('gigIdHoldingComment', isEqualTo: gigIdCommentsIdentifier)
+  //       .orderBy('createdAt', descending: false)
+  //       .snapshots();
+  // }
 
   Stream<QuerySnapshot> fetchAllNotifications() {
     return _notifications.orderBy('createdAt', descending: false).snapshots();
@@ -507,13 +507,13 @@ class FirestoreDatabase {
   }
 
   // show gig actions
-  Stream<QuerySnapshot> showGigWorkstreamActions({@required String gigId}) {
-    return _gigsCollection
-        .doc(gigId)
-        .collection('gigActions')
-        .orderBy('createdAt', descending: false)
-        .snapshots();
-  }
+  // Stream<QuerySnapshot> showGigWorkstreamActions({@required String gigId}) {
+  //   return _gigsCollection
+  //       .doc(gigId)
+  //       .collection('gigActions')
+  //       .orderBy('createdAt', descending: false)
+  //       .snapshots();
+  // }
 
   Future<DocumentSnapshot> fetchAppointedUserData(
       {@required String gigId}) async {
@@ -588,24 +588,6 @@ class FirestoreDatabase {
     }
   }
 
-  Future addComment(
-    Comment comment,
-    String gigIdHoldingComment,
-  ) async {
-    try {
-      Map<String, dynamic> commentData = comment.toMap();
-      return await _commentsCollection.add(commentData).then((comment) {
-        comment.update({'commentId': comment.id});
-      });
-    } catch (e) {
-      if (e is PlatformException) {
-        return e.message;
-      }
-
-      return e.toString();
-    }
-  }
-
   Stream listenToAllGigsRealTime() {
     // Register the handler for when the gigs data changes
     _gigsCollection.snapshots().listen((gigsSnapshot) {
@@ -660,92 +642,80 @@ class FirestoreDatabase {
   }
 
   // set gig client and gig worker
-  Future setGigClientAndGigWorker(
-      {@required String gigId,
-      @required String gigClientId,
-      @required String gigWorkerId}) async {
-    try {
-      await _gigsCollection.doc(gigId).update({
-        'gigClientId': gigClientId,
-        'gigWorkerId': gigWorkerId,
-      });
-    } catch (e) {
-      if (e is PlatformException) {
-        return e.message;
-      }
-    }
-  }
+  // Future setGigClientAndGigWorker(
+  //     {@required String gigId,
+  //     @required String gigClientId,
+  //     @required String gigWorkerId}) async {
+  //   try {
+  //     await _gigsCollection.doc(gigId).update({
+  //       'gigClientId': gigClientId,
+  //       'gigWorkerId': gigWorkerId,
+  //     });
+  //   } catch (e) {
+  //     if (e is PlatformException) {
+  //       return e.message;
+  //     }
+  //   }
+  // }
 
-  Future appointGigToUser(
-      {String gigId, String appointedUserId, String commentId}) async {
-    var appointedUser = await _usersCollection.doc(appointedUserId).get();
-    var appointedUsername = appointedUser.data()['username'];
-    try {
-      await _gigsCollection.doc(gigId).update({
-        'appointed': true,
-        'appointedUserId': appointedUserId,
-        'appointedUsername': appointedUsername,
-      });
-      await FirestoreDatabase()
-          .updateOpenGigsByGigId(userId: appointedUserId, gigId: gigId);
+  // Future appointGigToUser(
+  //     {String gigId, String appointedUserId, String commentId}) async {
+  //   var appointedUser = await _usersCollection.doc(appointedUserId).get();
+  //   var appointedUsername = appointedUser.data()['username'];
+  //   try {
+  //     await _gigsCollection.doc(gigId).update({
+  //       'appointed': true,
+  //       'appointedUserId': appointedUserId,
+  //       'appointedUsername': appointedUsername,
+  //     });
+  //     await FirestoreDatabase()
+  //         .updateOpenGigsByGigId(userId: appointedUserId, gigId: gigId);
 
-      await _commentsCollection.doc(commentId).update({
-        'approved': true,
-        'appointedUserId': appointedUserId,
-        'appointedUsername': appointedUsername,
-      }).then((value) async {
-        await _commentsCollection
-            .where('gigIdHoldingComment', isEqualTo: gigId)
-            .where('approved', isEqualTo: false)
-            .get()
-            .then((querySnapshots) {
-          querySnapshots.docs.forEach((document) {
-            document.reference.update({'rejected': true});
-          });
-        });
-      });
-    } catch (e) {
-      if (e is PlatformException) {
-        return e.message;
-      }
-    }
-  }
+  //     await _commentsCollection.doc(commentId).update({
+  //       'approved': true,
+  //       'appointedUserId': appointedUserId,
+  //       'appointedUsername': appointedUsername,
+  //     }).then((value) async {
+  //       await _commentsCollection
+  //           .where('gigIdHoldingComment', isEqualTo: gigId)
+  //           .where('approved', isEqualTo: false)
+  //           .get()
+  //           .then((querySnapshots) {
+  //         querySnapshots.docs.forEach((document) {
+  //           document.reference.update({'rejected': true});
+  //         });
+  //       });
+  //     });
+  //   } catch (e) {
+  //     if (e is PlatformException) {
+  //       return e.message;
+  //     }
+  //   }
+  // }
 
-  Future rejectProposal(String commentId) async {
-    try {
-      await _commentsCollection.doc(commentId).update({
-        'rejected': true,
-      });
-    } catch (e) {
-      if (e is PlatformException) {
-        return e.message;
-      }
-    }
-  }
+  // Future rejectProposal(String commentId) async {
+  //   try {
+  //     await _commentsCollection.doc(commentId).update({
+  //       'rejected': true,
+  //     });
+  //   } catch (e) {
+  //     if (e is PlatformException) {
+  //       return e.message;
+  //     }
+  //   }
+  // }
 
-  Future commentPrivacyToggle(String commentId, bool value) async {
-    try {
-      await _commentsCollection
-          .doc(commentId)
-          .update(({'commentPrivacyToggle': value}));
-    } catch (e) {
-      if (e is PlatformException) {
-        return e.message;
-      }
+  // Future commentPrivacyToggle(String commentId, bool value) async {
+  //   try {
+  //     await _commentsCollection
+  //         .doc(commentId)
+  //         .update(({'isPrivateComment': value}));
+  //   } catch (e) {
+  //     if (e is PlatformException) {
+  //       return e.message;
+  //     }
 
-      return e.toString();
-    }
-  }
-
-  Future updateComment(Comment comment) async {
-    try {
-      await _commentsCollection.doc(comment.commentId).update(comment.toMap());
-    } catch (e) {
-      if (e is PlatformException) {
-        return e.message;
-      }
-
-      return e.toString();
-    }
-  }
+  //     return e.toString();
+  //   }
+  // }
 }
